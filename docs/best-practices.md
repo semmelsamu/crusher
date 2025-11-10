@@ -27,3 +27,9 @@ Commits should look like this:
 ```
 
 The commit types should be the same as the branch types.
+
+## Coding conventions
+
+### Code Style
+
+We use the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
