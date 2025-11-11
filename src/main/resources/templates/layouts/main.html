@@ -1,34 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">Crusher</title>
-    
-    <!-- Common CSS -->
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
-    
-    <!-- Page-specific CSS -->
-    <th:block layout:fragment="styles"></th:block>
-</head>
-<body>
-    <!-- Header Component -->
-    <header th:replace="~{components/header :: header}"></header>
-    
-    <!-- Main Content -->
-    <main layout:fragment="content">
-        <!-- Page content will be inserted here -->
-    </main>
-    
-    <!-- Footer Component -->
-    <footer th:replace="~{components/footer :: footer}"></footer>
-    
-    <!-- Common JS -->
-    <script th:src="@{/js/main.js}"></script>
-    
-    <!-- Page-specific JS -->
-    <th:block layout:fragment="scripts"></th:block>
-</body>
-</html>
+<html
+    lang="en"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+        <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">
+            Crusher
+        </title>
+
+        <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    </head>
+    <body>
+        <x th:replace="~{components/nav :: nav}"></x>
+
+        <hr />
+
+        <main layout:fragment="content"></main>
+
+        <hr />
+
+        <x th:replace="~{components/footer :: footer}"></x>
+    </body>
+</html>

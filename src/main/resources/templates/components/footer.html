@@ -1,31 +1,7 @@
-<!-- Footer Fragment -->
-<footer th:fragment="footer" xmlns:th="http://www.thymeleaf.org">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Crusher</h3>
-                <p>Track your climbing progress and achievements</p>
-            </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a th:href="@{/about}">About</a></li>
-                    <li><a th:href="@{/contact}">Contact</a></li>
-                    <li><a th:href="@{/privacy}">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Connect</h4>
-                <ul>
-                    <li><a href="#">GitHub</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Instagram</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; <span th:text="${#dates.year(#dates.createNow())}">2025</span> Crusher. All rights reserved.</p>
-        </div>
-    </div>
+<footer th:fragment="footer">
+    <p>
+        &copy;
+        <span th:text="${#dates.year(#dates.createNow())}">2025</span>
+        Crusher. All rights reserved.
+    </p>
 </footer>
-
