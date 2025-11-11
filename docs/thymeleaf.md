@@ -5,7 +5,7 @@ This document describes the organization of Thymeleaf templates in the Crusher a
 ## Folder Structure
 
 ```
-templates/
+views/
 ├── components/       # Reusable UI components (fragments)
 │   ├── header.html   # Navigation header
 │   ├── footer.html   # Page footer
@@ -31,8 +31,8 @@ Components are reusable template fragments that can be included in multiple page
 
 ```html
 <div th:fragment="card(title, content)" class="card">
-  <h3 th:text="${title}">Title</h3>
-  <p th:text="${content}">Content</p>
+    <h3 th:text="${title}">Title</h3>
+    <p th:text="${content}">Content</p>
 </div>
 ```
 
@@ -51,16 +51,16 @@ Layouts define the overall page structure and common elements (header, footer, n
 ```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">App</title>
-  </head>
-  <body>
-    <header th:replace="~{components/header :: header}"></header>
-    <main layout:fragment="content">
-      <!-- Page content here -->
-    </main>
-    <footer th:replace="~{components/footer :: footer}"></footer>
-  </body>
+    <head>
+        <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">App</title>
+    </head>
+    <body>
+        <header th:replace="~{components/header :: header}"></header>
+        <main layout:fragment="content">
+            <!-- Page content here -->
+        </main>
+        <footer th:replace="~{components/footer :: footer}"></footer>
+    </body>
 </html>
 ```
 
@@ -69,18 +69,18 @@ Layouts define the overall page structure and common elements (header, footer, n
 ```html
 <!DOCTYPE html>
 <html
-  xmlns:th="http://www.thymeleaf.org"
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/main}"
 >
-  <head>
-    <title>My Page</title>
-  </head>
-  <body>
-    <div layout:fragment="content">
-      <h1>Page Content</h1>
-    </div>
-  </body>
+    <head>
+        <title>My Page</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <h1>Page Content</h1>
+        </div>
+    </body>
 </html>
 ```
 
@@ -125,7 +125,7 @@ public class HomeController {
 ```html
 <!-- Component definition -->
 <div th:fragment="alert(type, message)">
-  <div th:class="'alert alert-' + ${type}" th:text="${message}"></div>
+    <div th:class="'alert alert-' + ${type}" th:text="${message}"></div>
 </div>
 
 <!-- Usage -->
@@ -137,7 +137,7 @@ public class HomeController {
 ```html
 <!-- Show only if authenticated -->
 <div sec:authorize="isAuthenticated()">
-  <span sec:authentication="name">User</span>
+    <span sec:authentication="name">User</span>
 </div>
 ```
 
