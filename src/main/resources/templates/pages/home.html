@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" layout:decorate="~{layouts/main}">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Title</title>
-  </head>
-  <body>
-    Hello World
-  </body>
-</html>
+<th:block layout:decorate="~{layouts/main}" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <th:block layout:fragment="content">
+        <div class="container">
+            <h1>Hello World</h1>
+            <p>Welcome to Crusher - Track your climbing progress and achievements</p>
+        </div>
+    </th:block>
+</th:block>
