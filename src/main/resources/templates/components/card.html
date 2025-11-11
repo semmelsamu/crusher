@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Simple Card Component -->
+    <div th:fragment="card(title, content)" class="card">
+        <div class="card-header">
+            <h3 th:text="${title}">Card Title</h3>
+        </div>
+        <div class="card-body">
+            <p th:text="${content}">Card content goes here</p>
+        </div>
+    </div>
+    
+    <!-- Card with custom content -->
+    <div th:fragment="card-custom(title)" class="card">
+        <div class="card-header">
+            <h3 th:text="${title}">Card Title</h3>
+        </div>
+        <div class="card-body">
+            <th:block layout:fragment="card-content">
+                <!-- Custom content will be inserted here -->
+            </th:block>
+        </div>
+    </div>
+</body>
+</html>
+

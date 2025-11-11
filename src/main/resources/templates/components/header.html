@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Header Fragment -->
+    <header th:fragment="header">
+        <nav>
+            <div class="container">
+                <div class="logo">
+                    <a th:href="@{/}">Crusher</a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a th:href="@{/}">Home</a></li>
+                    <li><a th:href="@{/routes}">Routes</a></li>
+                    <li><a th:href="@{/climbs}">My Climbs</a></li>
+                    <li><a th:href="@{/profile}">Profile</a></li>
+                </ul>
+                <div class="user-menu">
+                    <!-- Authenticated user menu -->
+                    <div sec:authorize="isAuthenticated()">
+                        <span sec:authentication="name">User</span>
+                        <a th:href="@{/logout}">Logout</a>
+                    </div>
+                    <!-- Anonymous user menu -->
+                    <div sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/login}">Login</a>
+                        <a th:href="@{/register}">Register</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+</body>
+</html>
+
