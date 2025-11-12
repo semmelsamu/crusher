@@ -8,15 +8,39 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for loading user details for Spring Security.
+ * <p>
+ * Implements the {@link UserDetailsService} interface and retrieves user information
+ * from the database using {@link JdbcTemplate}.
+ * </p>
+ * <p>
+ * This class is used by Spring Security to authenticate users by their username.
+ * The returned {@link UserDetails} contain the username, password (already encoded),
+ * and assigned role.
+ * </p>
+ */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final JdbcTemplate jdbcTemplate;
 
+    /**
+     * Constructor that injects the JdbcTemplate.
+     *
+     * @param jdbcTemplate used to access the user table
+     */
     public CustomUserDetailsService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * Loads a user by their username from the database.
+     *
+     * @param username the username to look up
+     * @return the {@link UserDetails} of the user
+     * @throws UsernameNotFoundException if no user with the given username exists
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String sql = "SELECT * FROM users WHERE name = ?";
