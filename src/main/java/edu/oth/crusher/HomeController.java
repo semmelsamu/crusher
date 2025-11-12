@@ -10,7 +10,6 @@ public class HomeController {
 
     @RequestMapping(value="/", method= RequestMethod.GET)
     public String readersBooks() {
-        return "home";
+        return "home/home";
     }
-
 }
