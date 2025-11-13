@@ -1,5 +1,7 @@
 package edu.oth.crusher.utils.login;
 
+import edu.oth.crusher.model.UserEntity;
+import edu.oth.crusher.repository.UserRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -12,47 +14,38 @@ import org.springframework.stereotype.Service;
  * Service for loading user details for Spring Security.
  * <p>
  * Implements the {@link UserDetailsService} interface and retrieves user information
- * from the database using {@link JdbcTemplate}.
+ * from the database using the {@link UserRepository}.
  * </p>
  * <p>
- * This class is used by Spring Security to authenticate users by their username.
- * The returned {@link UserDetails} contain the username, password (already encoded),
- * and assigned role.
+ * This service is used by Spring Security to authenticate users based on their username.
+ * It fetches the user entity from the database, converts it into a {@link UserDetails}
+ * instance, and provides Spring Security with the user’s credentials and roles.
  * </p>
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final UserRepository userRepository;
 
-    /**
-     * Constructor that injects the JdbcTemplate.
-     *
-     * @param jdbcTemplate used to access the user table
-     */
-    public CustomUserDetailsService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     /**
      * Loads a user by their username from the database.
      *
      * @param username the username to look up
-     * @return the {@link UserDetails} of the user
+     * @return the {@link UserDetails} for authentication
      * @throws UsernameNotFoundException if no user with the given username exists
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String sql = "SELECT * FROM users WHERE name = ?";
-        return jdbcTemplate.query(sql, rs -> {
-            if (!rs.next()) throw new UsernameNotFoundException(username);
-            String name = rs.getString("name");
-            String password = rs.getString("password");
-            String role = rs.getString("role");
-            return User.withUsername(name)
-                    .password(password)
-                    .roles(role)
-                    .build();
-        }, username);
+        UserEntity user = userRepository.findByName(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+
+        return User.withUsername(user.getName())
+                .password(user.getPassword())
+                .roles(user.getRole())
+                .build();
     }
 }
