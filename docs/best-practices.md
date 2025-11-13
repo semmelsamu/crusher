@@ -8,9 +8,9 @@ The convention is inspired by [Conventional Branch](https://conventional-branch.
 
 There are 3 types of branches:
 
-- `feat/feature-name` for new features
-- `fix/fix-name` for bugfixes
-- `doc/doc-name` for documentation updates
+-   `feat/feature-name` for new features
+-   `fix/fix-name` for bugfixes
+-   `doc/doc-name` for documentation updates
 
 ### Commit conventions
 
