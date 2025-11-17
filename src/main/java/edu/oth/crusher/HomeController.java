@@ -12,5 +12,4 @@ public class HomeController {
     public String readersBooks() {
         return "pages/home";
     }
-
 }
