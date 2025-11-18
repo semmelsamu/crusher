@@ -1,0 +1,52 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <section th:if="${param.error} or ${param.logout}">
+            <p th:if="${param.error}" class="error-message">
+                Invalid username or password
+            </p>
+
+            <p th:if="${param.logout}" class="logout-message">
+                You have been logged out successfully
+            </p>
+        </section>
+
+        <section>
+            <form th:action="@{/login}" method="post">
+                <label for="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    required
+                    autofocus
+                    placeholder="Enter your username"
+                />
+
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                    placeholder="Enter your password"
+                />
+
+                <button type="submit" class="btn-login">Log In</button>
+            </form>
+        </section>
+
+        <section>
+            <b>Test Accounts (all use password: test)</b>
+            <ul>
+                <li>alice (USER)</li>
+                <li>bob (SETTER)</li>
+                <li>klaus (OWNER)</li>
+                <li>crusher (ADMIN)</li>
+            </ul>
+        </section>
+    </th:block>
+</th:block>

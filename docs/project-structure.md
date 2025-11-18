@@ -6,7 +6,7 @@
 
 This directory contains documentation about the project, including style guides. All files in this directory must follow the kebab-case naming convention.
 
-#### `src/main/java/edu/oth/crusher/`
+#### `src/main/java/de/othr/crusher/`
 
 -   `controller/` - Contains Spring REST controllers for handling HTTP requests and responses.
 -   `model/` - Domain model classes representing application data structures.

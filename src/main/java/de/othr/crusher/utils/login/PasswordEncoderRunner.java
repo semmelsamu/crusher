@@ -1,4 +1,4 @@
-package edu.oth.crusher.utils.login;
+package de.othr.crusher.utils.login;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
