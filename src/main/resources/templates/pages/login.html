@@ -5,7 +5,9 @@
 >
     <th:block layout:fragment="content">
         <main class="space-y-8 my-16">
-            <div class="card space-y-4 p-4 max-w-lg mx-auto">
+            <div
+                class="card bg-secondary-background space-y-4 p-4 max-w-lg mx-auto"
+            >
                 <h2>Login</h2>
 
                 <section th:if="${param.error} or ${param.logout}">
@@ -25,7 +27,7 @@
                             type="text"
                             id="username"
                             name="username"
-                            class="form-input"
+                            class="text-input block w-full"
                             required
                             autofocus
                             placeholder="Enter your username"
@@ -40,19 +42,19 @@
                             type="password"
                             id="password"
                             name="password"
-                            class="form-input"
+                            class="text-input block w-full"
                             required
                             placeholder="Enter your password"
                         />
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-full">
-                        Log In
-                    </button>
+                    <button type="submit" class="button w-full">Log In</button>
                 </form>
             </div>
 
-            <div class="card space-y-4 p-4 max-w-lg mx-auto">
+            <div
+                class="card bg-secondary-background space-y-4 p-4 max-w-lg mx-auto"
+            >
                 <h3>Test Accounts</h3>
                 <p>All accounts use password: <strong>test</strong></p>
                 <dl>

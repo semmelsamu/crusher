@@ -7,12 +7,13 @@
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
 
-    --color-main: var(--color-sky-500);
+    --color-main: var(--color-sky-500); /* color for text */
     --color-background: var(--color-sky-100);
     --color-foreground: black;
-    --color-main-foreground: black;
+    --color-main-foreground: black; /* color for text when background is set to main */
     --color-border: black;
     --color-secondary-background: white;
+    --color-overlay: rgba(0, 0, 0, 0.8);
 
     --radius-*: initial;
     --radius-base: 0.25rem;

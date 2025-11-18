@@ -1,6 +1,6 @@
 <nav
     th:fragment="nav"
-    class="bg-white border-b-4 bg-secondary-background"
+    class="border-b-4 bg-secondary-background"
     xmlns:th="http://www.thymeleaf.org"
     xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
 >
@@ -15,7 +15,7 @@
                     class="inline"
                     sec:authorize="isAuthenticated()"
                 >
-                    <button type="submit" class="btn btn-secondary">
+                    <button type="submit" class="button button-neutral">
                         Logout
                     </button>
                 </form>
