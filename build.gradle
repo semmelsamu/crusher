@@ -62,3 +62,8 @@ task buildTailwind(type: Exec) {
 
 // Make processResources depend on Tailwind CSS build
 processResources.dependsOn buildTailwind
+
+// Extend clean task to also remove the generated _build.css file
+clean {
+	delete 'src/main/resources/static/css/_build.css'
+}
