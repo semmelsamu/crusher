@@ -1,9 +1,17 @@
-<nav th:fragment="nav">
+<nav
+    th:fragment="nav"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+>
     <a th:href="@{/}">Crusher</a>
     <a href="#">Home</a>
 
-    <!-- Logout form -->
-    <form th:action="@{/logout}" method="post" style="display: inline">
+    <form
+        th:action="@{/logout}"
+        method="post"
+        style="display: inline"
+        sec:authorize="isAuthenticated()"
+    >
         <button type="submit">Logout</button>
     </form>
 </nav>
