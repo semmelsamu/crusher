@@ -1,4 +1,4 @@
-package edu.oth.crusher.model;
+package de.othr.crusher.model;
 
 import jakarta.persistence.*;
 

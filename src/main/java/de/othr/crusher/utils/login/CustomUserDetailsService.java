@@ -1,7 +1,7 @@
-package edu.oth.crusher.utils.login;
+package de.othr.crusher.utils.login;
 
-import edu.oth.crusher.model.UserEntity;
-import edu.oth.crusher.repository.UserRepository;
+import de.othr.crusher.model.UserEntity;
+import de.othr.crusher.repository.UserRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

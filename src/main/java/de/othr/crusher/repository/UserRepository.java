@@ -1,6 +1,6 @@
-package edu.oth.crusher.repository;
+package de.othr.crusher.repository;
 
-import edu.oth.crusher.model.UserEntity;
+import de.othr.crusher.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
