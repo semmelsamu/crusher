@@ -4,18 +4,14 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <main class="max-w-md mx-auto">
-            <div class="card">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">
-                    Login
-                </h2>
+        <main class="space-y-8 my-16">
+            <div class="card space-y-4 p-4 max-w-lg mx-auto">
+                <h2>Login</h2>
 
-                <section th:if="${param.error} or ${param.logout}" class="mb-6">
-                    <p th:if="${param.error}" class="error-message">
-                        Invalid username or password
-                    </p>
+                <section th:if="${param.error} or ${param.logout}">
+                    <p th:if="${param.error}">Invalid username or password</p>
 
-                    <p th:if="${param.logout}" class="logout-message">
+                    <p th:if="${param.logout}">
                         You have been logged out successfully
                     </p>
                 </section>
@@ -56,31 +52,19 @@
                 </form>
             </div>
 
-            <div class="mt-8 card bg-gray-50">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3">
-                    Test Accounts
-                </h3>
-                <p class="text-sm text-gray-600 mb-3">
-                    All accounts use password: <strong>test</strong>
-                </p>
-                <ul class="space-y-2 text-sm">
-                    <li class="flex items-center gap-2">
-                        <span class="font-medium">alice</span>
-                        <span class="text-gray-500">(USER)</span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="font-medium">bob</span>
-                        <span class="text-gray-500">(SETTER)</span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="font-medium">klaus</span>
-                        <span class="text-gray-500">(OWNER)</span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <span class="font-medium">crusher</span>
-                        <span class="text-gray-500">(ADMIN)</span>
-                    </li>
-                </ul>
+            <div class="card space-y-4 p-4 max-w-lg mx-auto">
+                <h3>Test Accounts</h3>
+                <p>All accounts use password: <strong>test</strong></p>
+                <dl>
+                    <dt>alice</dt>
+                    <dd>USER</dd>
+                    <dt>bob</dt>
+                    <dd>SETTER</dd>
+                    <dt>klaus</dt>
+                    <dd>OWNER</dd>
+                    <dt>crusher</dt>
+                    <dd>ADMIN</dd>
+                </dl>
             </div>
         </main>
     </th:block>
