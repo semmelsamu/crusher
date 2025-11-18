@@ -4,7 +4,7 @@ This document describes how the in-memory database is organized and initialized 
 
 ## Technology
 
-H2 as an in-memory database
+H2 is an in-memory database.
 Spring Data JPA is used for Object-Relational Mapping.
 
 Dependencies:
@@ -41,6 +41,7 @@ public interface UserRepository extends JpaRepository<User, Long> {}
 ##### Entity Example
 ```
 @Entity
+@Table(name = "users")
 public class User {
     @Id @GeneratedValue
     private Long id;
@@ -52,11 +53,11 @@ public class User {
 ```
 ## H2 Console
 
-The `/h2-console endpoint provides a `web-based interface` to view and manage the in-memory H2 database used in the Crusher application.
+The `/h2-console` endpoint provides a `web-based interface` to view and manage the in-memory H2 database used in the Crusher application.
 Accessible at /h2-console during development.
 
 Only Users with Role 'ADMIN' can access /h2-console.
-The following specifications in `SecurityConfig` are necessary to use it, they can be deleted when in production:
+The following specifications in `SecurityConfig` are necessary to use it, they must be deleted when in production:
 - .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
 - .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 
