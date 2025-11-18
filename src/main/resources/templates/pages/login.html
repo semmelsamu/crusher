@@ -6,17 +6,52 @@
     <th:block layout:fragment="content">
         <main class="space-y-8 my-16">
             <div
+                th:if="${param.logout}"
+                class="card bg-secondary-background space-y-4 p-4 max-w-sm mx-auto text-center flex items-center gap-2 justify-center"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-check-icon lucide-check"
+                >
+                    <path d="M20 6 9 17l-5-5" />
+                </svg>
+                You have been logged out successfully
+            </div>
+
+            <div
+                th:if="${param.error}"
+                class="card bg-secondary-background space-y-4 p-4 max-w-sm mx-auto text-center flex items-center gap-2 justify-center"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-x-icon lucide-x"
+                >
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                </svg>
+                Invalid username or password
+            </div>
+
+            <section
                 class="card bg-secondary-background space-y-4 p-4 max-w-lg mx-auto"
             >
                 <h2>Login</h2>
-
-                <section th:if="${param.error} or ${param.logout}">
-                    <p th:if="${param.error}">Invalid username or password</p>
-
-                    <p th:if="${param.logout}">
-                        You have been logged out successfully
-                    </p>
-                </section>
 
                 <form th:action="@{/login}" method="post" class="space-y-4">
                     <div>
@@ -48,11 +83,30 @@
                         />
                     </div>
 
-                    <button type="submit" class="button w-full">Log In</button>
+                    <button type="submit" class="button w-full">
+                        Log In<svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-log-in-icon lucide-log-in"
+                        >
+                            <path d="m10 17 5-5-5-5" />
+                            <path d="M15 12H3" />
+                            <path
+                                d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"
+                            />
+                        </svg>
+                    </button>
                 </form>
-            </div>
+            </section>
 
-            <div
+            <aside
                 class="card bg-secondary-background space-y-4 p-4 max-w-lg mx-auto"
             >
                 <h3>Test Accounts</h3>
@@ -67,7 +121,7 @@
                     <dt>crusher</dt>
                     <dd>ADMIN</dd>
                 </dl>
-            </div>
+            </aside>
         </main>
     </th:block>
 </th:block>

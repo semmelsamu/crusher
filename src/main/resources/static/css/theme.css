@@ -15,6 +15,8 @@
     --color-secondary-background: white;
     --color-overlay: rgba(0, 0, 0, 0.8);
 
+    --color-error: var(--color-red-500);
+
     --radius-*: initial;
     --radius-base: 0.25rem;
 

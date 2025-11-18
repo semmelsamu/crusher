@@ -25,3 +25,7 @@ dt {
 dd {
     @apply ml-4;
 }
+
+.lucide {
+    @apply w-4 h-4;
+}
