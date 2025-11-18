@@ -3,8 +3,8 @@
   "version": "0.0.1-SNAPSHOT",
   "description": "Boulder / rock climbing tracking and management tool",
   "scripts": {
-    "build:css": "postcss ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/styles.css --minify",
-    "watch:css": "postcss ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/styles.css --watch"
+    "build:css": "postcss ./src/main/resources/static/css/main.css -o ./src/main/resources/static/css/_build.css --minify",
+    "watch:css": "postcss ./src/main/resources/static/css/main.css -o ./src/main/resources/static/css/_build.css --watch"
   },
   "devDependencies": {
     "tailwindcss": "^4.0.0",

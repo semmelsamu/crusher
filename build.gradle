@@ -53,9 +53,9 @@ task buildTailwind(type: Exec) {
 	commandLine = ['npm', 'run', 'build:css']
 	dependsOn npmInstall
 	inputs.file('package.json')
-	inputs.file('src/main/resources/static/css/input.css')
+	inputs.file('src/main/resources/static/css/main.css')
 	inputs.dir('src/main/resources/templates')
-	outputs.file('src/main/resources/static/css/styles.css')
+	outputs.file('src/main/resources/static/css/_build.css')
 	// Ensure we use the local node_modules
 	environment 'PATH', "${projectDir}/node_modules/.bin:${System.getenv('PATH')}"
 }
