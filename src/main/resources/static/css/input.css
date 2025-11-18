@@ -1,85 +1,70 @@
 @import "tailwindcss";
 
-/* Configure content paths for Thymeleaf templates */
 @source "../../templates/**/*.html";
 
-/* Design tokens using CSS custom properties */
 @theme {
-  /* Colors - using OKLCH for better color consistency */
-  --color-primary: oklch(0.5 0.2 250);
-  --color-secondary: oklch(0.6 0.15 180);
-  --color-accent: oklch(0.7 0.2 30);
-  
-  /* Spacing */
-  --spacing-section: clamp(2rem, 5vw, 4rem);
-  
-  /* Typography */
-  --font-brand: system-ui, -apple-system, sans-serif;
+    --font-brand: system-ui, -apple-system, sans-serif;
 }
 
-/* Base layer - element resets and typography */
 @layer base {
-  body {
-    @apply font-sans antialiased;
-  }
-  
-  h1 {
-    @apply text-4xl font-bold;
-  }
-  
-  h2 {
-    @apply text-3xl font-semibold;
-  }
-  
-  h3 {
-    @apply text-2xl font-semibold;
-  }
+    body {
+        @apply font-sans antialiased;
+    }
+
+    h1 {
+        @apply text-4xl font-bold;
+    }
+
+    h2 {
+        @apply text-3xl font-semibold;
+    }
+
+    h3 {
+        @apply text-2xl font-semibold;
+    }
 }
 
-/* Components layer - reusable component styles */
 @layer components {
-  .btn {
-    @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200;
-  }
-  
-  .btn-primary {
-    @apply bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
-  }
-  
-  .btn-secondary {
-    @apply bg-gray-200 text-gray-800 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
-  }
-  
-  .card {
-    @apply bg-white rounded-lg shadow-md p-6;
-  }
-  
-  .form-input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
-  }
-  
-  .form-label {
-    @apply block text-sm font-medium text-gray-700 mb-1;
-  }
-  
-  .error-message {
-    @apply text-red-600 bg-red-50 border border-red-200 rounded-md p-3 mb-4;
-  }
-  
-  .logout-message {
-    @apply text-green-600 bg-green-50 border border-green-200 rounded-md p-3 mb-4;
-  }
+    .btn {
+        @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200;
+    }
+
+    .btn-primary {
+        @apply bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+    }
+
+    .btn-secondary {
+        @apply bg-gray-200 text-gray-800 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+    }
+
+    .card {
+        @apply bg-white rounded-lg shadow-md p-6;
+    }
+
+    .form-input {
+        @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+    }
+
+    .form-label {
+        @apply block text-sm font-medium text-gray-700 mb-1;
+    }
+
+    .error-message {
+        @apply text-red-600 bg-red-50 border border-red-200 rounded-md p-3 mb-4;
+    }
+
+    .logout-message {
+        @apply text-green-600 bg-green-50 border border-green-200 rounded-md p-3 mb-4;
+    }
 }
 
-/* Utilities layer - custom utility classes */
 @layer utilities {
-  .scrollbar-hide {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-}
+    .scrollbar-hide {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
 
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+}
