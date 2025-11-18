@@ -1,4 +1,4 @@
-package edu.oth.crusher.config;
+package de.othr.crusher.config;
 
 
 import org.springframework.context.annotation.Bean;

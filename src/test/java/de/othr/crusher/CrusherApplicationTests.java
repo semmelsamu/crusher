@@ -1,4 +1,4 @@
-package edu.oth.crusher;
+package de.othr.crusher;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
