@@ -4,49 +4,84 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <section th:if="${param.error} or ${param.logout}">
-            <p th:if="${param.error}" class="error-message">
-                Invalid username or password
-            </p>
+        <main class="max-w-md mx-auto">
+            <div class="card">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">
+                    Login
+                </h2>
 
-            <p th:if="${param.logout}" class="logout-message">
-                You have been logged out successfully
-            </p>
-        </section>
+                <section th:if="${param.error} or ${param.logout}" class="mb-6">
+                    <p th:if="${param.error}" class="error-message">
+                        Invalid username or password
+                    </p>
 
-        <section>
-            <form th:action="@{/login}" method="post">
-                <label for="username">Username</label>
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    required
-                    autofocus
-                    placeholder="Enter your username"
-                />
+                    <p th:if="${param.logout}" class="logout-message">
+                        You have been logged out successfully
+                    </p>
+                </section>
 
-                <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    required
-                    placeholder="Enter your password"
-                />
+                <form th:action="@{/login}" method="post" class="space-y-4">
+                    <div>
+                        <label for="username" class="form-label"
+                            >Username</label
+                        >
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            class="form-input"
+                            required
+                            autofocus
+                            placeholder="Enter your username"
+                        />
+                    </div>
 
-                <button type="submit" class="btn-login">Log In</button>
-            </form>
-        </section>
+                    <div>
+                        <label for="password" class="form-label"
+                            >Password</label
+                        >
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input"
+                            required
+                            placeholder="Enter your password"
+                        />
+                    </div>
 
-        <section>
-            <b>Test Accounts (all use password: test)</b>
-            <ul>
-                <li>alice (USER)</li>
-                <li>bob (SETTER)</li>
-                <li>klaus (OWNER)</li>
-                <li>crusher (ADMIN)</li>
-            </ul>
-        </section>
+                    <button type="submit" class="btn btn-primary w-full">
+                        Log In
+                    </button>
+                </form>
+            </div>
+
+            <div class="mt-8 card bg-gray-50">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                    Test Accounts
+                </h3>
+                <p class="text-sm text-gray-600 mb-3">
+                    All accounts use password: <strong>test</strong>
+                </p>
+                <ul class="space-y-2 text-sm">
+                    <li class="flex items-center gap-2">
+                        <span class="font-medium">alice</span>
+                        <span class="text-gray-500">(USER)</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="font-medium">bob</span>
+                        <span class="text-gray-500">(SETTER)</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="font-medium">klaus</span>
+                        <span class="text-gray-500">(OWNER)</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="font-medium">crusher</span>
+                        <span class="text-gray-500">(ADMIN)</span>
+                    </li>
+                </ul>
+            </div>
+        </main>
     </th:block>
 </th:block>

@@ -14,15 +14,9 @@
 
         <link rel="stylesheet" th:href="@{/css/styles.css}" />
     </head>
-    <body>
+    <body class="min-h-screen flex flex-col bg-gray-50">
         <x th:replace="~{components/nav :: nav}"></x>
-
-        <hr />
-
-        <main layout:fragment="content"></main>
-
-        <hr />
-
+        <x layout:fragment="content"></x>
         <x th:replace="~{components/footer :: footer}"></x>
     </body>
 </html>
