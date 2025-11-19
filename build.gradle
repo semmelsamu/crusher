@@ -37,7 +37,7 @@ tasks.named('test') {
 }
 
 // Task to install npm dependencies
-task npmInstall(type: Exec) {
+tasks.register('npmInstall', Exec) {
 	description = 'Install npm dependencies'
 	group = 'build'
 	commandLine = ['npm', 'install']
@@ -47,7 +47,7 @@ task npmInstall(type: Exec) {
 }
 
 // Task to build Tailwind CSS
-task buildTailwind(type: Exec) {
+tasks.register('buildTailwind', Exec) {
 	description = 'Build Tailwind CSS'
 	group = 'build'
 	commandLine = ['npm', 'run', 'build:css']
