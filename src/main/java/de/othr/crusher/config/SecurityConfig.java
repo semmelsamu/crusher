@@ -24,6 +24,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  * {@link SecurityFilterChain} that:
  * <ul>
  *     <li>Restricts access to the H2 console to users with the ADMIN role</li>
+ *     <li>Allows public access to static resources (CSS, JS, images, webjars)</li>
+ *     <li>Allows public access to the login page</li>
  *     <li>Requires authentication for all other requests</li>
  *     <li>Enables default form login and logout</li>
  * </ul>
@@ -62,6 +64,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/h2-console/**").hasRole("ADMIN")
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

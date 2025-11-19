@@ -35,3 +35,35 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// Task to install npm dependencies
+tasks.register('npmInstall', Exec) {
+	description = 'Install npm dependencies'
+	group = 'build'
+	commandLine = ['npm', 'install']
+	inputs.file('package.json')
+	outputs.dir('node_modules')
+	// Always run if node_modules doesn't exist or package.json changed
+}
+
+// Task to build Tailwind CSS
+tasks.register('buildTailwind', Exec) {
+	description = 'Build Tailwind CSS'
+	group = 'build'
+	commandLine = ['npm', 'run', 'build:css']
+	dependsOn npmInstall
+	inputs.file('package.json')
+	inputs.file('src/main/resources/static/css/main.css')
+	inputs.dir('src/main/resources/templates')
+	outputs.file('src/main/resources/static/css/_build.css')
+	// Ensure we use the local node_modules
+	environment 'PATH', "${projectDir}/node_modules/.bin:${System.getenv('PATH')}"
+}
+
+// Make processResources depend on Tailwind CSS build
+processResources.dependsOn buildTailwind
+
+// Extend clean task to also remove the generated _build.css file
+clean {
+	delete 'src/main/resources/static/css/_build.css'
+}

@@ -1,0 +1,15 @@
+.card {
+    @apply border-4 rounded-base shadow-base;
+}
+
+.button {
+    @apply bg-main text-main-foreground border-2 rounded-base shadow-base px-4 py-2 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all cursor-pointer flex items-center gap-2 justify-center;
+}
+
+.button-neutral {
+    @apply bg-secondary-background text-foreground;
+}
+
+.text-input {
+    @apply border-2 rounded-base px-3 py-2;
+}

@@ -1,0 +1,31 @@
+* {
+    border-color: var(--color-border);
+}
+
+body {
+    @apply antialiased bg-background font-main;
+}
+
+h1 {
+    @apply text-4xl font-bold;
+}
+
+h2 {
+    @apply text-3xl font-semibold;
+}
+
+h3 {
+    @apply text-2xl font-semibold;
+}
+
+dt {
+    @apply font-bold;
+}
+
+dd {
+    @apply ml-4;
+}
+
+.lucide {
+    @apply w-4 h-4;
+}

@@ -1,0 +1,26 @@
+:root {
+    --box-shadow-size: 0.25rem;
+}
+
+@theme {
+    --font-main: "DM Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+
+    --color-main: var(--color-sky-500); /* color for text */
+    --color-background: var(--color-sky-100);
+    --color-foreground: black;
+    --color-main-foreground: black; /* color for text when background is set to main */
+    --color-border: black;
+    --color-secondary-background: white;
+    --color-overlay: rgba(0, 0, 0, 0.8);
+
+    --color-error: var(--color-red-500);
+
+    --radius-*: initial;
+    --radius-base: 0.25rem;
+
+    --shadow-*: initial;
+    --shadow-base: var(--box-shadow-size) var(--box-shadow-size) 0
+        var(--color-border);
+}

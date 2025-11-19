@@ -12,17 +12,19 @@
             Crusher
         </title>
 
-        <link rel="stylesheet" th:href="@{/css/styles.css}" />
+        <link rel="stylesheet" th:href="@{/css/_build.css}" />
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap"
+            rel="stylesheet"
+        />
     </head>
-    <body>
+    <body class="min-h-screen flex flex-col">
         <x th:replace="~{components/nav :: nav}"></x>
-
-        <hr />
-
-        <main layout:fragment="content"></main>
-
-        <hr />
-
+        <x layout:fragment="content"></x>
         <x th:replace="~{components/footer :: footer}"></x>
     </body>
 </html>
