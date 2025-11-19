@@ -60,3 +60,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### MacOS ###
+.DS_Store
