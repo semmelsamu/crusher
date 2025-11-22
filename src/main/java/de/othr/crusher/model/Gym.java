@@ -14,7 +14,6 @@ public class Gym {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name cannot be blank")
     @Column(nullable = false)
     private String name;
 
@@ -24,7 +23,6 @@ public class Gym {
     @Column(nullable = false)
     private String city;
 
-    @NotBlank(message = "Email cannot be blank")
     @Column(nullable = false)
     private String email;
 

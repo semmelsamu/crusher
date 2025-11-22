@@ -4,9 +4,7 @@ import de.othr.crusher.model.Gym;
 import de.othr.crusher.repository.GymRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
@@ -23,6 +21,7 @@ public class GymController {
     public String showAllGyms(Model model) {
 
         model.addAttribute("gyms", gymRepository.findAll());
+        model.addAttribute("newGym", new Gym());
 
         return "pages/admin/gyms";
     }
@@ -36,5 +35,11 @@ public class GymController {
         model.addAttribute("gym", gym);
 
         return "pages/admin/gym";
+    }
+
+    @PostMapping
+    public String createGym(@ModelAttribute Gym newGym) {
+        gymRepository.save(newGym);
+        return "redirect:/admin/gyms";
     }
 }
