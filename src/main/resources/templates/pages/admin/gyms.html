@@ -15,13 +15,14 @@
                     <a th:href="@{/admin/gyms/{id}(id=${gym.id})}">
                         <p th:text="${gym.name}" class="mt-2"></p>
                     </a>
-                </div>
 
-                <!-- Create new -->
-                <div class="text-center">
-                    <a th:href="@{/admin/gyms/new}">
-                        <p class="mt-2">Create New</p>
-                    </a>
+                    <!-- Delete Button -->
+                    <form th:action="@{/admin/gyms/{id}(id=${gym.id})}" method="post" th:object="${gym}" onsubmit="return confirm('Delete Gym?');">
+                        <input type="hidden" name="_method" value="delete"/>
+                        <button type="submit" class="text-red-600 ml-4 hover:text-red-800">
+                            &#128465; <!-- Papierkorb-Icon -->
+                        </button>
+                    </form>
                 </div>
 
             </div>

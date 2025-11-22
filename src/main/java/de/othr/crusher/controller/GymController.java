@@ -42,4 +42,10 @@ public class GymController {
         gymRepository.save(newGym);
         return "redirect:/admin/gyms";
     }
+
+    @DeleteMapping("/{id}")
+    public String deleteGym(@PathVariable("id") long id) {
+        gymRepository.deleteById(id);
+        return "redirect:/admin/gyms";
+    }
 }
