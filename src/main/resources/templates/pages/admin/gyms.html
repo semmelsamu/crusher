@@ -34,21 +34,37 @@
                 <div>
                     <label>Name</label>
                     <input th:field="*{name}" class="border w-full p-2"/>
+                    <p th:if="${#fields.hasErrors('name')}"
+                       th:errors="*{name}"
+                       class="text-red-600 text-sm mt-1">
+                    </p>
                 </div>
 
                 <div>
                     <label>Street</label>
                     <input th:field="*{street}" class="border w-full p-2"/>
+                    <p th:if="${#fields.hasErrors('street')}"
+                       th:errors="*{street}"
+                       class="text-red-600 text-sm mt-1">
+                    </p>
                 </div>
 
                 <div>
                     <label>City</label>
                     <input th:field="*{city}" class="border w-full p-2"/>
+                    <p th:if="${#fields.hasErrors('city')}"
+                       th:errors="*{city}"
+                       class="text-red-600 text-sm mt-1">
+                    </p>
                 </div>
 
                 <div>
                     <label>Email</label>
                     <input th:field="*{email}" class="border w-full p-2"/>
+                    <p th:if="${#fields.hasErrors('email')}"
+                       th:errors="*{email}"
+                       class="text-red-600 text-sm mt-1">
+                    </p>
                 </div>
 
                 <button class="px-4 py-2 bg-blue-600 text-white rounded">

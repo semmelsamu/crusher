@@ -1,6 +1,7 @@
 package de.othr.crusher.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 
@@ -15,15 +16,20 @@ public class Gym {
     private Long id;
 
     @Column(nullable = false)
+    @NotBlank(message = "Please enter a name")
     private String name;
 
     @Column(nullable = false)
+    @NotBlank(message = "Please enter a street")
     private String street;
 
     @Column(nullable = false)
+    @NotBlank(message = "Please enter a city")
     private String city;
 
     @Column(nullable = false)
+    @NotBlank(message = "Please enter a email")
+    @Email(message = "Please enter a correct email")
     private String email;
 
     public Gym() {}

@@ -2,8 +2,10 @@ package de.othr.crusher.controller;
 
 import de.othr.crusher.model.Gym;
 import de.othr.crusher.repository.GymRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -38,7 +40,13 @@ public class GymController {
     }
 
     @PostMapping
-    public String createGym(@ModelAttribute Gym newGym) {
+    public String createGym(@Valid @ModelAttribute("newGym") Gym newGym, BindingResult result, Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("gyms", gymRepository.findAll());
+            return "pages/admin/gyms";
+        }
+
         gymRepository.save(newGym);
         return "redirect:/admin/gyms";
     }
