@@ -1,0 +1,36 @@
+<th:block
+        layout:decorate="~{layouts/main}"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+
+        <div class="my-12">
+            <h2 class="text-2xl mb-6">Gyms</h2>
+
+            <div class="grid grid-cols-3 gap-8">
+
+                <!-- Existing gyms -->
+                <div th:each="gym : ${gyms}" class="text-center">
+                    <a th:href="@{/admin/gyms/{id}(id=${gym.id})}">
+                        <div style="width: 280px; height: 160px; border: 1px solid #ccc;"></div>
+                        <p th:text="${gym.name}" class="mt-2"></p>
+                    </a>
+                </div>
+
+                <!-- Create new -->
+                <div class="text-center">
+                    <a th:href="@{/admin/gyms/new}">
+                        <div style="width: 280px; height: 160px; border: 1px solid #ccc;
+                                    display: flex; justify-content: center; align-items: center;">
+                            +
+                        </div>
+                        <p class="mt-2">Create New</p>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </th:block>
+</th:block>
