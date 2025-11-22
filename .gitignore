@@ -71,3 +71,6 @@ yarn-error.log*
 
 ### MacOS ###
 .DS_Store
+
+### Java Version Manager ###
+.java-version
