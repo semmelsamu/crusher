@@ -13,7 +13,6 @@
                 <!-- Existing gyms -->
                 <div th:each="gym : ${gyms}" class="text-center">
                     <a th:href="@{/admin/gyms/{id}(id=${gym.id})}">
-                        <div style="width: 280px; height: 160px; border: 1px solid #ccc;"></div>
                         <p th:text="${gym.name}" class="mt-2"></p>
                     </a>
                 </div>
@@ -21,10 +20,6 @@
                 <!-- Create new -->
                 <div class="text-center">
                     <a th:href="@{/admin/gyms/new}">
-                        <div style="width: 280px; height: 160px; border: 1px solid #ccc;
-                                    display: flex; justify-content: center; align-items: center;">
-                            +
-                        </div>
                         <p class="mt-2">Create New</p>
                     </a>
                 </div>
