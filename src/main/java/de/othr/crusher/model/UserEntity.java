@@ -2,7 +2,6 @@ package de.othr.crusher.model;
 
 import jakarta.persistence.*;
 
-
 /**
  * Entity representing a user in the system.
  * <p>
