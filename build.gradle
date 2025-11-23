@@ -14,6 +14,16 @@ java {
 	}
 }
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -59,6 +69,40 @@ tasks.register('buildTailwind', Exec) {
 	outputs.file('src/main/resources/static/css/_build.css')
 	// Ensure we use the local node_modules
 	environment 'PATH', "${projectDir}/node_modules/.bin:${System.getenv('PATH')}"
+}
+
+tasks.register('watchTailwind', Exec) {
+	description = 'Watch Tailwind CSS and rebuild on changes'
+	group = 'application'
+	commandLine = ['npm', 'run', 'watch:css']
+	dependsOn npmInstall
+	workingDir projectDir
+	environment 'PATH', "${projectDir}/node_modules/.bin:${System.getenv('PATH')}"
+}
+
+tasks.register('dev', org.springframework.boot.gradle.tasks.run.BootRun) {
+	description = 'Run the app with Spring Boot DevTools and Tailwind CSS watcher'
+	group = 'application'
+	mainClass = 'de.othr.crusher.CrusherApplication'
+	classpath = sourceSets.main.runtimeClasspath
+	// Put resource folders on the runtime classpath so template/static changes are picked up without rebuilds
+	sourceResources sourceSets.main
+	dependsOn npmInstall
+	systemProperty 'spring.profiles.active', 'dev'
+
+	doFirst {
+		def tailwindPath = "${projectDir}/node_modules/.bin${File.pathSeparator}${System.getenv('PATH')}".toString()
+		def tailwindBuilder = new ProcessBuilder('npm', 'run', 'watch:css')
+				.directory(projectDir)
+		tailwindBuilder.environment().put('PATH', tailwindPath)
+		tailwindBuilder.inheritIO()
+		def tailwind = tailwindBuilder.start()
+		println "Tailwind CSS watcher started (PID ${tailwind.pid()})."
+
+		addShutdownHook {
+			tailwind.destroy()
+		}
+	}
 }
 
 // Make processResources depend on Tailwind CSS build
