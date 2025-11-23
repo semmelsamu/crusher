@@ -41,7 +41,12 @@ public class SectorController {
     }
 
     /**
-     * Displays details for a specific sector.
+     * Displays details for a specific sector based on gym and sector IDs.
+     *
+     * @param gymId identifier of the parent gym
+     * @param sectorId identifier of the sector
+     * @param model Spring model to pass data to the view
+     * @return view name for the sector detail page
      */
     @GetMapping("/{sectorId}")
     public String showSector(
@@ -58,6 +63,10 @@ public class SectorController {
 
     /**
      * Displays the form for creating a new sector for a gym.
+     *
+     * @param gymId identifier of the parent gym
+     * @param model Spring model to pass data to the view
+     * @return view name for the sector creation form
      */
     @GetMapping("/new")
     public String showCreateForm(@PathVariable("gymId") long gymId, Model model) {
@@ -73,6 +82,11 @@ public class SectorController {
 
     /**
      * Displays the form for editing an existing sector.
+     *
+     * @param gymId identifier of the parent gym
+     * @param sectorId identifier of the sector
+     * @param model Spring model to pass data to the view
+     * @return view name for the sector edit form
      */
     @GetMapping("/{sectorId}/edit")
     public String showEditForm(
@@ -88,7 +102,14 @@ public class SectorController {
     }
 
     /**
-     * Creates a new sector for the given gym.
+     * Creates a new sector for the given gym. Validates input and either redisplays
+     * the form with errors or saves the new sector.
+     *
+     * @param gymId identifier of the parent gym
+     * @param sector sector payload from the form
+     * @param result validation result
+     * @param model Spring model for re-rendering the form if needed
+     * @return redirect to the sector detail page or back to the form on validation errors
      */
     @PostMapping
     public String createSector(
@@ -113,7 +134,16 @@ public class SectorController {
     }
 
     /**
-     * Updates an existing sector.
+     * Updates an existing sector. Supports removing the image (resets to default) and
+     * keeps the user on the edit page when removal is requested.
+     *
+     * @param gymId identifier of the parent gym
+     * @param sectorId identifier of the sector
+     * @param formSector sector payload from the form
+     * @param result validation result
+     * @param removeImage whether to reset the image to the default placeholder
+     * @param model Spring model for re-rendering the form if needed
+     * @return redirect to the detail page or back to edit when removing the image/validation errors
      */
     @PutMapping("/{sectorId}")
     public String updateSector(
@@ -149,6 +179,10 @@ public class SectorController {
 
     /**
      * Deletes an existing sector.
+     *
+     * @param gymId identifier of the parent gym
+     * @param sectorId identifier of the sector
+     * @return redirect to the gym detail page
      */
     @DeleteMapping("/{sectorId}")
     public String deleteSector(
