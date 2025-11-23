@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "gyms")
-public class Gym {
+public class GymEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,11 +36,11 @@ public class Gym {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY)
-    private List<Sector> sectors = new ArrayList<>();
+    private List<SectorEntity> sectors = new ArrayList<>();
 
-    public Gym() {}
+    public GymEntity() {}
 
-    public Gym(String name, String street, String city, String email) {
+    public GymEntity(String name, String street, String city, String email) {
         this.name = name;
         this.street = street;
         this.city = city;
@@ -84,16 +84,16 @@ public class Gym {
         this.email = email;
     }
 
-    public List<Sector> getSectors() {
+    public List<SectorEntity> getSectors() {
         return sectors;
     }
 
-    public void addSector(Sector sector) {
+    public void addSector(SectorEntity sector) {
         sectors.add(sector);
         sector.setGym(this);
     }
 
-    public void removeSector(Sector sector) {
+    public void removeSector(SectorEntity sector) {
         sectors.remove(sector);
         sector.setGym(null);
     }

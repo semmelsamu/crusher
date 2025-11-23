@@ -17,7 +17,7 @@ import jakarta.validation.constraints.NotBlank;
  */
 @Entity
 @Table(name = "sectors")
-public class Sector {
+public class SectorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,11 +36,11 @@ public class Sector {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "gym_id", nullable = false)
-    private Gym gym;
+    private GymEntity gym;
 
-    public Sector() {}
+    public SectorEntity() {}
 
-    public Sector(String name, String description, String imagePath, Gym gym) {
+    public SectorEntity(String name, String description, String imagePath, GymEntity gym) {
         this.name = name;
         this.description = description;
         this.imagePath = imagePath;
@@ -75,11 +75,11 @@ public class Sector {
         this.imagePath = imagePath;
     }
 
-    public Gym getGym() {
+    public GymEntity getGym() {
         return gym;
     }
 
-    public void setGym(Gym gym) {
+    public void setGym(GymEntity gym) {
         this.gym = gym;
     }
 }

@@ -1,7 +1,7 @@
 package de.othr.crusher.controller;
 
-import de.othr.crusher.model.Gym;
-import de.othr.crusher.model.Sector;
+import de.othr.crusher.model.GymEntity;
+import de.othr.crusher.model.SectorEntity;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.SectorRepository;
 import jakarta.validation.Valid;
@@ -48,8 +48,8 @@ public class SectorController {
             @PathVariable("gymId") long gymId,
             @PathVariable("sectorId") long sectorId,
             Model model) {
-        Gym gym = findGymOrThrow(gymId);
-        Sector sector = findSectorInGymOrThrow(gymId, sectorId);
+        GymEntity gym = findGymOrThrow(gymId);
+        SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
@@ -61,8 +61,8 @@ public class SectorController {
      */
     @GetMapping("/new")
     public String showCreateForm(@PathVariable("gymId") long gymId, Model model) {
-        Gym gym = findGymOrThrow(gymId);
-        Sector sector = new Sector();
+        GymEntity gym = findGymOrThrow(gymId);
+        SectorEntity sector = new SectorEntity();
         sector.setGym(gym);
         sector.setImagePath(DEFAULT_IMAGE_PATH);
 
@@ -79,8 +79,8 @@ public class SectorController {
             @PathVariable("gymId") long gymId,
             @PathVariable("sectorId") long sectorId,
             Model model) {
-        Gym gym = findGymOrThrow(gymId);
-        Sector sector = findSectorInGymOrThrow(gymId, sectorId);
+        GymEntity gym = findGymOrThrow(gymId);
+        SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
@@ -93,10 +93,10 @@ public class SectorController {
     @PostMapping
     public String createSector(
             @PathVariable("gymId") long gymId,
-            @Valid @ModelAttribute("sector") Sector sector,
+            @Valid @ModelAttribute("sector") SectorEntity sector,
             BindingResult result,
             Model model) {
-        Gym gym = findGymOrThrow(gymId);
+        GymEntity gym = findGymOrThrow(gymId);
 
         if (result.hasErrors()) {
             model.addAttribute("gym", gym);
@@ -108,7 +108,7 @@ public class SectorController {
             sector.setImagePath(DEFAULT_IMAGE_PATH);
         }
 
-        Sector saved = sectorRepository.save(sector);
+        SectorEntity saved = sectorRepository.save(sector);
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + saved.getId();
     }
 
@@ -119,12 +119,12 @@ public class SectorController {
     public String updateSector(
             @PathVariable("gymId") long gymId,
             @PathVariable("sectorId") long sectorId,
-            @Valid @ModelAttribute("sector") Sector formSector,
+            @Valid @ModelAttribute("sector") SectorEntity formSector,
             BindingResult result,
             @RequestParam(value = "removeImage", required = false) boolean removeImage,
             Model model) {
-        Gym gym = findGymOrThrow(gymId);
-        Sector sector = findSectorInGymOrThrow(gymId, sectorId);
+        GymEntity gym = findGymOrThrow(gymId);
+        SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
         if (result.hasErrors()) {
             model.addAttribute("gym", gym);
@@ -154,19 +154,19 @@ public class SectorController {
     public String deleteSector(
             @PathVariable("gymId") long gymId, @PathVariable("sectorId") long sectorId) {
         findGymOrThrow(gymId);
-        Sector sector = findSectorInGymOrThrow(gymId, sectorId);
+        SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
         sectorRepository.delete(sector);
         return "redirect:/admin/gyms/" + gymId;
     }
 
-    private Gym findGymOrThrow(long gymId) {
+    private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
                 .findById(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 
-    private Sector findSectorInGymOrThrow(long gymId, long sectorId) {
-        Sector sector = sectorRepository
+    private SectorEntity findSectorInGymOrThrow(long gymId, long sectorId) {
+        SectorEntity sector = sectorRepository
                 .findById(sectorId)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sector not found"));
