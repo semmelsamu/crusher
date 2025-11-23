@@ -1,0 +1,74 @@
+<th:block
+        layout:decorate="~{layouts/main}"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+  <th:block layout:fragment="content">
+
+    <div class="my-12">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <p class="text-sm text-gray-600" th:text="${gym.name}">Gym Name</p>
+          <h2 class="text-2xl font-semibold" th:text="${sector.id} != null ? 'Edit Sector' : 'New Sector'">Edit Sector</h2>
+        </div>
+        <a th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}" class="px-3 py-2 border rounded">Back</a>
+      </div>
+
+      <form th:action="${sector.id} != null ?
+                        @{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})} :
+                        @{/admin/gyms/{gymId}/sectors(gymId=${gym.id})}"
+            th:object="${sector}"
+            method="post"
+            class="space-y-6"
+      >
+        <input type="hidden" name="_method" th:value="${sector.id} != null ? 'put' : 'post'"/>
+
+        <div>
+          <label class="block font-medium">Name</label>
+          <input th:field="*{name}" class="border w-full p-2 rounded"/>
+          <p th:if="${#fields.hasErrors('name')}"
+             th:errors="*{name}"
+             class="text-red-600 text-sm mt-1">
+          </p>
+        </div>
+
+        <div>
+          <label class="block font-medium">Description</label>
+          <textarea th:field="*{description}" class="border w-full p-2 rounded" rows="4"></textarea>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block font-medium">Image</label>
+          <img th:src="${sector.imagePath}" alt="Sector image" class="w-full h-48 object-cover rounded bg-gray-100">
+          <div class="flex space-x-2">
+            <button type="button" class="px-3 py-2 border rounded bg-gray-100 cursor-not-allowed" disabled>
+              Upload Image (coming soon)
+            </button>
+            <button type="submit" name="removeImage" value="true" class="px-3 py-2 border rounded">
+              Remove Image
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+          <a th:if="${sector.id != null}"
+             th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+             class="px-3 py-2 border rounded">
+            Cancel
+          </a>
+        </div>
+      </form>
+
+      <div class="mt-8" th:if="${sector.id != null}">
+        <form th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+              method="post"
+              onsubmit="return confirm('Delete Sector?');">
+          <input type="hidden" name="_method" value="delete"/>
+          <button type="submit" class="px-3 py-2 text-white bg-red-600 rounded">Delete Sector</button>
+        </form>
+      </div>
+    </div>
+
+  </th:block>
+</th:block>
