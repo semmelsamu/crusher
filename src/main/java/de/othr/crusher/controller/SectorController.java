@@ -141,6 +141,9 @@ public class SectorController {
         }
 
         sectorRepository.save(sector);
+        if (removeImage) {
+            return "redirect:/admin/gyms/" + gymId + "/sectors/" + sector.getId() + "/edit";
+        }
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sector.getId();
     }
 
