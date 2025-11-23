@@ -3,9 +3,8 @@ package de.othr.crusher.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
-
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "gyms")
@@ -31,6 +30,13 @@ public class Gym {
     @NotBlank(message = "Please enter a email")
     @Email(message = "Please enter a correct email")
     private String email;
+
+    @OneToMany(
+            mappedBy = "gym",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<Sector> sectors = new ArrayList<>();
 
     public Gym() {}
 
@@ -76,5 +82,19 @@ public class Gym {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Sector> getSectors() {
+        return sectors;
+    }
+
+    public void addSector(Sector sector) {
+        sectors.add(sector);
+        sector.setGym(this);
+    }
+
+    public void removeSector(Sector sector) {
+        sectors.remove(sector);
+        sector.setGym(null);
     }
 }

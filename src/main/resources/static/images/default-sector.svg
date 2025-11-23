@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="200" height="120">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="120" fill="url(#grad)" rx="12" ry="12"/>
+  <g fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round">
+    <path d="M30 90 L70 40 L110 70 L150 30" />
+    <circle cx="70" cy="40" r="6" fill="#38bdf8"/>
+    <circle cx="110" cy="70" r="6" fill="#38bdf8"/>
+    <circle cx="150" cy="30" r="6" fill="#38bdf8"/>
+  </g>
+  <text x="20" y="105" fill="#e2e8f0" font-family="Arial, sans-serif" font-size="14">Sector preview</text>
+</svg>
