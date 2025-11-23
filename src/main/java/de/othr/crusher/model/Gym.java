@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-
-import java.io.Serializable;
-
 @Entity
 @Table(name = "gyms")
 public class Gym {
