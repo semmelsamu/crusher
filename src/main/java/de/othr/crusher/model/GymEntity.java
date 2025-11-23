@@ -6,6 +6,13 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity representing a climbing gym.
+ * <p>
+ * Maps to the {@code gyms} table and stores the gym's contact details (name, street,
+ * city, email) along with its associated sectors.
+ * </p>
+ */
 @Entity
 @Table(name = "gyms")
 public class GymEntity {

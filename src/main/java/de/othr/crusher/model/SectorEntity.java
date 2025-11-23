@@ -13,7 +13,11 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * Entity representing a climbing sector that belongs to exactly one gym.
+ * Entity representing a climbing sector belonging to exactly one gym.
+ * <p>
+ * Maps to the {@code sectors} table and stores the sector name, optional description,
+ * an image path (defaults to a placeholder), and a reference to its owning gym.
+ * </p>
  */
 @Entity
 @Table(name = "sectors")
@@ -28,7 +32,6 @@ public class SectorEntity {
     private String name;
 
     @Column
-    @NotBlank(message = "Please enter a description (optional)")
     private String description;
 
     @Column(name = "image_path")
