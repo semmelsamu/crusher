@@ -1,0 +1,97 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="container mx-auto px-4 py-16 space-y-8">
+            <h1>Components</h1>
+
+            <h2>Buttons</h2>
+
+            <div class="flex gap-4">
+                <div class="space-y-4 *:w-full">
+                    <p>Default</p>
+                    <button class="button">Button</button>
+                    <button class="button button-primary">Primary</button>
+                    <button class="button button-danger">Danger</button>
+                    <button class="button button-success">Success</button>
+                    <button class="button button-warning">Warning</button>
+                    <button class="button button-ghost">Ghost</button>
+                </div>
+                <div class="space-y-4 *:w-full">
+                    <p>With Icon</p>
+                    <button class="button">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x
+                        >Button
+                    </button>
+                    <button class="button button-primary">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x
+                        >Primary
+                    </button>
+                    <button class="button button-danger">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x
+                        >Danger
+                    </button>
+                    <button class="button button-success">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x
+                        >Success
+                    </button>
+                    <button class="button button-warning">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x
+                        >Warning
+                    </button>
+                    <button class="button button-ghost">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x
+                        >Ghost
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <p>Icon Only</p>
+                    <button class="button button-square">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x>
+                    </button>
+                    <button class="button button-primary button-square">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x>
+                    </button>
+                    <button class="button button-danger button-square">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x>
+                    </button>
+                    <button class="button button-success button-square">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x>
+                    </button>
+                    <button class="button button-warning button-square">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x>
+                    </button>
+                    <button class="button button-ghost button-square">
+                        <x
+                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                        ></x>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </th:block>
+</th:block>

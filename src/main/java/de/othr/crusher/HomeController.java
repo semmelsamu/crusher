@@ -12,4 +12,9 @@ public class HomeController {
     public String readersBooks() {
         return "pages/home";
     }
+    
+    @RequestMapping(value="/components", method= RequestMethod.GET)
+    public String components() {
+        return "pages/components";
+    }
 }

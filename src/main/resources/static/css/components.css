@@ -3,11 +3,31 @@
 }
 
 .button {
-    @apply bg-main text-main-foreground border-2 rounded-base shadow-base px-4 py-2 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all cursor-pointer flex items-center gap-2 justify-center;
+    @apply text-main-foreground border-2 rounded-base shadow-base px-4 h-12 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background text-foreground;
 }
 
-.button-neutral {
-    @apply bg-secondary-background text-foreground;
+.button-primary {
+    @apply bg-main text-main-foreground;
+}
+
+.button-danger {
+    @apply bg-error text-main-foreground;
+}
+
+.button-success {
+    @apply bg-success text-main-foreground;
+}
+
+.button-warning {
+    @apply bg-warning text-main-foreground;
+}
+
+.button-ghost {
+    @apply bg-transparent text-foreground border-none outline-none shadow-none hover:translate-none;
+}
+
+.button-square {
+    @apply px-0 aspect-square;
 }
 
 .text-input {
