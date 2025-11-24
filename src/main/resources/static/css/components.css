@@ -11,5 +11,9 @@
 }
 
 .text-input {
-    @apply border-2 rounded-base px-3 py-2;
+    @apply border-2 rounded-base px-3 py-2 outline-none;
+}
+
+.text-input:focus {
+    @apply outline-border outline-solid outline;
 }
