@@ -1,6 +1,6 @@
 package de.othr.crusher.controller;
 
-import de.othr.crusher.model.Gym;
+import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.repository.GymRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,7 @@ public class GymController {
     @GetMapping
     public String showAllGyms(Model model) {
         model.addAttribute("gyms", gymRepository.findAll());
-        model.addAttribute("newGym", new Gym());
+        model.addAttribute("newGym", new GymEntity());
         return "pages/admin/gyms";
     }
 
@@ -50,7 +50,7 @@ public class GymController {
      */
     @GetMapping("/{id}")
     public String showGymForId(@PathVariable("id") long id, Model model) {
-        Gym gym = gymRepository.findById(id)
+        GymEntity gym = gymRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Gym not found"));
 
         model.addAttribute("gym", gym);
@@ -67,7 +67,7 @@ public class GymController {
      * @return redirect to the gym list or the form view if errors occur
      */
     @PostMapping
-    public String createGym(@Valid @ModelAttribute("newGym") Gym newGym, BindingResult result, Model model) {
+    public String createGym(@Valid @ModelAttribute("newGym") GymEntity newGym, BindingResult result, Model model) {
 
         if (result.hasErrors()) {
             model.addAttribute("gyms", gymRepository.findAll());

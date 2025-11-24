@@ -3,10 +3,19 @@ package de.othr.crusher.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Entity representing a climbing gym.
+ * <p>
+ * Maps to the {@code gyms} table and stores the gym's contact details (name, street,
+ * city, email) along with its associated sectors.
+ * </p>
+ */
 @Entity
 @Table(name = "gyms")
-public class Gym {
+public class GymEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +38,16 @@ public class Gym {
     @Email(message = "Please enter a correct email")
     private String email;
 
-    public Gym() {}
+    @OneToMany(
+            mappedBy = "gym",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<SectorEntity> sectors = new ArrayList<>();
 
-    public Gym(String name, String street, String city, String email) {
+    public GymEntity() {}
+
+    public GymEntity(String name, String street, String city, String email) {
         this.name = name;
         this.street = street;
         this.city = city;
@@ -73,5 +89,19 @@ public class Gym {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<SectorEntity> getSectors() {
+        return sectors;
+    }
+
+    public void addSector(SectorEntity sector) {
+        sectors.add(sector);
+        sector.setGym(this);
+    }
+
+    public void removeSector(SectorEntity sector) {
+        sectors.remove(sector);
+        sector.setGym(null);
     }
 }
