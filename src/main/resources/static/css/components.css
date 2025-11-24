@@ -8,7 +8,7 @@
 */
 
 .button {
-    @apply border-2 rounded-base shadow-base px-4 h-12 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background;
+    @apply border-2 rounded-base shadow-base px-4 h-12 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background focus:outline-none;
 }
 
 .button-primary {
@@ -59,4 +59,18 @@
 
 .text-input:disabled {
     @apply border-foreground-muted;
+}
+
+/*
+|-------------------------------------------------------------------------------
+| Dialogs
+|-------------------------------------------------------------------------------
+*/
+
+::backdrop {
+    @apply bg-overlay;
+}
+
+.dialog {
+    @apply border-2 shadow-base rounded-base p-4 bg-background text-foreground w-full mx-4 sm:max-w-md sm:mx-auto mt-32!;
 }

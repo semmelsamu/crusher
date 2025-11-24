@@ -23,37 +23,37 @@
                     <p>With Icon</p>
                     <button class="button">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x
                         >Button
                     </button>
                     <button class="button button-primary">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x
                         >Primary
                     </button>
                     <button class="button button-danger">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x
                         >Danger
                     </button>
                     <button class="button button-success">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x
                         >Success
                     </button>
                     <button class="button button-warning">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x
                         >Warning
                     </button>
                     <button class="button button-ghost">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x
                         >Ghost
                     </button>
@@ -62,32 +62,32 @@
                     <p>Icon Only</p>
                     <button class="button button-square">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x>
                     </button>
                     <button class="button button-primary button-square">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x>
                     </button>
                     <button class="button button-danger button-square">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x>
                     </button>
                     <button class="button button-success button-square">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x>
                     </button>
                     <button class="button button-warning button-square">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x>
                     </button>
                     <button class="button button-ghost button-square">
                         <x
-                            th:replace="~{components/icons/square-arrow-out-up-right :: square-arrow-out-up-right}"
+                            th:replace="~{components/icons :: square-arrow-out-up-right}"
                         ></x>
                     </button>
                 </div>
@@ -125,6 +125,34 @@
                     type="text"
                     placeholder="Text Input"
                 />
+            </div>
+
+            <h2>Dialogs</h2>
+            <div class="space-y-4">
+                <p>Default</p>
+                <button class="button" onclick="openDialog('dialog-1')">
+                    Open Dialog
+                </button>
+                <dialog id="dialog-1" class="dialog space-y-4" closedby="any">
+                    <h3>Dialog</h3>
+                    <p>This is a dialog</p>
+                    <div class="flex justify-end gap-4">
+                        <button
+                            autofocus
+                            class="button"
+                            onclick="closeDialog('dialog-1')"
+                        >
+                            Close
+                        </button>
+                        <button
+                            autofocus
+                            class="button button-primary"
+                            onclick="closeDialog('dialog-1')"
+                        >
+                            OK
+                        </button>
+                    </div>
+                </dialog>
             </div>
         </main>
     </th:block>
