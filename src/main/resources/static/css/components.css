@@ -1,9 +1,14 @@
 .card {
     @apply border-4 rounded-base shadow-base;
 }
+/*
+|-------------------------------------------------------------------------------
+| Buttons
+|-------------------------------------------------------------------------------
+*/
 
 .button {
-    @apply text-main-foreground border-2 rounded-base shadow-base px-4 h-12 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background text-foreground;
+    @apply border-2 rounded-base shadow-base px-4 h-12 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background;
 }
 
 .button-primary {
@@ -30,10 +35,28 @@
     @apply px-0 aspect-square;
 }
 
+.button:disabled {
+    @apply shadow-none border-foreground-muted text-foreground-muted hover:translate-none cursor-default;
+}
+
+/*
+|-------------------------------------------------------------------------------
+| Inputs
+|-------------------------------------------------------------------------------
+*/
+
 .text-input {
-    @apply border-2 rounded-base px-3 py-2 outline-none;
+    @apply border-2 rounded-base px-3 py-2 outline-none bg-secondary-background text-foreground;
+}
+
+.text-input::placeholder {
+    @apply text-foreground-muted;
 }
 
 .text-input:focus {
     @apply outline-border outline-solid outline;
+}
+
+.text-input:disabled {
+    @apply border-foreground-muted;
 }

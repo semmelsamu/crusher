@@ -5,7 +5,7 @@
 >
     <th:block layout:fragment="content">
         <main class="container mx-auto px-4 py-16 space-y-8">
-            <h1>Components</h1>
+            <h1>Component Reference</h1>
 
             <h2>Buttons</h2>
 
@@ -91,6 +91,40 @@
                         ></x>
                     </button>
                 </div>
+                <div class="space-y-4 *:w-full">
+                    <p>Disabled</p>
+                    <button class="button" disabled>Button</button>
+                    <button class="button button-primary" disabled>
+                        Primary
+                    </button>
+                    <button class="button button-danger" disabled>
+                        Danger
+                    </button>
+                    <button class="button button-success" disabled>
+                        Success
+                    </button>
+                    <button class="button button-warning" disabled>
+                        Warning
+                    </button>
+                    <button class="button button-ghost" disabled>Ghost</button>
+                </div>
+            </div>
+
+            <h2>Inputs</h2>
+            <div class="space-y-4">
+                <p>Default</p>
+                <input
+                    class="text-input"
+                    type="text"
+                    placeholder="Text Input"
+                />
+                <p>Disabled</p>
+                <input
+                    disabled
+                    class="text-input"
+                    type="text"
+                    placeholder="Text Input"
+                />
             </div>
         </main>
     </th:block>
