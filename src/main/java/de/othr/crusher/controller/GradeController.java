@@ -1,8 +1,9 @@
 package de.othr.crusher.controller;
 
 import de.othr.crusher.model.GradeEntity;
-import de.othr.crusher.service.GradeService;
+import de.othr.crusher.repository.GradeRepository;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Controller for viewing and editing grades within a gym in the admin area.
@@ -20,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin/gyms/{gymId}/grades")
 public class GradeController {
 
-    private final GradeService gradeService;
+    private final GradeRepository gradeRepository;
 
-    public GradeController(GradeService gradeService) {
-        this.gradeService = gradeService;
+    public GradeController(GradeRepository gradeRepository) {
+        this.gradeRepository = gradeRepository;
     }
 
     /**
@@ -39,7 +41,7 @@ public class GradeController {
             @PathVariable("gymId") long gymId,
             @PathVariable("gradeId") long gradeId,
             Model model) {
-        GradeEntity grade = gradeService.findGradeInGym(gymId, gradeId);
+        GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
         return "pages/admin/grade";
@@ -58,7 +60,7 @@ public class GradeController {
             @PathVariable("gymId") long gymId,
             @PathVariable("gradeId") long gradeId,
             Model model) {
-        GradeEntity grade = gradeService.findGradeInGym(gymId, gradeId);
+        GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
         return "pages/admin/grade-edit";
@@ -82,7 +84,7 @@ public class GradeController {
             BindingResult result,
             Model model) {
         if (result.hasErrors()) {
-            GradeEntity grade = gradeService.findGradeInGym(gymId, gradeId);
+            GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
             grade.setName(formGrade.getName());
             grade.setDescription(formGrade.getDescription());
             grade.setVScale(formGrade.getVScale());
@@ -93,7 +95,12 @@ public class GradeController {
             return "pages/admin/grade-edit";
         }
 
-        gradeService.updateGrade(gymId, gradeId, formGrade);
+        GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
+        grade.setName(formGrade.getName());
+        grade.setDescription(formGrade.getDescription());
+        grade.setVScale(formGrade.getVScale());
+        grade.setFontScale(formGrade.getFontScale());
+        gradeRepository.save(grade);
         return "redirect:/admin/gyms/" + gymId + "/grades/" + gradeId;
     }
 
@@ -106,7 +113,20 @@ public class GradeController {
      */
     @DeleteMapping("/{gradeId}")
     public String deleteGrade(@PathVariable("gymId") long gymId, @PathVariable("gradeId") long gradeId) {
-        gradeService.deleteGrade(gymId, gradeId);
+        GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
+        gradeRepository.delete(grade);
         return "redirect:/admin/gyms/" + gymId;
+    }
+
+    private GradeEntity findGradeInGymOrThrow(long gymId, long gradeId) {
+        GradeEntity grade = gradeRepository
+                .findById(gradeId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Grade not found"));
+
+        if (grade.getGym() == null || grade.getGym().getId() == null
+                || !grade.getGym().getId().equals(gymId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Grade does not belong to gym");
+        }
+        return grade;
     }
 }
