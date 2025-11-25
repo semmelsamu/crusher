@@ -2,7 +2,9 @@ package de.othr.crusher.controller;
 
 import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.service.GradeService;
 import jakarta.validation.Valid;
+import java.util.Collections;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,14 +20,16 @@ import org.springframework.web.bind.annotation.*;
 public class GymController {
 
     private final GymRepository gymRepository;
+    private final GradeService gradeService;
 
     /**
      * Creates a new GymController with the given repository.
      *
      * @param gymRepository repository for accessing gym data
      */
-    public GymController(GymRepository gymRepository) {
+    public GymController(GymRepository gymRepository, GradeService gradeService) {
         this.gymRepository = gymRepository;
+        this.gradeService = gradeService;
     }
 
     /**
@@ -54,6 +58,8 @@ public class GymController {
                 .orElseThrow(() -> new RuntimeException("Gym not found"));
 
         model.addAttribute("gym", gym);
+        model.addAttribute("grades", gradeService.findAllForGym(id));
+        model.addAttribute("boulders", Collections.emptyList());
         return "pages/admin/gym";
     }
 
@@ -90,4 +96,3 @@ public class GymController {
         return "redirect:/admin/gyms";
     }
 }
-
