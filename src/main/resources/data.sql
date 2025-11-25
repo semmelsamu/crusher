@@ -10,7 +10,7 @@ INSERT INTO gyms (name, street, city, email) VALUES
     ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de');
 
 INSERT INTO grades (name, v_scale, font_scale, description, gym_id) VALUES
-    ('1', 'V0', '4', 'Einfache slab-Moves auf Reibung.', 1),
+    ('1', 'V0', '4', 'Einfache Slab-Moves auf Reibung.', 1),
     ('2', 'V1', '5', 'Balance-Moves mit kleinen footholds.', 1),
     ('3', 'V2', '5+', 'Technische Kanten und Corners.', 1),
     ('4', 'V3', '6a', 'Erste Dynos und Swing-Moves.', 1),
