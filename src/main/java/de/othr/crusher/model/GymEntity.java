@@ -10,7 +10,7 @@ import java.util.List;
  * Entity representing a climbing gym.
  * <p>
  * Maps to the {@code gyms} table and stores the gym's contact details (name, street,
- * city, email) along with its associated sectors.
+ * city, email) along with its associated sectors and grades.
  * </p>
  */
 @Entity
@@ -44,6 +44,13 @@ public class GymEntity {
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     private List<SectorEntity> sectors = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "gym",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<GradeEntity> grades = new ArrayList<>();
 
     public GymEntity() {}
 
@@ -95,6 +102,10 @@ public class GymEntity {
         return sectors;
     }
 
+    public List<GradeEntity> getGrades() {
+        return grades;
+    }
+
     public void addSector(SectorEntity sector) {
         sectors.add(sector);
         sector.setGym(this);
@@ -103,5 +114,15 @@ public class GymEntity {
     public void removeSector(SectorEntity sector) {
         sectors.remove(sector);
         sector.setGym(null);
+    }
+
+    public void addGrade(GradeEntity grade) {
+        grades.add(grade);
+        grade.setGym(this);
+    }
+
+    public void removeGrade(GradeEntity grade) {
+        grades.remove(grade);
+        grade.setGym(null);
     }
 }
