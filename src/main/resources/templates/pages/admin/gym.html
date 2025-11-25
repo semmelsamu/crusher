@@ -11,66 +11,34 @@
       <p th:text="${gym.city}" class="mt-2"></p>
       <p th:text="${gym.email}" class="mt-2"></p>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-        <!-- Sectors -->
-        <div>
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl">Sectors</h3>
-            <a th:href="@{/admin/gyms/{gymId}/sectors/new(gymId=${gym.id})}"
-               class="px-3 py-1 bg-blue-600 text-white rounded">
-              Add Sector
-            </a>
-          </div>
-
-          <table class="min-w-full border">
-            <thead class="bg-gray-100">
-            <tr>
-              <th class="px-4 py-2 text-left">Name</th>
-              <th class="px-4 py-2 text-left">Description</th>
-              <th class="px-4 py-2 text-left">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="sector : ${gym.sectors}">
-              <td class="px-4 py-2" th:text="${sector.name}">Sector Name</td>
-              <td class="px-4 py-2" th:text="${sector.description}">Description</td>
-              <td class="px-4 py-2">
-                <a th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-                   class="text-blue-600 hover:underline">View</a>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+      <div class="mt-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xl">Sectors</h3>
+          <a th:href="@{/admin/gyms/{gymId}/sectors/new(gymId=${gym.id})}"
+             class="px-3 py-1 bg-blue-600 text-white rounded">
+            Add Sector
+          </a>
         </div>
 
-        <!-- Boulders -->
-        <div>
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl">Boulders</h3>
-          </div>
-
-          <div th:if="${#lists.isEmpty(boulders)}" class="text-gray-600">
-            No boulders available yet.
-          </div>
-          <table class="min-w-full border" th:if="${!#lists.isEmpty(boulders)}">
-            <thead class="bg-gray-100">
-            <tr>
-              <th class="px-4 py-2 text-left">Name</th>
-              <th class="px-4 py-2 text-left">Sector</th>
-              <th class="px-4 py-2 text-left">Grade</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="boulder : ${boulders}">
-              <td class="px-4 py-2" th:text="${boulder.name}">Boulder Name</td>
-              <td class="px-4 py-2" th:text="${boulder.sector != null ? boulder.sector.name : '-'}">Sector</td>
-              <td class="px-4 py-2" th:text="${boulder.grade != null ? boulder.grade.name : '-'}">Grade</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
-
+        <table class="min-w-full border">
+          <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2 text-left">Name</th>
+            <th class="px-4 py-2 text-left">Description</th>
+            <th class="px-4 py-2 text-left">Actions</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="sector : ${gym.sectors}">
+            <td class="px-4 py-2" th:text="${sector.name}">Sector Name</td>
+            <td class="px-4 py-2" th:text="${sector.description}">Description</td>
+            <td class="px-4 py-2">
+              <a th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                 class="text-blue-600 hover:underline">View</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="mt-8">

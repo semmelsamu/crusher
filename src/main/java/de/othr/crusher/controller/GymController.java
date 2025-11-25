@@ -4,7 +4,6 @@ import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.service.GradeService;
 import jakarta.validation.Valid;
-import java.util.Collections;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,7 +58,6 @@ public class GymController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeService.findAllForGym(id));
-        model.addAttribute("boulders", Collections.emptyList());
         return "pages/admin/gym";
     }
 
