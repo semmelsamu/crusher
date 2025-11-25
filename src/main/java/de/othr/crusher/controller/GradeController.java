@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Controller for viewing and editing grades within a gym.
+ * Controller for viewing and editing grades within a gym in the admin area.
  */
 @Controller
-@RequestMapping("/gyms/{gymId}/grades")
+@RequestMapping("/admin/gyms/{gymId}/grades")
 public class GradeController {
 
     private final GradeService gradeService;
@@ -42,7 +42,7 @@ public class GradeController {
         GradeEntity grade = gradeService.findGradeInGym(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
-        return "pages/grades/grade";
+        return "pages/admin/grade";
     }
 
     /**
@@ -61,7 +61,7 @@ public class GradeController {
         GradeEntity grade = gradeService.findGradeInGym(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
-        return "pages/grades/grade-edit";
+        return "pages/admin/grade-edit";
     }
 
     /**
@@ -90,11 +90,11 @@ public class GradeController {
 
             model.addAttribute("gym", grade.getGym());
             model.addAttribute("grade", grade);
-            return "pages/grades/grade-edit";
+            return "pages/admin/grade-edit";
         }
 
         gradeService.updateGrade(gymId, gradeId, formGrade);
-        return "redirect:/gyms/" + gymId + "/grades/" + gradeId;
+        return "redirect:/admin/gyms/" + gymId + "/grades/" + gradeId;
     }
 
     /**
@@ -107,6 +107,6 @@ public class GradeController {
     @DeleteMapping("/{gradeId}")
     public String deleteGrade(@PathVariable("gymId") long gymId, @PathVariable("gradeId") long gradeId) {
         gradeService.deleteGrade(gymId, gradeId);
-        return "redirect:/gyms/" + gymId;
+        return "redirect:/admin/gyms/" + gymId;
     }
 }
