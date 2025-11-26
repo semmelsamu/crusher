@@ -158,6 +158,7 @@ public class SectorController {
             sector.setImagePath(formSector.getImagePath());
             model.addAttribute("gym", gym);
             model.addAttribute("sector", sector);
+            model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "sector", result);
             return "pages/admin/sector-edit";
         }
 
