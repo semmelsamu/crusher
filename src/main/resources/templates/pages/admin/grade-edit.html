@@ -9,17 +9,21 @@
       <div class="flex items-center justify-between mb-6">
         <div>
           <p class="text-sm text-gray-600" th:text="${gym.name}">Gym Name</p>
-          <h2 class="text-2xl font-semibold">Edit Grade</h2>
+          <h2 class="text-2xl font-semibold" th:text="${grade.id} != null ? 'Edit Grade' : 'New Grade'">Edit Grade</h2>
         </div>
-        <a th:href="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
+        <a th:href="${grade.id} != null ?
+                     @{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})} :
+                     @{/admin/gyms/{gymId}(gymId=${gym.id})}"
            class="px-3 py-2 border rounded">Back</a>
       </div>
 
-      <form th:action="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
+      <form th:action="${grade.id} != null ?
+                        @{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})} :
+                        @{/admin/gyms/{gymId}/grades(gymId=${gym.id})}"
             th:object="${grade}"
             method="post"
             class="space-y-6">
-        <input type="hidden" name="_method" value="put"/>
+        <input type="hidden" name="_method" th:value="${grade.id} != null ? 'put' : 'post'"/>
 
         <div>
           <label class="block font-medium">Name</label>
@@ -56,14 +60,16 @@
 
         <div class="flex items-center space-x-3">
           <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
-          <a th:href="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
+          <a th:href="${grade.id} != null ?
+                      @{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})} :
+                      @{/admin/gyms/{gymId}(gymId=${gym.id})}"
              class="px-3 py-2 border rounded">
             Cancel
           </a>
         </div>
       </form>
 
-      <div class="mt-8">
+      <div class="mt-8" th:if="${grade.id != null}">
         <form th:action="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
               method="post">
           <input type="hidden" name="_method" value="delete"/>

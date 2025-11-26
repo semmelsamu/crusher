@@ -44,6 +44,10 @@
       <div class="mt-8">
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-xl">Grades</h3>
+          <a th:href="@{/admin/gyms/{gymId}/grades/new(gymId=${gym.id})}"
+             class="px-3 py-1 bg-blue-600 text-white rounded">
+            Add Grade
+          </a>
         </div>
         <table class="min-w-full border">
           <thead class="bg-gray-100">
