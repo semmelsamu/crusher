@@ -1,0 +1,78 @@
+<form
+    th:fragment="boulder-form(actionUrl, boulder, gym, sector, availableColors, availableGrades)"
+    th:action="${actionUrl}"
+    th:object="${boulder}"
+    method="post"
+    class="space-y-6"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <input
+        type="hidden"
+        name="_method"
+        th:value="${boulder.id} != null ? 'put' : 'post'"
+    />
+
+    <div>
+        <label class="block font-medium mb-2">Description</label>
+        <input
+            th:field="*{description}"
+            class="border w-full p-2 rounded"
+            placeholder="e.g., Links hinten"
+        />
+        <p
+            th:if="${#fields.hasErrors('description')}"
+            th:errors="*{description}"
+            class="text-red-600 text-sm mt-1"
+        ></p>
+    </div>
+
+    <div>
+        <label class="block font-medium mb-2">Color</label>
+        <select th:field="*{color}" class="border w-full p-2 rounded">
+            <option
+                th:each="colorOption : ${availableColors}"
+                th:value="${colorOption}"
+                th:text="${colorOption.displayName}"
+            >
+                Color
+            </option>
+        </select>
+        <p
+            th:if="${#fields.hasErrors('color')}"
+            th:errors="*{color}"
+            class="text-red-600 text-sm mt-1"
+        ></p>
+    </div>
+
+    <div>
+        <label class="block font-medium mb-2">Grade</label>
+        <select th:field="*{grade.id}" class="border w-full p-2 rounded">
+            <option
+                th:each="gradeOption : ${availableGrades}"
+                th:value="${gradeOption.id}"
+                th:text="${gradeOption.name}"
+            >
+                Grade
+            </option>
+        </select>
+        <p
+            th:if="${#fields.hasErrors('grade')}"
+            th:errors="*{grade}"
+            class="text-red-600 text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="flex items-center space-x-3">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+            Save
+        </button>
+        <a
+            th:if="${boulder.id != null}"
+            th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+            class="px-3 py-2 border rounded"
+        >
+            Cancel
+        </a>
+    </div>
+</form>
+
