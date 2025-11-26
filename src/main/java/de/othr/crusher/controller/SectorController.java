@@ -153,12 +153,10 @@ public class SectorController {
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
         if (result.hasErrors()) {
-            sector.setName(formSector.getName());
-            sector.setDescription(formSector.getDescription());
-            sector.setImagePath(formSector.getImagePath());
+            formSector.setId(sector.getId());
+            formSector.setGym(gym);
             model.addAttribute("gym", gym);
-            model.addAttribute("sector", sector);
-            model.addAttribute(BindingResult.MODEL_KEY_PREFIX + "sector", result);
+            model.addAttribute("sector", formSector);
             return "pages/admin/sector-edit";
         }
 
