@@ -157,7 +157,11 @@ public class SectorController {
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
         if (result.hasErrors()) {
+            sector.setName(formSector.getName());
+            sector.setDescription(formSector.getDescription());
+            sector.setImagePath(formSector.getImagePath());
             model.addAttribute("gym", gym);
+            model.addAttribute("sector", sector);
             return "pages/admin/sector-edit";
         }
 
@@ -171,9 +175,6 @@ public class SectorController {
         }
 
         sectorRepository.save(sector);
-        if (removeImage) {
-            return "redirect:/admin/gyms/" + gymId + "/sectors/" + sector.getId() + "/edit";
-        }
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sector.getId();
     }
 
