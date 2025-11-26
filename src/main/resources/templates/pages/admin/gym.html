@@ -30,7 +30,6 @@
 
           <form th:action="@{/admin/gyms/{id}(id=${gym.id})}"
                 method="post"
-                onsubmit="return confirm('Delete this gym? This will also delete all sectors and grades.');"
                 class="inline">
             <input type="hidden" name="_method" value="delete"/>
             <button type="submit"
