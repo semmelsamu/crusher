@@ -1,82 +1,108 @@
 <th:block
-        layout:decorate="~{layouts/main}"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
-  <th:block layout:fragment="content">
+    <th:block layout:fragment="content">
+        <div class="my-12">
+            <h2 th:text="${gym.name}" class="text-2xl mb-6"></h2>
+            <p th:text="${gym.street}" class="mt-2"></p>
+            <p th:text="${gym.city}" class="mt-2"></p>
+            <p th:text="${gym.email}" class="mt-2"></p>
 
-    <div class="my-12">
-      <h2 th:text="${gym.name}"  class="text-2xl mb-6"></h2>
-      <p th:text="${gym.street}" class="mt-2"></p>
-      <p th:text="${gym.city}" class="mt-2"></p>
-      <p th:text="${gym.email}" class="mt-2"></p>
+            <div class="mt-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl">Sectors</h3>
+                    <a
+                        th:href="@{/admin/gyms/{gymId}/sectors/new(gymId=${gym.id})}"
+                        class="px-3 py-1 bg-blue-600 text-white rounded"
+                    >
+                        Add Sector
+                    </a>
+                </div>
 
-      <div class="mt-8">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xl">Sectors</h3>
-          <a th:href="@{/admin/gyms/{gymId}/sectors/new(gymId=${gym.id})}"
-             class="px-3 py-1 bg-blue-600 text-white rounded">
-            Add Sector
-          </a>
+                <table class="min-w-full border">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Name</th>
+                            <th class="px-4 py-2 text-left">Description</th>
+                            <th class="px-4 py-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="sector : ${gym.sectors}">
+                            <td class="px-4 py-2" th:text="${sector.name}">
+                                Sector Name
+                            </td>
+                            <td
+                                class="px-4 py-2"
+                                th:text="${sector.description}"
+                            >
+                                Description
+                            </td>
+                            <td class="px-4 py-2">
+                                <a
+                                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                                    class="text-blue-600 hover:underline"
+                                    >View</a
+                                >
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl">Grades</h3>
+                    <a
+                        th:href="@{/admin/gyms/{gymId}/grades/new(gymId=${gym.id})}"
+                        class="px-3 py-1 bg-blue-600 text-white rounded"
+                    >
+                        Add Grade
+                    </a>
+                </div>
+                <table class="min-w-full border">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Name</th>
+                            <th class="px-4 py-2 text-left">V-Scale</th>
+                            <th class="px-4 py-2 text-left">Font-Scale</th>
+                            <th class="px-4 py-2 text-left">Description</th>
+                            <th class="px-4 py-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${#lists.isEmpty(grades)}">
+                            <td colspan="5" class="px-4 py-3 text-gray-600">
+                                No grades added yet.
+                            </td>
+                        </tr>
+                        <tr th:each="grade : ${grades}">
+                            <td class="px-4 py-2" th:text="${grade.name}">1</td>
+                            <td class="px-4 py-2" th:text="${grade.vScale}">
+                                V0
+                            </td>
+                            <td class="px-4 py-2" th:text="${grade.fontScale}">
+                                4
+                            </td>
+                            <td
+                                class="px-4 py-2"
+                                th:text="${grade.description}"
+                            >
+                                Description
+                            </td>
+                            <td class="px-4 py-2">
+                                <a
+                                    th:href="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
+                                    class="text-blue-600 hover:underline"
+                                    >View</a
+                                >
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-        <table class="min-w-full border">
-          <thead class="bg-gray-100">
-          <tr>
-            <th class="px-4 py-2 text-left">Name</th>
-            <th class="px-4 py-2 text-left">Description</th>
-            <th class="px-4 py-2 text-left">Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:each="sector : ${gym.sectors}">
-            <td class="px-4 py-2" th:text="${sector.name}">Sector Name</td>
-            <td class="px-4 py-2" th:text="${sector.description}">Description</td>
-            <td class="px-4 py-2">
-              <a th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-                 class="text-blue-600 hover:underline">View</a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="mt-8">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xl">Grades</h3>
-          <a th:href="@{/admin/gyms/{gymId}/grades/new(gymId=${gym.id})}"
-             class="px-3 py-1 bg-blue-600 text-white rounded">
-            Add Grade
-          </a>
-        </div>
-        <table class="min-w-full border">
-          <thead class="bg-gray-100">
-          <tr>
-            <th class="px-4 py-2 text-left">Name</th>
-            <th class="px-4 py-2 text-left">V-Scale</th>
-            <th class="px-4 py-2 text-left">Font-Scale</th>
-            <th class="px-4 py-2 text-left">Description</th>
-            <th class="px-4 py-2 text-left">Actions</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th:if="${#lists.isEmpty(grades)}">
-            <td colspan="5" class="px-4 py-3 text-gray-600">No grades added yet.</td>
-          </tr>
-          <tr th:each="grade : ${grades}">
-            <td class="px-4 py-2" th:text="${grade.name}">1</td>
-            <td class="px-4 py-2" th:text="${grade.vScale}">V0</td>
-            <td class="px-4 py-2" th:text="${grade.fontScale}">4</td>
-            <td class="px-4 py-2" th:text="${grade.description}">Description</td>
-            <td class="px-4 py-2">
-              <a th:href="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
-                 class="text-blue-600 hover:underline">View</a>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </th:block>
+    </th:block>
 </th:block>
