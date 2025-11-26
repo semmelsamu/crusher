@@ -4,15 +4,17 @@ import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 
 /**
  * Controller for managing gyms in the admin area.
- * Provides endpoints for listing, viewing, creating and deleting gyms.
+ * Provides endpoints for listing, viewing, creating, editing and deleting gyms.
  */
 @Controller
 @RequestMapping("/admin/gyms")
@@ -25,6 +27,7 @@ public class GymController {
      * Creates a new GymController with the given repository.
      *
      * @param gymRepository repository for accessing gym data
+     * @param gradeRepository repository for accessing grade data
      */
     public GymController(GymRepository gymRepository, GradeRepository gradeRepository) {
         this.gymRepository = gymRepository;
@@ -32,7 +35,7 @@ public class GymController {
     }
 
     /**
-     * Displays a list of all gyms and a form for creating a new gym.
+     * Displays a list of all gyms.
      *
      * @param model Spring model to pass data to the view
      * @return view name for the gyms overview page
@@ -40,7 +43,6 @@ public class GymController {
     @GetMapping
     public String showAllGyms(Model model) {
         model.addAttribute("gyms", gymRepository.findAll());
-        model.addAttribute("newGym", new GymEntity());
         return "pages/admin/gyms";
     }
 
@@ -54,7 +56,7 @@ public class GymController {
     @GetMapping("/{id}")
     public String showGymForId(@PathVariable("id") long id, Model model) {
         GymEntity gym = gymRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gym not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymId(id));
@@ -62,24 +64,79 @@ public class GymController {
     }
 
     /**
+     * Displays the form for creating a new gym.
+     *
+     * @param model Spring model to pass data to the view
+     * @return view name for the gym creation page
+     */
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("gym", new GymEntity());
+        return "pages/admin/gym-edit";
+    }
+
+    /**
+     * Displays the edit form for an existing gym.
+     *
+     * @param id gym ID
+     * @param model Spring model to pass data to the view
+     * @return view name for the gym edit page
+     */
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable("id") long id, Model model) {
+        GymEntity gym = gymRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+        model.addAttribute("gym", gym);
+        return "pages/admin/gym-edit";
+    }
+
+    /**
      * Handles the creation of a new gym. Validates input and either redisplays
      * the form with errors or saves the new gym.
      *
-     * @param newGym gym object submitted from the form
+     * @param gym gym object submitted from the form
      * @param result validation result
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the gym list or the form view if errors occur
      */
     @PostMapping
-    public String createGym(@Valid @ModelAttribute("newGym") GymEntity newGym, BindingResult result, Model model) {
-
+    public String createGym(@Valid @ModelAttribute("gym") GymEntity gym, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("gyms", gymRepository.findAll());
-            return "pages/admin/gyms";
+            return "pages/admin/gym-edit";
         }
 
-        gymRepository.save(newGym);
+        gymRepository.save(gym);
         return "redirect:/admin/gyms";
+    }
+
+    /**
+     * Updates an existing gym. Validates input and either redisplays
+     * the form with errors or saves the changes.
+     *
+     * @param id gym ID
+     * @param formGym gym object submitted from the form
+     * @param result validation result
+     * @param model Spring model for re-rendering the form if needed
+     * @return redirect to the gym detail page or the form view if errors occur
+     */
+    @PutMapping("/{id}")
+    public String updateGym(
+            @PathVariable("id") long id,
+            @Valid @ModelAttribute("gym") GymEntity formGym,
+            BindingResult result,
+            Model model) {
+        if (result.hasErrors()) {
+            return "pages/admin/gym-edit";
+        }
+
+        GymEntity gym = gymRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+        gym.setName(formGym.getName());
+        gym.setStreet(formGym.getStreet());
+        gym.setCity(formGym.getCity());
+        gym.setEmail(formGym.getEmail());
+        gymRepository.save(gym);
+        return "redirect:/admin/gyms/" + id;
     }
 
     /**

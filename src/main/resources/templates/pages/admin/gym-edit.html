@@ -1,0 +1,80 @@
+<th:block
+        layout:decorate="~{layouts/main}"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+
+        <div class="my-12">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-semibold" th:text="${gym.id} != null ? 'Edit Gym' : 'New Gym'">Edit Gym</h2>
+                </div>
+                <a th:href="${gym.id} != null ? @{/admin/gyms/{id}(id=${gym.id})} : @{/admin/gyms}"
+                   class="px-3 py-2 border rounded">Back</a>
+            </div>
+
+            <form th:action="${gym.id} != null ? @{/admin/gyms/{id}(id=${gym.id})} : @{/admin/gyms}"
+                  th:object="${gym}"
+                  method="post"
+                  class="space-y-6">
+                <input type="hidden" name="_method" th:value="${gym.id} != null ? 'put' : 'post'"/>
+                <input type="hidden" th:field="*{id}" th:if="${gym.id} != null"/>
+
+                <div>
+                    <label class="block font-medium">Name</label>
+                    <input th:field="*{name}" class="border w-full p-2 rounded"/>
+                    <p th:if="${#fields.hasErrors('name')}"
+                       th:errors="*{name}"
+                       class="text-red-600 text-sm mt-1">
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block font-medium">Street</label>
+                    <input th:field="*{street}" class="border w-full p-2 rounded"/>
+                    <p th:if="${#fields.hasErrors('street')}"
+                       th:errors="*{street}"
+                       class="text-red-600 text-sm mt-1">
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block font-medium">City</label>
+                    <input th:field="*{city}" class="border w-full p-2 rounded"/>
+                    <p th:if="${#fields.hasErrors('city')}"
+                       th:errors="*{city}"
+                       class="text-red-600 text-sm mt-1">
+                    </p>
+                </div>
+
+                <div>
+                    <label class="block font-medium">Email</label>
+                    <input th:field="*{email}" type="email" class="border w-full p-2 rounded"/>
+                    <p th:if="${#fields.hasErrors('email')}"
+                       th:errors="*{email}"
+                       class="text-red-600 text-sm mt-1">
+                    </p>
+                </div>
+
+                <div class="flex items-center space-x-3">
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+                    <a th:href="${gym.id} != null ? @{/admin/gyms/{id}(id=${gym.id})} : @{/admin/gyms}"
+                       class="px-3 py-2 border rounded">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+
+            <div class="mt-8" th:if="${gym.id != null}">
+                <form th:action="@{/admin/gyms/{id}(id=${gym.id})}"
+                      method="post"
+                      onsubmit="return confirm('Delete Gym? This will also delete all sectors and grades.');">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" class="px-3 py-2 text-white bg-red-600 rounded">Delete Gym</button>
+                </form>
+            </div>
+        </div>
+
+    </th:block>
+</th:block>
