@@ -24,7 +24,7 @@
 
             <th:block
                 th:replace="~{components/boulder-form :: boulder-form(
-                    ${#httpServletRequest.getRequestURI()},
+                    @{/admin/gyms/{gymId}/sectors/{sectorId}/boulders(gymId=${gym.id}, sectorId=${sector.id})},
                     ${boulder},
                     ${gym},
                     ${sector},
