@@ -1,10 +1,13 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.model.BoulderEntity;
 import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.model.SectorEntity;
+import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.SectorRepository;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,10 +36,12 @@ public class SectorController {
 
     private final GymRepository gymRepository;
     private final SectorRepository sectorRepository;
+    private final BoulderRepository boulderRepository;
 
-    public SectorController(GymRepository gymRepository, SectorRepository sectorRepository) {
+    public SectorController(GymRepository gymRepository, SectorRepository sectorRepository, BoulderRepository boulderRepository) {
         this.gymRepository = gymRepository;
         this.sectorRepository = sectorRepository;
+        this.boulderRepository = boulderRepository;
     }
 
     /**
@@ -54,9 +59,11 @@ public class SectorController {
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
+        List<BoulderEntity> boulders = boulderRepository.findBySectorId(sectorId);
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
+        model.addAttribute("boulders", boulders);
         return "pages/admin/sector";
     }
 

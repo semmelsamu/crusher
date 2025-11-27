@@ -1,0 +1,38 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <div class="my-12">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <p
+                        class="text-sm text-gray-600"
+                        th:text="${gym.name} + ' / ' + ${sector.name}"
+                    >
+                        Gym Name / Sector Name
+                    </p>
+                    <h2 class="text-2xl font-semibold">New Boulder</h2>
+                </div>
+                <a
+                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                    class="px-3 py-2 border rounded"
+                    >Back to Boulders</a
+                >
+            </div>
+
+            <th:block
+                th:replace="~{components/boulder-form :: boulder-form(
+                    @{/admin/gyms/{gymId}/sectors/{sectorId}/boulders(gymId=${gym.id}, sectorId=${sector.id})},
+                    ${boulder},
+                    ${gym},
+                    ${sector},
+                    ${availableColors},
+                    ${availableGrades}
+                )}"
+            ></th:block>
+        </div>
+    </th:block>
+</th:block>
+
