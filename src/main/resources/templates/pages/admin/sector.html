@@ -85,16 +85,16 @@
                         <tr th:each="boulder : ${boulders}">
                             <td>
                                 <div
-                                    th:class="'w-6 h-6 rounded ' + ${boulder.color.cssColorClass}"
+                                    th:class="'color-badge ' + ${boulder.color.cssColorClass}"
                                 ></div>
-                                <span th:text="${boulder.color.displayName}"
-                                    >Color</span
-                                >
                             </td>
                             <td>
-                                <span th:text="${boulder.grade.name}"
-                                    >Grade</span
+                                <span
+                                    class="grade-badge"
+                                    th:text="${boulder.grade.name}"
                                 >
+                                    Grade
+                                </span>
                             </td>
                             <td th:text="${boulder.description}">
                                 Description

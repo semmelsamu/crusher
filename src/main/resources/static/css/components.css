@@ -105,3 +105,17 @@
 .table thead {
     @apply border-b-2;
 }
+
+/*
+|-------------------------------------------------------------------------------
+| Crusher-specific
+|-------------------------------------------------------------------------------
+*/
+
+.color-badge {
+    @apply w-6 h-6 rounded-full border-2;
+}
+
+.grade-badge {
+    @apply text-center block w-fit px-1 min-w-7 bg-secondary-background border-2 font-medium;
+}
