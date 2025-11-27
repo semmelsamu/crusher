@@ -4,7 +4,7 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="my-12 space-y-6">
+        <div class="my-12 space-y-8">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600" th:text="${gym.name}">
@@ -46,73 +46,85 @@
                     ></p>
                 </div>
             </div>
-        </div>
-        <div class="space-x-2">
-          <a th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/edit(gymId=${gym.id}, sectorId=${sector.id})}"
-             class="px-3 py-2 bg-blue-600 text-white rounded">Edit</a>
-          <a th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
-             class="px-3 py-2 border rounded">Back</a>
-        </div>
-      </div>
 
-      <div class="border rounded p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <img th:src="${sector.imagePath}" alt="Sector image" class="w-full h-64 object-cover rounded bg-gray-100">
-        </div>
-        <div>
-          <h3 class="text-lg font-semibold mb-2">Description</h3>
-          <p th:text="${sector.description != null ? sector.description : 'No description provided.'}"
-             class="text-gray-700"></p>
-        </div>
-      </div>
+            <div class="space-y-4">
+                <!-- Boulders Section -->
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl font-semibold">Boulders</h3>
+                    <a
+                        th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/new(gymId=${gym.id}, sectorId=${sector.id})}"
+                        class="px-3 py-2 bg-blue-600 text-white rounded"
+                        >New Boulder</a
+                    >
+                </div>
 
-      <!-- Boulders Section -->
-      <div class="space-y-4">
-        <div class="flex items-center justify-between">
-          <h3 class="text-xl font-semibold">Boulders</h3>
-          <a th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/new(gymId=${gym.id}, sectorId=${sector.id})}"
-             class="px-3 py-2 bg-blue-600 text-white rounded">New Boulder</a>
+                <div
+                    th:if="${boulders.isEmpty()}"
+                    class="border rounded p-6 text-center text-gray-600"
+                >
+                    No boulders in this sector yet.
+                </div>
+
+                <div
+                    th:unless="${boulders.isEmpty()}"
+                    class="border rounded overflow-hidden"
+                >
+                    <table class="w-full">
+                        <thead class="bg-gray-100 border-b">
+                            <tr>
+                                <th class="px-4 py-2 text-left font-semibold">
+                                    Color
+                                </th>
+                                <th class="px-4 py-2 text-left font-semibold">
+                                    Grade
+                                </th>
+                                <th class="px-4 py-2 text-left font-semibold">
+                                    Description
+                                </th>
+                                <th class="px-4 py-2 text-left font-semibold">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                th:each="boulder : ${boulders}"
+                                class="border-b last:border-b-0 hover:bg-gray-50"
+                            >
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center space-x-2">
+                                        <div
+                                            th:class="'w-6 h-6 rounded ' + ${boulder.color.cssColorClass}"
+                                        ></div>
+                                        <span
+                                            th:text="${boulder.color.displayName}"
+                                            >Color</span
+                                        >
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span th:text="${boulder.grade.name}"
+                                        >Grade</span
+                                    >
+                                </td>
+                                <td
+                                    class="px-4 py-3"
+                                    th:text="${boulder.description}"
+                                >
+                                    Description
+                                </td>
+                                <td class="px-4 py-3">
+                                    <a
+                                        th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}/edit(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})}"
+                                        class="px-3 py-1 bg-blue-600 text-white text-sm rounded"
+                                        >Edit</a
+                                    >
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
-        <div th:if="${boulders.isEmpty()}" class="border rounded p-6 text-center text-gray-600">
-          No boulders in this sector yet.
-        </div>
-
-        <div th:unless="${boulders.isEmpty()}" class="border rounded overflow-hidden">
-          <table class="w-full">
-            <thead class="bg-gray-100 border-b">
-              <tr>
-                <th class="px-4 py-2 text-left font-semibold">Color</th>
-                <th class="px-4 py-2 text-left font-semibold">Grade</th>
-                <th class="px-4 py-2 text-left font-semibold">Description</th>
-                <th class="px-4 py-2 text-left font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="boulder : ${boulders}" class="border-b last:border-b-0 hover:bg-gray-50">
-                <td class="px-4 py-3">
-                  <div class="flex items-center space-x-2">
-                    <div th:class="'w-6 h-6 rounded ' + ${boulder.color.cssColorClass}"></div>
-                    <span th:text="${boulder.color.displayName}">Color</span>
-                  </div>
-                </td>
-                <td class="px-4 py-3">
-                  <span th:text="${boulder.grade.name}">Grade</span>
-                </td>
-                <td class="px-4 py-3" th:text="${boulder.description}">
-                  Description
-                </td>
-                <td class="px-4 py-3">
-                  <a th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}/edit(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})}"
-                     class="px-3 py-1 bg-blue-600 text-white text-sm rounded">Edit</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div>
-
-  </th:block>
+    </th:block>
 </th:block>

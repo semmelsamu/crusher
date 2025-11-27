@@ -10,99 +10,26 @@
                     <p class="text-sm text-gray-600" th:text="${gym.name}">
                         Gym Name
                     </p>
-                    <h2
-                        class="text-2xl font-semibold"
-                        th:text="${sector.id} != null ? 'Edit Sector' : 'New Sector'"
-                    >
-                        Edit Sector
+                    <h2 class="text-2xl font-semibold" th:text="${sector.name}">
+                        Sector Name
                     </h2>
                 </div>
                 <a
-                    th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
+                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
                     class="px-3 py-2 border rounded"
-                    >Back</a
+                    >Back to Sector</a
                 >
             </div>
 
-            <form
-                th:action="${sector.id} != null ?
-                        @{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})} :
-                        @{/admin/gyms/{gymId}/sectors(gymId=${gym.id})}"
-                th:object="${sector}"
-                method="post"
-                class="space-y-6"
-            >
-                <input
-                    type="hidden"
-                    name="_method"
-                    th:value="${sector.id} != null ? 'put' : 'post'"
-                />
+            <th:block
+                th:replace="~{components/sector-form :: sector-form(
+                    @{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})},
+                    ${sector},
+                    ${gym}
+                )}"
+            ></th:block>
 
-                <div>
-                    <label class="block font-medium">Name</label>
-                    <input
-                        th:field="*{name}"
-                        class="border w-full p-2 rounded"
-                    />
-                    <p
-                        th:if="${#fields.hasErrors('name')}"
-                        th:errors="*{name}"
-                        class="text-red-600 text-sm mt-1"
-                    ></p>
-                </div>
-
-                <div>
-                    <label class="block font-medium">Description</label>
-                    <textarea
-                        th:field="*{description}"
-                        class="border w-full p-2 rounded"
-                        rows="4"
-                    ></textarea>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="block font-medium">Image</label>
-                    <img
-                        th:src="${sector.imagePath}"
-                        alt="Sector image"
-                        class="w-full h-48 object-cover rounded bg-gray-100"
-                    />
-                    <div class="flex space-x-2">
-                        <button
-                            type="button"
-                            class="px-3 py-2 border rounded bg-gray-100 cursor-not-allowed"
-                            disabled
-                        >
-                            Upload Image (coming soon)
-                        </button>
-                        <button
-                            type="button"
-                            class="px-3 py-2 border rounded bg-gray-100 cursor-not-allowed"
-                            disabled
-                        >
-                            Remove Image (coming soon)
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex items-center space-x-3">
-                    <button
-                        type="submit"
-                        class="px-4 py-2 bg-blue-600 text-white rounded"
-                    >
-                        Save
-                    </button>
-                    <a
-                        th:if="${sector.id != null}"
-                        th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-                        class="px-3 py-2 border rounded"
-                    >
-                        Cancel
-                    </a>
-                </div>
-            </form>
-
-            <div class="mt-8" th:if="${sector.id != null}">
+            <div class="mt-8">
                 <form
                     th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
                     method="post"
