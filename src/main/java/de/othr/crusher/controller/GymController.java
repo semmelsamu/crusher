@@ -99,7 +99,7 @@ public class GymController {
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the gym list or the form view if errors occur
      */
-    @PostMapping("/new")
+    @PostMapping
     public String createGym(@Valid @ModelAttribute("gym") GymEntity gym, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "pages/admin/gym-edit";
@@ -119,17 +119,20 @@ public class GymController {
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the gym detail page or the form view if errors occur
      */
-    @PostMapping("/{id}/edit")
+    @PutMapping("/{id}")
     public String updateGym(
             @PathVariable("id") long id,
             @Valid @ModelAttribute("gym") GymEntity formGym,
             BindingResult result,
             Model model) {
         if (result.hasErrors()) {
-            gymRepository.findById(id)
+            GymEntity gym = gymRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
-            // add id separately so the template can know which gym is edited
-            model.addAttribute("gymId", id);
+            gym.setName(formGym.getName());
+            gym.setStreet(formGym.getStreet());
+            gym.setCity(formGym.getCity());
+            gym.setEmail(formGym.getEmail());
+            model.addAttribute("gym", gym);
             return "pages/admin/gym-edit";
         }
 
