@@ -5,55 +5,65 @@
 >
     <th:block layout:fragment="content">
         <main class="wrapper">
-            <header class="card p-4 flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600" th:text="${gym.name}">
-                        Gym Name
-                    </p>
-                    <h2 class="text-2xl font-semibold" th:text="${sector.name}">
-                        Sector Name
-                    </h2>
-                </div>
-                <div class="space-x-2">
-                    <a
-                        th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/edit(gymId=${gym.id}, sectorId=${sector.id})}"
-                        class="px-3 py-2 bg-blue-600 text-white rounded"
-                        >Edit</a
-                    >
-                    <a
-                        th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
-                        class="px-3 py-2 border rounded"
-                        >Back</a
-                    >
-                </div>
-            </header>
+            <div class="flex items-center gap-4">
+                <a
+                    th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
+                    class="button button-square"
+                >
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
 
-            <section class="card grid gap-4 grid-cols-1 md:grid-cols-2">
-                <div>
-                    <img
-                        th:src="${sector.imagePath}"
-                        alt="Sector image"
-                        class="w-full h-64 object-cover rounded bg-gray-100"
-                    />
-                </div>
-                <div>
-                    <h3 class="text-lg font-semibold mb-2">Description</h3>
-                    <p
-                        th:text="${sector.description != null ? sector.description : 'No description provided.'}"
-                        class="text-gray-700"
-                    ></p>
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <div>
+                        <h1 th:text="${sector.name}">Sector Name</h1>
+                        <p class="text-foreground-muted" th:text="${gym.name}">
+                            Gym Name
+                        </p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a
+                            th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/edit(gymId=${gym.id}, sectorId=${sector.id})}"
+                            class="button button-primary"
+                        >
+                            <x
+                                th:replace="~{components/icons :: pencil-ruler}"
+                            ></x>
+                            Edit
+                        </a>
+                        <a href="#" class="button button-danger button-square">
+                            <x th:replace="~{components/icons :: trash-2}"></x>
+                        </a>
+                    </div>
+                </header>
+            </div>
+
+            <section class="card p-4 space-y-4">
+                <h2>General Information</h2>
+
+                <div class="grid gap-4 grid-cols-2">
+                    <div>
+                        <h3>Description</h3>
+                        <p
+                            th:text="${sector.description != null ? sector.description : 'No description provided.'}"
+                        >
+                            Description goes here
+                        </p>
+                    </div>
+
+                    <div>
+                        <img
+                            th:src="${sector.imagePath}"
+                            alt="Sector image"
+                            class="w-full aspect-video object-cover rounded-base border-2"
+                        />
+                    </div>
                 </div>
             </section>
 
             <section class="card p-4 space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-semibold">Boulders</h3>
-                    <a
-                        th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/new(gymId=${gym.id}, sectorId=${sector.id})}"
-                        class="px-3 py-2 bg-blue-600 text-white rounded"
-                        >New Boulder</a
-                    >
-                </div>
+                <h2>Boulders</h2>
 
                 <div
                     th:if="${boulders.isEmpty()}"
@@ -113,14 +123,25 @@
                                 <td class="px-4 py-3">
                                     <a
                                         th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}/edit(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})}"
-                                        class="px-3 py-1 bg-blue-600 text-white text-sm rounded"
-                                        >Edit</a
+                                        class="button button-primary button-square"
                                     >
+                                        <x
+                                            th:replace="~{components/icons :: pencil-ruler}"
+                                        ></x>
+                                    </a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+
+                <a
+                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/new(gymId=${gym.id}, sectorId=${sector.id})}"
+                    class="button button-success"
+                >
+                    <x th:replace="~{components/icons :: badge-plus}"></x>
+                    Create New Boulder
+                </a>
             </section>
         </main>
     </th:block>

@@ -8,7 +8,7 @@
         "Noto Color Emoji";
 
     --color-foreground: black; /* color for text */
-    --color-foreground-muted: gray; /* color muted text */
+    --color-foreground-muted: var(--color-gray-700); /* color muted text */
     --color-main-foreground: black; /* color for text when background is set to main */
 
     --color-background: var(--color-sky-100);
