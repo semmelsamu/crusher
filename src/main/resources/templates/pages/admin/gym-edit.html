@@ -65,15 +65,6 @@
                     </a>
                 </div>
             </form>
-
-            <div class="mt-8" th:if="${gym.id} != null">
-                <form th:action="@{/admin/gyms/{id}(id=${gym.id})}"
-                      method="post"
-                      onsubmit="return confirm('Delete Gym? This will also delete all sectors and grades.');">
-                    <input type="hidden" name="_method" value="delete"/>
-                    <button type="submit" class="px-3 py-2 text-white bg-red-600 rounded">Delete Gym</button>
-                </form>
-            </div>
         </div>
 
     </th:block>
