@@ -19,7 +19,7 @@
 
                 <a
                     href="/admin/gyms"
-                    class="button button-neutral"
+                    class="button"
                     sec:authorize="hasAnyRole('ADMIN', 'OWNER')"
                 >
                     Admin Panel
@@ -31,7 +31,7 @@
                     class="inline"
                     sec:authorize="isAuthenticated()"
                 >
-                    <button type="submit" class="button button-neutral">
+                    <button type="submit" class="button">
                         Logout
                         <x th:replace="~{components/icons :: log-out}"></x>
                     </button>
