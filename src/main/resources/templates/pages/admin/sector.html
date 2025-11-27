@@ -75,10 +75,10 @@
                 <table class="table w-full" th:unless="${boulders.isEmpty()}">
                     <thead>
                         <tr>
-                            <th>Color</th>
-                            <th>Grade</th>
+                            <th class="w-20">Color</th>
+                            <th class="w-20">Grade</th>
                             <th>Description</th>
-                            <th>Actions</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,7 +102,7 @@
                             <td>
                                 <a
                                     th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}/edit(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})}"
-                                    class="button button-primary button-square"
+                                    class="button button-primary button-square ml-auto"
                                 >
                                     <x
                                         th:replace="~{components/icons :: pencil-ruler}"
