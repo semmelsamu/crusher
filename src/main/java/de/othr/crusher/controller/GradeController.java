@@ -49,7 +49,7 @@ public class GradeController {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
-        return "pages/admin/grade";
+        return "redirect:/admin/gyms/" + gymId + "/grades/" + gradeId + "/edit";
     }
 
     /**
@@ -120,7 +120,7 @@ public class GradeController {
         grade.setVScale(formGrade.getVScale());
         grade.setFontScale(formGrade.getFontScale());
         gradeRepository.save(grade);
-        return "redirect:/admin/gyms/" + gymId + "/grades/" + gradeId;
+        return "redirect:/admin/gyms/" + gymId;
     }
 
     /**
@@ -147,7 +147,7 @@ public class GradeController {
 
         formGrade.setGym(gym);
         GradeEntity saved = gradeRepository.save(formGrade);
-        return "redirect:/admin/gyms/" + gymId + "/grades/" + saved.getId();
+        return "redirect:/admin/gyms/" + gymId;
     }
 
     /**

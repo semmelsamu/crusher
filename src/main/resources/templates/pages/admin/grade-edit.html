@@ -10,12 +10,17 @@
                     <p class="text-sm text-gray-600" th:text="${gym.name}">
                         Gym Name
                     </p>
-                    <h2 class="text-2xl font-semibold">Edit Grade</h2>
+                    <h2
+                        class="text-2xl font-semibold"
+                        th:text="${grade.name}"
+                    >
+                        Grade Name
+                    </h2>
                 </div>
                 <a
-                    th:href="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
+                    th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
                     class="px-3 py-2 border rounded"
-                    >Back to Grade</a
+                    >Back to Gym</a
                 >
             </div>
 

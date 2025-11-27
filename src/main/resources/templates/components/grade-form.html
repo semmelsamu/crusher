@@ -57,9 +57,7 @@
             Save
         </button>
         <a
-            th:href="${grade.id} != null ?
-                @{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})} :
-                @{/admin/gyms/{gymId}(gymId=${gym.id})}"
+            th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
             class="px-3 py-2 border rounded"
         >
             Cancel

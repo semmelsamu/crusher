@@ -87,22 +87,23 @@
                                 4
                             </td>
                             <td
-                                class="px-4 py-2"
-                                th:text="${grade.description}"
+                            class="px-4 py-2"
+                            th:text="${grade.description}"
+                        >
+                            Description
+                        </td>
+                        <td class="px-4 py-2">
+                            <a
+                                th:href="@{/admin/gyms/{gymId}/grades/{gradeId}/edit(gymId=${gym.id}, gradeId=${grade.id})}"
+                                class="text-blue-600 hover:underline"
                             >
-                                Description
-                            </td>
-                            <td class="px-4 py-2">
-                                <a
-                                    th:href="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
-                                    class="text-blue-600 hover:underline"
-                                    >View</a
-                                >
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         </div>
     </th:block>
 </th:block>
