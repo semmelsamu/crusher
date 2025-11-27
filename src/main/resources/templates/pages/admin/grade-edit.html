@@ -10,28 +10,31 @@
                     <p class="text-sm text-gray-600" th:text="${gym.name}">
                         Gym Name
                     </p>
-                    <h2 class="text-2xl font-semibold" th:text="${sector.name}">
-                        Sector Name
+                    <h2
+                        class="text-2xl font-semibold"
+                        th:text="${grade.name}"
+                    >
+                        Grade Name
                     </h2>
                 </div>
                 <a
-                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                    th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
                     class="px-3 py-2 border rounded"
-                    >Back to Sector</a
+                    >Back to Gym</a
                 >
             </div>
 
             <th:block
-                th:replace="~{components/sector-form :: sector-form(
-                    @{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})},
-                    ${sector},
+                th:replace="~{components/grade-form :: grade-form(
+                    @{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})},
+                    ${grade},
                     ${gym}
                 )}"
             ></th:block>
 
-            <div class="mt-8">
+            <div class="mt-8" th:if="${grade.id != null}">
                 <form
-                    th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                    th:action="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
                     method="post"
                 >
                     <input type="hidden" name="_method" value="delete" />
@@ -39,7 +42,7 @@
                         type="submit"
                         class="px-3 py-2 text-white bg-red-600 rounded"
                     >
-                        Delete Sector
+                        Delete Grade
                     </button>
                 </form>
             </div>

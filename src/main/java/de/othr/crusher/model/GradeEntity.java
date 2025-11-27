@@ -1,6 +1,5 @@
 package de.othr.crusher.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,15 +12,15 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * Entity representing a climbing sector belonging to exactly one gym.
+ * Entity representing a bouldering grade within a gym.
  * <p>
- * Maps to the {@code sectors} table and stores the sector name, optional description,
- * an image path (defaults to a placeholder), and a reference to its owning gym.
+ * Stores human-readable identifiers (name), along with scale values (V-scale and
+ * Font-scale) and an optional description. Each grade belongs to exactly one gym.
  * </p>
  */
 @Entity
-@Table(name = "sectors")
-public class SectorEntity {
+@Table(name = "grades")
+public class GradeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,22 +30,28 @@ public class SectorEntity {
     @NotBlank(message = "Please enter a name")
     private String name;
 
+    @Column(name = "v_scale", nullable = false)
+    @NotBlank(message = "Please enter a V-scale value")
+    private String vScale;
+
+    @Column(name = "font_scale", nullable = false)
+    @NotBlank(message = "Please enter a Font-scale value")
+    private String fontScale;
+
     @Column
     private String description;
 
-    @Column(name = "image_path")
-    private String imagePath = "/images/default-sector.svg";
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gym_id", nullable = false)
     private GymEntity gym;
 
-    public SectorEntity() {}
+    public GradeEntity() {}
 
-    public SectorEntity(String name, String description, String imagePath, GymEntity gym) {
+    public GradeEntity(String name, String vScale, String fontScale, String description, GymEntity gym) {
         this.name = name;
+        this.vScale = vScale;
+        this.fontScale = fontScale;
         this.description = description;
-        this.imagePath = imagePath;
         this.gym = gym;
     }
 
@@ -66,20 +71,28 @@ public class SectorEntity {
         this.name = name;
     }
 
+    public String getVScale() {
+        return vScale;
+    }
+
+    public void setVScale(String vScale) {
+        this.vScale = vScale;
+    }
+
+    public String getFontScale() {
+        return fontScale;
+    }
+
+    public void setFontScale(String fontScale) {
+        this.fontScale = fontScale;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
     }
 
     public GymEntity getGym() {
