@@ -83,7 +83,7 @@ public class SectorController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
-        return "pages/admin/sector-edit";
+        return "pages/admin/sector-new";
     }
 
     /**
@@ -126,8 +126,11 @@ public class SectorController {
         GymEntity gym = findGymOrThrow(gymId);
 
         if (result.hasErrors()) {
+            if (sector.getImagePath() == null || sector.getImagePath().isBlank()) {
+                sector.setImagePath(DEFAULT_IMAGE_PATH);
+            }
             model.addAttribute("gym", gym);
-            return "pages/admin/sector-edit";
+            return "pages/admin/sector-new";
         }
 
         sector.setGym(gym);
@@ -162,6 +165,10 @@ public class SectorController {
         if (result.hasErrors()) {
             formSector.setId(sector.getId());
             formSector.setGym(gym);
+            if (formSector.getImagePath() == null || formSector.getImagePath().isBlank()) {
+                formSector.setImagePath(
+                        sector.getImagePath() != null ? sector.getImagePath() : DEFAULT_IMAGE_PATH);
+            }
             model.addAttribute("gym", gym);
             model.addAttribute("sector", formSector);
             return "pages/admin/sector-edit";
