@@ -10,12 +10,7 @@
                     <p class="text-sm text-gray-600" th:text="${gym.name}">
                         Gym Name
                     </p>
-                    <h2
-                        class="text-2xl font-semibold"
-                        th:text="${grade.name}"
-                    >
-                        Grade Name
-                    </h2>
+                    <h2 class="text-2xl font-semibold">New Grade</h2>
                 </div>
                 <a
                     th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
@@ -26,26 +21,11 @@
 
             <th:block
                 th:replace="~{components/grade-form :: grade-form(
-                    @{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})},
+                    @{/admin/gyms/{gymId}/grades(gymId=${gym.id})},
                     ${grade},
                     ${gym}
                 )}"
             ></th:block>
-
-            <div class="mt-8" th:if="${grade.id != null}">
-                <form
-                    th:action="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
-                    method="post"
-                >
-                    <input type="hidden" name="_method" value="delete" />
-                    <button
-                        type="submit"
-                        class="px-3 py-2 text-white bg-red-600 rounded"
-                    >
-                        Delete Grade
-                    </button>
-                </form>
-            </div>
         </div>
     </th:block>
 </th:block>

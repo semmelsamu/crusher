@@ -1,0 +1,66 @@
+<form
+    th:fragment="grade-form(actionUrl, grade, gym)"
+    th:action="${actionUrl}"
+    th:object="${grade}"
+    method="post"
+    class="space-y-6"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <input
+        type="hidden"
+        name="_method"
+        th:value="${grade.id} != null ? 'put' : 'post'"
+    />
+
+    <div>
+        <label class="block font-medium mb-2">Name</label>
+        <input th:field="*{name}" class="border w-full p-2 rounded" />
+        <p
+            th:if="${#fields.hasErrors('name')}"
+            th:errors="*{name}"
+            class="text-red-600 text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <label class="block font-medium mb-2">V-Scale</label>
+            <input th:field="*{vScale}" class="border w-full p-2 rounded" />
+            <p
+                th:if="${#fields.hasErrors('vScale')}"
+                th:errors="*{vScale}"
+                class="text-red-600 text-sm mt-1"
+            ></p>
+        </div>
+        <div>
+            <label class="block font-medium mb-2">Font-Scale</label>
+            <input th:field="*{fontScale}" class="border w-full p-2 rounded" />
+            <p
+                th:if="${#fields.hasErrors('fontScale')}"
+                th:errors="*{fontScale}"
+                class="text-red-600 text-sm mt-1"
+            ></p>
+        </div>
+    </div>
+
+    <div>
+        <label class="block font-medium mb-2">Description</label>
+        <textarea
+            th:field="*{description}"
+            class="border w-full p-2 rounded"
+            rows="4"
+        ></textarea>
+    </div>
+
+    <div class="flex items-center space-x-3">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+            Save
+        </button>
+        <a
+            th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
+            class="px-3 py-2 border rounded"
+        >
+            Cancel
+        </a>
+    </div>
+</form>
