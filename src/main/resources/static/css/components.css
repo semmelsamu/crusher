@@ -85,3 +85,23 @@
 .dialog {
     @apply border-2 shadow-base rounded-base p-4 bg-background text-foreground w-full mx-4 sm:max-w-md sm:mx-auto mt-32!;
 }
+
+/*
+|-------------------------------------------------------------------------------
+| Tables
+|-------------------------------------------------------------------------------
+*/
+
+.table {
+    @apply w-full overflow-x-auto table-fixed border-2 bg-background;
+}
+
+.table th,
+.table td {
+    @apply align-top text-left p-2;
+}
+
+.table tr:not(:last-child),
+.table thead {
+    @apply border-b-2;
+}
