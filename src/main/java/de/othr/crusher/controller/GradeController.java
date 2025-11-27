@@ -86,7 +86,7 @@ public class GradeController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("grade", grade);
-        return "pages/admin/grade-edit";
+        return "pages/admin/grade-new";
     }
 
     /**
@@ -142,7 +142,7 @@ public class GradeController {
 
         if (result.hasErrors()) {
             model.addAttribute("gym", gym);
-            return "pages/admin/grade-edit";
+            return "pages/admin/grade-new";
         }
 
         formGrade.setGym(gym);
