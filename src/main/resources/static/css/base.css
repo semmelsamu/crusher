@@ -1,5 +1,5 @@
 * {
-    @apply appearance-none border-border outline-border;
+    @apply border-border outline-border;
 }
 
 :focus-visible {
