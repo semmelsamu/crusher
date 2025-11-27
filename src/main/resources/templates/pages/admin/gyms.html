@@ -5,86 +5,30 @@
 >
     <th:block layout:fragment="content">
         <div class="my-12">
-            <h2 class="text-2xl mb-6">Gyms</h2>
-
-            <div class="grid grid-cols-3 gap-8">
-                <!-- Existing gyms -->
-                <div th:each="gym : ${gyms}" class="text-center">
-                    <a th:href="@{/admin/gyms/{id}(id=${gym.id})}">
-                        <p th:text="${gym.name}" class="mt-2"></p>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl">Gyms</h2>
+                <div class="flex items-center gap-4">
+                    <a th:href="@{/admin/gyms/new}" class="px-4 py-2 bg-blue-600 text-white rounded">
+                        Create Gym
                     </a>
-
-                    <!-- Delete Button -->
-                    <form
-                        th:action="@{/admin/gyms/{id}(id=${gym.id})}"
-                        method="post"
-                        th:object="${gym}"
-                        onsubmit="return confirm('Delete Gym?');"
-                    >
-                        <input type="hidden" name="_method" value="delete" />
-                        <button
-                            type="submit"
-                            class="text-red-600 ml-4 hover:text-red-800"
-                        >
-                            &#128465;
-                            <!-- Papierkorb-Icon -->
-                        </button>
-                    </form>
+                    <a href="/" class="px-3 py-2 border rounded">Back</a>
                 </div>
             </div>
 
-            <h2 class="text-2xl mb-6">Create Gym</h2>
-
-            <form
-                th:action="@{/admin/gyms}"
-                th:object="${newGym}"
-                method="POST"
-                class="space-y-4"
-            >
-                <div>
-                    <label>Name</label>
-                    <input th:field="*{name}" class="border w-full p-2" />
-                    <p
-                        th:if="${#fields.hasErrors('name')}"
-                        th:errors="*{name}"
-                        class="text-red-600 text-sm mt-1"
-                    ></p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div th:each="gym : ${gyms}" class="border rounded p-4 hover:shadow-lg transition-shadow">
+                    <a th:href="@{/admin/gyms/{id}(id=${gym.id})}" class="block">
+                        <h3 class="text-xl font-semibold mb-2" th:text="${gym.name}">Gym Name</h3>
+                        <p class="text-sm text-gray-600" th:text="${gym.street}">Street</p>
+                        <p class="text-sm text-gray-600" th:text="${gym.city}">City</p>
+                        <p class="text-sm text-gray-600 mt-2" th:text="${gym.email}">Email</p>
+                    </a>
                 </div>
+            </div>
 
-                <div>
-                    <label>Street</label>
-                    <input th:field="*{street}" class="border w-full p-2" />
-                    <p
-                        th:if="${#fields.hasErrors('street')}"
-                        th:errors="*{street}"
-                        class="text-red-600 text-sm mt-1"
-                    ></p>
-                </div>
-
-                <div>
-                    <label>City</label>
-                    <input th:field="*{city}" class="border w-full p-2" />
-                    <p
-                        th:if="${#fields.hasErrors('city')}"
-                        th:errors="*{city}"
-                        class="text-red-600 text-sm mt-1"
-                    ></p>
-                </div>
-
-                <div>
-                    <label>Email</label>
-                    <input th:field="*{email}" class="border w-full p-2" />
-                    <p
-                        th:if="${#fields.hasErrors('email')}"
-                        th:errors="*{email}"
-                        class="text-red-600 text-sm mt-1"
-                    ></p>
-                </div>
-
-                <button class="px-4 py-2 bg-blue-600 text-white rounded">
-                    Save
-                </button>
-            </form>
+            <div th:if="${#lists.isEmpty(gyms)}" class="text-center text-gray-600 py-12">
+                <p>No gyms found. Create your first gym to get started.</p>
+            </div>
         </div>
     </th:block>
 </th:block>
