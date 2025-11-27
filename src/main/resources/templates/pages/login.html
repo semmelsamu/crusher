@@ -4,7 +4,7 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <main class="space-y-8 my-16">
+        <main class="wrapper">
             <div
                 th:if="${param.logout}"
                 class="card bg-success space-y-4 p-4 max-w-sm mx-auto text-center flex items-center gap-2 justify-center"
@@ -27,7 +27,7 @@
                 <h2>Login</h2>
 
                 <form th:action="@{/login}" method="post" class="space-y-4">
-                    <div>
+                    <div class="space-y-2">
                         <label for="username" class="form-label"
                             >Username</label
                         >
@@ -42,7 +42,7 @@
                         />
                     </div>
 
-                    <div>
+                    <div class="space-y-2">
                         <label for="password" class="form-label"
                             >Password</label
                         >
@@ -56,7 +56,10 @@
                         />
                     </div>
 
-                    <button type="submit" class="button button-primary w-full">
+                    <button
+                        type="submit"
+                        class="button button-primary w-full mt-8"
+                    >
                         Log In
                         <x th:replace="~{components/icons :: log-in}"></x>
                     </button>

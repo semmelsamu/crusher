@@ -37,3 +37,7 @@ dd {
 .lucide {
     @apply w-4 h-4;
 }
+
+label {
+    @apply inline-block;
+}
