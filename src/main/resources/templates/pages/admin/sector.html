@@ -52,13 +52,22 @@
                         </p>
                     </div>
 
-                    <div>
-                        <img
-                            th:src="${sector.imagePath}"
-                            alt="Sector image"
-                            class="w-full aspect-video object-cover rounded-base border-2"
-                        />
+                    <div
+                        class="w-full aspect-video rounded-base border-2 overflow-clip bg-main flex items-center justify-center flex-col gap-2"
+                    >
+                        <x th:replace="~{components/icons :: image-off}"></x>
+                        <p class="text-main-foreground font-medium">
+                            This sector has no image.
+                        </p>
                     </div>
+
+                    <!-- 
+                    <img
+                        th:src="${sector.imagePath}"
+                        alt="Sector image"
+                        class="w-full h-full object-cover brightness-20"
+                    />
+                    -->
                 </div>
             </section>
 
