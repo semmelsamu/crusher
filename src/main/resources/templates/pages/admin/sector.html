@@ -5,7 +5,7 @@
 >
     <th:block layout:fragment="content">
         <main class="wrapper">
-            <div class="flex items-center justify-between">
+            <header class="card p-4 flex items-center justify-between">
                 <div>
                     <p class="text-sm text-gray-600" th:text="${gym.name}">
                         Gym Name
@@ -26,11 +26,9 @@
                         >Back</a
                     >
                 </div>
-            </div>
+            </header>
 
-            <div
-                class="border rounded p-6 grid grid-cols-1 md:grid-cols-2 gap-6"
-            >
+            <section class="card grid gap-4 grid-cols-1 md:grid-cols-2">
                 <div>
                     <img
                         th:src="${sector.imagePath}"
@@ -45,10 +43,9 @@
                         class="text-gray-700"
                     ></p>
                 </div>
-            </div>
+            </section>
 
-            <div class="space-y-4">
-                <!-- Boulders Section -->
+            <section class="card p-4 space-y-4">
                 <div class="flex items-center justify-between">
                     <h3 class="text-xl font-semibold">Boulders</h3>
                     <a
@@ -124,7 +121,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </section>
         </main>
     </th:block>
 </th:block>
