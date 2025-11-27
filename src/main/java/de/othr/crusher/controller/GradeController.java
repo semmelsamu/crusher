@@ -106,19 +106,15 @@ public class GradeController {
             @Valid @ModelAttribute("grade") GradeEntity formGrade,
             BindingResult result,
             Model model) {
-        if (result.hasErrors()) {
-            GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
-            grade.setName(formGrade.getName());
-            grade.setDescription(formGrade.getDescription());
-            grade.setVScale(formGrade.getVScale());
-            grade.setFontScale(formGrade.getFontScale());
+        GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
 
+        if (result.hasErrors()) {
+            formGrade.setId(grade.getId());
+            formGrade.setGym(grade.getGym());
             model.addAttribute("gym", grade.getGym());
-            model.addAttribute("grade", grade);
             return "pages/admin/grade-edit";
         }
 
-        GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         grade.setName(formGrade.getName());
         grade.setDescription(formGrade.getDescription());
         grade.setVScale(formGrade.getVScale());

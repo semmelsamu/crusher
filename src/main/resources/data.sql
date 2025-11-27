@@ -42,3 +42,38 @@ INSERT INTO sectors (name, description, image_path, gym_id) VALUES
     ('45er', 'Starker Überhang und Campus-Style Moves.', '/images/default-sector.svg', 2),
     ('Tech-Deck', 'Schmale Leisten und Fußarbeitstraining.', '/images/default-sector.svg', 3),
     ('Höhle', 'Kompressionslastige Boulder in der Grotte.', '/images/default-sector.svg', 3);
+
+INSERT INTO boulders (description, color, grade_id, sector_id) VALUES
+    -- Boulders for sector 1 (30er, gym 1)
+    ('Links hinten', 'YELLOW', 1, 1),
+    ('Rechts vorne, steil', 'BLUE', 3, 1),
+    ('Mittig, dynamisch', 'RED', 4, 1),
+    ('Kante rechts', 'PINK', 2, 1),
+    
+    -- Boulders for sector 2 (Volldach, gym 1)
+    ('Dach links, Power', 'BLACK', 6, 2),
+    ('Campus rechts', 'BLUE', 7, 2),
+    ('Überhang mittig', 'DARK_GREEN', 5, 2),
+    ('Traversierung komplett', 'WHITE', 4, 2),
+    
+    -- Boulders for sector 3 (Slab-City, gym 2)
+    ('Balance links', 'YELLOW', 9, 3),
+    ('Platte rechts', 'WHITE', 10, 3),
+    ('Technik pur', 'PINK', 11, 3),
+    
+    -- Boulders for sector 4 (45er, gym 2)
+    ('Überhang extrem', 'BLACK', 14, 4),
+    ('Power-Dynos', 'RED', 15, 4),
+    ('Sloper Challenge', 'BLUE', 16, 4),
+    ('Campus Board', 'DARK_GREEN', 13, 4),
+    
+    -- Boulders for sector 5 (Tech-Deck, gym 3)
+    ('Crimp Heaven', 'YELLOW', 17, 5),
+    ('Fußarbeit Spezial', 'PINK', 18, 5),
+    ('Leisten links', 'WHITE', 19, 5),
+    
+    -- Boulders for sector 6 (Höhle, gym 3)
+    ('Compression Crack', 'BLACK', 22, 6),
+    ('Grotten-Traverse', 'BLUE', 23, 6),
+    ('Power-Kompression', 'RED', 24, 6),
+    ('Höhlen-Arete', 'DARK_GREEN', 21, 6);

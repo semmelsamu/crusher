@@ -1,10 +1,13 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.model.BoulderEntity;
 import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.model.SectorEntity;
+import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.SectorRepository;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
@@ -34,10 +36,12 @@ public class SectorController {
 
     private final GymRepository gymRepository;
     private final SectorRepository sectorRepository;
+    private final BoulderRepository boulderRepository;
 
-    public SectorController(GymRepository gymRepository, SectorRepository sectorRepository) {
+    public SectorController(GymRepository gymRepository, SectorRepository sectorRepository, BoulderRepository boulderRepository) {
         this.gymRepository = gymRepository;
         this.sectorRepository = sectorRepository;
+        this.boulderRepository = boulderRepository;
     }
 
     /**
@@ -55,9 +59,11 @@ public class SectorController {
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
+        List<BoulderEntity> boulders = boulderRepository.findBySectorId(sectorId);
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
+        model.addAttribute("boulders", boulders);
         return "pages/admin/sector";
     }
 
@@ -134,16 +140,14 @@ public class SectorController {
     }
 
     /**
-     * Updates an existing sector. Supports removing the image (resets to default) and
-     * keeps the user on the edit page when removal is requested.
+     * Updates an existing sector.
      *
      * @param gymId identifier of the parent gym
      * @param sectorId identifier of the sector
      * @param formSector sector payload from the form
      * @param result validation result
-     * @param removeImage whether to reset the image to the default placeholder
      * @param model Spring model for re-rendering the form if needed
-     * @return redirect to the detail page or back to edit when removing the image/validation errors
+     * @return redirect to the detail page or back to edit when validation errors occur
      */
     @PutMapping("/{sectorId}")
     public String updateSector(
@@ -151,29 +155,26 @@ public class SectorController {
             @PathVariable("sectorId") long sectorId,
             @Valid @ModelAttribute("sector") SectorEntity formSector,
             BindingResult result,
-            @RequestParam(value = "removeImage", required = false) boolean removeImage,
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
         if (result.hasErrors()) {
+            formSector.setId(sector.getId());
+            formSector.setGym(gym);
             model.addAttribute("gym", gym);
+            model.addAttribute("sector", formSector);
             return "pages/admin/sector-edit";
         }
 
         sector.setName(formSector.getName());
         sector.setDescription(formSector.getDescription());
 
-        if (removeImage) {
-            sector.setImagePath(DEFAULT_IMAGE_PATH);
-        } else if (sector.getImagePath() == null || sector.getImagePath().isBlank()) {
+        if (sector.getImagePath() == null || sector.getImagePath().isBlank()) {
             sector.setImagePath(DEFAULT_IMAGE_PATH);
         }
 
         sectorRepository.save(sector);
-        if (removeImage) {
-            return "redirect:/admin/gyms/" + gymId + "/sectors/" + sector.getId() + "/edit";
-        }
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sector.getId();
     }
 
