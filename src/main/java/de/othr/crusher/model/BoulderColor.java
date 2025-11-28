@@ -40,7 +40,7 @@ public enum BoulderColor {
             case YELLOW -> "bg-yellow-400";
             case BLUE -> "bg-blue-500";
             case BLACK -> "bg-gray-900";
-            case WHITE -> "bg-white border border-gray-300";
+            case WHITE -> "bg-white";
             case PINK -> "bg-pink-400";
             case DARK_GREEN -> "bg-green-700";
             case RED -> "bg-red-500";

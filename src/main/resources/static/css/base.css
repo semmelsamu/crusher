@@ -1,21 +1,29 @@
 * {
-    border-color: var(--color-border);
+    @apply border-border outline-border;
+}
+
+:focus-visible {
+    @apply outline-border;
 }
 
 body {
     @apply antialiased bg-background font-main;
 }
 
+body:has(.dialog[open]) {
+    @apply overflow-hidden;
+}
+
 h1 {
-    @apply text-4xl font-bold;
+    @apply text-4xl font-bold mb-2;
 }
 
 h2 {
-    @apply text-3xl font-semibold;
+    @apply text-3xl font-semibold mb-2;
 }
 
 h3 {
-    @apply text-2xl font-semibold;
+    @apply text-2xl font-semibold mb-1;
 }
 
 dt {
@@ -27,5 +35,9 @@ dd {
 }
 
 .lucide {
-    @apply w-4 h-4;
+    @apply w-5 h-5;
+}
+
+label {
+    @apply inline-block;
 }

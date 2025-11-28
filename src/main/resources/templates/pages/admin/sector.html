@@ -4,59 +4,75 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="my-12 space-y-8">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm text-gray-600" th:text="${gym.name}">
-                        Gym Name
-                    </p>
-                    <h2 class="text-2xl font-semibold" th:text="${sector.name}">
-                        Sector Name
-                    </h2>
-                </div>
-                <div class="space-x-2">
-                    <a
-                        th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/edit(gymId=${gym.id}, sectorId=${sector.id})}"
-                        class="px-3 py-2 bg-blue-600 text-white rounded"
-                        >Edit</a
-                    >
-                    <a
-                        th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
-                        class="px-3 py-2 border rounded"
-                        >Back</a
-                    >
-                </div>
+        <main class="wrapper">
+            <div class="flex items-center gap-4">
+                <a
+                    th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
+                    class="button button-square"
+                >
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <div>
+                        <h1 th:text="${sector.name}">Sector Name</h1>
+                        <p class="text-foreground-muted" th:text="${gym.name}">
+                            Gym Name
+                        </p>
+                    </div>
+                    <div class="flex gap-4">
+                        <a
+                            th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/edit(gymId=${gym.id}, sectorId=${sector.id})}"
+                            class="button button-primary"
+                        >
+                            <x
+                                th:replace="~{components/icons :: pencil-ruler}"
+                            ></x>
+                            Edit
+                        </a>
+                        <a href="#" class="button button-danger button-square">
+                            <x th:replace="~{components/icons :: trash-2}"></x>
+                        </a>
+                    </div>
+                </header>
             </div>
 
-            <div
-                class="border rounded p-6 grid grid-cols-1 md:grid-cols-2 gap-6"
-            >
-                <div>
+            <section class="card p-4 space-y-4">
+                <h2>General Information</h2>
+
+                <div class="grid gap-4 grid-cols-2">
+                    <div>
+                        <h3>Description</h3>
+                        <p
+                            th:text="${sector.description != null ? sector.description : 'No description provided.'}"
+                        >
+                            Description goes here
+                        </p>
+                    </div>
+
+                    <div
+                        class="w-full aspect-video rounded-base border-2 overflow-clip bg-main flex items-center justify-center flex-col gap-2"
+                    >
+                        <x th:replace="~{components/icons :: image-off}"></x>
+                        <p class="text-main-foreground font-medium">
+                            This sector has no image.
+                        </p>
+                    </div>
+
+                    <!-- 
                     <img
                         th:src="${sector.imagePath}"
                         alt="Sector image"
-                        class="w-full h-64 object-cover rounded bg-gray-100"
+                        class="w-full h-full object-cover brightness-20"
                     />
+                    -->
                 </div>
-                <div>
-                    <h3 class="text-lg font-semibold mb-2">Description</h3>
-                    <p
-                        th:text="${sector.description != null ? sector.description : 'No description provided.'}"
-                        class="text-gray-700"
-                    ></p>
-                </div>
-            </div>
+            </section>
 
-            <div class="space-y-4">
-                <!-- Boulders Section -->
-                <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-semibold">Boulders</h3>
-                    <a
-                        th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/new(gymId=${gym.id}, sectorId=${sector.id})}"
-                        class="px-3 py-2 bg-blue-600 text-white rounded"
-                        >New Boulder</a
-                    >
-                </div>
+            <section class="card p-4 space-y-4">
+                <h2>Boulders</h2>
 
                 <div
                     th:if="${boulders.isEmpty()}"
@@ -65,66 +81,55 @@
                     No boulders in this sector yet.
                 </div>
 
-                <div
-                    th:unless="${boulders.isEmpty()}"
-                    class="border rounded overflow-hidden"
-                >
-                    <table class="w-full">
-                        <thead class="bg-gray-100 border-b">
-                            <tr>
-                                <th class="px-4 py-2 text-left font-semibold">
-                                    Color
-                                </th>
-                                <th class="px-4 py-2 text-left font-semibold">
-                                    Grade
-                                </th>
-                                <th class="px-4 py-2 text-left font-semibold">
-                                    Description
-                                </th>
-                                <th class="px-4 py-2 text-left font-semibold">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                th:each="boulder : ${boulders}"
-                                class="border-b last:border-b-0 hover:bg-gray-50"
-                            >
-                                <td class="px-4 py-3">
-                                    <div class="flex items-center space-x-2">
-                                        <div
-                                            th:class="'w-6 h-6 rounded ' + ${boulder.color.cssColorClass}"
-                                        ></div>
-                                        <span
-                                            th:text="${boulder.color.displayName}"
-                                            >Color</span
-                                        >
-                                    </div>
-                                </td>
-                                <td class="px-4 py-3">
-                                    <span th:text="${boulder.grade.name}"
-                                        >Grade</span
-                                    >
-                                </td>
-                                <td
-                                    class="px-4 py-3"
-                                    th:text="${boulder.description}"
+                <table class="table w-full" th:unless="${boulders.isEmpty()}">
+                    <thead>
+                        <tr>
+                            <th class="w-20">Color</th>
+                            <th class="w-20">Grade</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="boulder : ${boulders}">
+                            <td>
+                                <div
+                                    th:class="'color-badge ' + ${boulder.color.cssColorClass}"
+                                ></div>
+                            </td>
+                            <td>
+                                <span
+                                    class="grade-badge"
+                                    th:text="${boulder.grade.name}"
                                 >
-                                    Description
-                                </td>
-                                <td class="px-4 py-3">
-                                    <a
-                                        th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}/edit(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})}"
-                                        class="px-3 py-1 bg-blue-600 text-white text-sm rounded"
-                                        >Edit</a
-                                    >
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+                                    Grade
+                                </span>
+                            </td>
+                            <td th:text="${boulder.description}">
+                                Description
+                            </td>
+                            <td>
+                                <a
+                                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}/edit(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})}"
+                                    class="button button-primary button-square ml-auto"
+                                >
+                                    <x
+                                        th:replace="~{components/icons :: pencil-ruler}"
+                                    ></x>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <a
+                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/new(gymId=${gym.id}, sectorId=${sector.id})}"
+                    class="button button-success"
+                >
+                    <x th:replace="~{components/icons :: badge-plus}"></x>
+                    Create New Boulder
+                </a>
+            </section>
+        </main>
     </th:block>
 </th:block>
