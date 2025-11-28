@@ -84,8 +84,7 @@ public class GymController {
      */
     @GetMapping("/{id}/update")
     public String showEditForm(@PathVariable("id") long id, Model model) {
-        GymEntity gym = gymRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+        GymEntity gym = findGymOrThrow(id);
         model.addAttribute("gym", gym);
         return "pages/admin/gyms/update";
     }
@@ -156,5 +155,12 @@ public class GymController {
     public String deleteGym(@PathVariable("id") long id) {
         gymRepository.deleteById(id);
         return "redirect:/admin/gyms";
+    }
+
+
+    private GymEntity findGymOrThrow(long gymId) {
+        return gymRepository
+                .findById(gymId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }
