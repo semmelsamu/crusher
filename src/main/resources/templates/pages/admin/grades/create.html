@@ -20,7 +20,7 @@
             </div>
 
             <th:block
-                th:replace="~{components/grade-form :: grade-form(
+                th:replace="~{components/cu-forms/grade :: grade(
                     @{/admin/gyms/{gymId}/grades(gymId=${gym.id})},
                     ${grade},
                     ${gym}

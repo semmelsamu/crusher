@@ -7,31 +7,27 @@
         <div class="my-12">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <p class="text-sm text-gray-600" th:text="${gym.name}">
+                    <h2 class="text-2xl font-semibold" th:text="${gym.name}">
                         Gym Name
-                    </p>
-                    <h2 class="text-2xl font-semibold" th:text="${sector.name}">
-                        Sector Name
                     </h2>
                 </div>
                 <a
-                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                    th:href="@{/admin/gyms/{id}(id=${gym.id})}"
                     class="px-3 py-2 border rounded"
-                    >Back to Sector</a
+                    >Back to Gym</a
                 >
             </div>
 
             <th:block
-                th:replace="~{components/sector-form :: sector-form(
-                    @{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})},
-                    ${sector},
+                th:replace="~{components/cu-forms/gym :: gym(
+                    @{/admin/gyms/{id}(id=${gym.id})},
                     ${gym}
                 )}"
             ></th:block>
 
             <div class="mt-8">
                 <form
-                    th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                    th:action="@{/admin/gyms/{id}(id=${gym.id})}"
                     method="post"
                 >
                     <input type="hidden" name="_method" value="delete" />
@@ -39,7 +35,7 @@
                         type="submit"
                         class="px-3 py-2 text-white bg-red-600 rounded"
                     >
-                        Delete Sector
+                        Delete Gym
                     </button>
                 </form>
             </div>
