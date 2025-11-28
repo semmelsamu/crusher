@@ -124,19 +124,14 @@ public class GymController {
             @Valid @ModelAttribute("gym") GymEntity formGym,
             BindingResult result,
             Model model) {
+        GymEntity gym = findGymOrThrow(id);
+
         if (result.hasErrors()) {
-            GymEntity gym = gymRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
-            gym.setName(formGym.getName());
-            gym.setStreet(formGym.getStreet());
-            gym.setCity(formGym.getCity());
-            gym.setEmail(formGym.getEmail());
-            model.addAttribute("gym", gym);
+            formGym.setId(gym.getId());
+            model.addAttribute("gym", formGym);
             return "pages/admin/gyms/update";
         }
 
-        GymEntity gym = gymRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
         gym.setName(formGym.getName());
         gym.setStreet(formGym.getStreet());
         gym.setCity(formGym.getCity());
