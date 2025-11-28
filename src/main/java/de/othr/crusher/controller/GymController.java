@@ -72,7 +72,7 @@ public class GymController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("gym", new GymEntity());
-        return "pages/admin/gym-edit";
+        return "pages/admin/gym-new";
     }
 
     /**
@@ -84,8 +84,7 @@ public class GymController {
      */
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable("id") long id, Model model) {
-        GymEntity gym = gymRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+        GymEntity gym = findGymOrThrow(id);
         model.addAttribute("gym", gym);
         return "pages/admin/gym-edit";
     }
@@ -102,7 +101,7 @@ public class GymController {
     @PostMapping
     public String createGym(@Valid @ModelAttribute("gym") GymEntity gym, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "pages/admin/gym-edit";
+            return "pages/admin/gym-new";
         }
 
         gymRepository.save(gym);
@@ -126,13 +125,8 @@ public class GymController {
             BindingResult result,
             Model model) {
         if (result.hasErrors()) {
-            GymEntity gym = gymRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
-            gym.setName(formGym.getName());
-            gym.setStreet(formGym.getStreet());
-            gym.setCity(formGym.getCity());
-            gym.setEmail(formGym.getEmail());
-            model.addAttribute("gym", gym);
+            formGym.setId(id);
+            model.addAttribute("gym", formGym);
             return "pages/admin/gym-edit";
         }
 
@@ -156,5 +150,12 @@ public class GymController {
     public String deleteGym(@PathVariable("id") long id) {
         gymRepository.deleteById(id);
         return "redirect:/admin/gyms";
+    }
+
+
+    private GymEntity findGymOrThrow(long gymId) {
+        return gymRepository
+                .findById(gymId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }

@@ -1,0 +1,25 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <div class="my-12">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-semibold">New Gym</h2>
+                </div>
+                <a th:href="@{/admin/gyms}" class="px-3 py-2 border rounded"
+                    >Back to Gyms</a
+                >
+            </div>
+
+            <th:block
+                th:replace="~{components/gym-form :: gym-form(
+                    @{/admin/gyms},
+                    ${gym}
+                )}"
+            ></th:block>
+        </div>
+    </th:block>
+</th:block>
