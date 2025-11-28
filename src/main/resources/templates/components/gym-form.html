@@ -1,0 +1,91 @@
+<form
+    th:fragment="gym-form(actionUrl, gym)"
+    th:action="${actionUrl}"
+    th:object="${gym}"
+    method="post"
+    class="space-y-6"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <input
+        type="hidden"
+        name="_method"
+        th:value="${gym.id} != null ? 'put' : 'post'"
+    />
+
+    <div>
+        <label class="block font-medium mb-2">Name</label>
+        <input
+            th:field="*{name}"
+            class="border w-full p-2 rounded"
+            placeholder="e.g., Boulder Shack"
+        />
+        <p
+            th:if="${#fields.hasErrors('name')}"
+            th:errors="*{name}"
+            class="text-red-600 text-sm mt-1"
+        ></p>
+    </div>
+
+    <div>
+        <label class="block font-medium mb-2">Street</label>
+        <input
+            th:field="*{street}"
+            class="border w-full p-2 rounded"
+            placeholder="e.g., Main Street 42"
+        />
+        <p
+            th:if="${#fields.hasErrors('street')}"
+            th:errors="*{street}"
+            class="text-red-600 text-sm mt-1"
+        ></p>
+    </div>
+
+    <div>
+        <label class="block font-medium mb-2">City</label>
+        <input
+            th:field="*{city}"
+            class="border w-full p-2 rounded"
+            placeholder="e.g., Berlin"
+        />
+        <p
+            th:if="${#fields.hasErrors('city')}"
+            th:errors="*{city}"
+            class="text-red-600 text-sm mt-1"
+        ></p>
+    </div>
+
+    <div>
+        <label class="block font-medium mb-2">Email</label>
+        <input
+            th:field="*{email}"
+            type="email"
+            class="border w-full p-2 rounded"
+            placeholder="e.g., contact@gym.com"
+        />
+        <p
+            th:if="${#fields.hasErrors('email')}"
+            th:errors="*{email}"
+            class="text-red-600 text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="flex items-center space-x-3">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+            Save
+        </button>
+        <a
+            th:if="${gym.id != null}"
+            th:href="@{/admin/gyms/{id}(id=${gym.id})}"
+            class="px-3 py-2 border rounded"
+        >
+            Cancel
+        </a>
+        <a
+            th:if="${gym.id == null}"
+            th:href="@{/admin/gyms}"
+            class="px-3 py-2 border rounded"
+        >
+            Cancel
+        </a>
+    </div>
+</form>

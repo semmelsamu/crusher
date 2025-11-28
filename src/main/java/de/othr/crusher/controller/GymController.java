@@ -72,7 +72,7 @@ public class GymController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("gym", new GymEntity());
-        return "pages/admin/gym-edit";
+        return "pages/admin/gym-new";
     }
 
     /**
@@ -102,7 +102,7 @@ public class GymController {
     @PostMapping
     public String createGym(@Valid @ModelAttribute("gym") GymEntity gym, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "pages/admin/gym-edit";
+            return "pages/admin/gym-new";
         }
 
         gymRepository.save(gym);
