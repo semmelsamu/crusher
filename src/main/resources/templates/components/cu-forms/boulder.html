@@ -1,5 +1,5 @@
 <form
-    th:fragment="boulder-form(actionUrl, boulder, gym, sector, availableColors, availableGrades)"
+    th:fragment="boulder(actionUrl, boulder, gym, sector, availableColors, availableGrades)"
     th:action="${actionUrl}"
     th:object="${boulder}"
     method="post"
@@ -75,4 +75,3 @@
         </a>
     </div>
 </form>
-

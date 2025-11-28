@@ -23,7 +23,7 @@
             </div>
 
             <th:block
-                th:replace="~{components/boulder-form :: boulder-form(
+                th:replace="~{components/cu-forms/boulder :: boulder(
                     @{/admin/gyms/{gymId}/sectors/{sectorId}/boulders(gymId=${gym.id}, sectorId=${sector.id})},
                     ${boulder},
                     ${gym},
@@ -35,4 +35,3 @@
         </div>
     </th:block>
 </th:block>
-

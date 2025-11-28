@@ -10,10 +10,7 @@
                     <p class="text-sm text-gray-600" th:text="${gym.name}">
                         Gym Name
                     </p>
-                    <h2
-                        class="text-2xl font-semibold"
-                        th:text="${grade.name}"
-                    >
+                    <h2 class="text-2xl font-semibold" th:text="${grade.name}">
                         Grade Name
                     </h2>
                 </div>
@@ -25,7 +22,7 @@
             </div>
 
             <th:block
-                th:replace="~{components/grade-form :: grade-form(
+                th:replace="~{components/cu-forms/grade :: grade(
                     @{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})},
                     ${grade},
                     ${gym}

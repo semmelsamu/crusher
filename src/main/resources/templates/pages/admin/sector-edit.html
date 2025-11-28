@@ -22,7 +22,7 @@
             </div>
 
             <th:block
-                th:replace="~{components/sector-form :: sector-form(
+                th:replace="~{components/cu-forms/sector :: sector(
                     @{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})},
                     ${sector},
                     ${gym}

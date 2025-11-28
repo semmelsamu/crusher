@@ -28,7 +28,7 @@
             </div>
 
             <th:block
-                th:replace="~{components/boulder-form :: boulder-form(
+                th:replace="~{components/cu-forms/boulder :: boulder(
                     @{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})},
                     ${boulder},
                     ${gym},
