@@ -43,7 +43,7 @@ public class GymController {
     @GetMapping
     public String showAllGyms(Model model) {
         model.addAttribute("gyms", gymRepository.findAll());
-        return "pages/admin/gyms";
+        return "pages/admin/gyms/all";
     }
 
     /**
@@ -60,7 +60,7 @@ public class GymController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymId(id));
-        return "pages/admin/gym";
+        return "pages/admin/gyms/detail";
     }
 
     /**
@@ -72,7 +72,7 @@ public class GymController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("gym", new GymEntity());
-        return "pages/admin/gym-new";
+        return "pages/admin/gyms/create";
     }
 
     /**
@@ -87,7 +87,7 @@ public class GymController {
         GymEntity gym = gymRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
         model.addAttribute("gym", gym);
-        return "pages/admin/gym-edit";
+        return "pages/admin/gyms/update";
     }
 
     /**
@@ -102,7 +102,7 @@ public class GymController {
     @PostMapping
     public String createGym(@Valid @ModelAttribute("gym") GymEntity gym, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "pages/admin/gym-new";
+            return "pages/admin/gyms/create";
         }
 
         gymRepository.save(gym);
@@ -133,7 +133,7 @@ public class GymController {
             gym.setCity(formGym.getCity());
             gym.setEmail(formGym.getEmail());
             model.addAttribute("gym", gym);
-            return "pages/admin/gym-edit";
+            return "pages/admin/gyms/update";
         }
 
         GymEntity gym = gymRepository.findById(id)

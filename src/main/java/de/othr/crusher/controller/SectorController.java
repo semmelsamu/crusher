@@ -64,7 +64,7 @@ public class SectorController {
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
         model.addAttribute("boulders", boulders);
-        return "pages/admin/sector";
+        return "pages/admin/sectors/detail";
     }
 
     /**
@@ -83,7 +83,7 @@ public class SectorController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
-        return "pages/admin/sector-new";
+        return "pages/admin/sectors/create";
     }
 
     /**
@@ -104,7 +104,7 @@ public class SectorController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
-        return "pages/admin/sector-edit";
+        return "pages/admin/sectors/update";
     }
 
     /**
@@ -130,7 +130,7 @@ public class SectorController {
                 sector.setImagePath(DEFAULT_IMAGE_PATH);
             }
             model.addAttribute("gym", gym);
-            return "pages/admin/sector-new";
+            return "pages/admin/sectors/create";
         }
 
         sector.setGym(gym);
@@ -171,7 +171,7 @@ public class SectorController {
             }
             model.addAttribute("gym", gym);
             model.addAttribute("sector", formSector);
-            return "pages/admin/sector-edit";
+            return "pages/admin/sectors/update";
         }
 
         sector.setName(formSector.getName());

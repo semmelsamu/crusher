@@ -68,7 +68,7 @@ public class GradeController {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
-        return "pages/admin/grade-edit";
+        return "pages/admin/grades/update";
     }
 
     /**
@@ -86,7 +86,7 @@ public class GradeController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("grade", grade);
-        return "pages/admin/grade-new";
+        return "pages/admin/grades/create";
     }
 
     /**
@@ -112,7 +112,7 @@ public class GradeController {
             formGrade.setId(grade.getId());
             formGrade.setGym(grade.getGym());
             model.addAttribute("gym", grade.getGym());
-            return "pages/admin/grade-edit";
+            return "pages/admin/grades/update";
         }
 
         grade.setName(formGrade.getName());
@@ -142,7 +142,7 @@ public class GradeController {
 
         if (result.hasErrors()) {
             model.addAttribute("gym", gym);
-            return "pages/admin/grade-new";
+            return "pages/admin/grades/create";
         }
 
         formGrade.setGym(gym);

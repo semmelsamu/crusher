@@ -77,7 +77,7 @@ public class BoulderController {
         model.addAttribute("boulder", boulder);
         model.addAttribute("availableGrades", availableGrades);
         model.addAttribute("availableColors", BoulderColor.values());
-        return "pages/admin/boulder-new";
+        return "pages/admin/boulders/create";
     }
 
     /**
@@ -106,7 +106,7 @@ public class BoulderController {
         model.addAttribute("boulder", boulder);
         model.addAttribute("availableGrades", availableGrades);
         model.addAttribute("availableColors", BoulderColor.values());
-        return "pages/admin/boulder-edit";
+        return "pages/admin/boulders/update";
     }
 
     /**
@@ -136,7 +136,7 @@ public class BoulderController {
             model.addAttribute("sector", sector);
             model.addAttribute("availableGrades", availableGrades);
             model.addAttribute("availableColors", BoulderColor.values());
-            return "pages/admin/boulder-new";
+            return "pages/admin/boulders/create";
         }
 
         // Validate that the grade belongs to the same gym
@@ -186,7 +186,7 @@ public class BoulderController {
             model.addAttribute("boulder", formBoulder);
             model.addAttribute("availableGrades", availableGrades);
             model.addAttribute("availableColors", BoulderColor.values());
-            return "pages/admin/boulder-edit";
+            return "pages/admin/boulders/update";
         }
 
         // Validate that the grade belongs to the same gym
