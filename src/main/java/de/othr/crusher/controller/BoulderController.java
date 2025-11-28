@@ -59,7 +59,7 @@ public class BoulderController {
      * @param model Spring model to pass data to the view
      * @return view name for the boulder creation form
      */
-    @GetMapping("/new")
+    @GetMapping("/create")
     public String showCreateForm(
             @PathVariable("gymId") long gymId,
             @PathVariable("sectorId") long sectorId,
@@ -89,7 +89,7 @@ public class BoulderController {
      * @param model Spring model to pass data to the view
      * @return view name for the boulder edit form
      */
-    @GetMapping("/{boulderId}/edit")
+    @GetMapping("/{boulderId}/update")
     public String showEditForm(
             @PathVariable("gymId") long gymId,
             @PathVariable("sectorId") long sectorId,

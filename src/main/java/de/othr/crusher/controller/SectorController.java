@@ -74,7 +74,7 @@ public class SectorController {
      * @param model Spring model to pass data to the view
      * @return view name for the sector creation form
      */
-    @GetMapping("/new")
+    @GetMapping("/create")
     public String showCreateForm(@PathVariable("gymId") long gymId, Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = new SectorEntity();
@@ -94,7 +94,7 @@ public class SectorController {
      * @param model Spring model to pass data to the view
      * @return view name for the sector edit form
      */
-    @GetMapping("/{sectorId}/edit")
+    @GetMapping("/{sectorId}/update")
     public String showEditForm(
             @PathVariable("gymId") long gymId,
             @PathVariable("sectorId") long sectorId,

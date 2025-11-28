@@ -69,7 +69,7 @@ public class GymController {
      * @param model Spring model to pass data to the view
      * @return view name for the gym creation page
      */
-    @GetMapping("/new")
+    @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("gym", new GymEntity());
         return "pages/admin/gyms/create";
@@ -82,7 +82,7 @@ public class GymController {
      * @param model Spring model to pass data to the view
      * @return view name for the gym edit page
      */
-    @GetMapping("/{id}/edit")
+    @GetMapping("/{id}/update")
     public String showEditForm(@PathVariable("id") long id, Model model) {
         GymEntity gym = gymRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));

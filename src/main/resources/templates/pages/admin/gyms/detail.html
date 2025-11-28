@@ -17,7 +17,7 @@
                     </h2>
                     <div class="flex items-center gap-3">
                         <a
-                            th:href="@{/admin/gyms/{id}/edit(id=${gym.id})}"
+                            th:href="@{/admin/gyms/{id}/update(id=${gym.id})}"
                             class="px-3 py-2 bg-blue-600 text-white rounded flex items-center gap-2"
                             title="Edit Gym"
                         >
@@ -109,7 +109,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-xl">Sectors</h3>
                         <a
-                            th:href="@{/admin/gyms/{gymId}/sectors/new(gymId=${gym.id})}"
+                            th:href="@{/admin/gyms/{gymId}/sectors/create(gymId=${gym.id})}"
                             class="px-3 py-1 bg-blue-600 text-white rounded"
                         >
                             Add Sector
@@ -156,7 +156,7 @@
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-xl">Grades</h3>
                         <a
-                            th:href="@{/admin/gyms/{gymId}/grades/new(gymId=${gym.id})}"
+                            th:href="@{/admin/gyms/{gymId}/grades/create(gymId=${gym.id})}"
                             class="px-3 py-1 bg-blue-600 text-white rounded"
                         >
                             Add Grade
@@ -199,7 +199,7 @@
                                 </td>
                                 <td class="px-4 py-2">
                                     <a
-                                        th:href="@{/admin/gyms/{gymId}/grades/{gradeId}/edit(gymId=${gym.id}, gradeId=${grade.id})}"
+                                        th:href="@{/admin/gyms/{gymId}/grades/{gradeId}/update(gymId=${gym.id}, gradeId=${grade.id})}"
                                         class="text-blue-600 hover:underline"
                                     >
                                         Edit

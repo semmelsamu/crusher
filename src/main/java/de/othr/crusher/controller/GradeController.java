@@ -49,7 +49,7 @@ public class GradeController {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
-        return "redirect:/admin/gyms/" + gymId + "/grades/" + gradeId + "/edit";
+        return "redirect:/admin/gyms/" + gymId + "/grades/" + gradeId + "/update";
     }
 
     /**
@@ -60,7 +60,7 @@ public class GradeController {
      * @param model Spring model to pass data to the view
      * @return view name for the grade edit page
      */
-    @GetMapping("/{gradeId}/edit")
+    @GetMapping("/{gradeId}/update")
     public String showEditForm(
             @PathVariable("gymId") long gymId,
             @PathVariable("gradeId") long gradeId,
@@ -78,7 +78,7 @@ public class GradeController {
      * @param model Spring model to pass data to the view
      * @return view name for the grade creation page
      */
-    @GetMapping("/new")
+    @GetMapping("/create")
     public String showCreateForm(@PathVariable("gymId") long gymId, Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         GradeEntity grade = new GradeEntity();
