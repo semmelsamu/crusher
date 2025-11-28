@@ -146,7 +146,7 @@ public class GradeController {
         }
 
         formGrade.setGym(gym);
-        GradeEntity saved = gradeRepository.save(formGrade);
+        gradeRepository.save(formGrade);
         return "redirect:/admin/gyms/" + gymId;
     }
 
