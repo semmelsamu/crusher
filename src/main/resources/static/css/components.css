@@ -108,6 +108,36 @@
 
 /*
 |-------------------------------------------------------------------------------
+| Breadcrumb
+|-------------------------------------------------------------------------------
+*/
+
+.breadcrumb {
+    @apply py-2;
+}
+
+.breadcrumb-list {
+    @apply flex items-center gap-2 flex-wrap;
+}
+
+.breadcrumb-item {
+    @apply flex items-center gap-2;
+}
+
+.breadcrumb-link {
+    @apply hover:underline transition-all;
+}
+
+.breadcrumb-current {
+    @apply text-foreground-muted;
+}
+
+.breadcrumb-separator {
+    @apply text-foreground-muted;
+}
+
+/*
+|-------------------------------------------------------------------------------
 | Crusher-specific
 |-------------------------------------------------------------------------------
 */

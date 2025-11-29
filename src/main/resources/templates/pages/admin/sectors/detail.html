@@ -5,6 +5,21 @@
 >
     <th:block layout:fragment="content">
         <main class="wrapper">
+            <th:block
+                th:with="breadcrumbItems=${
+                    {
+                        {label: 'Home', url: '/'},
+                        {label: 'Admin Panel', url: '/admin/gyms'},
+                        {label: gym.name, url: '/admin/gyms/' + gym.id},
+                        {label: sector.name, url: ''}
+                    }
+                }"
+            >
+                <div
+                    th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumbItems})}"
+                ></div>
+            </th:block>
+
             <div class="flex items-center gap-4">
                 <a
                     th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
