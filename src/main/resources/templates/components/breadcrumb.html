@@ -1,16 +1,16 @@
 <nav
     th:fragment="breadcrumb(items)"
     aria-label="Breadcrumb"
-    class="breadcrumb"
+    class="py-2 text-foreground-muted"
     xmlns:th="http://www.thymeleaf.org"
 >
-    <ol class="breadcrumb-list">
-        <li th:each="item, iterStat : ${items}" class="breadcrumb-item">
+    <ol class="flex items-center gap-2 flex-wrap">
+        <li th:each="item, iterStat : ${items}" class="flex items-center gap-2">
             <a
                 th:if="${!iterStat.last}"
                 th:href="${item.url}"
                 th:text="${item.label}"
-                class="breadcrumb-link"
+                class="hover:underline"
             >
                 Label
             </a>
