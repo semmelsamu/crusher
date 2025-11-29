@@ -9,7 +9,7 @@
 }
 
 .card {
-    @apply border-4 rounded-base shadow-base bg-secondary-background;
+    @apply border-2 rounded-base shadow-base bg-secondary-background;
 }
 
 /*
