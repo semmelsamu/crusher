@@ -8,6 +8,7 @@ import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.SectorRepository;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,6 +65,15 @@ public class SectorController {
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
         model.addAttribute("boulders", boulders);
+        
+        // Add breadcrumb navigation
+        model.addAttribute("breadcrumb", List.of(
+            Map.of("label", "Home", "url", "/"),
+            Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+            Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
+            Map.of("label", sector.getName(), "url", "")
+        ));
+        
         return "pages/admin/sectors/detail";
     }
 
