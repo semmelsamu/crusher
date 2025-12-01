@@ -29,21 +29,6 @@
                 )}"
                 ></th:block>
             </section>
-
-            <div
-                class="card max-w-md mx-auto p-4 flex items-center justify-between"
-            >
-                <p>Delete Grade</p>
-                <form
-                    th:action="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
-                    method="post"
-                >
-                    <input type="hidden" name="_method" value="delete" />
-                    <button type="submit" class="button button-danger">
-                        Delete Grade
-                    </button>
-                </form>
-            </div>
         </main>
     </th:block>
 </th:block>

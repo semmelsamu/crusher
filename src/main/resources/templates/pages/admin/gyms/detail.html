@@ -180,14 +180,35 @@
                             <td th:text="${grade.fontScale}">Font-Scale</td>
                             <td th:text="${grade.description}">Description</td>
                             <td>
-                                <a
-                                    th:href="@{/admin/gyms/{gymId}/grades/{gradeId}/update(gymId=${gym.id}, gradeId=${grade.id})}"
-                                    class="button button-primary button-square ml-auto"
-                                >
-                                    <x
-                                        th:replace="~{components/icons :: pencil-ruler}"
-                                    ></x>
-                                </a>
+                                <div class="flex gap-2 justify-end">
+                                    <a
+                                        th:href="@{/admin/gyms/{gymId}/grades/{gradeId}/update(gymId=${gym.id}, gradeId=${grade.id})}"
+                                        class="button button-primary button-square"
+                                    >
+                                        <x
+                                            th:replace="~{components/icons :: pencil-ruler}"
+                                        ></x>
+                                    </a>
+                                    <form
+                                        th:action="@{/admin/gyms/{gymId}/grades/{gradeId}(gymId=${gym.id}, gradeId=${grade.id})}"
+                                        method="post"
+                                        class="inline"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="_method"
+                                            value="delete"
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="button button-danger button-square"
+                                        >
+                                            <x
+                                                th:replace="~{components/icons :: trash-2}"
+                                            ></x>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
