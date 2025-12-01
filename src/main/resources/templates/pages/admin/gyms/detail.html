@@ -75,11 +75,13 @@
             <section class="card p-4 space-y-4">
                 <h2>General Information</h2>
 
-                <div class="grid gap-2 grid-cols-1">
+                <div class="space-y-1">
                     <p th:text="${gym.name}">Name</p>
                     <p th:text="${gym.street}">Street</p>
                     <p th:text="${gym.city}">City</p>
-                    <p th:text="${gym.email}">Email</p>
+                    <a th:href="mailto:${gym.email}" th:text="${gym.email}">
+                        Email
+                    </a>
                 </div>
             </section>
 
@@ -91,7 +93,7 @@
                     <a
                         th:each="sector : ${gym.sectors}"
                         th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-                        class="p-4 block space-y-4"
+                        class="block space-y-2"
                     >
                         <div class="aspect-video rounded-base border-2">
                             <img
@@ -111,26 +113,25 @@
                             </div>
                         </div>
                         <div>
-                            <h3 th:text="${sector.name}">Sector Name</h3>
-                            <p th:text="${sector.description}">Description</p>
+                            <h3 th:text="${sector.name}" class="text-center">
+                                Sector Name
+                            </h3>
                         </div>
                     </a>
 
                     <!-- Create new sector card -->
                     <a
                         th:href="@{/admin/gyms/{gymId}/sectors/create(gymId=${gym.id})}"
-                        class="p-4 block space-y-4"
+                        class="block space-y-2"
                     >
                         <div
-                            class="button-success aspect-video rounded-base border-2 flex items-center justify-center"
+                            class="bg-success aspect-video rounded-base border-2 flex items-center justify-center"
                         >
                             <x
                                 th:replace="~{components/icons :: circle-plus}"
                             ></x>
                         </div>
-                        <div>
-                            <h3>Create New Sector</h3>
-                        </div>
+                        <h3 class="text-center">Create New Sector</h3>
                     </a>
                 </div>
 
@@ -156,8 +157,8 @@
                     <thead>
                         <tr>
                             <th class="w-20">Name</th>
-                            <th class="w-20">V-Scale</th>
-                            <th class="w-20">Font-Scale</th>
+                            <th class="w-32">V-Scale</th>
+                            <th class="w-32">Font-Scale</th>
                             <th>Description</th>
                             <th></th>
                         </tr>
