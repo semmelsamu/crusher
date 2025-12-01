@@ -119,3 +119,25 @@
 .grade-badge {
     @apply text-center inline-block w-fit px-1 min-w-7 bg-secondary-background border-2 font-medium;
 }
+
+/*
+|-------------------------------------------------------------------------------
+| Notifications
+|-------------------------------------------------------------------------------
+*/
+
+.notification {
+    @apply border-2 rounded-base shadow-base p-4 bg-background text-foreground w-full mx-4 sm:max-w-md sm:mx-auto;
+}
+
+.notification:has(svg) {
+    @apply grid grid-cols-[auto_1fr] gap-x-4;
+}
+
+.notification:has(svg) * {
+    @apply col-start-2;
+}
+
+.notification svg {
+    @apply mt-0.5 col-start-1;
+}
