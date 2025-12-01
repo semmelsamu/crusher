@@ -20,12 +20,7 @@
                 <header
                     class="card flex-1 p-4 flex items-center justify-between"
                 >
-                    <div>
-                        <h1 th:text="${sector.name}">Sector Name</h1>
-                        <p class="text-foreground-muted" th:text="${gym.name}">
-                            Gym Name
-                        </p>
-                    </div>
+                    <h1>Sector Details</h1>
                     <div class="flex gap-4">
                         <a
                             th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/update(gymId=${gym.id}, sectorId=${sector.id})}"
@@ -76,8 +71,12 @@
 
                 <div class="grid gap-4 grid-cols-2">
                     <div>
-                        <h3>Description</h3>
+                        <strong th:text="${sector.name}">Sector Name</strong>
+
+                        <p th:text="${gym.name}">Gym Name</p>
+
                         <p
+                            class="mt-4"
                             th:text="${sector.description != null ? sector.description : 'No description provided.'}"
                         >
                             Description goes here
