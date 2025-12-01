@@ -4,22 +4,27 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="my-12">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h2 class="text-2xl font-semibold">New Gym</h2>
-                </div>
-                <a th:href="@{/admin/gyms}" class="px-3 py-2 border rounded"
-                    >Back to Gyms</a
+        <main class="wrapper">
+            <div class="flex items-center gap-4">
+                <a th:href="@{/admin/gyms}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 flex items-center justify-between p-4"
                 >
+                    <h1>Create New Gym</h1>
+                </header>
             </div>
 
-            <th:block
-                th:replace="~{components/cu-forms/gym :: gym(
+            <section class="card p-4 max-w-md mx-auto">
+                <th:block
+                    th:replace="~{components/cu-forms/gym :: gym(
                     @{/admin/gyms},
                     ${gym}
                 )}"
-            ></th:block>
-        </div>
+                ></th:block>
+            </section>
+        </main>
     </th:block>
 </th:block>
