@@ -86,49 +86,60 @@
             <section class="card p-4 space-y-4">
                 <h2>Sectors</h2>
 
-                <div
-                    th:if="${gym.sectors.isEmpty()}"
-                    class="border rounded p-6 text-center text-gray-600"
-                >
-                    No sectors added yet.
+                <div class="grid lg:grid-cols-3 gap-4">
+                    <!-- Existing sectors -->
+                    <a
+                        th:each="sector : ${gym.sectors}"
+                        th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                        class="p-4 block space-y-4"
+                    >
+                        <div class="aspect-video rounded-base border-2">
+                            <img
+                                th:if="${sector.imagePath != null}"
+                                th:src="${sector.imagePath}"
+                                alt="Sector image"
+                                class="w-full h-full object-cover"
+                            />
+                            <div
+                                th:unless="${sector.imagePath != null}"
+                                class="flex flex-col items-center gap-2"
+                            >
+                                <x
+                                    th:replace="~{components/icons :: image-off}"
+                                ></x>
+                                <span>No image</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 th:text="${sector.name}">Sector Name</h3>
+                            <p th:text="${sector.description}">Description</p>
+                        </div>
+                    </a>
+
+                    <!-- Create new sector card -->
+                    <a
+                        th:href="@{/admin/gyms/{gymId}/sectors/create(gymId=${gym.id})}"
+                        class="p-4 block space-y-4"
+                    >
+                        <div
+                            class="button-success aspect-video rounded-base border-2 flex items-center justify-center"
+                        >
+                            <x
+                                th:replace="~{components/icons :: circle-plus}"
+                            ></x>
+                        </div>
+                        <div>
+                            <h3>Create New Sector</h3>
+                        </div>
+                    </a>
                 </div>
 
-                <table
-                    class="table w-full"
-                    th:unless="${gym.sectors.isEmpty()}"
-                >
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="sector : ${gym.sectors}">
-                            <td th:text="${sector.name}">Sector Name</td>
-                            <td th:text="${sector.description}">Description</td>
-                            <td>
-                                <a
-                                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-                                    class="button button-primary button-square ml-auto"
-                                >
-                                    <x
-                                        th:replace="~{components/icons :: square-arrow-out-up-right}"
-                                    ></x>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <a
-                    th:href="@{/admin/gyms/{gymId}/sectors/create(gymId=${gym.id})}"
-                    class="button button-success"
-                >
-                    <x th:replace="~{components/icons :: badge-plus}"></x>
-                    Create New Sector
-                </a>
+                <div th:if="${gym.sectors.isEmpty()}">
+                    <p>
+                        No sectors added yet. Click the card above to create
+                        your first sector.
+                    </p>
+                </div>
             </section>
 
             <section class="card p-4 space-y-4">
