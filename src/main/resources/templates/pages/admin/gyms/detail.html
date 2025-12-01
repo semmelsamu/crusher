@@ -17,7 +17,7 @@
                 <header
                     class="card flex-1 p-4 flex items-center justify-between"
                 >
-                    <h1 th:text="${gym.name}">Gym Name</h1>
+                    <h1>Gym Details</h1>
                     <div class="flex gap-4">
                         <a
                             th:href="@{/admin/gyms/{id}/update(id=${gym.id})}"
@@ -75,19 +75,11 @@
             <section class="card p-4 space-y-4">
                 <h2>General Information</h2>
 
-                <div class="grid gap-4 grid-cols-1 md:grid-cols-2">
-                    <div>
-                        <h3>Street</h3>
-                        <p th:text="${gym.street}">Street</p>
-                    </div>
-                    <div>
-                        <h3>City</h3>
-                        <p th:text="${gym.city}">City</p>
-                    </div>
-                    <div>
-                        <h3>Email</h3>
-                        <p th:text="${gym.email}">Email</p>
-                    </div>
+                <div class="grid gap-4 grid-cols-1">
+                    <p th:text="${gym.name}">Name</p>
+                    <p th:text="${gym.street}">Street</p>
+                    <p th:text="${gym.city}">City</p>
+                    <p th:text="${gym.email}">Email</p>
                 </div>
             </section>
 
