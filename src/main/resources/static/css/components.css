@@ -117,5 +117,5 @@
 }
 
 .grade-badge {
-    @apply text-center block w-fit px-1 min-w-7 bg-secondary-background border-2 font-medium;
+    @apply text-center inline-block w-fit px-1 min-w-7 bg-secondary-background border-2 font-medium;
 }
