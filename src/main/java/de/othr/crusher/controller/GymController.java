@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -60,6 +62,14 @@ public class GymController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymId(id));
+
+        // Add breadcrumb navigation
+        model.addAttribute("breadcrumb", List.of(
+                Map.of("label", "Home", "url", "/"),
+                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId())
+        ));
+
         return "pages/admin/gyms/detail";
     }
 
