@@ -79,7 +79,10 @@
                     <p th:text="${gym.name}">Name</p>
                     <p th:text="${gym.street}">Street</p>
                     <p th:text="${gym.city}">City</p>
-                    <a th:href="mailto:${gym.email}" th:text="${gym.email}">
+                    <a
+                        th:href="@{mailto:{email}(email=${gym.email})}"
+                        th:text="${gym.email}"
+                    >
                         Email
                     </a>
                 </div>
