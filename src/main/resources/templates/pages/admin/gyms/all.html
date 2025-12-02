@@ -9,7 +9,7 @@
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
             ></div>
 
-            <div class="flex items-center gap-4 mt-4">
+            <div class="flex items-center gap-4">
                 <a th:href="@{/}" class="button button-square">
                     <x th:replace="~{components/icons :: arrow-big-left}"></x>
                 </a>
@@ -21,7 +21,7 @@
                 </header>
             </div>
 
-            <section class="card p-4 space-y-4 mt-4">
+            <section class="card p-4 space-y-4">
                 <div class="grid lg:grid-cols-3 gap-4">
                     <a
                         th:each="gym : ${gyms}"
