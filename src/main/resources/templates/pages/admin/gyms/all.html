@@ -31,19 +31,17 @@
                         <div
                             class="aspect-video rounded-base border-2 overflow-clip bg-background flex flex-col items-center justify-center gap-2 text-main-foreground text-center p-4"
                         >
-                            <div class="space-y-2">
-                                <h3 th:text="${gym.name}">Gym Name</h3>
-                                <p class="text-sm text-main-foreground">
-                                    <span th:text="${gym.street}">Street</span>,
-                                    <span th:text="${gym.city}">City</span>
-                                </p>
-                                <p
-                                    class="text-sm text-main-foreground"
-                                    th:text="${gym.email}"
-                                >
-                                    Email
-                                </p>
-                            </div>
+                            <h3 th:text="${gym.name}">Gym Name</h3>
+                            <p class="text-sm text-main-foreground">
+                                <span th:text="${gym.street}">Street</span>,
+                                <span th:text="${gym.city}">City</span>
+                            </p>
+                            <p
+                                class="text-sm text-main-foreground"
+                                th:text="${gym.email}"
+                            >
+                                Email
+                            </p>
                         </div>
                     </a>
 
