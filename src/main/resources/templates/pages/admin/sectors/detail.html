@@ -84,21 +84,24 @@
                     </div>
 
                     <div
-                        class="w-full aspect-video rounded-base border-2 overflow-clip bg-background flex items-center justify-center flex-col gap-2"
+                        class="w-full aspect-video rounded-base border-2 overflow-clip bg-background"
                     >
-                        <x th:replace="~{components/icons :: image-off}"></x>
-                        <p class="text-main-foreground font-medium">
-                            This sector has no image.
-                        </p>
+                        <img
+                            th:if="${sector.imagePath != null and !#strings.contains(sector.imagePath, 'default-sector')}"
+                            th:src="${sector.imagePath}"
+                            alt="Sector image"
+                            class="w-full h-full object-cover"
+                        />
+                        <div
+                            th:unless="${sector.imagePath != null and !#strings.contains(sector.imagePath, 'default-sector')}"
+                            class="w-full h-full flex flex-col items-center justify-center gap-2 text-main-foreground"
+                        >
+                            <x
+                                th:replace="~{components/icons :: image-off}"
+                            ></x>
+                            <p class="font-medium">Image coming soon</p>
+                        </div>
                     </div>
-
-                    <!-- 
-                    <img
-                        th:src="${sector.imagePath}"
-                        alt="Sector image"
-                        class="w-full h-full object-cover brightness-20"
-                    />
-                    -->
                 </div>
             </section>
 
