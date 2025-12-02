@@ -13,45 +13,45 @@
                 <header
                     class="card flex-1 flex items-center justify-between p-4"
                 >
-                    <h1>Gyms</h1>
+                    <h1>All Gyms</h1>
                 </header>
             </div>
 
             <section class="card p-4 space-y-4">
-                <h2>All Gyms</h2>
-
                 <div class="grid lg:grid-cols-3 gap-4">
                     <a
                         th:each="gym : ${gyms}"
                         th:href="@{/admin/gyms/{id}(id=${gym.id})}"
-                        class="block space-y-2"
+                        class="block"
                     >
                         <div
-                            class="aspect-video rounded-base border-2 overflow-clip bg-background flex flex-col items-center justify-center gap-2 text-main-foreground"
+                            class="aspect-video rounded-base border-2 overflow-clip bg-background flex flex-col items-center justify-center gap-2 text-main-foreground text-center p-4"
                         >
-                            <x
-                                th:replace="~{components/icons :: image-off}"
-                            ></x>
-                            <span th:text="${gym.city}">City</span>
-                        </div>
-                        <div class="text-center space-y-1">
-                            <h3 th:text="${gym.name}">Gym Name</h3>
-                            <p class="text-sm text-main-foreground">
-                                <span th:text="${gym.street}">Street</span>,
-                                <span th:text="${gym.city}">City</span>
-                            </p>
+                            <div class="space-y-2">
+                                <h3 th:text="${gym.name}">Gym Name</h3>
+                                <p class="text-sm text-main-foreground">
+                                    <span th:text="${gym.street}">Street</span>,
+                                    <span th:text="${gym.city}">City</span>
+                                </p>
+                                <p
+                                    class="text-sm text-main-foreground"
+                                    th:text="${gym.email}"
+                                >
+                                    Email
+                                </p>
+                            </div>
                         </div>
                     </a>
 
                     <a th:href="@{/admin/gyms/create}" class="block space-y-2">
                         <div
-                            class="bg-success aspect-video rounded-base border-2 flex items-center justify-center"
+                            class="bg-success aspect-video rounded-base border-2 flex flex-col items-center justify-center gap-2 text-center"
                         >
                             <x
                                 th:replace="~{components/icons :: circle-plus}"
                             ></x>
+                            <h3>Create New Gym</h3>
                         </div>
-                        <h3 class="text-center">Create New Gym</h3>
                     </a>
                 </div>
 
