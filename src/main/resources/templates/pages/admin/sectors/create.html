@@ -5,6 +5,10 @@
 >
     <th:block layout:fragment="content">
         <main class="wrapper">
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
             <div class="flex items-center gap-4">
                 <a
                     th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
