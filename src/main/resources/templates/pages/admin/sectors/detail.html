@@ -53,13 +53,24 @@
                                 >
                                     Cancel
                                 </button>
-                                <a
-                                    autofocus
-                                    class="button button-danger"
-                                    href="#"
+                                <form
+                                    th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                                    method="post"
+                                    class="inline"
                                 >
-                                    Delete
-                                </a>
+                                    <input
+                                        type="hidden"
+                                        name="_method"
+                                        value="delete"
+                                    />
+                                    <button
+                                        autofocus
+                                        type="submit"
+                                        class="button button-danger"
+                                    >
+                                        Delete
+                                    </button>
+                                </form>
                             </div>
                         </dialog>
                     </div>

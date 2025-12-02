@@ -34,21 +34,6 @@
                 )}"
                 ></th:block>
             </section>
-
-            <section class="card p-4 max-w-md mx-auto mt-6">
-                <form
-                    th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-                    method="post"
-                >
-                    <input type="hidden" name="_method" value="delete" />
-                    <button
-                        type="submit"
-                        class="button button-danger w-full text-center"
-                    >
-                        Delete Sector
-                    </button>
-                </form>
-            </section>
         </main>
     </th:block>
 </th:block>
