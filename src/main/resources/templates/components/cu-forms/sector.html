@@ -31,7 +31,7 @@
         ></textarea>
     </div>
 
-    <div class="flex justify-end mt-8 gap-4">
+    <div class="flex justify-end mt-8 gap-3">
         <a
             th:if="${sector.id != null}"
             th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
