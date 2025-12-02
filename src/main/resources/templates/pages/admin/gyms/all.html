@@ -4,60 +4,66 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="my-12">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl">Gyms</h2>
-                <div class="flex items-center gap-4">
-                    <a
-                        th:href="@{/admin/gyms/create}"
-                        class="px-4 py-2 bg-blue-600 text-white rounded"
-                    >
-                        Create Gym
-                    </a>
-                    <a href="/" class="px-3 py-2 border rounded">Back</a>
-                </div>
+        <main class="wrapper">
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 flex items-center justify-between p-4"
+                >
+                    <h1>Gyms</h1>
+                </header>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div
-                    th:each="gym : ${gyms}"
-                    class="border rounded p-4 hover:shadow-lg transition-shadow"
-                >
+            <section class="card p-4 space-y-4">
+                <div class="grid lg:grid-cols-3 gap-4">
                     <a
+                        th:each="gym : ${gyms}"
                         th:href="@{/admin/gyms/{id}(id=${gym.id})}"
                         class="block"
                     >
-                        <h3
-                            class="text-xl font-semibold mb-2"
-                            th:text="${gym.name}"
+                        <div
+                            class="aspect-video rounded-base border-2 overflow-clip bg-background flex flex-col items-center justify-center gap-2 text-main-foreground text-center p-4"
                         >
-                            Gym Name
-                        </h3>
-                        <p
-                            class="text-sm text-gray-600"
-                            th:text="${gym.street}"
+                            <h3 th:text="${gym.name}">Gym Name</h3>
+                            <p class="text-sm text-main-foreground">
+                                <span th:text="${gym.street}">Street</span>,
+                                <span th:text="${gym.city}">City</span>
+                            </p>
+                            <p
+                                class="text-sm text-main-foreground"
+                                th:text="${gym.email}"
+                            >
+                                Email
+                            </p>
+                        </div>
+                    </a>
+
+                    <a th:href="@{/admin/gyms/create}" class="block space-y-2">
+                        <div
+                            class="bg-success aspect-video rounded-base border-2 flex flex-col items-center justify-center gap-2 text-center"
                         >
-                            Street
-                        </p>
-                        <p class="text-sm text-gray-600" th:text="${gym.city}">
-                            City
-                        </p>
-                        <p
-                            class="text-sm text-gray-600 mt-2"
-                            th:text="${gym.email}"
-                        >
-                            Email
-                        </p>
+                            <x
+                                th:replace="~{components/icons :: circle-plus}"
+                            ></x>
+                            <h3>Create New Gym</h3>
+                        </div>
                     </a>
                 </div>
-            </div>
 
-            <div
-                th:if="${#lists.isEmpty(gyms)}"
-                class="text-center text-gray-600 py-12"
-            >
-                <p>No gyms found. Create your first gym to get started.</p>
-            </div>
-        </div>
+                <div th:if="${#lists.isEmpty(gyms)}">
+                    <p>
+                        No gyms added yet. Click the card above to create your
+                        first gym.
+                    </p>
+                </div>
+            </section>
+        </main>
     </th:block>
 </th:block>
