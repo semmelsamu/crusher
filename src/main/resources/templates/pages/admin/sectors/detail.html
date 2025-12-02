@@ -53,13 +53,24 @@
                                 >
                                     Cancel
                                 </button>
-                                <a
-                                    autofocus
-                                    class="button button-danger"
-                                    href="#"
+                                <form
+                                    th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
+                                    method="post"
+                                    class="inline"
                                 >
-                                    Delete
-                                </a>
+                                    <input
+                                        type="hidden"
+                                        name="_method"
+                                        value="delete"
+                                    />
+                                    <button
+                                        autofocus
+                                        type="submit"
+                                        class="button button-danger"
+                                    >
+                                        Delete
+                                    </button>
+                                </form>
                             </div>
                         </dialog>
                     </div>
@@ -84,21 +95,24 @@
                     </div>
 
                     <div
-                        class="w-full aspect-video rounded-base border-2 overflow-clip bg-background flex items-center justify-center flex-col gap-2"
+                        class="w-full aspect-video rounded-base border-2 overflow-clip bg-background"
                     >
-                        <x th:replace="~{components/icons :: image-off}"></x>
-                        <p class="text-main-foreground font-medium">
-                            This sector has no image.
-                        </p>
+                        <img
+                            th:if="${sector.imagePath != null and !#strings.contains(sector.imagePath, 'default-sector')}"
+                            th:src="${sector.imagePath}"
+                            alt="Sector image"
+                            class="w-full h-full object-cover"
+                        />
+                        <div
+                            th:unless="${sector.imagePath != null and !#strings.contains(sector.imagePath, 'default-sector')}"
+                            class="w-full h-full flex flex-col items-center justify-center gap-2 text-main-foreground"
+                        >
+                            <x
+                                th:replace="~{components/icons :: image-off}"
+                            ></x>
+                            <p class="font-medium">Image coming soon</p>
+                        </div>
                     </div>
-
-                    <!-- 
-                    <img
-                        th:src="${sector.imagePath}"
-                        alt="Sector image"
-                        class="w-full h-full object-cover brightness-20"
-                    />
-                    -->
                 </div>
             </section>
 
@@ -107,7 +121,7 @@
 
                 <div
                     th:if="${boulders.isEmpty()}"
-                    class="border rounded p-6 text-center text-gray-600"
+                    class="border rounded p-6 text-center text-muted-foreground"
                 >
                     No boulders in this sector yet.
                 </div>
