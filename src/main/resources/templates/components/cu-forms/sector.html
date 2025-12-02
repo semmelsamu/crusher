@@ -3,7 +3,7 @@
     th:action="${actionUrl}"
     th:object="${sector}"
     method="post"
-    class="space-y-6"
+    class="space-y-4"
     xmlns:th="http://www.thymeleaf.org"
 >
     <input
@@ -12,9 +12,9 @@
         th:value="${sector.id} != null ? 'put' : 'post'"
     />
 
-    <div>
-        <label class="block font-medium mb-2">Name</label>
-        <input th:field="*{name}" class="border w-full p-2 rounded" />
+    <div class="space-y-2">
+        <label class="block">Name</label>
+        <input th:field="*{name}" class="text-input w-full" />
         <p
             th:if="${#fields.hasErrors('name')}"
             th:errors="*{name}"
@@ -22,50 +22,23 @@
         ></p>
     </div>
 
-    <div>
-        <label class="block font-medium mb-2">Description</label>
+    <div class="space-y-2">
+        <label class="block">Description</label>
         <textarea
             th:field="*{description}"
-            class="border w-full p-2 rounded"
+            class="text-input w-full"
             rows="4"
         ></textarea>
     </div>
 
-    <div class="space-y-2">
-        <label class="block font-medium">Image</label>
-        <img
-            th:src="${sector.imagePath}"
-            alt="Sector image"
-            class="w-full h-48 object-cover rounded bg-gray-100"
-        />
-        <div class="flex space-x-2">
-            <button
-                type="button"
-                class="px-3 py-2 border rounded bg-gray-100 cursor-not-allowed"
-                disabled
-            >
-                Upload Image (coming soon)
-            </button>
-            <button
-                type="button"
-                class="px-3 py-2 border rounded bg-gray-100 cursor-not-allowed"
-                disabled
-            >
-                Remove Image (coming soon)
-            </button>
-        </div>
-    </div>
-
-    <div class="flex items-center space-x-3">
-        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
-            Save
-        </button>
+    <div class="flex justify-end mt-8 gap-3">
         <a
             th:if="${sector.id != null}"
             th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-            class="px-3 py-2 border rounded"
+            class="button"
         >
             Cancel
         </a>
+        <button type="submit" class="button button-primary">Save</button>
     </div>
 </form>

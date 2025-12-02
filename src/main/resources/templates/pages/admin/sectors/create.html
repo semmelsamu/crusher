@@ -4,28 +4,31 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="my-12">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <p class="text-sm text-gray-600" th:text="${gym.name}">
-                        Gym Name
-                    </p>
-                    <h2 class="text-2xl font-semibold">New Sector</h2>
-                </div>
+        <main class="wrapper">
+            <div class="flex items-center gap-4">
                 <a
                     th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
-                    class="px-3 py-2 border rounded"
-                    >Back to Gym</a
+                    class="button button-square"
                 >
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 flex items-center justify-between p-4"
+                >
+                    <h1>Create New Sector</h1>
+                </header>
             </div>
 
-            <th:block
-                th:replace="~{components/cu-forms/sector :: sector(
+            <section class="card p-4 max-w-md mx-auto">
+                <th:block
+                    th:replace="~{components/cu-forms/sector :: sector(
                     @{/admin/gyms/{gymId}/sectors(gymId=${gym.id})},
                     ${sector},
                     ${gym}
                 )}"
-            ></th:block>
-        </div>
+                ></th:block>
+            </section>
+        </main>
     </th:block>
 </th:block>
