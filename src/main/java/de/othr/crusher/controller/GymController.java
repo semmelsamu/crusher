@@ -47,7 +47,8 @@ public class GymController {
         model.addAttribute("gyms", gymRepository.findAll());
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Admin Panel", "url", "/admin/gyms")
+                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                Map.of("label", "Gyms", "url", "")
         ));
         return "pages/admin/gyms/all";
     }
