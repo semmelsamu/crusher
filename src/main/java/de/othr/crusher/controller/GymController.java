@@ -112,7 +112,8 @@ public class GymController {
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Admin Panel", "url", "/admin/gyms"),
                 Map.of("label", "Gyms", "url", "/admin/gyms"),
-                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId())
+                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
+                Map.of("label", "Edit", "url", "")
         ));
         return "pages/admin/gyms/update";
     }
@@ -167,7 +168,8 @@ public class GymController {
                     Map.of("label", "Home", "url", "/"),
                     Map.of("label", "Admin Panel", "url", "/admin/gyms"),
                     Map.of("label", "Gyms", "url", "/admin/gyms"),
-                    Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId())
+                    Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
+                    Map.of("label", "Edit", "url", "")
             ));
             return "pages/admin/gyms/update";
         }
