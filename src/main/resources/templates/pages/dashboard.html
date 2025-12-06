@@ -1,0 +1,81 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <h1>Dashboard</h1>
+                </header>
+            </div>
+
+            <section class="card p-4 space-y-4">
+                <h2>Sessions</h2>
+
+                <div
+                    th:if="${sessions.isEmpty()}"
+                    class="border rounded p-6 text-center text-muted-foreground"
+                >
+                    No sessions yet. Start your first climbing session!
+                </div>
+
+                <table class="table w-full" th:unless="${sessions.isEmpty()}">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Gym</th>
+                            <th class="w-32 text-center">Boulders</th>
+                            <th class="w-20"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="sess : ${sessions}">
+                            <td>
+                                <span
+                                    th:text="${#temporals.format(sess.startedAt, 'dd.MM.yyyy')}"
+                                >
+                                    Date
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${sess.gym.name}">
+                                    Gym Name
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span>0</span>
+                            </td>
+                            <td>
+                                <a
+                                    th:href="@{/sessions/{id}(id=${sess.id})}"
+                                    class="button button-primary button-square ml-auto"
+                                >
+                                    <x
+                                        th:replace="~{components/icons :: pencil-ruler}"
+                                    ></x>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <a th:href="@{/sessions/create}" class="button button-success">
+                    <x th:replace="~{components/icons :: badge-plus}"></x>
+                    Start New Session
+                </a>
+            </section>
+        </main>
+    </th:block>
+</th:block>

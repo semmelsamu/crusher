@@ -18,6 +18,14 @@
                 </p>
 
                 <a
+                    href="/dashboard"
+                    class="button"
+                    sec:authorize="isAuthenticated()"
+                >
+                    Dashboard
+                </a>
+
+                <a
                     href="/admin/gyms"
                     class="button"
                     sec:authorize="hasAnyRole('ADMIN', 'OWNER')"
