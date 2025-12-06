@@ -31,14 +31,7 @@
         ></textarea>
     </div>
 
-    <div class="flex justify-end mt-8 gap-4">
-        <a
-            th:if="${sector.id != null}"
-            th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-            class="button"
-        >
-            Cancel
-        </a>
-        <button type="submit" class="button button-primary">Save</button>
-    </div>
+    <button type="submit" class="button button-primary mt-8 ml-auto">
+        Save
+    </button>
 </form>

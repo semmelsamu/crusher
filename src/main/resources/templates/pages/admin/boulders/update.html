@@ -4,54 +4,34 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="my-12">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <p
-                        class="text-sm text-gray-600"
-                        th:text="${gym.name} + ' / ' + ${sector.name}"
-                    >
-                        Gym Name / Sector Name
-                    </p>
-                    <h2
-                        class="text-2xl font-semibold"
-                        th:text="${boulder.description}"
-                    >
-                        Boulder Description
-                    </h2>
-                </div>
+        <main class="wrapper">
+            <div class="flex items-center gap-4">
                 <a
                     th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-                    class="px-3 py-2 border rounded"
-                    >Back to Boulders</a
+                    class="button button-square"
                 >
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <h1>Edit Boulder</h1>
+                </header>
             </div>
 
-            <th:block
-                th:replace="~{components/cu-forms/boulder :: boulder(
-                    @{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})},
-                    ${boulder},
-                    ${gym},
-                    ${sector},
-                    ${availableColors},
-                    ${availableGrades}
-                )}"
-            ></th:block>
-
-            <div class="mt-8">
-                <form
-                    th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})}"
-                    method="post"
-                >
-                    <input type="hidden" name="_method" value="delete" />
-                    <button
-                        type="submit"
-                        class="px-3 py-2 text-white bg-red-600 rounded"
-                    >
-                        Delete Boulder
-                    </button>
-                </form>
-            </div>
-        </div>
+            <section class="card p-4 max-w-md mx-auto">
+                <th:block
+                    th:replace="~{components/cu-forms/boulder :: boulder(
+                        @{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})},
+                        ${boulder},
+                        ${gym},
+                        ${sector},
+                        ${availableColors},
+                        ${availableGrades}
+                    )}"
+                ></th:block>
+            </section>
+        </main>
     </th:block>
 </th:block>
