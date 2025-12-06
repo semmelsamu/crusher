@@ -18,7 +18,7 @@
         <p
             th:if="${#fields.hasErrors('name')}"
             th:errors="*{name}"
-            class="text-red-600 text-sm mt-1"
+            class="text-error text-sm mt-1"
         ></p>
     </div>
 
@@ -28,7 +28,7 @@
         <p
             th:if="${#fields.hasErrors('street')}"
             th:errors="*{street}"
-            class="text-red-600 text-sm mt-1"
+            class="text-error text-sm mt-1"
         ></p>
     </div>
 
@@ -38,7 +38,7 @@
         <p
             th:if="${#fields.hasErrors('city')}"
             th:errors="*{city}"
-            class="text-red-600 text-sm mt-1"
+            class="text-error text-sm mt-1"
         ></p>
     </div>
 
@@ -48,11 +48,11 @@
         <p
             th:if="${#fields.hasErrors('email')}"
             th:errors="*{email}"
-            class="text-red-600 text-sm mt-1"
+            class="text-error text-sm mt-1"
         ></p>
     </div>
 
-    <div class="flex justify-end mt-8">
-        <button type="submit" class="button button-primary">Save</button>
-    </div>
+    <button type="submit" class="button button-primary mt-8 ml-auto">
+        Save
+    </button>
 </form>

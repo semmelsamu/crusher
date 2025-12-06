@@ -36,18 +36,6 @@
                 )}"
                 ></th:block>
             </section>
-
-            <section class="card p-4 max-w-md mx-auto">
-                <form
-                    th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})}"
-                    method="post"
-                >
-                    <input type="hidden" name="_method" value="delete" />
-                    <button type="submit" class="button button-danger">
-                        Delete Boulder
-                    </button>
-                </form>
-            </section>
         </main>
     </th:block>
 </th:block>
