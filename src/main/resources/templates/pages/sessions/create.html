@@ -1,0 +1,71 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/dashboard}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <h1>Start a new Session</h1>
+                </header>
+            </div>
+
+            <section class="card p-4 space-y-4">
+                <h2>Choose a Gym</h2>
+
+                <div
+                    th:if="${gyms.isEmpty()}"
+                    class="border rounded p-6 text-center text-muted-foreground"
+                >
+                    No gyms available. Please contact an administrator to add
+                    gyms.
+                </div>
+
+                <div
+                    class="grid lg:grid-cols-3 gap-4"
+                    th:unless="${gyms.isEmpty()}"
+                >
+                    <form
+                        th:each="gym : ${gyms}"
+                        th:action="@{/sessions}"
+                        method="post"
+                        class="block"
+                    >
+                        <input
+                            type="hidden"
+                            name="gymId"
+                            th:value="${gym.id}"
+                        />
+                        <button
+                            type="submit"
+                            class="w-full aspect-video rounded-base border-2 overflow-clip flex flex-col items-center justify-center gap-2 text-center p-4 cursor-pointer bg-background"
+                        >
+                            <h3 th:text="${gym.name}">Gym Name</h3>
+                            <p class="text-sm text-main-foreground">
+                                <span th:text="${gym.street}">Street</span>,
+                                <span th:text="${gym.city}">City</span>
+                            </p>
+                            <p
+                                class="text-sm text-main-foreground"
+                                th:text="${gym.email}"
+                            >
+                                Email
+                            </p>
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </th:block>
+</th:block>

@@ -1,0 +1,86 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/dashboard}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <h1>Session</h1>
+                </header>
+            </div>
+
+            <section class="card p-4 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2>Details</h2>
+                    <span
+                        th:if="${currentSession.isRunning()}"
+                        class="px-3 py-1 bg-success text-success-foreground rounded-full text-sm font-medium"
+                    >
+                        running
+                    </span>
+                </div>
+
+                <div class="grid gap-4">
+                    <div>
+                        <strong class="text-main-foreground">Gym</strong>
+                        <p th:text="${currentSession.gym.name}">Gym Name</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <strong class="text-main-foreground">
+                                Started
+                            </strong>
+                            <p
+                                th:text="${#temporals.format(currentSession.startedAt, 'dd.MM.yyyy HH:mm')}"
+                            >
+                                Start Time
+                            </p>
+                        </div>
+
+                        <div>
+                            <strong class="text-main-foreground">
+                                Ended
+                            </strong>
+                            <p
+                                th:if="${currentSession.endedAt != null}"
+                                th:text="${#temporals.format(currentSession.endedAt, 'dd.MM.yyyy HH:mm')}"
+                            >
+                                End Time
+                            </p>
+                            <p
+                                th:unless="${currentSession.endedAt != null}"
+                                class="text-muted-foreground"
+                            >
+                                /
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <form
+                    th:if="${currentSession.isRunning()}"
+                    th:action="@{/sessions/{id}/end(id=${currentSession.id})}"
+                    method="post"
+                >
+                    <button type="submit" class="button button-danger">
+                        <x th:replace="~{components/icons :: x}"></x>
+                        End Session
+                    </button>
+                </form>
+            </section>
+        </main>
+    </th:block>
+</th:block>
