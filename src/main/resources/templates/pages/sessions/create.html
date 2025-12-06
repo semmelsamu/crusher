@@ -33,14 +33,14 @@
                 </div>
 
                 <div
-                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+                    class="grid lg:grid-cols-3 gap-4"
                     th:unless="${gyms.isEmpty()}"
                 >
                     <form
                         th:each="gym : ${gyms}"
                         th:action="@{/sessions}"
                         method="post"
-                        class="flex flex-col items-center text-center"
+                        class="block"
                     >
                         <input
                             type="hidden"
@@ -49,21 +49,20 @@
                         />
                         <button
                             type="submit"
-                            class="w-32 h-32 rounded-full border-4 border-main bg-background hover:bg-main hover:border-main-foreground transition-all flex items-center justify-center text-main-foreground font-medium"
+                            class="w-full aspect-video rounded-base border-2 overflow-clip flex flex-col items-center justify-center gap-2 text-center p-4 cursor-pointer bg-background"
                         >
-                            <span
-                                class="text-sm font-semibold"
-                                th:text="${gym.name.length() > 20 ? gym.name.substring(0, 20) + '...' : gym.name}"
+                            <h3 th:text="${gym.name}">Gym Name</h3>
+                            <p class="text-sm text-main-foreground">
+                                <span th:text="${gym.street}">Street</span>,
+                                <span th:text="${gym.city}">City</span>
+                            </p>
+                            <p
+                                class="text-sm text-main-foreground"
+                                th:text="${gym.email}"
                             >
-                                Gym Name
-                            </span>
+                                Email
+                            </p>
                         </button>
-                        <p
-                            class="mt-2 text-sm text-main-foreground"
-                            th:text="${gym.name}"
-                        >
-                            Full Gym Name
-                        </p>
                     </form>
                 </div>
             </section>
