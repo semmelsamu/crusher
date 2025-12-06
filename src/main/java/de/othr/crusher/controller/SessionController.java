@@ -144,6 +144,7 @@ public class SessionController {
      * @return redirect to the session detail page
      */
     @PostMapping("/sessions/{id}/end")
+    @Transactional
     public String endSession(@PathVariable("id") Long id, Principal principal) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
@@ -173,6 +174,7 @@ public class SessionController {
      * @return redirect to the dashboard
      */
     @DeleteMapping("/sessions/{id}")
+    @Transactional
     public String deleteSession(@PathVariable("id") Long id, Principal principal) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
