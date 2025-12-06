@@ -72,6 +72,7 @@ public class GymController {
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                Map.of("label", "Gyms", "url", "/admin/gyms"),
                 Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId())
         ));
 
@@ -87,6 +88,12 @@ public class GymController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("gym", new GymEntity());
+        model.addAttribute("breadcrumb", List.of(
+                Map.of("label", "Home", "url", "/"),
+                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                Map.of("label", "Gyms", "url", "/admin/gyms"),
+                Map.of("label", "New Gym", "url", "")
+        ));
         return "pages/admin/gyms/create";
     }
 
@@ -101,6 +108,13 @@ public class GymController {
     public String showEditForm(@PathVariable("id") long id, Model model) {
         GymEntity gym = findGymOrThrow(id);
         model.addAttribute("gym", gym);
+        model.addAttribute("breadcrumb", List.of(
+                Map.of("label", "Home", "url", "/"),
+                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                Map.of("label", "Gyms", "url", "/admin/gyms"),
+                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
+                Map.of("label", "Edit", "url", "")
+        ));
         return "pages/admin/gyms/update";
     }
 
@@ -116,6 +130,12 @@ public class GymController {
     @PostMapping
     public String createGym(@Valid @ModelAttribute("gym") GymEntity gym, BindingResult result, Model model) {
         if (result.hasErrors()) {
+            model.addAttribute("breadcrumb", List.of(
+                    Map.of("label", "Home", "url", "/"),
+                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                    Map.of("label", "Gyms", "url", "/admin/gyms"),
+                    Map.of("label", "New Gym", "url", "")
+            ));
             return "pages/admin/gyms/create";
         }
 
@@ -144,6 +164,13 @@ public class GymController {
         if (result.hasErrors()) {
             formGym.setId(gym.getId());
             model.addAttribute("gym", formGym);
+            model.addAttribute("breadcrumb", List.of(
+                    Map.of("label", "Home", "url", "/"),
+                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                    Map.of("label", "Gyms", "url", "/admin/gyms"),
+                    Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
+                    Map.of("label", "Edit", "url", "")
+            ));
             return "pages/admin/gyms/update";
         }
 

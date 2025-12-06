@@ -5,6 +5,10 @@
 >
     <th:block layout:fragment="content">
         <main class="wrapper">
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
             <div class="flex items-center gap-4">
                 <a
                     th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
@@ -23,13 +27,13 @@
             <section class="card p-4 max-w-md mx-auto">
                 <th:block
                     th:replace="~{components/cu-forms/boulder :: boulder(
-                        @{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})},
-                        ${boulder},
-                        ${gym},
-                        ${sector},
-                        ${availableColors},
-                        ${availableGrades}
-                    )}"
+                    @{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/{boulderId}(gymId=${gym.id}, sectorId=${sector.id}, boulderId=${boulder.id})},
+                    ${boulder},
+                    ${gym},
+                    ${sector},
+                    ${availableColors},
+                    ${availableGrades}
+                )}"
                 ></th:block>
             </section>
         </main>
