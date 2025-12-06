@@ -24,14 +24,7 @@
             <section class="card p-4 space-y-4">
                 <h2>Sessions</h2>
 
-                <div
-                    th:if="${sessions.isEmpty()}"
-                    class="border rounded p-6 text-center text-muted-foreground"
-                >
-                    No sessions yet. Start your first climbing session!
-                </div>
-
-                <table class="table w-full" th:unless="${sessions.isEmpty()}">
+                <table class="table w-full">
                     <thead>
                         <tr>
                             <th class="w-32">Date</th>
@@ -39,7 +32,19 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
+
+                    <tbody th:if="${sessions.isEmpty()}">
+                        <tr>
+                            <td
+                                colspan="3"
+                                class="text-center text-muted-foreground"
+                            >
+                                No sessions yet. Start your first climbing
+                                session!
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody th:unless="${sessions.isEmpty()}">
                         <tr th:each="sess : ${sessions}">
                             <td>
                                 <span
