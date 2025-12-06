@@ -62,14 +62,7 @@
         ></p>
     </div>
 
-    <div class="flex justify-end mt-8">
-        <button type="submit" class="button button-primary">Save</button>
-        <a
-            th:if="${boulder.id != null}"
-            th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}(gymId=${gym.id}, sectorId=${sector.id})}"
-            class="button ml-3"
-        >
-            Cancel
-        </a>
-    </div>
+    <button type="submit" class="button button-primary mt-8 ml-auto">
+        Save
+    </button>
 </form>
