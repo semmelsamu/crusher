@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller for managing boulders within a sector in the admin area.
@@ -77,6 +78,16 @@ public class BoulderController {
         model.addAttribute("boulder", boulder);
         model.addAttribute("availableGrades", availableGrades);
         model.addAttribute("availableColors", BoulderColor.values());
+        model.addAttribute("breadcrumb", List.of(
+                Map.of("label", "Home", "url", "/"),
+                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                Map.of("label", "Gyms", "url", "/admin/gyms"),
+                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
+                Map.of("label", "Sectors", "url", "/admin/gyms/" + gym.getId()),
+                Map.of("label", sector.getName(), "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId),
+                Map.of("label", "Boulders", "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId),
+                Map.of("label", "New Boulder", "url", "")
+        ));
         return "pages/admin/boulders/create";
     }
 
@@ -106,6 +117,17 @@ public class BoulderController {
         model.addAttribute("boulder", boulder);
         model.addAttribute("availableGrades", availableGrades);
         model.addAttribute("availableColors", BoulderColor.values());
+        model.addAttribute("breadcrumb", List.of(
+                Map.of("label", "Home", "url", "/"),
+                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                Map.of("label", "Gyms", "url", "/admin/gyms"),
+                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
+                Map.of("label", "Sectors", "url", "/admin/gyms/" + gym.getId()),
+                Map.of("label", sector.getName(), "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId),
+                Map.of("label", "Boulders", "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId),
+                Map.of("label", String.valueOf(boulder.getId()), "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId + "/boulders/" + boulderId),
+                Map.of("label", "Edit", "url", "")
+        ));
         return "pages/admin/boulders/update";
     }
 
@@ -134,8 +156,19 @@ public class BoulderController {
             List<GradeEntity> availableGrades = gradeRepository.findByGymId(gymId);
             model.addAttribute("gym", gym);
             model.addAttribute("sector", sector);
+            model.addAttribute("boulder", boulder);
             model.addAttribute("availableGrades", availableGrades);
             model.addAttribute("availableColors", BoulderColor.values());
+            model.addAttribute("breadcrumb", List.of(
+                    Map.of("label", "Home", "url", "/"),
+                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                    Map.of("label", "Gyms", "url", "/admin/gyms"),
+                    Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
+                    Map.of("label", "Sectors", "url", "/admin/gyms/" + gym.getId()),
+                    Map.of("label", sector.getName(), "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId),
+                    Map.of("label", "Boulders", "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId),
+                    Map.of("label", "New Boulder", "url", "")
+            ));
             return "pages/admin/boulders/create";
         }
 
@@ -186,6 +219,17 @@ public class BoulderController {
             model.addAttribute("boulder", formBoulder);
             model.addAttribute("availableGrades", availableGrades);
             model.addAttribute("availableColors", BoulderColor.values());
+            model.addAttribute("breadcrumb", List.of(
+                    Map.of("label", "Home", "url", "/"),
+                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
+                    Map.of("label", "Gyms", "url", "/admin/gyms"),
+                    Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
+                    Map.of("label", "Sectors", "url", "/admin/gyms/" + gym.getId()),
+                    Map.of("label", sector.getName(), "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId),
+                    Map.of("label", "Boulders", "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId),
+                    Map.of("label", String.valueOf(boulder.getId()), "url", "/admin/gyms/" + gymId + "/sectors/" + sectorId + "/boulders/" + boulderId),
+                    Map.of("label", "Edit", "url", "")
+            ));
             return "pages/admin/boulders/update";
         }
 
