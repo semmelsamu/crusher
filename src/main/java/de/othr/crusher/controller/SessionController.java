@@ -8,6 +8,7 @@ import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +49,7 @@ public class SessionController {
      * @return view name for the dashboard page
      */
     @GetMapping("/dashboard")
+    @Transactional(readOnly = true)
     public String showDashboard(Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
         List<SessionEntity> sessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId());
@@ -112,6 +114,7 @@ public class SessionController {
      * @return view name for the session detail page
      */
     @GetMapping("/sessions/{id}")
+    @Transactional(readOnly = true)
     public String showSession(@PathVariable("id") Long id, Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
