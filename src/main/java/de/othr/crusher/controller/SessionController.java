@@ -165,6 +165,29 @@ public class SessionController {
     }
 
     /**
+     * Deletes a session.
+     *
+     * @param id session ID
+     * @param principal the authenticated user
+     * @return redirect to the dashboard
+     */
+    @PostMapping("/sessions/{id}")
+    public String deleteSession(@PathVariable("id") Long id, Principal principal) {
+        UserEntity user = findUserByPrincipal(principal);
+        SessionEntity session = sessionRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
+
+        // Ensure the session belongs to the current user
+        if (!session.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
+        }
+
+        sessionRepository.delete(session);
+
+        return "redirect:/dashboard";
+    }
+
+    /**
      * Helper method to find the current user from the security principal.
      *
      * @param principal the authenticated user principal
