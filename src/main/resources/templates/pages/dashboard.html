@@ -34,10 +34,9 @@
                 <table class="table w-full" th:unless="${sessions.isEmpty()}">
                     <thead>
                         <tr>
-                            <th>Date</th>
+                            <th class="w-32">Date</th>
                             <th>Gym</th>
-                            <th class="w-32 text-center">Boulders</th>
-                            <th class="w-20"></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,9 +52,6 @@
                                 <span th:text="${sess.gym.name}">
                                     Gym Name
                                 </span>
-                            </td>
-                            <td class="text-center">
-                                <span>0</span>
                             </td>
                             <td>
                                 <a
