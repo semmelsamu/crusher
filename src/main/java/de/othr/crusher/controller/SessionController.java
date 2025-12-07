@@ -131,10 +131,10 @@ public class SessionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
-        List<GoEntity> gos = goRepository.findBySessionIdOrderByTimestampDesc(session.getId());
+        List<GoEntity> goes = goRepository.findBySessionIdOrderByTimestampDesc(session.getId());
 
         model.addAttribute("currentSession", session);
-        model.addAttribute("gos", gos);
+        model.addAttribute("goes", goes);
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),

@@ -4,6 +4,8 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
+        <div th:replace="~{components/toast :: success-toast}"></div>
+
         <main class="wrapper">
             <div
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
@@ -11,7 +13,7 @@
 
             <div class="flex items-center gap-4">
                 <a
-                    th:href="@{/sessions/{sessionId}(sessionId=${currentSession.id})}"
+                    th:href="@{/sessions/{sessionId}/goes/create(sessionId=${currentSession.id})}"
                     class="button button-square"
                 >
                     <x th:replace="~{components/icons :: arrow-big-left}"></x>
@@ -20,24 +22,23 @@
                 <header
                     class="card flex-1 flex items-center justify-between p-4"
                 >
-                    <h1>Edit Go</h1>
+                    <h1>Result</h1>
                 </header>
             </div>
 
             <section class="card p-4 max-w-md mx-auto space-y-6">
                 <form
-                    th:action="@{/sessions/{sessionId}/gos/{goId}(sessionId=${currentSession.id}, goId=${go.id})}"
+                    th:action="@{/sessions/{sessionId}/goes(sessionId=${currentSession.id})}"
                     method="post"
                     th:object="${go}"
                 >
-                    <input type="hidden" name="_method" value="put" />
                     <input type="hidden" th:field="*{boulder.id}" />
                     <input type="hidden" th:field="*{session.id}" />
 
                     <div class="space-y-4">
                         <div class="text-lg font-medium">
                             <p>
-                                Edit Result for
+                                Select Result for
                                 <strong th:text="${boulder.description}"
                                     >Boulder</strong
                                 >
@@ -53,14 +54,14 @@
                                 <input
                                     type="radio"
                                     th:field="*{result}"
-                                    value="FINISHED"
+                                    value="DID_NOT_FINISH"
                                     class="peer sr-only"
                                     required
                                 />
                                 <div
-                                    class="border-2 rounded-base shadow-base p-4 text-center font-medium bg-success text-main-foreground h-full flex items-center justify-center transition-all peer-checked:translate-y-1 peer-checked:shadow-none"
+                                    class="border-2 rounded-base shadow-base p-4 text-center font-medium bg-error text-main-foreground h-full flex items-center justify-center transition-all peer-checked:translate-y-1 peer-checked:shadow-none"
                                 >
-                                    Finished
+                                    Did not finish
                                 </div>
                             </label>
 
@@ -83,14 +84,14 @@
                                 <input
                                     type="radio"
                                     th:field="*{result}"
-                                    value="DID_NOT_FINISH"
+                                    value="FINISHED"
                                     class="peer sr-only"
                                     required
                                 />
                                 <div
-                                    class="border-2 rounded-base shadow-base p-4 text-center font-medium bg-error text-main-foreground h-full flex items-center justify-center transition-all peer-checked:translate-y-1 peer-checked:shadow-none"
+                                    class="border-2 rounded-base shadow-base p-4 text-center font-medium bg-success text-main-foreground h-full flex items-center justify-center transition-all peer-checked:translate-y-1 peer-checked:shadow-none"
                                 >
-                                    Did not finish
+                                    Finished
                                 </div>
                             </label>
                         </div>
@@ -103,7 +104,20 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end mt-6">
+                    <div class="flex items-center justify-between mt-6">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <label class="switch">
+                                <input
+                                    type="checkbox"
+                                    name="createAnother"
+                                    value="true"
+                                    th:checked="${createAnother}"
+                                />
+                                <span class="switch-thumb"></span>
+                            </label>
+                            <span>Create more Goes</span>
+                        </label>
+
                         <button type="submit" class="button button-success">
                             <x th:replace="~{components/icons :: check}"></x>
                             Save

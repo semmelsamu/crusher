@@ -35,14 +35,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller for managing climbing attempts (gos) within a session.
+ * Controller for managing climbing attempts (goes) within a session.
  * <p>
  * Provides CRUD operations for tracking boulder attempts during a climbing session.
  * All operations are nested under the session resource path.
  * </p>
  */
 @Controller
-@RequestMapping("/sessions/{sessionId}/gos")
+@RequestMapping("/sessions/{sessionId}/goes")
 public class GoController {
 
     private final GoRepository goRepository;
@@ -106,11 +106,11 @@ public class GoController {
                     Map.of("label", "Home", "url", "/"),
                     Map.of("label", "Dashboard", "url", "/dashboard"),
                     Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                    Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/gos/create"),
+                    Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/goes/create"),
                     Map.of("label", "Select Result", "url", "")
             ));
 
-            return "pages/gos/create-result";
+            return "pages/goes/create-result";
         }
 
         // Step 1: Show boulder selection
@@ -140,7 +140,7 @@ public class GoController {
                 Map.of("label", "Record Go", "url", "")
         ));
 
-        return "pages/gos/create-boulder";
+        return "pages/goes/create-boulder";
     }
 
     /**
@@ -171,11 +171,11 @@ public class GoController {
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),
                 Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                Map.of("label", "Go #" + goId, "url", "/sessions/" + sessionId + "/gos/" + goId),
+                Map.of("label", "Go #" + goId, "url", "/sessions/" + sessionId + "/goes/" + goId),
                 Map.of("label", "Edit", "url", "")
         ));
 
-        return "pages/gos/edit";
+        return "pages/goes/edit";
     }
 
     /**
@@ -217,10 +217,10 @@ public class GoController {
                     Map.of("label", "Home", "url", "/"),
                     Map.of("label", "Dashboard", "url", "/dashboard"),
                     Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                    Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/gos/create"),
+                    Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/goes/create"),
                     Map.of("label", "Select Result", "url", "")
             ));
-            return "pages/gos/create-result";
+            return "pages/goes/create-result";
         }
 
         // Validate that the boulder exists
@@ -240,7 +240,7 @@ public class GoController {
 
         // If "create another" is checked, redirect back to create form with same boulder
         if (createAnother && go.getBoulder() != null) {
-            return "redirect:/sessions/" + sessionId + "/gos/create?boulderId=" + go.getBoulder().getId() + "&createAnother=true";
+            return "redirect:/sessions/" + sessionId + "/goes/create?boulderId=" + go.getBoulder().getId() + "&createAnother=true";
         }
 
         return "redirect:/sessions/" + sessionId;
@@ -282,10 +282,10 @@ public class GoController {
                     Map.of("label", "Home", "url", "/"),
                     Map.of("label", "Dashboard", "url", "/dashboard"),
                     Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                    Map.of("label", "Go #" + goId, "url", "/sessions/" + sessionId + "/gos/" + goId),
+                    Map.of("label", "Go #" + goId, "url", "/sessions/" + sessionId + "/goes/" + goId),
                     Map.of("label", "Edit", "url", "")
             ));
-            return "pages/gos/edit";
+            return "pages/goes/edit";
         }
 
         // Validate that the boulder exists
