@@ -79,6 +79,7 @@ public class GoController {
     public String showCreateForm(
             @PathVariable("sessionId") Long sessionId,
             @RequestParam(required = false) Long boulderId,
+            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
             Principal principal,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
@@ -94,11 +95,11 @@ public class GoController {
             GoEntity go = new GoEntity();
             go.setSession(session);
             go.setBoulder(boulder);
-            go.setTimestamp(LocalDateTime.now());
 
             model.addAttribute("go", go);
             model.addAttribute("boulder", boulder);
             model.addAttribute("availableResults", GoResult.values());
+            model.addAttribute("createAnother", createAnother);
             model.addAttribute("breadcrumb", List.of(
                     Map.of("label", "Home", "url", "/"),
                     Map.of("label", "Dashboard", "url", "/dashboard"),
@@ -113,7 +114,23 @@ public class GoController {
         // Step 1: Show boulder selection
         List<SectorEntity> sectors = sectorRepository.findByGymId(session.getGym().getId());
 
+        // Load and sort boulders for each sector by grade (vScale)
+        java.util.Map<Long, List<BoulderEntity>> sectorBoulders = new java.util.HashMap<>();
+        for (SectorEntity sector : sectors) {
+            List<BoulderEntity> boulders = boulderRepository.findBySectorId(sector.getId());
+            boulders.sort((b1, b2) -> {
+                String v1 = b1.getGrade().getVScale();
+                String v2 = b2.getGrade().getVScale();
+                // Extract numeric value from V-scale (e.g., "V0" -> 0, "V10" -> 10)
+                int grade1 = Integer.parseInt(v1.substring(1));
+                int grade2 = Integer.parseInt(v2.substring(1));
+                return Integer.compare(grade1, grade2);
+            });
+            sectorBoulders.put(sector.getId(), boulders);
+        }
+
         model.addAttribute("sectors", sectors);
+        model.addAttribute("sectorBoulders", sectorBoulders);
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),
@@ -176,7 +193,7 @@ public class GoController {
     @Transactional
     public String createGo(
             @PathVariable("sessionId") Long sessionId,
-            @Valid @ModelAttribute("go") GoEntity go,
+            @ModelAttribute("go") GoEntity go,
             @RequestParam(required = false, defaultValue = "false") boolean createAnother,
             BindingResult result,
             Principal principal,
@@ -212,14 +229,13 @@ public class GoController {
         }
 
         go.setSession(session);
-        if (go.getTimestamp() == null) {
-            go.setTimestamp(LocalDateTime.now());
-        }
+        // Set timestamp when save button is clicked
+        go.setTimestamp(LocalDateTime.now());
         goRepository.save(go);
 
         // If "create another" is checked, redirect back to create form with same boulder
         if (createAnother && go.getBoulder() != null) {
-            return "redirect:/sessions/" + sessionId + "/gos/create?boulderId=" + go.getBoulder().getId();
+            return "redirect:/sessions/" + sessionId + "/gos/create?boulderId=" + go.getBoulder().getId() + "&createAnother=true";
         }
 
         return "redirect:/sessions/" + sessionId;

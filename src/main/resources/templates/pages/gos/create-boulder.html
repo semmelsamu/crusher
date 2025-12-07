@@ -1,0 +1,88 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a
+                    th:href="@{/sessions/{id}(id=${currentSession.id})}"
+                    class="button button-square"
+                >
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 flex items-center justify-between p-4"
+                >
+                    <h1>Select Boulder</h1>
+                </header>
+            </div>
+
+            <section class="card p-4 space-y-4">
+                <div
+                    th:if="${sectors.isEmpty()}"
+                    class="border rounded p-6 text-center text-muted-foreground"
+                >
+                    No sectors available in this gym.
+                </div>
+
+                <div th:unless="${sectors.isEmpty()}" class="space-y-4">
+                    <details
+                        th:each="sector : ${sectors}"
+                        class="border-2 rounded-base"
+                    >
+                        <summary
+                            class="p-4 cursor-pointer hover:bg-background transition-colors font-medium"
+                            th:text="${sector.name}"
+                        >
+                            Sector Name
+                        </summary>
+
+                        <div class="p-4 pt-0">
+                            <div
+                                th:if="${sectorBoulders[sector.id].isEmpty()}"
+                                class="text-muted-foreground text-sm py-2"
+                            >
+                                No boulders in this sector.
+                            </div>
+
+                            <div
+                                th:unless="${sectorBoulders[sector.id].isEmpty()}"
+                                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+                            >
+                                <div
+                                    th:each="boulder : ${sectorBoulders[sector.id]}"
+                                    class="flex flex-col gap-2"
+                                >
+                                    <a
+                                        th:href="@{/sessions/{sessionId}/gos/create(sessionId=${currentSession.id}, boulderId=${boulder.id})}"
+                                        th:class="'border-2 rounded-base shadow-base p-4 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all flex items-center justify-center ' + ${boulder.color.cssColorClass}"
+                                    >
+                                        <span
+                                            class="grade-badge"
+                                            th:text="${boulder.grade.name}"
+                                        >
+                                            Grade
+                                        </span>
+                                    </a>
+                                    <p
+                                        class="text-sm text-center font-medium break-words"
+                                        th:text="${boulder.description}"
+                                    >
+                                        Description
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+            </section>
+        </main>
+    </th:block>
+</th:block>
