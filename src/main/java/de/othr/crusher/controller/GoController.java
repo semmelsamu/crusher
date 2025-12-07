@@ -161,11 +161,9 @@ public class GoController {
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
         GoEntity go = findGoInSessionOrThrow(sessionId, goId);
 
-        List<BoulderEntity> availableBoulders = boulderRepository.findBySectorGymId(session.getGym().getId());
-
         model.addAttribute("currentSession", session);
         model.addAttribute("go", go);
-        model.addAttribute("availableBoulders", availableBoulders);
+        model.addAttribute("boulder", go.getBoulder());
         model.addAttribute("availableResults", GoResult.values());
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
@@ -257,7 +255,7 @@ public class GoController {
     public String updateGo(
             @PathVariable("sessionId") Long sessionId,
             @PathVariable("goId") Long goId,
-            @Valid @ModelAttribute("go") GoEntity formGo,
+            @ModelAttribute("go") GoEntity formGo,
             BindingResult result,
             Principal principal,
             Model model) {
@@ -291,9 +289,7 @@ public class GoController {
         }
 
         go.setResult(formGo.getResult());
-        if (formGo.getTimestamp() != null) {
-            go.setTimestamp(formGo.getTimestamp());
-        }
+        // Timestamp is intentionally not updated - preserve original timestamp
         goRepository.save(go);
 
         return "redirect:/sessions/" + sessionId;
