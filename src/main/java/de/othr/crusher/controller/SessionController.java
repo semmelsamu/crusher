@@ -1,8 +1,10 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.model.GoEntity;
 import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.model.SessionEntity;
 import de.othr.crusher.model.UserEntity;
+import de.othr.crusher.repository.GoRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
@@ -32,14 +34,17 @@ public class SessionController {
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
     private final GymRepository gymRepository;
+    private final GoRepository goRepository;
 
     public SessionController(
             SessionRepository sessionRepository,
             UserRepository userRepository,
-            GymRepository gymRepository) {
+            GymRepository gymRepository,
+            GoRepository goRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.gymRepository = gymRepository;
+        this.goRepository = goRepository;
     }
 
     /**
@@ -126,7 +131,10 @@ public class SessionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
+        List<GoEntity> gos = goRepository.findBySessionIdOrderByTimestampDesc(session.getId());
+
         model.addAttribute("currentSession", session);
+        model.addAttribute("gos", gos);
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),
