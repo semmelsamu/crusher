@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -185,6 +186,7 @@ public class GoController {
      * @param createAnother whether to create another go for the same boulder
      * @param result validation result
      * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the session detail page, back to create form, or back on validation errors
      */
@@ -196,6 +198,7 @@ public class GoController {
             @RequestParam(required = false, defaultValue = "false") boolean createAnother,
             BindingResult result,
             Principal principal,
+            RedirectAttributes redirectAttributes,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
@@ -231,6 +234,9 @@ public class GoController {
         // Set timestamp when save button is clicked
         go.setTimestamp(LocalDateTime.now());
         goRepository.save(go);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("successMessage", "Go created successfully!");
 
         // If "create another" is checked, redirect back to create form with same boulder
         if (createAnother && go.getBoulder() != null) {
