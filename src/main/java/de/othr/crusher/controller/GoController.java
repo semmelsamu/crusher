@@ -29,6 +29,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -115,7 +116,7 @@ public class GoController {
         List<SectorEntity> sectors = sectorRepository.findByGymId(session.getGym().getId());
 
         // Load and sort boulders for each sector by grade (vScale)
-        java.util.Map<Long, List<BoulderEntity>> sectorBoulders = new java.util.HashMap<>();
+        Map<Long, List<BoulderEntity>> sectorBoulders = new HashMap<>();
         for (SectorEntity sector : sectors) {
             List<BoulderEntity> boulders = boulderRepository.findBySectorId(sector.getId());
             boulders.sort((b1, b2) -> {
@@ -135,7 +136,7 @@ public class GoController {
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),
                 Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                Map.of("label", "Select Boulder", "url", "")
+                Map.of("label", "Record Go", "url", "")
         ));
 
         return "pages/gos/create-boulder";
