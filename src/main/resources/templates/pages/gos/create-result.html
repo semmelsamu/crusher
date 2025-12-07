@@ -105,14 +105,16 @@
                     </div>
 
                     <div class="flex items-center justify-between mt-6">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                name="createAnother"
-                                value="true"
-                                th:checked="${createAnother}"
-                                class="w-5 h-5 border-2 rounded cursor-pointer"
-                            />
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <label class="switch">
+                                <input
+                                    type="checkbox"
+                                    name="createAnother"
+                                    value="true"
+                                    th:checked="${createAnother}"
+                                />
+                                <span class="switch-thumb"></span>
+                            </label>
                             <span>Create new go</span>
                         </label>
 
