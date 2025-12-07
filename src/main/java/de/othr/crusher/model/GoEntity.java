@@ -17,12 +17,12 @@ import java.time.LocalDateTime;
 /**
  * Entity representing a climbing attempt (go) on a boulder during a session.
  * <p>
- * Maps to the {@code goes} table and stores the attempt result and timestamp
+ * Maps to the {@code gos} table and stores the attempt result and timestamp
  * along with references to the session and boulder.
  * </p>
  */
 @Entity
-@Table(name = "goes")
+@Table(name = "gos")
 public class GoEntity {
 
     @Id

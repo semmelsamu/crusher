@@ -1,5 +1,6 @@
 package de.othr.crusher.repository;
 
+import de.othr.crusher.model.BoulderColor;
 import de.othr.crusher.model.BoulderEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,13 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return list of boulders belonging to the sector
      */
     List<BoulderEntity> findBySectorId(Long sectorId);
+
+    /**
+     * Finds all boulders for the given gym.
+     *
+     * @param gymId identifier of the gym
+     * @return list of boulders belonging to the gym
+     */
+    List<BoulderEntity> findBySectorGymId(Long gymId);
 }
 
