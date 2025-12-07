@@ -3,10 +3,12 @@ package de.othr.crusher.controller;
 import de.othr.crusher.model.BoulderEntity;
 import de.othr.crusher.model.GoEntity;
 import de.othr.crusher.model.GoResult;
+import de.othr.crusher.model.SectorEntity;
 import de.othr.crusher.model.SessionEntity;
 import de.othr.crusher.model.UserEntity;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
+import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
 import jakarta.validation.Valid;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
@@ -43,23 +46,30 @@ public class GoController {
     private final GoRepository goRepository;
     private final SessionRepository sessionRepository;
     private final BoulderRepository boulderRepository;
+    private final SectorRepository sectorRepository;
     private final UserRepository userRepository;
 
     public GoController(
             GoRepository goRepository,
             SessionRepository sessionRepository,
             BoulderRepository boulderRepository,
+            SectorRepository sectorRepository,
             UserRepository userRepository) {
         this.goRepository = goRepository;
         this.sessionRepository = sessionRepository;
         this.boulderRepository = boulderRepository;
+        this.sectorRepository = sectorRepository;
         this.userRepository = userRepository;
     }
 
     /**
      * Displays the form for creating a new go in a session.
+     * Two-step process:
+     * - Without boulderId parameter: Shows boulder selection (step 1)
+     * - With boulderId parameter: Shows result selection (step 2)
      *
      * @param sessionId identifier of the parent session
+     * @param boulderId optional identifier of the selected boulder
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
      * @return view name for the go creation form
@@ -68,30 +78,50 @@ public class GoController {
     @Transactional(readOnly = true)
     public String showCreateForm(
             @PathVariable("sessionId") Long sessionId,
+            @RequestParam(required = false) Long boulderId,
             Principal principal,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
 
-        // Get all boulders from the session's gym
-        List<BoulderEntity> availableBoulders = boulderRepository.findBySectorGymId(session.getGym().getId());
-
-        GoEntity go = new GoEntity();
-        go.setSession(session);
-        go.setTimestamp(LocalDateTime.now());
-
         model.addAttribute("currentSession", session);
-        model.addAttribute("go", go);
-        model.addAttribute("availableBoulders", availableBoulders);
-        model.addAttribute("availableResults", GoResult.values());
+
+        // Step 2: Boulder selected, show result selection
+        if (boulderId != null) {
+            BoulderEntity boulder = boulderRepository.findById(boulderId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+
+            GoEntity go = new GoEntity();
+            go.setSession(session);
+            go.setBoulder(boulder);
+            go.setTimestamp(LocalDateTime.now());
+
+            model.addAttribute("go", go);
+            model.addAttribute("boulder", boulder);
+            model.addAttribute("availableResults", GoResult.values());
+            model.addAttribute("breadcrumb", List.of(
+                    Map.of("label", "Home", "url", "/"),
+                    Map.of("label", "Dashboard", "url", "/dashboard"),
+                    Map.of("label", "Session", "url", "/sessions/" + sessionId),
+                    Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/gos/create"),
+                    Map.of("label", "Select Result", "url", "")
+            ));
+
+            return "pages/gos/create-result";
+        }
+
+        // Step 1: Show boulder selection
+        List<SectorEntity> sectors = sectorRepository.findByGymId(session.getGym().getId());
+
+        model.addAttribute("sectors", sectors);
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),
                 Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                Map.of("label", "Record Go", "url", "")
+                Map.of("label", "Select Boulder", "url", "")
         ));
 
-        return "pages/gos/create";
+        return "pages/gos/create-boulder";
     }
 
     /**
@@ -136,16 +166,18 @@ public class GoController {
      *
      * @param sessionId identifier of the parent session
      * @param go go payload from the form
+     * @param createAnother whether to create another go for the same boulder
      * @param result validation result
      * @param principal the authenticated user
      * @param model Spring model for re-rendering the form if needed
-     * @return redirect to the session detail page or back to the form on validation errors
+     * @return redirect to the session detail page, back to create form, or back on validation errors
      */
     @PostMapping
     @Transactional
     public String createGo(
             @PathVariable("sessionId") Long sessionId,
             @Valid @ModelAttribute("go") GoEntity go,
+            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
             BindingResult result,
             Principal principal,
             Model model) {
@@ -153,18 +185,23 @@ public class GoController {
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
 
         if (result.hasErrors()) {
-            List<BoulderEntity> availableBoulders = boulderRepository.findBySectorGymId(session.getGym().getId());
+            BoulderEntity boulder = go.getBoulder();
+            if (boulder != null && boulder.getId() != null) {
+                boulder = boulderRepository.findById(boulder.getId()).orElse(null);
+            }
+
             model.addAttribute("currentSession", session);
             model.addAttribute("go", go);
-            model.addAttribute("availableBoulders", availableBoulders);
+            model.addAttribute("boulder", boulder);
             model.addAttribute("availableResults", GoResult.values());
             model.addAttribute("breadcrumb", List.of(
                     Map.of("label", "Home", "url", "/"),
                     Map.of("label", "Dashboard", "url", "/dashboard"),
                     Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                    Map.of("label", "Record Go", "url", "")
+                    Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/gos/create"),
+                    Map.of("label", "Select Result", "url", "")
             ));
-            return "pages/gos/create";
+            return "pages/gos/create-result";
         }
 
         // Validate that the boulder exists
@@ -179,6 +216,11 @@ public class GoController {
             go.setTimestamp(LocalDateTime.now());
         }
         goRepository.save(go);
+
+        // If "create another" is checked, redirect back to create form with same boulder
+        if (createAnother && go.getBoulder() != null) {
+            return "redirect:/sessions/" + sessionId + "/gos/create?boulderId=" + go.getBoulder().getId();
+        }
 
         return "redirect:/sessions/" + sessionId;
     }
