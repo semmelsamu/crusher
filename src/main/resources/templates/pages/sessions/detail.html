@@ -20,18 +20,37 @@
                     class="card flex-1 p-4 flex items-center justify-between"
                 >
                     <h1>Session</h1>
+
+                    <span
+                        th:if="${currentSession.isRunning()}"
+                        class="badge badge-success ml-auto mr-4"
+                    >
+                        Running
+                    </span>
+
+                    <span
+                        th:unless="${currentSession.isRunning()}"
+                        class="badge badge-danger ml-auto mr-4"
+                    >
+                        Ended
+                    </span>
+
+                    <form
+                        th:if="${currentSession.isRunning()}"
+                        th:action="@{/sessions/{id}/end(id=${currentSession.id})}"
+                        method="post"
+                    >
+                        <button type="submit" class="button button-danger">
+                            <x th:replace="~{components/icons :: x}"></x>
+                            End Session
+                        </button>
+                    </form>
                 </header>
             </div>
 
             <section class="card p-4 space-y-4">
                 <div class="flex items-center justify-between">
                     <h2>Details</h2>
-                    <span
-                        th:if="${currentSession.isRunning()}"
-                        class="badge badge-success"
-                    >
-                        Running
-                    </span>
                 </div>
 
                 <div class="grid gap-4">
@@ -71,17 +90,6 @@
                         </div>
                     </div>
                 </div>
-
-                <form
-                    th:if="${currentSession.isRunning()}"
-                    th:action="@{/sessions/{id}/end(id=${currentSession.id})}"
-                    method="post"
-                >
-                    <button type="submit" class="button button-danger">
-                        <x th:replace="~{components/icons :: x}"></x>
-                        End Session
-                    </button>
-                </form>
             </section>
 
             <section class="card p-4 space-y-4">
