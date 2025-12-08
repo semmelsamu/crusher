@@ -87,14 +87,7 @@
             <section class="card p-4 space-y-4">
                 <h2>Goes</h2>
 
-                <div
-                    th:if="${goes.isEmpty()}"
-                    class="border rounded p-6 text-center text-muted-foreground"
-                >
-                    No goes recorded yet.
-                </div>
-
-                <table class="table w-full" th:unless="${goes.isEmpty()}">
+                <table class="table w-full">
                     <thead>
                         <tr>
                             <th>Boulder</th>
@@ -104,7 +97,14 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody th:if="${goes.isEmpty()}">
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                No goes recorded yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody th:unless="${goes.isEmpty()}">
                         <tr th:each="go : ${goes}">
                             <td th:text="${go.boulder.description}">
                                 Boulder Description

@@ -151,14 +151,7 @@
             <section class="card p-4 space-y-4">
                 <h2>Grades</h2>
 
-                <div
-                    th:if="${grades.isEmpty()}"
-                    class="border rounded p-6 text-center text-foreground-muted"
-                >
-                    No grades added yet.
-                </div>
-
-                <table class="table w-full" th:unless="${grades.isEmpty()}">
+                <table class="table w-full">
                     <thead>
                         <tr>
                             <th class="w-20">Name</th>
@@ -168,7 +161,14 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody th:if="${grades.isEmpty()}">
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                No grades added yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody th:unless="${grades.isEmpty()}">
                         <tr th:each="grade : ${grades}">
                             <td>
                                 <span
