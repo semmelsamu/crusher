@@ -193,3 +193,21 @@
         opacity: 1;
     }
 }
+
+/*
+|-------------------------------------------------------------------------------
+| Details / Summary
+|-------------------------------------------------------------------------------
+*/
+
+.details {
+    @apply border-2 shadow-base rounded-base;
+}
+
+.details summary {
+    @apply p-4 cursor-pointer bg-background font-bold;
+}
+
+.details > :last-child {
+    @apply p-4 border-t-2;
+}

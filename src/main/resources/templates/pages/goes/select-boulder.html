@@ -33,18 +33,10 @@
                 </div>
 
                 <div th:unless="${sectors.isEmpty()}" class="space-y-4">
-                    <details
-                        th:each="sector : ${sectors}"
-                        class="border-2 rounded-base"
-                    >
-                        <summary
-                            class="p-4 cursor-pointer hover:bg-background transition-colors font-medium"
-                            th:text="${sector.name}"
-                        >
-                            Sector Name
-                        </summary>
+                    <details th:each="sector : ${sectors}" class="details">
+                        <summary th:text="${sector.name}">Sector Name</summary>
 
-                        <div class="p-4 pt-0">
+                        <div>
                             <div
                                 th:if="${sectorBoulders[sector.id].isEmpty()}"
                                 class="text-muted-foreground text-sm py-2"
