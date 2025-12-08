@@ -1,7 +1,8 @@
 <div
+    id="toast"
     th:fragment="toast"
     th:if="${toast != null}"
-    th:class="'notification ' + (${toast.containsKey('type')} ? (${toast.type == 'success'} ? 'bg-success' : (${toast.type == 'error'} ? 'bg-error' : 'bg-main')) : 'bg-main')"
+    th:class="'notification toast animate-slide-in-right ' + (${toast.containsKey('type')} ? (${toast.type == 'success'} ? 'bg-success' : (${toast.type == 'error'} ? 'bg-error' : 'bg-main')) : 'bg-main')"
 >
     <span th:if="${toast.containsKey('type') and toast.type == 'success'}">
         <x th:replace="~{components/icons :: check}"></x>
