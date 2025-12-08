@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Map;
@@ -139,6 +140,7 @@ public class BoulderController {
      * @param sectorId identifier of the parent sector
      * @param boulder boulder payload from the form
      * @param result validation result
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the sector detail page or back to the form on validation errors
      */
@@ -148,6 +150,7 @@ public class BoulderController {
             @PathVariable("sectorId") long sectorId,
             @Valid @ModelAttribute("boulder") BoulderEntity boulder,
             BindingResult result,
+            RedirectAttributes redirectAttributes,
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
@@ -184,6 +187,13 @@ public class BoulderController {
 
         boulder.setSector(sector);
         boulderRepository.save(boulder);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Boulder created successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
     }
 
@@ -195,6 +205,7 @@ public class BoulderController {
      * @param boulderId identifier of the boulder
      * @param formBoulder boulder payload from the form
      * @param result validation result
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the sector detail page or back to edit when validation errors occur
      */
@@ -205,6 +216,7 @@ public class BoulderController {
             @PathVariable("boulderId") long boulderId,
             @Valid @ModelAttribute("boulder") BoulderEntity formBoulder,
             BindingResult result,
+            RedirectAttributes redirectAttributes,
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
@@ -246,6 +258,13 @@ public class BoulderController {
         boulder.setDescription(formBoulder.getDescription());
         boulder.setColor(formBoulder.getColor());
         boulderRepository.save(boulder);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Boulder updated successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
     }
 
@@ -255,17 +274,26 @@ public class BoulderController {
      * @param gymId identifier of the parent gym
      * @param sectorId identifier of the parent sector
      * @param boulderId identifier of the boulder
+     * @param redirectAttributes attributes for flash messages on redirect
      * @return redirect to the sector detail page
      */
     @DeleteMapping("/{boulderId}")
     public String deleteBoulder(
             @PathVariable("gymId") long gymId,
             @PathVariable("sectorId") long sectorId,
-            @PathVariable("boulderId") long boulderId) {
+            @PathVariable("boulderId") long boulderId,
+            RedirectAttributes redirectAttributes) {
         findGymOrThrow(gymId);
         findSectorInGymOrThrow(gymId, sectorId);
         BoulderEntity boulder = findBoulderInSectorOrThrow(sectorId, boulderId);
         boulderRepository.delete(boulder);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Boulder deleted successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
     }
 

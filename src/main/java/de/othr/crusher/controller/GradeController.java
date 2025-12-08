@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller for viewing and editing grades within a gym in the admin area.
@@ -115,6 +116,7 @@ public class GradeController {
      * @param gradeId identifier of the grade
      * @param formGrade grade payload from the form
      * @param result validation result
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for rerendering the form if needed
      * @return redirect to the grade detail page or the edit page on validation errors
      */
@@ -124,6 +126,7 @@ public class GradeController {
             @PathVariable("gradeId") long gradeId,
             @Valid @ModelAttribute("grade") GradeEntity formGrade,
             BindingResult result,
+            RedirectAttributes redirectAttributes,
             Model model) {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
 
@@ -149,6 +152,13 @@ public class GradeController {
         grade.setVScale(formGrade.getVScale());
         grade.setFontScale(formGrade.getFontScale());
         gradeRepository.save(grade);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Grade updated successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + gymId;
     }
 
@@ -158,6 +168,7 @@ public class GradeController {
      * @param gymId identifier of the parent gym
      * @param formGrade grade payload from the form
      * @param result validation result
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for rerendering the form if needed
      * @return redirect to the new grade detail page or back to the form on validation errors
      */
@@ -166,6 +177,7 @@ public class GradeController {
             @PathVariable("gymId") long gymId,
             @Valid @ModelAttribute("grade") GradeEntity formGrade,
             BindingResult result,
+            RedirectAttributes redirectAttributes,
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
 
@@ -185,6 +197,13 @@ public class GradeController {
 
         formGrade.setGym(gym);
         gradeRepository.save(formGrade);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Grade created successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + gymId;
     }
 
@@ -193,12 +212,20 @@ public class GradeController {
      *
      * @param gymId identifier of the parent gym
      * @param gradeId identifier of the grade
+     * @param redirectAttributes attributes for flash messages on redirect
      * @return redirect to the gym detail page
      */
     @DeleteMapping("/{gradeId}")
-    public String deleteGrade(@PathVariable("gymId") long gymId, @PathVariable("gradeId") long gradeId) {
+    public String deleteGrade(@PathVariable("gymId") long gymId, @PathVariable("gradeId") long gradeId, RedirectAttributes redirectAttributes) {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         gradeRepository.delete(grade);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Grade deleted successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + gymId;
     }
 
