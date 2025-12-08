@@ -1,0 +1,3 @@
+@utility border-pressed {
+    @apply translate-[var(--box-shadow-size)] shadow-none;
+}

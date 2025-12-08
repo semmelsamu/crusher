@@ -19,7 +19,7 @@
 */
 
 .button {
-    @apply border-2 rounded-base shadow-base px-4 h-12 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background focus:outline-none;
+    @apply border-2 rounded-base shadow-base px-4 h-12 transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background focus:outline-none text-center hover:border-pressed;
 }
 
 .button-primary {
