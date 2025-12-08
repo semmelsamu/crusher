@@ -140,7 +140,7 @@ public class GoController {
                 Map.of("label", "Record Go", "url", "")
         ));
 
-        return "pages/goes/create-boulder";
+        return "pages/goes/select-boulder";
     }
 
     /**
