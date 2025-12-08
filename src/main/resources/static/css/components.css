@@ -194,30 +194,8 @@
     @apply col-start-2;
 }
 
-.notification svg {
+.notification > :is(svg, :has(svg)) {
     @apply mt-0.5 col-start-1;
-}
-
-/*
-|-------------------------------------------------------------------------------
-| Toasts
-|-------------------------------------------------------------------------------
-*/
-
-.toast-success {
-    @apply fixed top-25 right-4 z-50;
-    animation: toast-slide-in 0.3s ease-out;
-}
-
-@keyframes toast-slide-in {
-    from {
-        transform: translateX(calc(100% + 1rem));
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
 }
 
 /*

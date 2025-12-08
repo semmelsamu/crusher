@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html
     lang="en"
     xmlns:th="http://www.thymeleaf.org"
@@ -25,6 +25,7 @@
     </head>
     <body class="min-h-screen flex flex-col">
         <x th:replace="~{components/nav :: nav}"></x>
+        <x th:replace="~{components/toast :: toast}"></x>
         <x layout:fragment="content"></x>
         <x th:replace="~{components/footer :: footer}"></x>
     </body>
