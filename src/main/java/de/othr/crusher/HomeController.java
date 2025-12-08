@@ -15,17 +15,6 @@ public class HomeController {
     public String readersBooks(RedirectAttributes redirectAttributes) {
         return "pages/home";
     }
-
-    @RequestMapping(value="/te", method= RequestMethod.GET)
-    public String te(RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("toast", Map.of(
-            "message", "Hello!",
-            "type", "success",
-            "title", "Success"
-        ));
-        
-        return "redirect:/";
-    }
     
     @RequestMapping(value="/components", method= RequestMethod.GET)
     public String components() {
