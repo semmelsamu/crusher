@@ -4,8 +4,6 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div th:replace="~{components/toast :: success-toast}"></div>
-
         <main class="wrapper">
             <div
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"

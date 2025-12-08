@@ -236,7 +236,10 @@ public class GoController {
         goRepository.save(go);
 
         // Add success message for toast notification
-        redirectAttributes.addFlashAttribute("successMessage", "Go created successfully!");
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Go created successfully!"
+        ));
 
         // If "create another" is checked, redirect back to create form with same boulder
         if (createAnother && go.getBoulder() != null) {
