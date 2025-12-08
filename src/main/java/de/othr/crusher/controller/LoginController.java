@@ -1,7 +1,11 @@
 package de.othr.crusher.controller;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller for handling login page requests.
@@ -11,11 +15,37 @@ public class LoginController {
 
     /**
      * Displays the custom login page.
+     * Handles logout and error notifications via toast messages.
      *
-     * @return the login view template
+     * @param logout optional parameter indicating successful logout
+     * @param error optional parameter indicating login failure
+     * @param redirectAttributes attributes for flash scope
+     * @return the login view template or redirect
      */
     @GetMapping("/login")
-    public String login() {
+    public String login(
+            @RequestParam(required = false) String logout,
+            @RequestParam(required = false) String error,
+            RedirectAttributes redirectAttributes) {
+        
+        if (logout != null) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "success",
+                "title", "Logged out",
+                "message", "You have been logged out successfully"
+            ));
+            return "redirect:/login";
+        }
+        
+        if (error != null) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error",
+                "title", "Login failed",
+                "message", "Invalid username or password"
+            ));
+            return "redirect:/login";
+        }
+        
         return "pages/login";
     }
 }

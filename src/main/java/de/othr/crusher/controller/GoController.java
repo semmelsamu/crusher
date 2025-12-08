@@ -11,7 +11,6 @@ import de.othr.crusher.repository.GoRepository;
 import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -236,7 +235,10 @@ public class GoController {
         goRepository.save(go);
 
         // Add success message for toast notification
-        redirectAttributes.addFlashAttribute("successMessage", "Go created successfully!");
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Go created successfully!"
+        ));
 
         // If "create another" is checked, redirect back to create form with same boulder
         if (createAnother && go.getBoulder() != null) {
@@ -254,6 +256,7 @@ public class GoController {
      * @param formGo go payload from the form
      * @param result validation result
      * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the session detail page or back to edit when validation errors occur
      */
@@ -265,6 +268,7 @@ public class GoController {
             @ModelAttribute("go") GoEntity formGo,
             BindingResult result,
             Principal principal,
+            RedirectAttributes redirectAttributes,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
@@ -299,6 +303,12 @@ public class GoController {
         // Timestamp is intentionally not updated - preserve original timestamp
         goRepository.save(go);
 
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Go updated successfully!"
+        ));
+
         return "redirect:/sessions/" + sessionId;
     }
 
@@ -308,6 +318,7 @@ public class GoController {
      * @param sessionId identifier of the parent session
      * @param goId identifier of the go
      * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages on redirect
      * @return redirect to the session detail page
      */
     @DeleteMapping("/{goId}")
@@ -315,12 +326,19 @@ public class GoController {
     public String deleteGo(
             @PathVariable("sessionId") Long sessionId,
             @PathVariable("goId") Long goId,
-            Principal principal) {
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         findSessionAndVerifyOwnership(sessionId, user);
         GoEntity go = findGoInSessionOrThrow(sessionId, goId);
 
         goRepository.delete(go);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Go deleted successfully!"
+        ));
 
         return "redirect:/sessions/" + sessionId;
     }

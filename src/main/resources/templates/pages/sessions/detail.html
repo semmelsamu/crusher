@@ -4,8 +4,6 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div th:replace="~{components/toast :: success-toast}"></div>
-
         <main class="wrapper">
             <div
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
@@ -41,7 +39,7 @@
                         method="post"
                     >
                         <button type="submit" class="button button-danger">
-                            <x th:replace="~{components/icons :: x}"></x>
+                            <x th:replace="~{components/icons :: pause}"></x>
                             End Session
                         </button>
                     </form>

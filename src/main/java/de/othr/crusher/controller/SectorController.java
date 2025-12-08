@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller for managing sectors within a gym in the admin area.
@@ -143,6 +144,7 @@ public class SectorController {
      * @param gymId identifier of the parent gym
      * @param sector sector payload from the form
      * @param result validation result
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the sector detail page or back to the form on validation errors
      */
@@ -151,6 +153,7 @@ public class SectorController {
             @PathVariable("gymId") long gymId,
             @Valid @ModelAttribute("sector") SectorEntity sector,
             BindingResult result,
+            RedirectAttributes redirectAttributes,
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
 
@@ -176,6 +179,13 @@ public class SectorController {
         }
 
         SectorEntity saved = sectorRepository.save(sector);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Sector created successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + saved.getId();
     }
 
@@ -186,6 +196,7 @@ public class SectorController {
      * @param sectorId identifier of the sector
      * @param formSector sector payload from the form
      * @param result validation result
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the detail page or back to edit when validation errors occur
      */
@@ -195,6 +206,7 @@ public class SectorController {
             @PathVariable("sectorId") long sectorId,
             @Valid @ModelAttribute("sector") SectorEntity formSector,
             BindingResult result,
+            RedirectAttributes redirectAttributes,
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
@@ -228,6 +240,13 @@ public class SectorController {
         }
 
         sectorRepository.save(sector);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Sector updated successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sector.getId();
     }
 
@@ -236,14 +255,22 @@ public class SectorController {
      *
      * @param gymId identifier of the parent gym
      * @param sectorId identifier of the sector
+     * @param redirectAttributes attributes for flash messages on redirect
      * @return redirect to the gym detail page
      */
     @DeleteMapping("/{sectorId}")
     public String deleteSector(
-            @PathVariable("gymId") long gymId, @PathVariable("sectorId") long sectorId) {
+            @PathVariable("gymId") long gymId, @PathVariable("sectorId") long sectorId, RedirectAttributes redirectAttributes) {
         findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
         sectorRepository.delete(sector);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Sector deleted successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + gymId;
     }
 

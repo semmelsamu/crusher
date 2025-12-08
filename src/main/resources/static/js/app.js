@@ -8,13 +8,19 @@ window.closeDialog = (id) => {
     dialog.close();
 };
 
-// Auto-dismiss toast notifications
-document.addEventListener("DOMContentLoaded", () => {
-    const toast = document.querySelector(".toast-success");
+window.dismissToast = () => {
+    const toast = document.getElementById("toast");
     if (toast) {
-        setTimeout(() => {
-            toast.style.animation = "toast-slide-in 0.3s ease-out reverse";
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        toast.style.animation = "slide-out-right 0.3s ease-in forwards";
+        setTimeout(() => toast.remove(), 300);
+    }
+};
+
+// Auto-dismiss after 8 seconds and add click handler
+document.addEventListener("DOMContentLoaded", () => {
+    const toast = document.getElementById("toast");
+    if (toast) {
+        setTimeout(() => dismissToast(), 8000);
+        toast.addEventListener("click", dismissToast);
     }
 });

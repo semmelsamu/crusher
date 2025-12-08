@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 import java.util.Map;
 
@@ -124,11 +125,12 @@ public class GymController {
      *
      * @param gym gym object submitted from the form
      * @param result validation result
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the gym list or the form view if errors occur
      */
     @PostMapping
-    public String createGym(@Valid @ModelAttribute("gym") GymEntity gym, BindingResult result, Model model) {
+    public String createGym(@Valid @ModelAttribute("gym") GymEntity gym, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("breadcrumb", List.of(
                     Map.of("label", "Home", "url", "/"),
@@ -140,6 +142,13 @@ public class GymController {
         }
 
         gymRepository.save(gym);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Gym created successfully!"
+        ));
+
         return "redirect:/admin/gyms";
     }
 
@@ -150,6 +159,7 @@ public class GymController {
      * @param id gym ID
      * @param formGym gym object submitted from the form
      * @param result validation result
+     * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
      * @return redirect to the gym detail page or the form view if errors occur
      */
@@ -158,6 +168,7 @@ public class GymController {
             @PathVariable("id") long id,
             @Valid @ModelAttribute("gym") GymEntity formGym,
             BindingResult result,
+            RedirectAttributes redirectAttributes,
             Model model) {
         GymEntity gym = findGymOrThrow(id);
 
@@ -179,6 +190,13 @@ public class GymController {
         gym.setCity(formGym.getCity());
         gym.setEmail(formGym.getEmail());
         gymRepository.save(gym);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Gym updated successfully!"
+        ));
+
         return "redirect:/admin/gyms/" + id;
     }
 
@@ -186,11 +204,19 @@ public class GymController {
      * Deletes a gym by its ID.
      *
      * @param id gym ID
+     * @param redirectAttributes attributes for flash messages on redirect
      * @return redirect to the gym list
      */
     @DeleteMapping("/{id}")
-    public String deleteGym(@PathVariable("id") long id) {
+    public String deleteGym(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
         gymRepository.deleteById(id);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Gym deleted successfully!"
+        ));
+
         return "redirect:/admin/gyms";
     }
 

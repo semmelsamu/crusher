@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -94,10 +95,11 @@ public class SessionController {
      *
      * @param gymId the ID of the selected gym
      * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages on redirect
      * @return redirect to the newly created session detail page
      */
     @PostMapping("/sessions")
-    public String createSession(@RequestParam("gymId") Long gymId, Principal principal) {
+    public String createSession(@RequestParam("gymId") Long gymId, Principal principal, RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         GymEntity gym = gymRepository.findById(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
@@ -108,6 +110,13 @@ public class SessionController {
         session.setGym(gym);
 
         SessionEntity savedSession = sessionRepository.save(session);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Session created successfully!"
+        ));
+
         return "redirect:/sessions/" + savedSession.getId();
     }
 
@@ -149,11 +158,12 @@ public class SessionController {
      *
      * @param id session ID
      * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages on redirect
      * @return redirect to the session detail page
      */
     @PostMapping("/sessions/{id}/end")
     @Transactional
-    public String endSession(@PathVariable("id") Long id, Principal principal) {
+    public String endSession(@PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
@@ -171,6 +181,12 @@ public class SessionController {
         session.setEndedAt(LocalDateTime.now());
         sessionRepository.save(session);
 
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Session ended successfully!"
+        ));
+
         return "redirect:/sessions/" + id;
     }
 
@@ -179,11 +195,12 @@ public class SessionController {
      *
      * @param id session ID
      * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages on redirect
      * @return redirect to the dashboard
      */
     @DeleteMapping("/sessions/{id}")
     @Transactional
-    public String deleteSession(@PathVariable("id") Long id, Principal principal) {
+    public String deleteSession(@PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
@@ -194,6 +211,12 @@ public class SessionController {
         }
 
         sessionRepository.delete(session);
+
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Session deleted successfully!"
+        ));
 
         return "redirect:/dashboard";
     }
