@@ -56,6 +56,32 @@
 |-------------------------------------------------------------------------------
 */
 
+.badge {
+    @apply px-2 h-7 rounded-base text-sm font-medium inline-flex items-center justify-center border-2;
+}
+
+.badge-primary {
+    @apply bg-main text-main-foreground;
+}
+
+.badge-danger {
+    @apply bg-error text-main-foreground;
+}
+
+.badge-success {
+    @apply bg-success text-main-foreground;
+}
+
+.badge-warning {
+    @apply bg-warning text-main-foreground;
+}
+
+/*
+|-------------------------------------------------------------------------------
+| Inputs
+|-------------------------------------------------------------------------------
+*/
+
 .text-input {
     @apply border-2 rounded-base px-3 py-2 outline-none bg-secondary-background text-foreground;
 }
