@@ -19,7 +19,7 @@
 */
 
 .button {
-    @apply border-2 rounded-base shadow-base px-4 h-12 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background focus:outline-none;
+    @apply border-2 rounded-base shadow-base px-4 h-12 transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background focus:outline-none text-center hover:border-pressed;
 }
 
 .button-primary {
@@ -48,6 +48,32 @@
 
 .button:disabled {
     @apply shadow-none border-foreground-muted text-foreground-muted hover:translate-none cursor-default;
+}
+
+/*
+|-------------------------------------------------------------------------------
+| Inputs
+|-------------------------------------------------------------------------------
+*/
+
+.badge {
+    @apply px-2 h-7 rounded-base text-sm font-medium inline-flex items-center justify-center border-2;
+}
+
+.badge-primary {
+    @apply bg-main text-main-foreground;
+}
+
+.badge-danger {
+    @apply bg-error text-main-foreground;
+}
+
+.badge-success {
+    @apply bg-success text-main-foreground;
+}
+
+.badge-warning {
+    @apply bg-warning text-main-foreground;
 }
 
 /*
@@ -192,4 +218,22 @@
         transform: translateX(0);
         opacity: 1;
     }
+}
+
+/*
+|-------------------------------------------------------------------------------
+| Details / Summary
+|-------------------------------------------------------------------------------
+*/
+
+.details {
+    @apply border-2 shadow-base rounded-base;
+}
+
+.details summary {
+    @apply p-4 cursor-pointer bg-background font-bold;
+}
+
+.details > :last-child {
+    @apply p-4 border-t-2;
 }

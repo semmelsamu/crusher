@@ -119,14 +119,7 @@
             <section class="card p-4 space-y-4">
                 <h2>Boulders</h2>
 
-                <div
-                    th:if="${boulders.isEmpty()}"
-                    class="border rounded p-6 text-center text-muted-foreground"
-                >
-                    No boulders in this sector yet.
-                </div>
-
-                <table class="table w-full" th:unless="${boulders.isEmpty()}">
+                <table class="table w-full">
                     <thead>
                         <tr>
                             <th class="w-20">Color</th>
@@ -135,7 +128,14 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody th:if="${boulders.isEmpty()}">
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                No boulders added yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody th:unless="${boulders.isEmpty()}">
                         <tr th:each="boulder : ${boulders}">
                             <td>
                                 <div

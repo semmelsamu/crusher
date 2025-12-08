@@ -20,18 +20,37 @@
                     class="card flex-1 p-4 flex items-center justify-between"
                 >
                     <h1>Session</h1>
+
+                    <span
+                        th:if="${currentSession.isRunning()}"
+                        class="badge badge-success ml-auto mr-4"
+                    >
+                        Running
+                    </span>
+
+                    <span
+                        th:unless="${currentSession.isRunning()}"
+                        class="badge badge-danger ml-auto mr-4"
+                    >
+                        Ended
+                    </span>
+
+                    <form
+                        th:if="${currentSession.isRunning()}"
+                        th:action="@{/sessions/{id}/end(id=${currentSession.id})}"
+                        method="post"
+                    >
+                        <button type="submit" class="button button-danger">
+                            <x th:replace="~{components/icons :: x}"></x>
+                            End Session
+                        </button>
+                    </form>
                 </header>
             </div>
 
             <section class="card p-4 space-y-4">
                 <div class="flex items-center justify-between">
                     <h2>Details</h2>
-                    <span
-                        th:if="${currentSession.isRunning()}"
-                        class="px-3 py-1 bg-success text-success-foreground rounded-full text-sm font-medium"
-                    >
-                        running
-                    </span>
                 </div>
 
                 <div class="grid gap-4">
@@ -71,30 +90,12 @@
                         </div>
                     </div>
                 </div>
-
-                <form
-                    th:if="${currentSession.isRunning()}"
-                    th:action="@{/sessions/{id}/end(id=${currentSession.id})}"
-                    method="post"
-                >
-                    <button type="submit" class="button button-danger">
-                        <x th:replace="~{components/icons :: x}"></x>
-                        End Session
-                    </button>
-                </form>
             </section>
 
             <section class="card p-4 space-y-4">
                 <h2>Goes</h2>
 
-                <div
-                    th:if="${goes.isEmpty()}"
-                    class="border rounded p-6 text-center text-muted-foreground"
-                >
-                    No goes recorded yet.
-                </div>
-
-                <table class="table w-full" th:unless="${goes.isEmpty()}">
+                <table class="table w-full">
                     <thead>
                         <tr>
                             <th>Boulder</th>
@@ -104,7 +105,14 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody th:if="${goes.isEmpty()}">
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                No goes recorded yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody th:unless="${goes.isEmpty()}">
                         <tr th:each="go : ${goes}">
                             <td th:text="${go.boulder.description}">
                                 Boulder Description
@@ -119,7 +127,7 @@
                             </td>
                             <td>
                                 <span
-                                    th:class="${go.result == T(de.othr.crusher.model.GoResult).FINISHED ? 'px-2 py-1 bg-success text-main-foreground rounded text-sm font-medium' : (go.result == T(de.othr.crusher.model.GoResult).CLOSE_TRY ? 'px-2 py-1 bg-warning text-main-foreground rounded text-sm font-medium' : 'px-2 py-1 bg-error text-main-foreground rounded text-sm font-medium')}"
+                                    th:class="${go.result == T(de.othr.crusher.model.GoResult).FINISHED ? 'badge badge-success' : (go.result == T(de.othr.crusher.model.GoResult).CLOSE_TRY ? 'badge badge-warning' : 'badge badge-danger')}"
                                     th:text="${go.result.displayName}"
                                 >
                                     Result
