@@ -5,16 +5,6 @@
 >
     <th:block layout:fragment="content">
         <main class="wrapper">
-            <div th:if="${param.logout}" class="notification bg-success">
-                <x th:replace="~{components/icons :: check}"></x>
-                <strong>You have been logged out successfully</strong>
-            </div>
-
-            <div th:if="${param.error}" class="notification bg-error">
-                <x th:replace="~{components/icons :: x}"></x>
-                <strong>Invalid username or password</strong>
-            </div>
-
             <section class="card space-y-4 p-4 max-w-lg mx-auto">
                 <h2>Login</h2>
 

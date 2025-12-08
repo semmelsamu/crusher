@@ -19,7 +19,9 @@ public class HomeController {
     @RequestMapping(value="/te", method= RequestMethod.GET)
     public String te(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "message", "Hello!"
+            "message", "Hello!",
+            "type", "success",
+            "title", "Success"
         ));
         
         return "redirect:/";
