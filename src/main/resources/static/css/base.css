@@ -15,15 +15,15 @@ body:has(.dialog[open]) {
 }
 
 h1 {
-    @apply text-4xl font-bold mb-2;
+    @apply text-4xl font-bold;
 }
 
 h2 {
-    @apply text-3xl font-semibold mb-2;
+    @apply text-3xl font-semibold;
 }
 
 h3 {
-    @apply text-2xl font-semibold mb-1;
+    @apply text-2xl font-semibold;
 }
 
 dt {
