@@ -83,7 +83,47 @@ INSERT INTO sessions (started_at, ended_at, user_id, gym_id) VALUES
     ('2024-12-01 18:00:00', '2024-12-01 20:30:00', 1, 1),
     ('2024-12-03 17:30:00', '2024-12-03 19:45:00', 1, 1),
     ('2024-12-05 16:00:00', '2024-12-05 18:15:00', 1, 2),
-    
+
     -- Past sessions for bob (user_id = 2)
     ('2024-12-02 19:00:00', '2024-12-02 21:00:00', 2, 2),
     ('2024-12-04 18:00:00', '2024-12-04 20:00:00', 2, 3);
+
+INSERT INTO goes (session_id, boulder_id, result, timestamp) VALUES
+    -- Goes for alice's first session (session_id = 1, gym 1)
+    (1, 1, 'FINISHED', '2024-12-01 18:15:00'),
+    (1, 2, 'CLOSE_TRY', '2024-12-01 18:30:00'),
+    (1, 3, 'DID_NOT_FINISH', '2024-12-01 18:45:00'),
+    (1, 2, 'FINISHED', '2024-12-01 19:00:00'),
+    (1, 4, 'FINISHED', '2024-12-01 19:20:00'),
+    (1, 5, 'CLOSE_TRY', '2024-12-01 19:45:00'),
+    (1, 3, 'CLOSE_TRY', '2024-12-01 20:00:00'),
+
+    -- Goes for alice's second session (session_id = 2, gym 1)
+    (2, 2, 'FINISHED', '2024-12-03 17:45:00'),
+    (2, 5, 'FINISHED', '2024-12-03 18:00:00'),
+    (2, 6, 'DID_NOT_FINISH', '2024-12-03 18:20:00'),
+    (2, 7, 'CLOSE_TRY', '2024-12-03 18:40:00'),
+    (2, 6, 'CLOSE_TRY', '2024-12-03 19:00:00'),
+    (2, 8, 'DID_NOT_FINISH', '2024-12-03 19:30:00'),
+
+    -- Goes for alice's third session (session_id = 3, gym 2)
+    (3, 9, 'FINISHED', '2024-12-05 16:15:00'),
+    (3, 10, 'FINISHED', '2024-12-05 16:30:00'),
+    (3, 11, 'CLOSE_TRY', '2024-12-05 16:50:00'),
+    (3, 12, 'DID_NOT_FINISH', '2024-12-05 17:10:00'),
+    (3, 11, 'FINISHED', '2024-12-05 17:30:00'),
+    (3, 13, 'CLOSE_TRY', '2024-12-05 17:50:00'),
+
+    -- Goes for bob's first session (session_id = 4, gym 2)
+    (4, 9, 'FINISHED', '2024-12-02 19:15:00'),
+    (4, 11, 'FINISHED', '2024-12-02 19:35:00'),
+    (4, 13, 'CLOSE_TRY', '2024-12-02 19:55:00'),
+    (4, 14, 'DID_NOT_FINISH', '2024-12-02 20:15:00'),
+    (4, 15, 'CLOSE_TRY', '2024-12-02 20:40:00'),
+
+    -- Goes for bob's second session (session_id = 5, gym 3)
+    (5, 17, 'FINISHED', '2024-12-04 18:20:00'),
+    (5, 18, 'FINISHED', '2024-12-04 18:40:00'),
+    (5, 19, 'CLOSE_TRY', '2024-12-04 19:00:00'),
+    (5, 20, 'DID_NOT_FINISH', '2024-12-04 19:20:00'),
+    (5, 21, 'CLOSE_TRY', '2024-12-04 19:45:00');

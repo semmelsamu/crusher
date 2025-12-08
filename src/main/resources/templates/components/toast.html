@@ -1,0 +1,13 @@
+<div
+    th:fragment="success-toast"
+    th:if="${successMessage}"
+    class="toast-success"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <div
+        class="border-2 rounded-base shadow-base p-4 bg-success text-main-foreground flex items-center gap-3 min-w-[300px]"
+    >
+        <x th:replace="~{components/icons :: check}" class="flex-shrink-0"></x>
+        <p class="font-medium" th:text="${successMessage}">Success!</p>
+    </div>
+</div>

@@ -74,6 +74,36 @@
 
 /*
 |-------------------------------------------------------------------------------
+| Switch
+|-------------------------------------------------------------------------------
+*/
+
+.switch {
+    @apply relative inline-flex h-6 w-12 shrink-0 cursor-pointer items-center rounded-full border-2 bg-secondary-background transition-colors;
+}
+
+.switch input {
+    @apply sr-only;
+}
+
+.switch input:checked ~ .switch-thumb {
+    @apply translate-x-6;
+}
+
+.switch:has(input:checked) {
+    @apply bg-main;
+}
+
+.switch input:focus-visible ~ .switch-thumb {
+    @apply ring-2 ring-border ring-offset-2;
+}
+
+.switch-thumb {
+    @apply pointer-events-none block h-4 w-4 translate-x-1 rounded-full bg-white border-2 transition-transform;
+}
+
+/*
+|-------------------------------------------------------------------------------
 | Dialogs
 |-------------------------------------------------------------------------------
 */
@@ -140,4 +170,26 @@
 
 .notification svg {
     @apply mt-0.5 col-start-1;
+}
+
+/*
+|-------------------------------------------------------------------------------
+| Toasts
+|-------------------------------------------------------------------------------
+*/
+
+.toast-success {
+    @apply fixed top-25 right-4 z-50;
+    animation: toast-slide-in 0.3s ease-out;
+}
+
+@keyframes toast-slide-in {
+    from {
+        transform: translateX(calc(100% + 1rem));
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
