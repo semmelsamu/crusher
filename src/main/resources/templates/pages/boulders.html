@@ -1,0 +1,84 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/dashboard}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <h1>All Boulders</h1>
+                </header>
+            </div>
+
+            <section class="card p-4 space-y-4">
+                <h2>Boulders from All Gyms</h2>
+
+                <table class="table w-full">
+                    <thead>
+                        <tr>
+                            <th class="w-20">Color</th>
+                            <th class="w-20">Grade</th>
+                            <th>Description</th>
+                            <th>Sector</th>
+                            <th>Gym</th>
+                        </tr>
+                    </thead>
+
+                    <tbody th:if="${boulders.isEmpty()}">
+                        <tr>
+                            <td
+                                colspan="5"
+                                class="text-center text-muted-foreground"
+                            >
+                                No boulders available yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody th:unless="${boulders.isEmpty()}">
+                        <tr th:each="boulder : ${boulders}">
+                            <td>
+                                <div
+                                    th:class="'color-badge ' + ${boulder.color.cssColorClass}"
+                                ></div>
+                            </td>
+                            <td>
+                                <span
+                                    class="grade-badge"
+                                    th:text="${boulder.grade.name}"
+                                >
+                                    Grade
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${boulder.description}">
+                                    Description
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${boulder.sector.name}">
+                                    Sector
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${boulder.sector.gym.name}">
+                                    Gym
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </th:block>
+</th:block>

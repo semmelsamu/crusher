@@ -1,9 +1,11 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.model.BoulderEntity;
 import de.othr.crusher.model.GoEntity;
 import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.model.SessionEntity;
 import de.othr.crusher.model.UserEntity;
+import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.SessionRepository;
@@ -36,16 +38,19 @@ public class SessionController {
     private final UserRepository userRepository;
     private final GymRepository gymRepository;
     private final GoRepository goRepository;
+    private final BoulderRepository boulderRepository;
 
     public SessionController(
             SessionRepository sessionRepository,
             UserRepository userRepository,
             GymRepository gymRepository,
-            GoRepository goRepository) {
+            GoRepository goRepository,
+            BoulderRepository boulderRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.gymRepository = gymRepository;
         this.goRepository = goRepository;
+        this.boulderRepository = boulderRepository;
     }
 
     /**
@@ -69,6 +74,27 @@ public class SessionController {
         ));
 
         return "pages/dashboard";
+    }
+
+    /**
+     * Displays all boulders from all gyms.
+     *
+     * @param model Spring model to pass data to the view
+     * @return view name for the boulders page
+     */
+    @GetMapping("/boulders")
+    @Transactional(readOnly = true)
+    public String showAllBoulders(Model model) {
+        List<BoulderEntity> boulders = boulderRepository.findAll();
+
+        model.addAttribute("boulders", boulders);
+        model.addAttribute("breadcrumb", List.of(
+                Map.of("label", "Home", "url", "/"),
+                Map.of("label", "Dashboard", "url", "/dashboard"),
+                Map.of("label", "All Boulders", "url", "/boulders")
+        ));
+
+        return "pages/boulders";
     }
 
     /**

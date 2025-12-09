@@ -119,10 +119,18 @@
                     </tbody>
                 </table>
 
-                <a th:href="@{/sessions/create}" class="button button-success">
-                    <x th:replace="~{components/icons :: play}"></x>
-                    Start New Session
-                </a>
+                <div class="flex gap-4">
+                    <a
+                        th:href="@{/sessions/create}"
+                        class="button button-success"
+                    >
+                        <x th:replace="~{components/icons :: play}"></x>
+                        Start New Session
+                    </a>
+                    <a th:href="@{/boulders}" class="button">
+                        View All Boulders
+                    </a>
+                </div>
             </section>
         </main>
     </th:block>
