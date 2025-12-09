@@ -18,6 +18,10 @@
                     class="card flex-1 p-4 flex items-center justify-between"
                 >
                     <h1>Dashboard</h1>
+
+                    <a th:href="@{/boulders}" class="button ml-auto">
+                        Browse Boulders
+                    </a>
                 </header>
             </div>
 
@@ -119,18 +123,10 @@
                     </tbody>
                 </table>
 
-                <div class="flex gap-4">
-                    <a
-                        th:href="@{/sessions/create}"
-                        class="button button-success"
-                    >
-                        <x th:replace="~{components/icons :: play}"></x>
-                        Start New Session
-                    </a>
-                    <a th:href="@{/boulders}" class="button">
-                        View All Boulders
-                    </a>
-                </div>
+                <a th:href="@{/sessions/create}" class="button button-success">
+                    <x th:replace="~{components/icons :: play}"></x>
+                    Start New Session
+                </a>
             </section>
         </main>
     </th:block>
