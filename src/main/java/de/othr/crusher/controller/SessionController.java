@@ -1,11 +1,17 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.model.BoulderEntity;
 import de.othr.crusher.model.GoEntity;
+import de.othr.crusher.model.GradeEntity;
 import de.othr.crusher.model.GymEntity;
+import de.othr.crusher.model.SectorEntity;
 import de.othr.crusher.model.SessionEntity;
 import de.othr.crusher.model.UserEntity;
+import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
+import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -36,16 +42,25 @@ public class SessionController {
     private final UserRepository userRepository;
     private final GymRepository gymRepository;
     private final GoRepository goRepository;
+    private final BoulderRepository boulderRepository;
+    private final SectorRepository sectorRepository;
+    private final GradeRepository gradeRepository;
 
     public SessionController(
             SessionRepository sessionRepository,
             UserRepository userRepository,
             GymRepository gymRepository,
-            GoRepository goRepository) {
+            GoRepository goRepository,
+            BoulderRepository boulderRepository,
+            SectorRepository sectorRepository,
+            GradeRepository gradeRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.gymRepository = gymRepository;
         this.goRepository = goRepository;
+        this.boulderRepository = boulderRepository;
+        this.sectorRepository = sectorRepository;
+        this.gradeRepository = gradeRepository;
     }
 
     /**
@@ -69,6 +84,77 @@ public class SessionController {
         ));
 
         return "pages/dashboard";
+    }
+
+    /**
+     * Displays all boulders with optional filtering by gym, sector, and grades.
+     *
+     * @param gymId optional gym ID to filter by
+     * @param sectorId optional sector ID to filter by
+     * @param gradeIds optional list of grade IDs to filter by
+     * @param model Spring model to pass data to the view
+     * @return view name for the boulders page
+     */
+    @GetMapping("/boulders")
+    @Transactional(readOnly = true)
+    public String showAllBoulders(
+            @RequestParam(value = "gymId", required = false) Long gymId,
+            @RequestParam(value = "sectorId", required = false) Long sectorId,
+            @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
+            Model model) {
+        
+        // Fetch all gyms for the dropdown
+        List<GymEntity> gyms = gymRepository.findAll();
+        
+        // Default to first gym if none selected
+        if (gymId == null && !gyms.isEmpty()) {
+            gymId = gyms.get(0).getId();
+        }
+        
+        // Fetch sectors and grades for the selected gym
+        List<SectorEntity> sectors = List.of();
+        List<GradeEntity> grades = List.of();
+        if (gymId != null) {
+            sectors = sectorRepository.findByGymId(gymId);
+            grades = gradeRepository.findByGymId(gymId);
+        }
+        
+        // Filter boulders based on selected criteria
+        List<BoulderEntity> boulders;
+        if (sectorId != null) {
+            // Filter by specific sector
+            if (gradeIds != null && !gradeIds.isEmpty()) {
+                boulders = boulderRepository.findBySectorIdAndGradeIdIn(sectorId, gradeIds);
+            } else {
+                boulders = boulderRepository.findBySectorId(sectorId);
+            }
+        } else if (gymId != null) {
+            // Filter by gym
+            if (gradeIds != null && !gradeIds.isEmpty()) {
+                boulders = boulderRepository.findBySectorGymIdAndGradeIdIn(gymId, gradeIds);
+            } else {
+                boulders = boulderRepository.findBySectorGymId(gymId);
+            }
+        } else {
+            // No filters - show all boulders
+            boulders = boulderRepository.findAll();
+        }
+
+        // Add attributes to model
+        model.addAttribute("boulders", boulders);
+        model.addAttribute("gyms", gyms);
+        model.addAttribute("sectors", sectors);
+        model.addAttribute("grades", grades);
+        model.addAttribute("selectedGymId", gymId);
+        model.addAttribute("selectedSectorId", sectorId);
+        model.addAttribute("selectedGradeIds", gradeIds != null ? gradeIds : List.of());
+        model.addAttribute("breadcrumb", List.of(
+                Map.of("label", "Home", "url", "/"),
+                Map.of("label", "Dashboard", "url", "/dashboard"),
+                Map.of("label", "All Boulders", "url", "/boulders")
+        ));
+
+        return "pages/boulders";
     }
 
     /**
