@@ -11,6 +11,7 @@ import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.repository.ProjectRepository;
 import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
@@ -30,6 +31,9 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Controller for managing climbing sessions.
@@ -45,6 +49,7 @@ public class SessionController {
     private final BoulderRepository boulderRepository;
     private final SectorRepository sectorRepository;
     private final GradeRepository gradeRepository;
+    private final ProjectRepository projectRepository;
 
     public SessionController(
             SessionRepository sessionRepository,
@@ -53,7 +58,8 @@ public class SessionController {
             GoRepository goRepository,
             BoulderRepository boulderRepository,
             SectorRepository sectorRepository,
-            GradeRepository gradeRepository) {
+            GradeRepository gradeRepository,
+            ProjectRepository projectRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.gymRepository = gymRepository;
@@ -61,6 +67,7 @@ public class SessionController {
         this.boulderRepository = boulderRepository;
         this.sectorRepository = sectorRepository;
         this.gradeRepository = gradeRepository;
+        this.projectRepository = projectRepository;
     }
 
     /**
@@ -92,6 +99,8 @@ public class SessionController {
      * @param gymId optional gym ID to filter by
      * @param sectorId optional sector ID to filter by
      * @param gradeIds optional list of grade IDs to filter by
+     * @param projectOnly whether to show only boulders marked as projects by the current user
+     * @param principal the authenticated user
      * @param model Spring model to pass data to the view
      * @return view name for the boulders page
      */
@@ -101,8 +110,11 @@ public class SessionController {
             @RequestParam(value = "gymId", required = false) Long gymId,
             @RequestParam(value = "sectorId", required = false) Long sectorId,
             @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
+            @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
+            Principal principal,
             Model model) {
-        
+        UserEntity user = findUserByPrincipal(principal);
+
         // Fetch all gyms for the dropdown
         List<GymEntity> gyms = gymRepository.findAll();
         
@@ -140,6 +152,18 @@ public class SessionController {
             boulders = boulderRepository.findAll();
         }
 
+        // Load project marks for current user (once) to drive UI and optional filtering
+        Set<Long> projectBoulderIds = projectRepository.findByUserId(user.getId()).stream()
+                .map(project -> project.getBoulder() != null ? project.getBoulder().getId() : null)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        if (projectOnly) {
+            boulders = boulders.stream()
+                    .filter(boulder -> projectBoulderIds.contains(boulder.getId()))
+                    .toList();
+        }
+
         // Add attributes to model
         model.addAttribute("boulders", boulders);
         model.addAttribute("gyms", gyms);
@@ -148,6 +172,8 @@ public class SessionController {
         model.addAttribute("selectedGymId", gymId);
         model.addAttribute("selectedSectorId", sectorId);
         model.addAttribute("selectedGradeIds", gradeIds != null ? gradeIds : List.of());
+        model.addAttribute("projectBoulderIds", projectBoulderIds);
+        model.addAttribute("projectOnly", projectOnly);
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),
@@ -319,4 +345,3 @@ public class SessionController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }
-
