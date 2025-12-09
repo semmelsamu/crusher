@@ -105,9 +105,6 @@ public class ProjectController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
-        BoulderEntity boulder = boulderRepository.findById(boulderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
-
         projectRepository.findByUserIdAndBoulderId(user.getId(), boulderId)
                 .ifPresent(projectRepository::delete);
 
