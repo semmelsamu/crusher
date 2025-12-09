@@ -118,8 +118,8 @@ public class SessionController {
         // Fetch all gyms for the dropdown
         List<GymEntity> gyms = gymRepository.findAll();
         
-        // Default to first gym if none selected
-        if (gymId == null && !gyms.isEmpty()) {
+        // Default to first gym if none selected and project-only filter is not active
+        if (gymId == null && !projectOnly && !gyms.isEmpty()) {
             gymId = gyms.get(0).getId();
         }
         
