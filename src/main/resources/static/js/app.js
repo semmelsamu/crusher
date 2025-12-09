@@ -23,4 +23,15 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => dismissToast(), 8000);
         toast.addEventListener("click", dismissToast);
     }
+
+    // Auto-submit filter form when gym changes (for cascading filters)
+    const gymSelect = document.getElementById("gym-select");
+    if (gymSelect) {
+        gymSelect.addEventListener("change", () => {
+            const form = document.getElementById("filter-form");
+            if (form) {
+                form.submit();
+            }
+        });
+    }
 });

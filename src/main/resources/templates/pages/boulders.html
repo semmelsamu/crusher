@@ -22,7 +22,95 @@
             </div>
 
             <section class="card p-4 space-y-4">
-                <h2>Boulders from All Gyms</h2>
+                <h2>Filter Boulders</h2>
+
+                <form
+                    id="filter-form"
+                    th:action="@{/boulders}"
+                    method="get"
+                    class="grid grid-cols-1 md:grid-cols-3 gap-4"
+                >
+                    <div class="space-y-2">
+                        <label class="block font-medium">Gym</label>
+                        <select
+                            id="gym-select"
+                            name="gymId"
+                            class="text-input w-full"
+                            required
+                        >
+                            <option
+                                th:each="gym : ${gyms}"
+                                th:value="${gym.id}"
+                                th:text="${gym.name}"
+                                th:selected="${gym.id == selectedGymId}"
+                            >
+                                Gym
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block font-medium">Sector</label>
+                        <select name="sectorId" class="text-input w-full">
+                            <option value="">All Sectors</option>
+                            <option
+                                th:each="sector : ${sectors}"
+                                th:value="${sector.id}"
+                                th:text="${sector.name}"
+                                th:selected="${sector.id == selectedSectorId}"
+                            >
+                                Sector
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block font-medium">Grades</label>
+                        <div
+                            class="border rounded-base p-2 max-h-40 overflow-y-auto bg-background"
+                        >
+                            <div
+                                th:if="${grades.isEmpty()}"
+                                class="text-muted-foreground text-sm"
+                            >
+                                No grades available
+                            </div>
+                            <div
+                                th:each="grade : ${grades}"
+                                class="flex items-center gap-2 py-1"
+                            >
+                                <input
+                                    type="checkbox"
+                                    name="gradeIds"
+                                    th:value="${grade.id}"
+                                    th:id="'grade-' + ${grade.id}"
+                                    th:checked="${selectedGradeIds.contains(grade.id)}"
+                                    class="cursor-pointer"
+                                />
+                                <label
+                                    th:for="'grade-' + ${grade.id}"
+                                    th:text="${grade.name}"
+                                    class="cursor-pointer"
+                                >
+                                    Grade
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-3 flex gap-2">
+                        <button type="submit" class="button button-primary">
+                            Apply Filters
+                        </button>
+                        <a th:href="@{/boulders}" class="button">
+                            Clear Filters
+                        </a>
+                    </div>
+                </form>
+            </section>
+
+            <section class="card p-4 space-y-4">
+                <h2>Results</h2>
 
                 <table class="table w-full">
                     <thead>
