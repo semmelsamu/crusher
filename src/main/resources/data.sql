@@ -78,6 +78,15 @@ INSERT INTO boulders (description, color, grade_id, sector_id) VALUES
     ('Power-Kompression', 'RED', 24, 6),
     ('Höhlen-Arete', 'DARK_GREEN', 21, 6);
 
+INSERT INTO projects (user_id, boulder_id, created_at) VALUES
+    -- Alice's projects
+    (1, 2, '2024-12-03 18:10:00'),
+    (1, 6, '2024-12-03 18:30:00'),
+    (1, 11, '2024-12-05 16:10:00'),
+    -- Bob's projects
+    (2, 14, '2024-12-02 19:05:00'),
+    (2, 18, '2024-12-04 18:10:00');
+
 INSERT INTO sessions (started_at, ended_at, user_id, gym_id) VALUES
     -- Past sessions for alice (user_id = 1)
     ('2024-12-01 18:00:00', '2024-12-01 20:30:00', 1, 1),
