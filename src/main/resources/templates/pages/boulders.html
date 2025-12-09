@@ -98,6 +98,22 @@
                         </div>
                     </div>
 
+                    <div class="space-y-2">
+                        <label class="block font-medium">Projects</label>
+                        <div class="flex items-center gap-2 h-full">
+                            <input
+                                type="checkbox"
+                                id="project-only"
+                                name="projectOnly"
+                                class="cursor-pointer"
+                                th:checked="${projectOnly}"
+                            />
+                            <label for="project-only" class="cursor-pointer">
+                                Show projects only
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="md:col-span-3 flex gap-2">
                         <button type="submit" class="button button-primary">
                             Apply Filters
@@ -120,6 +136,7 @@
                             <th>Description</th>
                             <th>Sector</th>
                             <th>Gym</th>
+                            <th class="w-16 text-right">Project</th>
                         </tr>
                     </thead>
 
@@ -162,6 +179,99 @@
                                 <span th:text="${boulder.sector.gym.name}">
                                     Gym
                                 </span>
+                            </td>
+                            <td class="text-right">
+                                <div class="flex justify-end">
+                                    <form
+                                        th:if="${projectBoulderIds.contains(boulder.id)}"
+                                        th:action="@{/boulders/{boulderId}/project(boulderId=${boulder.id})}"
+                                        method="post"
+                                        class="inline"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="_method"
+                                            value="delete"
+                                        />
+                                        <input
+                                            th:if="${selectedGymId != null}"
+                                            type="hidden"
+                                            name="gymId"
+                                            th:value="${selectedGymId}"
+                                        />
+                                        <input
+                                            th:if="${selectedSectorId != null}"
+                                            type="hidden"
+                                            name="sectorId"
+                                            th:value="${selectedSectorId}"
+                                        />
+                                        <input
+                                            th:if="${selectedGradeIds != null}"
+                                            th:each="gradeId : ${selectedGradeIds}"
+                                            type="hidden"
+                                            name="gradeIds"
+                                            th:value="${gradeId}"
+                                        />
+                                        <input
+                                            th:if="${projectOnly}"
+                                            type="hidden"
+                                            name="projectOnly"
+                                            value="true"
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="button button-primary button-square text-white"
+                                            aria-label="Remove from projects"
+                                            aria-pressed="true"
+                                        >
+                                            <x
+                                                th:replace="~{components/icons :: star}"
+                                            ></x>
+                                        </button>
+                                    </form>
+                                    <form
+                                        th:unless="${projectBoulderIds.contains(boulder.id)}"
+                                        th:action="@{/boulders/{boulderId}/project(boulderId=${boulder.id})}"
+                                        method="post"
+                                        class="inline"
+                                    >
+                                        <input
+                                            th:if="${selectedGymId != null}"
+                                            type="hidden"
+                                            name="gymId"
+                                            th:value="${selectedGymId}"
+                                        />
+                                        <input
+                                            th:if="${selectedSectorId != null}"
+                                            type="hidden"
+                                            name="sectorId"
+                                            th:value="${selectedSectorId}"
+                                        />
+                                        <input
+                                            th:if="${selectedGradeIds != null}"
+                                            th:each="gradeId : ${selectedGradeIds}"
+                                            type="hidden"
+                                            name="gradeIds"
+                                            th:value="${gradeId}"
+                                        />
+                                        <input
+                                            th:if="${projectOnly}"
+                                            type="hidden"
+                                            name="projectOnly"
+                                            value="true"
+                                        />
+                                        <button
+                                            type="submit"
+                                            class="button button-primary button-square text-white"
+                                            aria-label="Add to projects"
+                                            aria-pressed="false"
+                                        >
+                                            <x
+                                                th:replace="~{components/icons :: star-off}"
+                                            ></x>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     </tbody>

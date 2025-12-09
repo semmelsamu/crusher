@@ -34,4 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    const projectOnly = document.getElementById("project-only");
+    if (projectOnly) {
+        projectOnly.addEventListener("change", () => {
+            const form = document.getElementById("filter-form");
+            if (form) {
+                form.submit();
+            }
+        });
+    }
 });
