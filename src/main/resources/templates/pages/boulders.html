@@ -38,6 +38,12 @@
                             class="text-input w-full"
                         >
                             <option
+                                value=""
+                                th:selected="${selectedGymId == null}"
+                            >
+                                All Gyms
+                            </option>
+                            <option
                                 th:each="gym : ${gyms}"
                                 th:value="${gym.id}"
                                 th:text="${gym.name}"

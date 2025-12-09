@@ -118,17 +118,15 @@ public class SessionController {
         // Fetch all gyms for the dropdown
         List<GymEntity> gyms = gymRepository.findAll();
         
-        // Default to first gym if none selected and project-only filter is not active
-        if (gymId == null && !projectOnly && !gyms.isEmpty()) {
-            gymId = gyms.get(0).getId();
-        }
-        
         // Fetch sectors and grades for the selected gym
         List<SectorEntity> sectors = List.of();
         List<GradeEntity> grades = List.of();
         if (gymId != null) {
             sectors = sectorRepository.findByGymId(gymId);
             grades = gradeRepository.findByGymId(gymId);
+        } else {
+            sectors = sectorRepository.findAll();
+            grades = gradeRepository.findAll();
         }
         
         // Filter boulders based on selected criteria
