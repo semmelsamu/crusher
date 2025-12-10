@@ -6,6 +6,7 @@ import de.othr.crusher.model.SectorEntity;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.SectorRepository;
+import de.othr.crusher.service.SectorImageStorageService;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -20,14 +21,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * Controller for managing sectors within a gym in the admin area.
  * <p>
- * Provides basic CRUD operations. Image upload/remove is deferred; a default image is used
- * until upload support is added.
+ * Provides CRUD operations with optional image upload and removal. A default image is used
+ * when no custom image has been uploaded.
  * </p>
  */
 @Controller
@@ -39,11 +42,17 @@ public class SectorController {
     private final GymRepository gymRepository;
     private final SectorRepository sectorRepository;
     private final BoulderRepository boulderRepository;
+    private final SectorImageStorageService sectorImageStorageService;
 
-    public SectorController(GymRepository gymRepository, SectorRepository sectorRepository, BoulderRepository boulderRepository) {
+    public SectorController(
+            GymRepository gymRepository,
+            SectorRepository sectorRepository,
+            BoulderRepository boulderRepository,
+            SectorImageStorageService sectorImageStorageService) {
         this.gymRepository = gymRepository;
         this.sectorRepository = sectorRepository;
         this.boulderRepository = boulderRepository;
+        this.sectorImageStorageService = sectorImageStorageService;
     }
 
     /**
@@ -143,6 +152,7 @@ public class SectorController {
      *
      * @param gymId identifier of the parent gym
      * @param sector sector payload from the form
+     * @param imageFile optional uploaded image for the sector
      * @param result validation result
      * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
@@ -152,6 +162,7 @@ public class SectorController {
     public String createSector(
             @PathVariable("gymId") long gymId,
             @Valid @ModelAttribute("sector") SectorEntity sector,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model model) {
@@ -180,10 +191,24 @@ public class SectorController {
 
         SectorEntity saved = sectorRepository.save(sector);
 
+        String toastType = "success";
+        String toastMessage = "Sector created successfully!";
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String storedPath = sectorImageStorageService.store(saved.getId(), imageFile);
+                saved.setImagePath(storedPath);
+                saved = sectorRepository.save(saved);
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                toastType = "error";
+                toastMessage = "Sector created, but image upload failed: " + e.getMessage();
+            }
+        }
+
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Sector created successfully!"
+            "type", toastType,
+            "message", toastMessage
         ));
 
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + saved.getId();
@@ -195,6 +220,8 @@ public class SectorController {
      * @param gymId identifier of the parent gym
      * @param sectorId identifier of the sector
      * @param formSector sector payload from the form
+     * @param imageFile optional uploaded image for the sector
+     * @param removeImage flag to reset the sector image to the default
      * @param result validation result
      * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
@@ -205,6 +232,8 @@ public class SectorController {
             @PathVariable("gymId") long gymId,
             @PathVariable("sectorId") long sectorId,
             @Valid @ModelAttribute("sector") SectorEntity formSector,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+            @RequestParam(value = "removeImage", defaultValue = "false") boolean removeImage,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model model) {
@@ -235,7 +264,22 @@ public class SectorController {
         sector.setName(formSector.getName());
         sector.setDescription(formSector.getDescription());
 
-        if (sector.getImagePath() == null || sector.getImagePath().isBlank()) {
+        String toastType = "success";
+        String toastMessage = "Sector updated successfully!";
+
+        if (removeImage) {
+            sectorImageStorageService.deleteIfStored(sector.getImagePath());
+            sector.setImagePath(DEFAULT_IMAGE_PATH);
+        } else if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String storedPath = sectorImageStorageService.store(sector.getId(), imageFile);
+                sectorImageStorageService.deleteIfStored(sector.getImagePath());
+                sector.setImagePath(storedPath);
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                toastType = "error";
+                toastMessage = "Sector updated, but image upload failed: " + e.getMessage();
+            }
+        } else if (sector.getImagePath() == null || sector.getImagePath().isBlank()) {
             sector.setImagePath(DEFAULT_IMAGE_PATH);
         }
 
@@ -243,8 +287,8 @@ public class SectorController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Sector updated successfully!"
+            "type", toastType,
+            "message", toastMessage
         ));
 
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sector.getId();
@@ -263,6 +307,7 @@ public class SectorController {
             @PathVariable("gymId") long gymId, @PathVariable("sectorId") long sectorId, RedirectAttributes redirectAttributes) {
         findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
+        sectorImageStorageService.deleteIfStored(sector.getImagePath());
         sectorRepository.delete(sector);
 
         // Add success message for toast notification
