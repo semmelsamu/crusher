@@ -44,4 +44,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // Restore scroll after toggling favorites
+    const storedScroll = sessionStorage.getItem("projectScroll");
+    if (storedScroll) {
+        window.scrollTo(0, parseInt(storedScroll, 10));
+        sessionStorage.removeItem("projectScroll");
+    }
+
+    // Persist scroll before submitting toggle forms
+    document.querySelectorAll("form.toggle-form").forEach((form) => {
+        form.addEventListener("submit", () => {
+            sessionStorage.setItem("projectScroll", String(window.scrollY));
+        });
+    });
 });
