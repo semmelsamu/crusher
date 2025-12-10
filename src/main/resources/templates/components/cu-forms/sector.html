@@ -3,6 +3,7 @@
     th:action="${actionUrl}"
     th:object="${sector}"
     method="post"
+    enctype="multipart/form-data"
     class="space-y-4"
     xmlns:th="http://www.thymeleaf.org"
 >
@@ -29,6 +30,62 @@
             class="text-input w-full"
             rows="4"
         ></textarea>
+    </div>
+
+    <div
+        class="space-y-2"
+        data-image-picker
+        th:with="hasImage=${sector.imagePath != null and !#strings.contains(sector.imagePath, 'default-sector')}"
+        th:attr="data-has-image=${hasImage}, data-original-src=${hasImage} ? ${sector.imagePath} : ''"
+    >
+        <label class="block">Image</label>
+
+        <div class="image-picker-preview">
+            <img
+                data-preview-image
+                th:attr="src=${hasImage} ? ${sector.imagePath} : ''"
+                th:classappend="${!hasImage} ? 'hidden' : ''"
+                alt="Sector image preview"
+                class="image-picker-img"
+            />
+            <div
+                data-placeholder
+                th:classappend="${hasImage} ? 'hidden' : ''"
+                class="image-picker-placeholder"
+            >
+                <p class="font-medium">No image selected</p>
+                <p class="text-sm text-foreground-muted">
+                    Upload a JPG, PNG, WEBP, or GIF (max 5MB).
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <input
+                type="file"
+                name="imageFile"
+                accept="image/*"
+                data-image-input
+                class="file-input"
+            />
+            <p class="text-sm text-foreground-muted">
+                Supported: JPG, PNG, WEBP, GIF (max 5MB)
+            </p>
+        </div>
+
+        <label
+            class="inline-flex items-center gap-2 text-sm"
+            th:if="${sector.id != null and hasImage}"
+        >
+            <input
+                type="checkbox"
+                name="removeImage"
+                value="true"
+                data-remove-checkbox
+                class="checkbox"
+            />
+            <span>Remove current image</span>
+        </label>
     </div>
 
     <button type="submit" class="button button-primary mt-8 ml-auto">
