@@ -21,7 +21,8 @@ function setupImagePicker(picker) {
     const fileInput = picker.querySelector("[data-image-input]");
     const previewImage = picker.querySelector("[data-preview-image]");
     const placeholder = picker.querySelector("[data-placeholder]");
-    const removeCheckbox = picker.querySelector("[data-remove-checkbox]");
+    const removeButton = picker.querySelector("[data-remove-button]");
+    const removeInput = picker.querySelector("[data-remove-input]");
 
     const hasImage = picker.dataset.hasImage === "true";
     const originalSrc = picker.dataset.originalSrc || "";
@@ -42,6 +43,31 @@ function setupImagePicker(picker) {
         showPlaceholder();
     }
 
+    const setRemoveFlag = (value) => {
+        if (removeInput) removeInput.value = value ? "true" : "false";
+    };
+
+    const updateRemoveButton = (
+        enabled,
+        removing = false,
+        hasAnyImage = false,
+    ) => {
+        if (!removeButton) return;
+        removeButton.disabled = !enabled;
+        const label = removeButton.querySelector("span");
+        if (label) {
+            if (!hasAnyImage) {
+                label.textContent = "No image to remove";
+            } else if (removing) {
+                label.textContent = "Will remove on save";
+            } else {
+                label.textContent = "Remove image";
+            }
+        }
+    };
+
+    updateRemoveButton(hasImage, false, hasImage);
+
     fileInput?.addEventListener("change", (event) => {
         const [file] = event.target.files || [];
         if (!file) {
@@ -50,25 +76,25 @@ function setupImagePicker(picker) {
             } else {
                 showPlaceholder();
             }
+            setRemoveFlag(false);
+            updateRemoveButton(hasImage, false, hasImage);
             return;
         }
 
         const objectUrl = URL.createObjectURL(file);
         showImage(objectUrl);
-        if (removeCheckbox) {
-            removeCheckbox.checked = false;
-        }
+        setRemoveFlag(false);
+        updateRemoveButton(true, false, true);
     });
 
-    removeCheckbox?.addEventListener("change", (event) => {
-        if (event.target.checked) {
-            if (fileInput) fileInput.value = "";
-            showPlaceholder();
-        } else if (hasImage && originalSrc) {
-            showImage(originalSrc);
-        } else {
-            showPlaceholder();
+    removeButton?.addEventListener("click", () => {
+        if (!removeInput || removeInput.value === "true") {
+            return;
         }
+        if (fileInput) fileInput.value = "";
+        showPlaceholder();
+        setRemoveFlag(true);
+        updateRemoveButton(false, true, false);
     });
 }
 

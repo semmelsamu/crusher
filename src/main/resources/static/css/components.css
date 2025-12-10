@@ -102,10 +102,6 @@
     @apply text-sm text-foreground;
 }
 
-.checkbox {
-    @apply w-4 h-4 border-2 rounded-sm accent-main;
-}
-
 .image-picker-preview {
     @apply border-2 rounded-base overflow-hidden bg-background min-h-48 flex items-center justify-center;
 }
