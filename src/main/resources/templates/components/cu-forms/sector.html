@@ -32,15 +32,51 @@
         ></textarea>
     </div>
 
-    <div
-        class="space-y-2"
+    <section
+        class="space-y-3"
         data-image-picker
         th:with="hasImage=${sector.imagePath != null and !#strings.contains(sector.imagePath, 'default-sector')}"
         th:attr="data-has-image=${hasImage}, data-original-src=${hasImage} ? ${sector.imagePath} : ''"
     >
-        <label class="block">Image</label>
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="font-medium">Image</p>
+                <p class="text-sm text-foreground-muted">
+                    JPG, PNG, WEBP, or GIF — max 5MB
+                </p>
+            </div>
+            <div class="flex gap-2">
+                <label class="button button-primary cursor-pointer">
+                    <x th:replace="~{components/icons :: image-plus}"></x>
+                    <span>Select image</span>
+                    <input
+                        type="file"
+                        name="imageFile"
+                        accept="image/*"
+                        data-image-input
+                        class="sr-only"
+                    />
+                </label>
+                <button
+                    type="button"
+                    class="button button-danger"
+                    data-remove-button
+                    th:classappend="${!hasImage} ? 'hidden' : ''"
+                >
+                    <x th:replace="~{components/icons :: trash-2}"></x>
+                    <span>Remove image</span>
+                </button>
+            </div>
+        </div>
 
-        <div class="image-picker-preview">
+        <input
+            type="hidden"
+            name="removeImage"
+            value="false"
+            data-remove-input
+        />
+
+        <div class="image-picker-frame aspect-video w-full">
             <img
                 data-preview-image
                 th:attr="src=${hasImage} ? ${sector.imagePath} : ''"
@@ -53,40 +89,11 @@
                 th:classappend="${hasImage} ? 'hidden' : ''"
                 class="image-picker-placeholder"
             >
-                <p class="font-medium">No image selected</p>
-                <p class="text-sm text-foreground-muted">
-                    Upload a JPG, PNG, WEBP, or GIF (max 5MB).
-                </p>
+                <x th:replace="~{components/icons :: image-off}"></x>
+                <p class="font-medium">Image coming soon</p>
             </div>
         </div>
-
-        <div class="flex items-center gap-3">
-            <input
-                type="file"
-                name="imageFile"
-                accept="image/*"
-                data-image-input
-                class="file-input"
-            />
-            <p class="text-sm text-foreground-muted">
-                Supported: JPG, PNG, WEBP, GIF (max 5MB)
-            </p>
-        </div>
-
-        <label
-            class="inline-flex items-center gap-2 text-sm"
-            th:if="${sector.id != null and hasImage}"
-        >
-            <input
-                type="checkbox"
-                name="removeImage"
-                value="true"
-                data-remove-checkbox
-                class="checkbox"
-            />
-            <span>Remove current image</span>
-        </label>
-    </div>
+    </section>
 
     <button type="submit" class="button button-primary mt-8 ml-auto">
         Save
