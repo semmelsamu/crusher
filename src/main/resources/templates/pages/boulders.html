@@ -187,97 +187,55 @@
                                 </span>
                             </td>
                             <td class="text-right">
-                                <div class="flex justify-end">
-                                    <form
-                                        th:if="${projectBoulderIds.contains(boulder.id)}"
-                                        th:action="@{/boulders/{boulderId}/project(boulderId=${boulder.id})}"
-                                        method="post"
-                                        class="inline"
+                                <form
+                                    th:action="@{/boulders/{boulderId}/project/toggle(boulderId=${boulder.id})}"
+                                    method="post"
+                                    class="inline toggle-form"
+                                >
+                                    <input
+                                        th:if="${selectedGymId != null}"
+                                        type="hidden"
+                                        name="gymId"
+                                        th:value="${selectedGymId}"
+                                    />
+                                    <input
+                                        th:if="${selectedSectorId != null}"
+                                        type="hidden"
+                                        name="sectorId"
+                                        th:value="${selectedSectorId}"
+                                    />
+                                    <input
+                                        th:if="${selectedGradeIds != null}"
+                                        th:each="gradeId : ${selectedGradeIds}"
+                                        type="hidden"
+                                        name="gradeIds"
+                                        th:value="${gradeId}"
+                                    />
+                                    <input
+                                        th:if="${projectOnly}"
+                                        type="hidden"
+                                        name="projectOnly"
+                                        value="true"
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="toggle-button"
+                                        th:attr="data-active=${projectBoulderIds.contains(boulder.id)}"
+                                        th:attrappend=" aria-pressed=${projectBoulderIds.contains(boulder.id)}"
+                                        aria-label="Toggle project"
                                     >
-                                        <input
-                                            type="hidden"
-                                            name="_method"
-                                            value="delete"
-                                        />
-                                        <input
-                                            th:if="${selectedGymId != null}"
-                                            type="hidden"
-                                            name="gymId"
-                                            th:value="${selectedGymId}"
-                                        />
-                                        <input
-                                            th:if="${selectedSectorId != null}"
-                                            type="hidden"
-                                            name="sectorId"
-                                            th:value="${selectedSectorId}"
-                                        />
-                                        <input
-                                            th:if="${selectedGradeIds != null}"
-                                            th:each="gradeId : ${selectedGradeIds}"
-                                            type="hidden"
-                                            name="gradeIds"
-                                            th:value="${gradeId}"
-                                        />
-                                        <input
-                                            th:if="${projectOnly}"
-                                            type="hidden"
-                                            name="projectOnly"
-                                            value="true"
-                                        />
-                                        <button
-                                            type="submit"
-                                            class="button button-warning button-square"
-                                            aria-label="Remove from projects"
-                                            aria-pressed="true"
-                                        >
+                                        <span class="icon-on">
                                             <x
                                                 th:replace="~{components/icons :: star-off}"
                                             ></x>
-                                        </button>
-                                    </form>
-                                    <form
-                                        th:unless="${projectBoulderIds.contains(boulder.id)}"
-                                        th:action="@{/boulders/{boulderId}/project(boulderId=${boulder.id})}"
-                                        method="post"
-                                        class="inline"
-                                    >
-                                        <input
-                                            th:if="${selectedGymId != null}"
-                                            type="hidden"
-                                            name="gymId"
-                                            th:value="${selectedGymId}"
-                                        />
-                                        <input
-                                            th:if="${selectedSectorId != null}"
-                                            type="hidden"
-                                            name="sectorId"
-                                            th:value="${selectedSectorId}"
-                                        />
-                                        <input
-                                            th:if="${selectedGradeIds != null}"
-                                            th:each="gradeId : ${selectedGradeIds}"
-                                            type="hidden"
-                                            name="gradeIds"
-                                            th:value="${gradeId}"
-                                        />
-                                        <input
-                                            th:if="${projectOnly}"
-                                            type="hidden"
-                                            name="projectOnly"
-                                            value="true"
-                                        />
-                                        <button
-                                            type="submit"
-                                            class="button button-square"
-                                            aria-label="Add to projects"
-                                            aria-pressed="false"
-                                        >
+                                        </span>
+                                        <span class="icon-off">
                                             <x
                                                 th:replace="~{components/icons :: star}"
                                             ></x>
-                                        </button>
-                                    </form>
-                                </div>
+                                        </span>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     </tbody>
