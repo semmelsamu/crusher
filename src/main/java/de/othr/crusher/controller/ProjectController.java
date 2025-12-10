@@ -37,6 +37,53 @@ public class ProjectController {
     }
 
     /**
+     * Toggles the project state for the current user on a given boulder.
+     * Adds the project when missing, removes it when present.
+     *
+     * @param boulderId identifier of the boulder
+     * @param gymId optional gym filter to preserve on redirect
+     * @param sectorId optional sector filter to preserve on redirect
+     * @param gradeIds optional grade filters to preserve on redirect
+     * @param projectOnly whether the projects-only filter was active
+     * @param principal authenticated user
+     * @param redirectAttributes attributes to preserve filters and toast
+     * @return redirect to the boulders overview
+     */
+    @PostMapping("/boulders/{boulderId}/project/toggle")
+    @Transactional
+    public String toggleProject(
+            @PathVariable("boulderId") Long boulderId,
+            @RequestParam(value = "gymId", required = false) Long gymId,
+            @RequestParam(value = "sectorId", required = false) Long sectorId,
+            @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
+            @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+        UserEntity user = findUserByPrincipal(principal);
+        BoulderEntity boulder = boulderRepository.findById(boulderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+
+        projectRepository.findByUserIdAndBoulderId(user.getId(), boulderId)
+                .ifPresentOrElse(
+                        projectRepository::delete,
+                        () -> {
+                            ProjectEntity project = new ProjectEntity();
+                            project.setUser(user);
+                            project.setBoulder(boulder);
+                            projectRepository.save(project);
+                        }
+                );
+
+        boolean nowActive = projectRepository.findByUserIdAndBoulderId(user.getId(), boulderId).isPresent();
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "success",
+                "message", nowActive ? "Boulder added to your projects!" : "Boulder removed from your projects."
+        ));
+        preserveFilters(redirectAttributes, gymId, sectorId, gradeIds, projectOnly);
+        return "redirect:/boulders";
+    }
+
+    /**
      * Marks a boulder as a project for the current user. Idempotent: adding an existing
      * project is treated as success without error.
      *
