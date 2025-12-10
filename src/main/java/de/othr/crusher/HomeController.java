@@ -34,7 +34,6 @@ public class HomeController {
      * Shows either:
      * - A link to the active session if one exists
      * - A quick-start button for the last used gym if no active session
-     * - A generic "start session" button if no previous sessions exist
      *
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
@@ -49,10 +48,8 @@ public class HomeController {
         Optional<SessionEntity> activeSession = sessionRepository.findByUserIdAndEndedAtIsNull(user.getId());
 
         if (activeSession.isPresent()) {
-            // User has an active session - show link to it
             model.addAttribute("activeSession", activeSession.get());
         } else {
-            // No active session - check for last completed session
             Optional<SessionEntity> lastSession = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId())
                     .stream()
                     .findFirst();
