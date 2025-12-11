@@ -1,0 +1,176 @@
+<form
+    th:fragment="go(actionUrl, go, boulder, showCreateAnother, createAnother)"
+    th:action="${actionUrl}"
+    th:object="${go}"
+    method="post"
+    class="space-y-6"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <input type="hidden" name="_method" value="put" th:if="${go.id != null}" />
+    <input type="hidden" th:field="*{boulder.id}" />
+    <input type="hidden" th:field="*{session.id}" />
+
+    <div class="space-y-4">
+        <div class="text-lg font-medium">
+            <p>
+                <span
+                    th:text="${go.id != null ? 'Edit Result for' : 'Select Result for'}"
+                    >Select Result for</span
+                >
+                <strong th:text="${boulder.description}">Boulder</strong>
+            </p>
+            <p class="text-sm text-muted-foreground">
+                Grade
+                <span th:text="${boulder.grade.name}">1</span>
+            </p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+            <label class="cursor-pointer h-full">
+                <input
+                    type="radio"
+                    th:field="*{result}"
+                    value="DID_NOT_FINISH"
+                    class="peer sr-only"
+                    required
+                />
+                <div
+                    class="button button-danger h-16 peer-checked:border-pressed peer-checked:font-bold leading-tight"
+                >
+                    Did not finish
+                </div>
+            </label>
+
+            <label class="cursor-pointer h-full">
+                <input
+                    type="radio"
+                    th:field="*{result}"
+                    value="CLOSE_TRY"
+                    class="peer sr-only"
+                    required
+                />
+                <div
+                    class="button button-warning h-16 peer-checked:border-pressed peer-checked:font-bold"
+                >
+                    Close try
+                </div>
+            </label>
+
+            <label class="cursor-pointer h-full">
+                <input
+                    type="radio"
+                    th:field="*{result}"
+                    value="FINISHED"
+                    class="peer sr-only"
+                    required
+                />
+                <div
+                    class="button button-success h-16 peer-checked:border-pressed peer-checked:font-bold"
+                >
+                    Finished
+                </div>
+            </label>
+        </div>
+
+        <div th:if="${#fields.hasErrors('result')}" class="text-error text-sm">
+            <p th:errors="*{result}">Error</p>
+        </div>
+    </div>
+
+    <div
+        class="space-y-3"
+        data-progress-wrapper
+        th:if="${boulder.holdsCount != null}"
+    >
+        <div class="flex items-center gap-3">
+            <label class="switch">
+                <input
+                    type="checkbox"
+                    name="trackProgress"
+                    value="true"
+                    data-progress-toggle
+                    th:checked="${go.progressedHold != null}"
+                />
+                <span class="switch-thumb"></span>
+            </label>
+            <div>
+                <p class="font-medium">Track progress</p>
+                <p class="text-sm text-muted-foreground">
+                    Record the highest hold you reached
+                </p>
+            </div>
+        </div>
+
+        <div
+            class="space-y-2 border-2 rounded-base p-3"
+            data-progress-container
+            th:attr="data-disabled=${go.progressedHold == null}"
+        >
+            <div
+                class="flex items-center justify-between text-sm text-muted-foreground"
+            >
+                <span>Reached hold</span>
+                <span class="font-medium">
+                    <span
+                        data-progress-value
+                        th:text="${go.progressedHold != null ? go.progressedHold : 0}"
+                        >0</span
+                    >
+                    /
+                    <span th:text="${boulder.holdsCount}">0</span>
+                </span>
+            </div>
+
+            <input
+                type="range"
+                min="0"
+                th:max="${boulder.holdsCount}"
+                step="1"
+                th:field="*{progressedHold}"
+                class="w-full"
+                data-progress-input
+                th:disabled="${go.progressedHold == null}"
+            />
+            <p class="text-sm text-muted-foreground">
+                Drag to the highest hold you managed on this go (0 means the
+                start).
+            </p>
+            <div
+                th:if="${#fields.hasErrors('progressedHold')}"
+                class="text-error text-sm"
+            >
+                <p th:errors="*{progressedHold}">Error</p>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="flex items-center justify-between mt-6"
+        th:if="${showCreateAnother}"
+    >
+        <label class="flex items-center gap-3 cursor-pointer">
+            <label class="switch">
+                <input
+                    type="checkbox"
+                    name="createAnother"
+                    value="true"
+                    th:checked="${createAnother}"
+                />
+                <span class="switch-thumb"></span>
+            </label>
+            <span>Create more Goes</span>
+        </label>
+
+        <button type="submit" class="button button-success">
+            <x th:replace="~{components/icons :: check}"></x>
+            Save
+        </button>
+    </div>
+
+    <div class="flex justify-end mt-6" th:unless="${showCreateAnother}">
+        <button type="submit" class="button button-success">
+            <x th:replace="~{components/icons :: check}"></x>
+            Save
+        </button>
+    </div>
+</form>
