@@ -50,6 +50,30 @@
     @apply shadow-none border-foreground-muted text-foreground-muted hover:translate-none cursor-default;
 }
 
+.toggle-button {
+    @apply border-2 border-border rounded-base shadow-base h-12 px-0 aspect-square transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background text-foreground focus:outline-none text-center hover:border-pressed;
+}
+
+.toggle-button[data-active="true"] {
+    @apply bg-warning text-main-foreground;
+}
+
+.toggle-button[data-active="false"] {
+    @apply bg-secondary-background text-foreground;
+}
+
+.toggle-button .icon-off {
+    display: none;
+}
+
+.toggle-button[data-active="false"] .icon-on {
+    display: none;
+}
+
+.toggle-button[data-active="false"] .icon-off {
+    display: inline-flex;
+}
+
 /*
 |-------------------------------------------------------------------------------
 | Inputs

@@ -36,8 +36,13 @@
                             id="gym-select"
                             name="gymId"
                             class="text-input w-full"
-                            required
                         >
+                            <option
+                                value=""
+                                th:selected="${selectedGymId == null}"
+                            >
+                                All Gyms
+                            </option>
                             <option
                                 th:each="gym : ${gyms}"
                                 th:value="${gym.id}"
@@ -98,6 +103,23 @@
                         </div>
                     </div>
 
+                    <div
+                        class="space-y-2 md:flex md:items-center md:gap-3 md:space-y-0"
+                    >
+                        <div class="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="project-only"
+                                name="projectOnly"
+                                class="cursor-pointer"
+                                th:checked="${projectOnly}"
+                            />
+                            <label for="project-only" class="cursor-pointer">
+                                Show projects only
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="md:col-span-3 flex gap-2">
                         <button type="submit" class="button button-primary">
                             Apply Filters
@@ -120,6 +142,7 @@
                             <th>Description</th>
                             <th>Sector</th>
                             <th>Gym</th>
+                            <th class="w-16 text-right"></th>
                         </tr>
                     </thead>
 
@@ -162,6 +185,57 @@
                                 <span th:text="${boulder.sector.gym.name}">
                                     Gym
                                 </span>
+                            </td>
+                            <td class="text-right">
+                                <form
+                                    th:action="@{/boulders/{boulderId}/project/toggle(boulderId=${boulder.id})}"
+                                    method="post"
+                                    class="inline toggle-form"
+                                >
+                                    <input
+                                        th:if="${selectedGymId != null}"
+                                        type="hidden"
+                                        name="gymId"
+                                        th:value="${selectedGymId}"
+                                    />
+                                    <input
+                                        th:if="${selectedSectorId != null}"
+                                        type="hidden"
+                                        name="sectorId"
+                                        th:value="${selectedSectorId}"
+                                    />
+                                    <input
+                                        th:if="${selectedGradeIds != null}"
+                                        th:each="gradeId : ${selectedGradeIds}"
+                                        type="hidden"
+                                        name="gradeIds"
+                                        th:value="${gradeId}"
+                                    />
+                                    <input
+                                        th:if="${projectOnly}"
+                                        type="hidden"
+                                        name="projectOnly"
+                                        value="true"
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="toggle-button"
+                                        th:attr="data-active=${projectBoulderIds.contains(boulder.id)}"
+                                        th:attrappend=" aria-pressed=${projectBoulderIds.contains(boulder.id)}"
+                                        aria-label="Toggle project"
+                                    >
+                                        <span class="icon-on">
+                                            <x
+                                                th:replace="~{components/icons :: star-off}"
+                                            ></x>
+                                        </span>
+                                        <span class="icon-off">
+                                            <x
+                                                th:replace="~{components/icons :: star}"
+                                            ></x>
+                                        </span>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     </tbody>
