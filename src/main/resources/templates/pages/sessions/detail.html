@@ -98,6 +98,7 @@
                         <tr>
                             <th>Boulder</th>
                             <th>Grade</th>
+                            <th>Progress</th>
                             <th>Result</th>
                             <th>Time</th>
                             <th></th>
@@ -105,7 +106,7 @@
                     </thead>
                     <tbody th:if="${goes.isEmpty()}">
                         <tr>
-                            <td colspan="5" class="text-center">
+                            <td colspan="6" class="text-center">
                                 No goes recorded yet.
                             </td>
                         </tr>
@@ -121,6 +122,14 @@
                                     th:text="${go.boulder.grade.name}"
                                 >
                                     Grade
+                                </span>
+                            </td>
+                            <td>
+                                <span
+                                    th:if="${go.progressedHold != null}"
+                                    th:text="|Hold ${go.progressedHold}/${go.boulder.holdsCount}|"
+                                >
+                                    Progress
                                 </span>
                             </td>
                             <td>

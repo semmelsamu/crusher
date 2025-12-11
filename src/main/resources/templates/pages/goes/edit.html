@@ -103,6 +103,75 @@
                         </div>
                     </div>
 
+                    <div
+                        class="space-y-3"
+                        data-progress-wrapper
+                        th:if="${boulder.holdsCount != null}"
+                    >
+                        <div class="flex items-center gap-3">
+                            <label class="switch">
+                                <input
+                                    type="checkbox"
+                                    name="trackProgress"
+                                    value="true"
+                                    data-progress-toggle
+                                    th:checked="${go.progressedHold != null}"
+                                />
+                                <span class="switch-thumb"></span>
+                            </label>
+                            <div>
+                                <p class="font-medium">Track progress</p>
+                                <p class="text-sm text-muted-foreground">
+                                    Record the highest hold you reached
+                                </p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="space-y-2 border-2 rounded-base p-3"
+                            data-progress-container
+                            th:attr="data-disabled=${go.progressedHold == null}"
+                        >
+                            <div
+                                class="flex items-center justify-between text-sm text-muted-foreground"
+                            >
+                                <span>Reached hold</span>
+                                <span class="font-medium">
+                                    <span
+                                        data-progress-value
+                                        th:text="${go.progressedHold != null ? go.progressedHold : 0}"
+                                        >0</span
+                                    >
+                                    /
+                                    <span th:text="${boulder.holdsCount}"
+                                        >0</span
+                                    >
+                                </span>
+                            </div>
+
+                            <input
+                                type="range"
+                                min="0"
+                                th:max="${boulder.holdsCount}"
+                                step="1"
+                                th:field="*{progressedHold}"
+                                class="w-full"
+                                data-progress-input
+                                th:disabled="${go.progressedHold == null}"
+                            />
+                            <p class="text-sm text-muted-foreground">
+                                Drag to the highest hold you managed on this go
+                                (0 means the start).
+                            </p>
+                            <div
+                                th:if="${#fields.hasErrors('progressedHold')}"
+                                class="text-error text-sm"
+                            >
+                                <p th:errors="*{progressedHold}">Error</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="flex justify-end mt-6">
                         <button type="submit" class="button button-success">
                             <x th:replace="~{components/icons :: check}"></x>

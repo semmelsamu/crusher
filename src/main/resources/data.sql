@@ -43,40 +43,40 @@ INSERT INTO sectors (name, description, image_path, gym_id) VALUES
     ('Tech-Deck', 'Schmale Leisten und Fußarbeitstraining.', '/images/default-sector.svg', 3),
     ('Höhle', 'Kompressionslastige Boulder in der Grotte.', '/images/default-sector.svg', 3);
 
-INSERT INTO boulders (description, color, grade_id, sector_id) VALUES
+INSERT INTO boulders (description, color, grade_id, sector_id, holds_count) VALUES
     -- Boulders for sector 1 (30er, gym 1)
-    ('Links hinten', 'YELLOW', 1, 1),
-    ('Rechts vorne, steil', 'BLUE', 3, 1),
-    ('Mittig, dynamisch', 'RED', 4, 1),
-    ('Kante rechts', 'PINK', 2, 1),
+    ('Links hinten', 'YELLOW', 1, 1, 18),
+    ('Rechts vorne, steil', 'BLUE', 3, 1, 22),
+    ('Mittig, dynamisch', 'RED', 4, 1, 20),
+    ('Kante rechts', 'PINK', 2, 1, 16),
     
     -- Boulders for sector 2 (Volldach, gym 1)
-    ('Dach links, Power', 'BLACK', 6, 2),
-    ('Campus rechts', 'BLUE', 7, 2),
-    ('Überhang mittig', 'DARK_GREEN', 5, 2),
-    ('Traversierung komplett', 'WHITE', 4, 2),
+    ('Dach links, Power', 'BLACK', 6, 2, 25),
+    ('Campus rechts', 'BLUE', 7, 2, 22),
+    ('Überhang mittig', 'DARK_GREEN', 5, 2, 21),
+    ('Traversierung komplett', 'WHITE', 4, 2, 30),
     
     -- Boulders for sector 3 (Slab-City, gym 2)
-    ('Balance links', 'YELLOW', 9, 3),
-    ('Platte rechts', 'WHITE', 10, 3),
-    ('Technik pur', 'PINK', 11, 3),
+    ('Balance links', 'YELLOW', 9, 3, 14),
+    ('Platte rechts', 'WHITE', 10, 3, 12),
+    ('Technik pur', 'PINK', 11, 3, 18),
     
     -- Boulders for sector 4 (45er, gym 2)
-    ('Überhang extrem', 'BLACK', 14, 4),
-    ('Power-Dynos', 'RED', 15, 4),
-    ('Sloper Challenge', 'BLUE', 16, 4),
-    ('Campus Board', 'DARK_GREEN', 13, 4),
+    ('Überhang extrem', 'BLACK', 14, 4, 26),
+    ('Power-Dynos', 'RED', 15, 4, 20),
+    ('Sloper Challenge', 'BLUE', 16, 4, 19),
+    ('Campus Board', 'DARK_GREEN', 13, 4, 24),
     
     -- Boulders for sector 5 (Tech-Deck, gym 3)
-    ('Crimp Heaven', 'YELLOW', 17, 5),
-    ('Fußarbeit Spezial', 'PINK', 18, 5),
-    ('Leisten links', 'WHITE', 19, 5),
+    ('Crimp Heaven', 'YELLOW', 17, 5, 18),
+    ('Fußarbeit Spezial', 'PINK', 18, 5, 16),
+    ('Leisten links', 'WHITE', 19, 5, 17),
     
     -- Boulders for sector 6 (Höhle, gym 3)
-    ('Compression Crack', 'BLACK', 22, 6),
-    ('Grotten-Traverse', 'BLUE', 23, 6),
-    ('Power-Kompression', 'RED', 24, 6),
-    ('Höhlen-Arete', 'DARK_GREEN', 21, 6);
+    ('Compression Crack', 'BLACK', 22, 6, 23),
+    ('Grotten-Traverse', 'BLUE', 23, 6, 28),
+    ('Power-Kompression', 'RED', 24, 6, 24),
+    ('Höhlen-Arete', 'DARK_GREEN', 21, 6, 21);
 
 INSERT INTO projects (user_id, boulder_id, created_at) VALUES
     -- Alice's projects (2 per gym)

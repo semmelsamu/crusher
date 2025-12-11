@@ -200,6 +200,14 @@
     @apply text-center inline-block w-fit px-1 min-w-7 bg-secondary-background border-2 font-medium;
 }
 
+[data-progress-container][data-disabled="true"] {
+    @apply opacity-60;
+}
+
+[data-progress-input] {
+    accent-color: var(--color-main);
+}
+
 /*
 |-------------------------------------------------------------------------------
 | Notifications

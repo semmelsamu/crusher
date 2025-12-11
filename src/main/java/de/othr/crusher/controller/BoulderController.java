@@ -257,6 +257,7 @@ public class BoulderController {
 
         boulder.setDescription(formBoulder.getDescription());
         boulder.setColor(formBoulder.getColor());
+        boulder.setHoldsCount(formBoulder.getHoldsCount());
         boulderRepository.save(boulder);
 
         // Add success message for toast notification
@@ -329,4 +330,3 @@ public class BoulderController {
         return boulder;
     }
 }
-
