@@ -58,35 +58,4 @@ document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.setItem("projectScroll", String(window.scrollY));
         });
     });
-
-    // Toggle progress sliders on go forms
-    document.querySelectorAll("[data-progress-wrapper]").forEach((wrapper) => {
-        const toggle = wrapper.querySelector("[data-progress-toggle]");
-        const container = wrapper.querySelector("[data-progress-container]");
-        const input = wrapper.querySelector("[data-progress-input]");
-        const valueDisplay = wrapper.querySelector("[data-progress-value]");
-
-        if (!toggle || !container || !input) {
-            return;
-        }
-
-        const syncProgressState = () => {
-            const enabled = toggle.checked;
-            input.disabled = !enabled;
-            container.dataset.disabled = String(!enabled);
-            const currentValue = input.value || input.min || "0";
-            if (valueDisplay) {
-                valueDisplay.textContent = currentValue;
-            }
-        };
-
-        input.addEventListener("input", () => {
-            if (valueDisplay) {
-                valueDisplay.textContent = input.value;
-            }
-        });
-
-        toggle.addEventListener("change", syncProgressState);
-        syncProgressState();
-    });
 });

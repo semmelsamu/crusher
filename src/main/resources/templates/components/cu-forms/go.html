@@ -3,27 +3,25 @@
     th:action="${actionUrl}"
     th:object="${go}"
     method="post"
-    class="space-y-6"
+    class="space-y-4"
     xmlns:th="http://www.thymeleaf.org"
 >
     <input type="hidden" name="_method" value="put" th:if="${go.id != null}" />
     <input type="hidden" th:field="*{boulder.id}" />
     <input type="hidden" th:field="*{session.id}" />
 
-    <div class="space-y-4">
-        <div class="text-lg font-medium">
-            <p>
-                <span
-                    th:text="${go.id != null ? 'Edit Result for' : 'Select Result for'}"
-                    >Select Result for</span
-                >
-                <strong th:text="${boulder.description}">Boulder</strong>
-            </p>
-            <p class="text-sm text-muted-foreground">
-                Grade
-                <span th:text="${boulder.grade.name}">1</span>
-            </p>
-        </div>
+    <h2>Record Go</h2>
+
+    <div
+        class="p-4 border-2 rounded-base flex items-center gap-4 bg-background"
+    >
+        <div th:class="'color-badge ' + ${boulder.color.cssColorClass}"></div>
+        <span class="grade-badge" th:text="${boulder.grade.name}"> Grade </span>
+        <p th:text="${boulder.description}">Boulder</p>
+    </div>
+
+    <div class="space-y-2">
+        <p>Select Result</p>
 
         <div class="grid grid-cols-3 gap-4">
             <label class="cursor-pointer h-full">
@@ -71,53 +69,50 @@
                 </div>
             </label>
         </div>
+    </div>
 
-        <div th:if="${#fields.hasErrors('result')}" class="text-error text-sm">
-            <p th:errors="*{result}">Error</p>
-        </div>
+    <div th:if="${#fields.hasErrors('result')}" class="text-error text-sm">
+        <p th:errors="*{result}">Error</p>
     </div>
 
     <div
-        class="space-y-3"
-        data-progress-wrapper
+        class="grid grid-cols-[auto_1fr] items-center gap-4 my-8"
         th:if="${boulder.holdsCount != null}"
     >
-        <div class="flex items-center gap-3">
-            <label class="switch">
-                <input
-                    type="checkbox"
-                    name="trackProgress"
-                    value="true"
-                    data-progress-toggle
-                    th:checked="${go.progressedHold != null}"
-                />
-                <span class="switch-thumb"></span>
-            </label>
-            <div>
-                <p class="font-medium">Track progress</p>
-                <p class="text-sm text-muted-foreground">
+        <input
+            type="checkbox"
+            name="trackProgress"
+            value="true"
+            class="checkbox peer"
+            th:checked="${go.progressedHold != null}"
+            id="track-progress"
+        />
+        <div>
+            <label for="track-progress">
+                <span>Track detailed progress</span>
+                <br />
+                <span class="text-foreground-muted">
                     Record the highest hold you reached
-                </p>
-            </div>
+                </span>
+            </label>
         </div>
 
         <div
-            class="space-y-2 border-2 rounded-base p-3"
-            data-progress-container
+            class="col-start-2 space-y-4 border-2 rounded-base p-4 hidden peer-checked:block bg-background"
             th:attr="data-disabled=${go.progressedHold == null}"
+            th:x-data="'{ hold: ' + ${go.progressedHold != null ? go.progressedHold : 0} + '}'"
         >
-            <div
-                class="flex items-center justify-between text-sm text-muted-foreground"
-            >
-                <span>Reached hold</span>
-                <span class="font-medium">
-                    <span
-                        data-progress-value
-                        th:text="${go.progressedHold != null ? go.progressedHold : 0}"
-                        >0</span
-                    >
+            <div class="flex items-center justify-between">
+                <label for="reached-hold">Reached hold</label>
+                <span>
+                    <span x-text="hold">0</span>
                     /
-                    <span th:text="${boulder.holdsCount}">0</span>
+                    <span
+                        th:text="${boulder.holdsCount}"
+                        class="text-muted-foreground"
+                    >
+                        0
+                    </span>
                 </span>
             </div>
 
@@ -128,13 +123,9 @@
                 step="1"
                 th:field="*{progressedHold}"
                 class="w-full"
-                data-progress-input
-                th:disabled="${go.progressedHold == null}"
+                x-model="hold"
+                id="reached-hold"
             />
-            <p class="text-sm text-muted-foreground">
-                Drag to the highest hold you managed on this go (0 means the
-                start).
-            </p>
             <div
                 th:if="${#fields.hasErrors('progressedHold')}"
                 class="text-error text-sm"
@@ -144,31 +135,25 @@
         </div>
     </div>
 
-    <div
-        class="flex items-center justify-between mt-6"
-        th:if="${showCreateAnother}"
-    >
-        <label class="flex items-center gap-3 cursor-pointer">
+    <div class="flex items-center justify-between mt-6">
+        <div
+            th:if="${showCreateAnother}"
+            class="flex items-center gap-4 cursor-pointer"
+        >
             <label class="switch">
                 <input
                     type="checkbox"
                     name="createAnother"
                     value="true"
+                    id="create-more-goes"
                     th:checked="${createAnother}"
                 />
                 <span class="switch-thumb"></span>
             </label>
-            <span>Create more Goes</span>
-        </label>
+            <label for="create-more-goes">Create more Goes</label>
+        </div>
 
-        <button type="submit" class="button button-success">
-            <x th:replace="~{components/icons :: check}"></x>
-            Save
-        </button>
-    </div>
-
-    <div class="flex justify-end mt-6" th:unless="${showCreateAnother}">
-        <button type="submit" class="button button-success">
+        <button type="submit" class="button button-success ml-auto">
             <x th:replace="~{components/icons :: check}"></x>
             Save
         </button>
