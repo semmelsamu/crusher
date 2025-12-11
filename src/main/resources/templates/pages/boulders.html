@@ -78,7 +78,10 @@
                         </select>
                     </div>
 
-                    <div class="space-y-2 w-full">
+                    <div
+                        th:if="${selectedGymId != null}"
+                        class="space-y-2 w-full"
+                    >
                         <label>Grades</label>
                         <div
                             class="border-2 rounded-base p-4 bg-background flex flex-wrap gap-4"
