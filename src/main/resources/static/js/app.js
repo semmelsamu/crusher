@@ -21,6 +21,7 @@ function setupImagePicker(picker) {
     const fileInput = picker.querySelector("[data-image-input]");
     const previewImage = picker.querySelector("[data-preview-image]");
     const placeholder = picker.querySelector("[data-placeholder]");
+    const trigger = picker.querySelector("[data-image-trigger]");
     const removeButton = picker.querySelector("[data-remove-button]");
     const removeInput = picker.querySelector("[data-remove-input]");
 
@@ -47,13 +48,9 @@ function setupImagePicker(picker) {
         if (removeInput) removeInput.value = value ? "true" : "false";
     };
 
-    const updateRemoveButton = (
-        enabled,
-        removing = false,
-        hasAnyImage = false,
-    ) => {
+    const updateRemoveButton = (hasAnyImage, removing = false) => {
         if (!removeButton) return;
-        removeButton.disabled = !enabled;
+        removeButton.disabled = !hasAnyImage;
         const label = removeButton.querySelector("span");
         if (label) {
             if (!hasAnyImage) {
@@ -66,7 +63,7 @@ function setupImagePicker(picker) {
         }
     };
 
-    updateRemoveButton(hasImage, false, hasImage);
+    updateRemoveButton(hasImage, false);
 
     fileInput?.addEventListener("change", (event) => {
         const [file] = event.target.files || [];
@@ -77,24 +74,26 @@ function setupImagePicker(picker) {
                 showPlaceholder();
             }
             setRemoveFlag(false);
-            updateRemoveButton(hasImage, false, hasImage);
+            updateRemoveButton(hasImage, false);
             return;
         }
 
         const objectUrl = URL.createObjectURL(file);
         showImage(objectUrl);
         setRemoveFlag(false);
-        updateRemoveButton(true, false, true);
+        updateRemoveButton(true, false);
+    });
+
+    trigger?.addEventListener("click", () => {
+        fileInput?.click();
     });
 
     removeButton?.addEventListener("click", () => {
-        if (!removeInput || removeInput.value === "true") {
-            return;
-        }
+        if (!removeInput) return;
         if (fileInput) fileInput.value = "";
         showPlaceholder();
         setRemoveFlag(true);
-        updateRemoveButton(false, true, false);
+        updateRemoveButton(false, true);
     });
 }
 
