@@ -1,6 +1,7 @@
 # Compiled class file
 *.class
 .gradle/
+
 # Log file
 *.log
 
@@ -74,3 +75,6 @@ yarn-error.log*
 
 ### Java Version Manager ###
 .java-version
+
+### Image Files ###
+uploads/
