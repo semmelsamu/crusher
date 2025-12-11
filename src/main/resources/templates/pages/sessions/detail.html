@@ -134,8 +134,10 @@
                             </td>
                             <td>
                                 <span
-                                    th:class="${go.result == T(de.othr.crusher.model.GoResult).FINISHED ? 'badge badge-success' : (go.result == T(de.othr.crusher.model.GoResult).CLOSE_TRY ? 'badge badge-warning' : 'badge badge-danger')}"
-                                    th:text="${go.result.displayName}"
+                                    class="badge"
+                                    th:with="resultName=${go.result?.name()}"
+                                    th:classappend="${resultName == 'FINISHED' ? ' badge-success' : (resultName == 'CLOSE_TRY' ? ' badge-warning' : ' badge-danger')}"
+                                    th:text="${go.result != null ? go.result.displayName : 'Unknown'}"
                                 >
                                     Result
                                 </span>
