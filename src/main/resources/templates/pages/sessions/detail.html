@@ -21,14 +21,14 @@
 
                     <span
                         th:if="${currentSession.isRunning()}"
-                        class="badge badge-success ml-auto mr-4"
+                        class="badge success ml-auto mr-4"
                     >
                         Running
                     </span>
 
                     <span
                         th:unless="${currentSession.isRunning()}"
-                        class="badge badge-danger ml-auto mr-4"
+                        class="badge danger ml-auto mr-4"
                     >
                         Ended
                     </span>
@@ -38,7 +38,7 @@
                         th:action="@{/sessions/{id}/end(id=${currentSession.id})}"
                         method="post"
                     >
-                        <button type="submit" class="button button-danger">
+                        <button type="submit" class="button danger">
                             <x th:replace="~{components/icons :: pause}"></x>
                             End Session
                         </button>
@@ -125,7 +125,7 @@
                             </td>
                             <td>
                                 <span
-                                    th:class="${go.result == T(de.othr.crusher.model.GoResult).FINISHED ? 'badge badge-success' : (go.result == T(de.othr.crusher.model.GoResult).CLOSE_TRY ? 'badge badge-warning' : 'badge badge-danger')}"
+                                    th:class="${go.result == T(de.othr.crusher.model.GoResult).FINISHED ? 'badge success' : (go.result == T(de.othr.crusher.model.GoResult).CLOSE_TRY ? 'badge warning' : 'badge danger')}"
                                     th:text="${go.result.displayName}"
                                 >
                                     Result
@@ -140,7 +140,7 @@
                                 <div class="flex gap-2 justify-end">
                                     <a
                                         th:href="@{/sessions/{sessionId}/goes/{goId}/edit(sessionId=${currentSession.id}, goId=${go.id})}"
-                                        class="button button-primary button-square"
+                                        class="button primary button-square"
                                     >
                                         <x
                                             th:replace="~{components/icons :: pencil-ruler}"
@@ -148,7 +148,7 @@
                                     </a>
                                     <button
                                         th:onclick="|openDialog('delete-go-dialog-${go.id}')|"
-                                        class="button button-danger button-square"
+                                        class="button danger button-square"
                                     >
                                         <x
                                             th:replace="~{components/icons :: trash-2}"
@@ -184,7 +184,7 @@
                                                 <button
                                                     autofocus
                                                     type="submit"
-                                                    class="button button-danger"
+                                                    class="button danger"
                                                 >
                                                     Delete
                                                 </button>
@@ -200,7 +200,7 @@
                 <a
                     th:if="${currentSession.isRunning()}"
                     th:href="@{/sessions/{sessionId}/goes/create(sessionId=${currentSession.id})}"
-                    class="button button-success"
+                    class="button success"
                 >
                     <x th:replace="~{components/icons :: badge-plus}"></x>
                     Record New Go
@@ -209,7 +209,7 @@
                 <button
                     th:unless="${currentSession.isRunning()}"
                     onclick="openDialog('session-ended-dialog')"
-                    class="button button-success w-full"
+                    class="button success w-full"
                 >
                     <x th:replace="~{components/icons :: badge-plus}"></x>
                     Record New Go

@@ -66,7 +66,7 @@
                                 <div class="flex gap-2 justify-end">
                                     <a
                                         th:href="@{/sessions/{id}(id=${sess.id})}"
-                                        class="button button-primary button-square"
+                                        class="button primary button-square"
                                     >
                                         <x
                                             th:replace="~{components/icons :: pencil-ruler}"
@@ -74,7 +74,7 @@
                                     </a>
                                     <button
                                         th:onclick="|openDialog('delete-session-dialog-${sess.id}')|"
-                                        class="button button-danger button-square"
+                                        class="button danger button-square"
                                     >
                                         <x
                                             th:replace="~{components/icons :: trash-2}"
@@ -110,7 +110,7 @@
                                                 <button
                                                     autofocus
                                                     type="submit"
-                                                    class="button button-danger"
+                                                    class="button danger"
                                                 >
                                                     Delete
                                                 </button>
@@ -123,7 +123,7 @@
                     </tbody>
                 </table>
 
-                <a th:href="@{/sessions/create}" class="button button-success">
+                <a th:href="@{/sessions/create}" class="button success">
                     <x th:replace="~{components/icons :: play}"></x>
                     Start New Session
                 </a>

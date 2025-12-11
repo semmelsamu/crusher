@@ -22,22 +22,6 @@
     @apply border-2 rounded-base shadow-base px-4 h-12 transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background focus:outline-none text-center hover:border-pressed;
 }
 
-.button-primary {
-    @apply bg-main text-main-foreground;
-}
-
-.button-danger {
-    @apply bg-error text-main-foreground;
-}
-
-.button-success {
-    @apply bg-success text-main-foreground;
-}
-
-.button-warning {
-    @apply bg-warning text-main-foreground;
-}
-
 .button-ghost {
     @apply bg-transparent text-foreground border-none outline-none shadow-none hover:translate-none;
 }
@@ -82,22 +66,6 @@
 
 .badge {
     @apply px-2 h-7 rounded-base text-sm font-medium inline-flex items-center justify-center border-2;
-}
-
-.badge-primary {
-    @apply bg-main text-main-foreground;
-}
-
-.badge-danger {
-    @apply bg-error text-main-foreground;
-}
-
-.badge-success {
-    @apply bg-success text-main-foreground;
-}
-
-.badge-warning {
-    @apply bg-warning text-main-foreground;
 }
 
 /*
