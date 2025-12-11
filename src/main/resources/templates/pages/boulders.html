@@ -21,17 +21,22 @@
                 </header>
             </div>
 
-            <section class="card p-4 space-y-4">
-                <h2>Filter Boulders</h2>
+            <section class="card p-4 space-y-4 max-w-lg mx-auto">
+                <div class="flex items-center justify-between">
+                    <h2>Filter Boulders</h2>
 
+                    <a th:href="@{/boulders}" class="button button-ghost">
+                        <x th:replace="~{components/icons :: rotate-ccw}"></x>
+                    </a>
+                </div>
                 <form
                     id="filter-form"
                     th:action="@{/boulders}"
                     method="get"
-                    class="grid grid-cols-1 md:grid-cols-3 gap-4"
+                    class="flex gap-4 flex-wrap"
                 >
                     <div class="space-y-2">
-                        <label class="block font-medium">Gym</label>
+                        <label for="gym-select">Gym</label>
                         <select
                             id="gym-select"
                             name="gymId"
@@ -55,8 +60,12 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label class="block font-medium">Sector</label>
-                        <select name="sectorId" class="text-input w-full">
+                        <label for="sector-select">Sector</label>
+                        <select
+                            id="sector-select"
+                            name="sectorId"
+                            class="text-input w-full"
+                        >
                             <option value="">All Sectors</option>
                             <option
                                 th:each="sector : ${sectors}"
@@ -69,10 +78,10 @@
                         </select>
                     </div>
 
-                    <div class="space-y-2">
-                        <label class="block font-medium">Grades</label>
+                    <div class="space-y-2 w-full">
+                        <label>Grades</label>
                         <div
-                            class="border rounded-base p-2 max-h-40 overflow-y-auto bg-background"
+                            class="border-2 rounded-base p-4 bg-background flex flex-wrap gap-4"
                         >
                             <div
                                 th:if="${grades.isEmpty()}"
@@ -82,7 +91,7 @@
                             </div>
                             <div
                                 th:each="grade : ${grades}"
-                                class="flex items-center gap-2 py-1"
+                                class="flex items-center gap-2 w-fit"
                             >
                                 <input
                                     type="checkbox"
@@ -90,12 +99,12 @@
                                     th:value="${grade.id}"
                                     th:id="'grade-' + ${grade.id}"
                                     th:checked="${selectedGradeIds.contains(grade.id)}"
-                                    class="cursor-pointer"
+                                    class="peer hidden"
                                 />
                                 <label
                                     th:for="'grade-' + ${grade.id}"
                                     th:text="${grade.name}"
-                                    class="cursor-pointer"
+                                    class="grade-badge peer-checked:bg-main cursor-pointer"
                                 >
                                     Grade
                                 </label>
@@ -120,14 +129,9 @@
                         </div>
                     </div>
 
-                    <div class="md:col-span-3 flex gap-2">
-                        <button type="submit" class="button button-primary">
-                            Apply Filters
-                        </button>
-                        <a th:href="@{/boulders}" class="button">
-                            Clear Filters
-                        </a>
-                    </div>
+                    <button type="submit" class="button button-primary">
+                        Filter
+                    </button>
                 </form>
             </section>
 
