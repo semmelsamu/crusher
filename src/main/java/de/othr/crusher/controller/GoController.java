@@ -8,6 +8,7 @@ import de.othr.crusher.model.SessionEntity;
 import de.othr.crusher.model.UserEntity;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
+import de.othr.crusher.repository.ProjectRepository;
 import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
@@ -49,18 +50,21 @@ public class GoController {
     private final BoulderRepository boulderRepository;
     private final SectorRepository sectorRepository;
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
     public GoController(
             GoRepository goRepository,
             SessionRepository sessionRepository,
             BoulderRepository boulderRepository,
             SectorRepository sectorRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            ProjectRepository projectRepository) {
         this.goRepository = goRepository;
         this.sessionRepository = sessionRepository;
         this.boulderRepository = boulderRepository;
         this.sectorRepository = sectorRepository;
         this.userRepository = userRepository;
+        this.projectRepository = projectRepository;
     }
 
     /**
@@ -120,18 +124,33 @@ public class GoController {
         for (SectorEntity sector : sectors) {
             List<BoulderEntity> boulders = boulderRepository.findBySectorId(sector.getId());
             boulders.sort((b1, b2) -> {
-                String v1 = b1.getGrade().getVScale();
-                String v2 = b2.getGrade().getVScale();
-                // Extract numeric value from V-scale (e.g., "V0" -> 0, "V10" -> 10)
-                int grade1 = Integer.parseInt(v1.substring(1));
-                int grade2 = Integer.parseInt(v2.substring(1));
+                int grade1 = parseIntegerForGrade(b1.getGrade().getVScale());
+                int grade2 = parseIntegerForGrade(b2.getGrade().getVScale());
                 return Integer.compare(grade1, grade2);
             });
             sectorBoulders.put(sector.getId(), boulders);
         }
 
+
+        List<de.othr.crusher.model.ProjectEntity> projects = projectRepository.findByUserIdAndBoulder_Sector_Gym_Id(user.getId(), session.getGym().getId());
+        List<BoulderEntity> projectBoulders = new java.util.ArrayList<>();
+        for (de.othr.crusher.model.ProjectEntity project : projects) {
+            projectBoulders.add(project.getBoulder());
+        }
+
+        projectBoulders.sort((b1, b2) -> {
+            int sectorCompare = b1.getSector().getId().compareTo(b2.getSector().getId());
+            if (sectorCompare != 0) {
+                return sectorCompare;
+            }
+            int grade1 = parseIntegerForGrade(b1.getGrade().getVScale());
+            int grade2 = parseIntegerForGrade(b2.getGrade().getVScale());
+            return Integer.compare(grade1, grade2);
+        });
+
         model.addAttribute("sectors", sectors);
         model.addAttribute("sectorBoulders", sectorBoulders);
+        model.addAttribute("projectBoulders", projectBoulders);
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),
@@ -427,5 +446,15 @@ public class GoController {
         }
 
         return go;
+    }
+
+    /**
+     * Extracts the numeric value from a V-scale grade string.
+     *
+     * @param vScale the V-scale string (e.g., "V0", "V10")
+     * @return the numeric grade value
+     */
+    private int parseIntegerForGrade(String vScale) {
+        return Integer.parseInt(vScale.substring(1));
     }
 }
