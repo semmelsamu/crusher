@@ -98,6 +98,7 @@
                         <tr>
                             <th>Boulder</th>
                             <th>Grade</th>
+                            <th>Progress</th>
                             <th>Result</th>
                             <th>Time</th>
                             <th></th>
@@ -105,7 +106,7 @@
                     </thead>
                     <tbody th:if="${goes.isEmpty()}">
                         <tr>
-                            <td colspan="5" class="text-center">
+                            <td colspan="6" class="text-center">
                                 No goes recorded yet.
                             </td>
                         </tr>
@@ -125,8 +126,18 @@
                             </td>
                             <td>
                                 <span
-                                    th:class="${go.result == T(de.othr.crusher.model.GoResult).FINISHED ? 'badge success' : (go.result == T(de.othr.crusher.model.GoResult).CLOSE_TRY ? 'badge warning' : 'badge danger')}"
-                                    th:text="${go.result.displayName}"
+                                    th:if="${go.progressedHold != null}"
+                                    th:text="|Hold ${go.progressedHold}/${go.boulder.holdsCount}|"
+                                >
+                                    Progress
+                                </span>
+                            </td>
+                            <td>
+                                <span
+                                    class="badge"
+                                    th:with="resultName=${go.result?.name()}"
+                                    th:classappend="${resultName == 'FINISHED' ? ' badge-success' : (resultName == 'CLOSE_TRY' ? ' badge-warning' : ' badge-danger')}"
+                                    th:text="${go.result != null ? go.result.displayName : 'Unknown'}"
                                 >
                                     Result
                                 </span>

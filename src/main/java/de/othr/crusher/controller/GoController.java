@@ -194,24 +194,33 @@ public class GoController {
     public String createGo(
             @PathVariable("sessionId") Long sessionId,
             @ModelAttribute("go") GoEntity go,
-            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
             BindingResult result,
+            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
+            @RequestParam(value = "trackProgress", required = false, defaultValue = "false") boolean trackProgress,
             Principal principal,
             RedirectAttributes redirectAttributes,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
 
-        if (result.hasErrors()) {
-            BoulderEntity boulder = go.getBoulder();
-            if (boulder != null && boulder.getId() != null) {
-                boulder = boulderRepository.findById(boulder.getId()).orElse(null);
-            }
+        BoulderEntity boulder = null;
+        if (go.getBoulder() != null && go.getBoulder().getId() != null) {
+            boulder = boulderRepository.findById(go.getBoulder().getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
+            go.setBoulder(boulder);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Boulder is required");
+        }
 
+        go.setSession(session);
+        validateProgressedHold(go, boulder, trackProgress, result);
+
+        if (result.hasErrors()) {
             model.addAttribute("currentSession", session);
             model.addAttribute("go", go);
             model.addAttribute("boulder", boulder);
             model.addAttribute("availableResults", GoResult.values());
+            model.addAttribute("createAnother", createAnother);
             model.addAttribute("breadcrumb", List.of(
                     Map.of("label", "Home", "url", "/"),
                     Map.of("label", "Dashboard", "url", "/dashboard"),
@@ -222,14 +231,6 @@ public class GoController {
             return "pages/goes/create-result";
         }
 
-        // Validate that the boulder exists
-        if (go.getBoulder() != null && go.getBoulder().getId() != null) {
-            BoulderEntity boulder = boulderRepository.findById(go.getBoulder().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
-            go.setBoulder(boulder);
-        }
-
-        go.setSession(session);
         // Set timestamp when save button is clicked
         go.setTimestamp(LocalDateTime.now());
         goRepository.save(go);
@@ -267,6 +268,7 @@ public class GoController {
             @PathVariable("goId") Long goId,
             @ModelAttribute("go") GoEntity formGo,
             BindingResult result,
+            @RequestParam(value = "trackProgress", required = false, defaultValue = "false") boolean trackProgress,
             Principal principal,
             RedirectAttributes redirectAttributes,
             Model model) {
@@ -274,13 +276,25 @@ public class GoController {
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
         GoEntity go = findGoInSessionOrThrow(sessionId, goId);
 
+        BoulderEntity boulder = null;
+        if (formGo.getBoulder() != null && formGo.getBoulder().getId() != null) {
+            boulder = boulderRepository.findById(formGo.getBoulder().getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
+        } else if (go.getBoulder() != null) {
+            boulder = go.getBoulder();
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Boulder is required");
+        }
+
+        formGo.setBoulder(boulder);
+        formGo.setSession(session);
+        validateProgressedHold(formGo, boulder, trackProgress, result);
+
         if (result.hasErrors()) {
-            List<BoulderEntity> availableBoulders = boulderRepository.findBySectorGymId(session.getGym().getId());
             formGo.setId(go.getId());
-            formGo.setSession(session);
             model.addAttribute("currentSession", session);
             model.addAttribute("go", formGo);
-            model.addAttribute("availableBoulders", availableBoulders);
+            model.addAttribute("boulder", boulder);
             model.addAttribute("availableResults", GoResult.values());
             model.addAttribute("breadcrumb", List.of(
                     Map.of("label", "Home", "url", "/"),
@@ -292,14 +306,10 @@ public class GoController {
             return "pages/goes/edit";
         }
 
-        // Validate that the boulder exists
-        if (formGo.getBoulder() != null && formGo.getBoulder().getId() != null) {
-            BoulderEntity boulder = boulderRepository.findById(formGo.getBoulder().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
-            go.setBoulder(boulder);
-        }
+        go.setBoulder(boulder);
 
         go.setResult(formGo.getResult());
+        go.setProgressedHold(formGo.getProgressedHold());
         // Timestamp is intentionally not updated - preserve original timestamp
         goRepository.save(go);
 
@@ -341,6 +351,32 @@ public class GoController {
         ));
 
         return "redirect:/sessions/" + sessionId;
+    }
+
+    private void validateProgressedHold(
+            GoEntity go, BoulderEntity boulder, boolean trackProgress, BindingResult result) {
+        if (!trackProgress) {
+            go.setProgressedHold(null);
+            return;
+        }
+
+        Integer progressedHold = go.getProgressedHold();
+        if (progressedHold == null) {
+            result.rejectValue("progressedHold", "progress.required", "Please select the last hold you reached");
+            return;
+        }
+
+        if (progressedHold < 0) {
+            result.rejectValue("progressedHold", "progress.invalid", "Progressed hold cannot be negative");
+        }
+
+        Integer holdsCount = boulder.getHoldsCount();
+        if (holdsCount != null && progressedHold > holdsCount) {
+            result.rejectValue(
+                    "progressedHold",
+                    "progress.tooHigh",
+                    "Progressed hold cannot exceed the boulder's total holds");
+        }
     }
 
     /**

@@ -25,91 +25,15 @@
             </div>
 
             <section class="card p-4 max-w-md mx-auto space-y-6">
-                <form
-                    th:action="@{/sessions/{sessionId}/goes/{goId}(sessionId=${currentSession.id}, goId=${go.id})}"
-                    method="post"
-                    th:object="${go}"
-                >
-                    <input type="hidden" name="_method" value="put" />
-                    <input type="hidden" th:field="*{boulder.id}" />
-                    <input type="hidden" th:field="*{session.id}" />
-
-                    <div class="space-y-4">
-                        <div class="text-lg font-medium">
-                            <p>
-                                Edit Result for
-                                <strong th:text="${boulder.description}"
-                                    >Boulder</strong
-                                >
-                            </p>
-                            <p class="text-sm text-muted-foreground">
-                                Grade
-                                <span th:text="${boulder.grade.name}">1</span>
-                            </p>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-4">
-                            <label class="cursor-pointer h-full">
-                                <input
-                                    type="radio"
-                                    th:field="*{result}"
-                                    value="FINISHED"
-                                    class="peer sr-only"
-                                    required
-                                />
-                                <div
-                                    class="border-2 rounded-base shadow-base p-4 text-center font-medium bg-success text-main-foreground h-full flex items-center justify-center transition-all peer-checked:translate-y-1 peer-checked:shadow-none"
-                                >
-                                    Finished
-                                </div>
-                            </label>
-
-                            <label class="cursor-pointer h-full">
-                                <input
-                                    type="radio"
-                                    th:field="*{result}"
-                                    value="CLOSE_TRY"
-                                    class="peer sr-only"
-                                    required
-                                />
-                                <div
-                                    class="border-2 rounded-base shadow-base p-4 text-center font-medium bg-warning text-main-foreground h-full flex items-center justify-center transition-all peer-checked:translate-y-1 peer-checked:shadow-none"
-                                >
-                                    Close try
-                                </div>
-                            </label>
-
-                            <label class="cursor-pointer h-full">
-                                <input
-                                    type="radio"
-                                    th:field="*{result}"
-                                    value="DID_NOT_FINISH"
-                                    class="peer sr-only"
-                                    required
-                                />
-                                <div
-                                    class="border-2 rounded-base shadow-base p-4 text-center font-medium bg-error text-main-foreground h-full flex items-center justify-center transition-all peer-checked:translate-y-1 peer-checked:shadow-none"
-                                >
-                                    Did not finish
-                                </div>
-                            </label>
-                        </div>
-
-                        <div
-                            th:if="${#fields.hasErrors('result')}"
-                            class="text-error text-sm"
-                        >
-                            <p th:errors="*{result}">Error</p>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end mt-6">
-                        <button type="submit" class="button success">
-                            <x th:replace="~{components/icons :: check}"></x>
-                            Save
-                        </button>
-                    </div>
-                </form>
+                <th:block
+                    th:replace="~{components/cu-forms/go :: go(
+                    @{/sessions/{sessionId}/goes/{goId}(sessionId=${currentSession.id}, goId=${go.id})},
+                    ${go},
+                    ${boulder},
+                    ${false},
+                    ${false}
+                )}"
+                ></th:block>
             </section>
         </main>
     </th:block>

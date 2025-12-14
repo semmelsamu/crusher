@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -45,6 +46,11 @@ public class BoulderEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sector_id", nullable = false)
     private SectorEntity sector;
+
+    @Column(name = "holds_count", nullable = false)
+    @NotNull(message = "Please enter the number of holds")
+    @Min(value = 1, message = "Boulder must have at least one hold")
+    private Integer holdsCount;
 
     public BoulderEntity() {}
 
@@ -94,5 +100,12 @@ public class BoulderEntity {
     public void setSector(SectorEntity sector) {
         this.sector = sector;
     }
-}
 
+    public Integer getHoldsCount() {
+        return holdsCount;
+    }
+
+    public void setHoldsCount(Integer holdsCount) {
+        this.holdsCount = holdsCount;
+    }
+}

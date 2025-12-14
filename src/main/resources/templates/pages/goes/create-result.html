@@ -25,103 +25,15 @@
             </div>
 
             <section class="card p-4 max-w-md mx-auto space-y-6">
-                <form
-                    th:action="@{/sessions/{sessionId}/goes(sessionId=${currentSession.id})}"
-                    method="post"
-                    th:object="${go}"
-                >
-                    <input type="hidden" th:field="*{boulder.id}" />
-                    <input type="hidden" th:field="*{session.id}" />
-
-                    <div class="space-y-4">
-                        <div class="text-lg font-medium">
-                            <p>
-                                Select Result for
-                                <strong th:text="${boulder.description}"
-                                    >Boulder</strong
-                                >
-                            </p>
-                            <p class="text-sm text-muted-foreground">
-                                Grade
-                                <span th:text="${boulder.grade.name}">1</span>
-                            </p>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-4">
-                            <label class="cursor-pointer h-full">
-                                <input
-                                    type="radio"
-                                    th:field="*{result}"
-                                    value="DID_NOT_FINISH"
-                                    class="peer sr-only"
-                                    required
-                                />
-                                <div
-                                    class="button danger h-16 peer-checked:border-pressed peer-checked:font-bold leading-tight"
-                                >
-                                    Did not finish
-                                </div>
-                            </label>
-
-                            <label class="cursor-pointer h-full">
-                                <input
-                                    type="radio"
-                                    th:field="*{result}"
-                                    value="CLOSE_TRY"
-                                    class="peer sr-only"
-                                    required
-                                />
-                                <div
-                                    class="button warning h-16 peer-checked:border-pressed peer-checked:font-bold"
-                                >
-                                    Close try
-                                </div>
-                            </label>
-
-                            <label class="cursor-pointer h-full">
-                                <input
-                                    type="radio"
-                                    th:field="*{result}"
-                                    value="FINISHED"
-                                    class="peer sr-only"
-                                    required
-                                />
-                                <div
-                                    class="button success h-16 peer-checked:border-pressed peer-checked:font-bold"
-                                >
-                                    Finished
-                                </div>
-                            </label>
-                        </div>
-
-                        <div
-                            th:if="${#fields.hasErrors('result')}"
-                            class="text-error text-sm"
-                        >
-                            <p th:errors="*{result}">Error</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between mt-6">
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <label class="switch">
-                                <input
-                                    type="checkbox"
-                                    name="createAnother"
-                                    value="true"
-                                    th:checked="${createAnother}"
-                                />
-                                <span class="switch-thumb"></span>
-                            </label>
-                            <span>Create more Goes</span>
-                        </label>
-
-                        <button type="submit" class="button success">
-                            <x th:replace="~{components/icons :: check}"></x>
-                            Save
-                        </button>
-                    </div>
-                </form>
+                <th:block
+                    th:replace="~{components/cu-forms/go :: go(
+                    @{/sessions/{sessionId}/goes(sessionId=${currentSession.id})},
+                    ${go},
+                    ${boulder},
+                    ${true},
+                    ${createAnother}
+                )}"
+                ></th:block>
             </section>
         </main>
     </th:block>
