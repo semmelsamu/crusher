@@ -22,22 +22,6 @@
     @apply border-2 rounded-base shadow-base px-4 h-12 transition-all cursor-pointer flex items-center gap-2 justify-center font-medium bg-secondary-background focus:outline-none text-center hover:border-pressed;
 }
 
-.button-primary {
-    @apply bg-main text-main-foreground;
-}
-
-.button-danger {
-    @apply bg-error text-main-foreground;
-}
-
-.button-success {
-    @apply bg-success text-main-foreground;
-}
-
-.button-warning {
-    @apply bg-warning text-main-foreground;
-}
-
 .button-ghost {
     @apply bg-transparent text-foreground border-none outline-none shadow-none hover:translate-none;
 }
@@ -52,28 +36,27 @@
 
 /*
 |-------------------------------------------------------------------------------
+| Toggles
+|-------------------------------------------------------------------------------
+*/
+
+.toggle[data-active="true"]:hover .active {
+    @apply hidden;
+}
+
+:is(.toggle[data-active="true"]:not(:hover), .toggle[data-active="false"])
+    .deactivate {
+    @apply hidden;
+}
+
+/*
+|-------------------------------------------------------------------------------
 | Inputs
 |-------------------------------------------------------------------------------
 */
 
 .badge {
     @apply px-2 h-7 rounded-base text-sm font-medium inline-flex items-center justify-center border-2;
-}
-
-.badge-primary {
-    @apply bg-main text-main-foreground;
-}
-
-.badge-danger {
-    @apply bg-error text-main-foreground;
-}
-
-.badge-success {
-    @apply bg-success text-main-foreground;
-}
-
-.badge-warning {
-    @apply bg-warning text-main-foreground;
 }
 
 /*
@@ -116,6 +99,25 @@
 
 .image-picker-frame {
     @apply border-2 rounded-base overflow-clip bg-background;
+}
+
+/*
+|-------------------------------------------------------------------------------
+| Checkbox
+|-------------------------------------------------------------------------------
+*/
+
+.checkbox {
+    @apply w-5 h-5 border-2 appearance-none relative bg-secondary-background;
+}
+
+.checkbox:checked {
+    @apply bg-main;
+}
+
+.checkbox:checked::after {
+    @apply content-[''] inset-0 absolute;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg>");
 }
 
 /*
@@ -194,6 +196,14 @@
 
 .grade-badge {
     @apply text-center inline-block w-fit px-1 min-w-7 bg-secondary-background border-2 font-medium;
+}
+
+[data-progress-container][data-disabled="true"] {
+    @apply opacity-60;
+}
+
+[data-progress-input] {
+    accent-color: var(--color-main);
 }
 
 /*

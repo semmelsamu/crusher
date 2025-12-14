@@ -21,14 +21,14 @@
 
                     <span
                         th:if="${currentSession.isRunning()}"
-                        class="badge badge-success ml-auto mr-4"
+                        class="badge success ml-auto mr-4"
                     >
                         Running
                     </span>
 
                     <span
                         th:unless="${currentSession.isRunning()}"
-                        class="badge badge-danger ml-auto mr-4"
+                        class="badge danger ml-auto mr-4"
                     >
                         Ended
                     </span>
@@ -38,7 +38,7 @@
                         th:action="@{/sessions/{id}/end(id=${currentSession.id})}"
                         method="post"
                     >
-                        <button type="submit" class="button button-danger">
+                        <button type="submit" class="button danger">
                             <x th:replace="~{components/icons :: pause}"></x>
                             End Session
                         </button>
@@ -98,6 +98,7 @@
                         <tr>
                             <th>Boulder</th>
                             <th>Grade</th>
+                            <th>Progress</th>
                             <th>Result</th>
                             <th>Time</th>
                             <th></th>
@@ -105,7 +106,7 @@
                     </thead>
                     <tbody th:if="${goes.isEmpty()}">
                         <tr>
-                            <td colspan="5" class="text-center">
+                            <td colspan="6" class="text-center">
                                 No goes recorded yet.
                             </td>
                         </tr>
@@ -125,8 +126,18 @@
                             </td>
                             <td>
                                 <span
-                                    th:class="${go.result == T(de.othr.crusher.model.GoResult).FINISHED ? 'badge badge-success' : (go.result == T(de.othr.crusher.model.GoResult).CLOSE_TRY ? 'badge badge-warning' : 'badge badge-danger')}"
-                                    th:text="${go.result.displayName}"
+                                    th:if="${go.progressedHold != null}"
+                                    th:text="|Hold ${go.progressedHold}/${go.boulder.holdsCount}|"
+                                >
+                                    Progress
+                                </span>
+                            </td>
+                            <td>
+                                <span
+                                    class="badge"
+                                    th:with="resultName=${go.result?.name()}"
+                                    th:classappend="${resultName == 'FINISHED' ? 'success' : (resultName == 'CLOSE_TRY' ? 'warning' : 'danger')}"
+                                    th:text="${go.result != null ? go.result.displayName : 'Unknown'}"
                                 >
                                     Result
                                 </span>
@@ -140,7 +151,7 @@
                                 <div class="flex gap-2 justify-end">
                                     <a
                                         th:href="@{/sessions/{sessionId}/goes/{goId}/edit(sessionId=${currentSession.id}, goId=${go.id})}"
-                                        class="button button-primary button-square"
+                                        class="button primary button-square"
                                     >
                                         <x
                                             th:replace="~{components/icons :: pencil-ruler}"
@@ -148,7 +159,7 @@
                                     </a>
                                     <button
                                         th:onclick="|openDialog('delete-go-dialog-${go.id}')|"
-                                        class="button button-danger button-square"
+                                        class="button danger button-square"
                                     >
                                         <x
                                             th:replace="~{components/icons :: trash-2}"
@@ -184,7 +195,7 @@
                                                 <button
                                                     autofocus
                                                     type="submit"
-                                                    class="button button-danger"
+                                                    class="button danger"
                                                 >
                                                     Delete
                                                 </button>
@@ -200,7 +211,7 @@
                 <a
                     th:if="${currentSession.isRunning()}"
                     th:href="@{/sessions/{sessionId}/goes/create(sessionId=${currentSession.id})}"
-                    class="button button-success"
+                    class="button success"
                 >
                     <x th:replace="~{components/icons :: badge-plus}"></x>
                     Record New Go
@@ -209,7 +220,7 @@
                 <button
                     th:unless="${currentSession.isRunning()}"
                     onclick="openDialog('session-ended-dialog')"
-                    class="button button-success w-full"
+                    class="button success w-full"
                 >
                     <x th:replace="~{components/icons :: badge-plus}"></x>
                     Record New Go

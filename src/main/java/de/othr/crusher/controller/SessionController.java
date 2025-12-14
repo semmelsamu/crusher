@@ -1,11 +1,18 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.model.BoulderEntity;
 import de.othr.crusher.model.GoEntity;
+import de.othr.crusher.model.GradeEntity;
 import de.othr.crusher.model.GymEntity;
+import de.othr.crusher.model.SectorEntity;
 import de.othr.crusher.model.SessionEntity;
 import de.othr.crusher.model.UserEntity;
+import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
+import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.repository.ProjectRepository;
+import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -24,6 +31,9 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Controller for managing climbing sessions.
@@ -36,16 +46,28 @@ public class SessionController {
     private final UserRepository userRepository;
     private final GymRepository gymRepository;
     private final GoRepository goRepository;
+    private final BoulderRepository boulderRepository;
+    private final SectorRepository sectorRepository;
+    private final GradeRepository gradeRepository;
+    private final ProjectRepository projectRepository;
 
     public SessionController(
             SessionRepository sessionRepository,
             UserRepository userRepository,
             GymRepository gymRepository,
-            GoRepository goRepository) {
+            GoRepository goRepository,
+            BoulderRepository boulderRepository,
+            SectorRepository sectorRepository,
+            GradeRepository gradeRepository,
+            ProjectRepository projectRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.gymRepository = gymRepository;
         this.goRepository = goRepository;
+        this.boulderRepository = boulderRepository;
+        this.sectorRepository = sectorRepository;
+        this.gradeRepository = gradeRepository;
+        this.projectRepository = projectRepository;
     }
 
     /**
@@ -69,6 +91,94 @@ public class SessionController {
         ));
 
         return "pages/dashboard";
+    }
+
+    /**
+     * Displays all boulders with optional filtering by gym, sector, and grades.
+     *
+     * @param gymId optional gym ID to filter by
+     * @param sectorId optional sector ID to filter by
+     * @param gradeIds optional list of grade IDs to filter by
+     * @param projectOnly whether to show only boulders marked as projects by the current user
+     * @param principal the authenticated user
+     * @param model Spring model to pass data to the view
+     * @return view name for the boulders page
+     */
+    @GetMapping("/boulders")
+    @Transactional(readOnly = true)
+    public String showAllBoulders(
+            @RequestParam(value = "gymId", required = false) Long gymId,
+            @RequestParam(value = "sectorId", required = false) Long sectorId,
+            @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
+            @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
+            Principal principal,
+            Model model) {
+        UserEntity user = findUserByPrincipal(principal);
+
+        // Fetch all gyms for the dropdown
+        List<GymEntity> gyms = gymRepository.findAll();
+        
+        // Fetch sectors and grades for the selected gym
+        List<SectorEntity> sectors = List.of();
+        List<GradeEntity> grades = List.of();
+        if (gymId != null) {
+            sectors = sectorRepository.findByGymId(gymId);
+            grades = gradeRepository.findByGymId(gymId);
+        } else {
+            sectors = sectorRepository.findAll();
+            grades = gradeRepository.findAll();
+        }
+        
+        // Filter boulders based on selected criteria
+        List<BoulderEntity> boulders;
+        if (sectorId != null) {
+            // Filter by specific sector
+            if (gradeIds != null && !gradeIds.isEmpty()) {
+                boulders = boulderRepository.findBySectorIdAndGradeIdIn(sectorId, gradeIds);
+            } else {
+                boulders = boulderRepository.findBySectorId(sectorId);
+            }
+        } else if (gymId != null) {
+            // Filter by gym
+            if (gradeIds != null && !gradeIds.isEmpty()) {
+                boulders = boulderRepository.findBySectorGymIdAndGradeIdIn(gymId, gradeIds);
+            } else {
+                boulders = boulderRepository.findBySectorGymId(gymId);
+            }
+        } else {
+            // No filters - show all boulders
+            boulders = boulderRepository.findAll();
+        }
+
+        // Load project marks for current user (once) to drive UI and optional filtering
+        Set<Long> projectBoulderIds = projectRepository.findByUserId(user.getId()).stream()
+                .map(project -> project.getBoulder() != null ? project.getBoulder().getId() : null)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        if (projectOnly) {
+            boulders = boulders.stream()
+                    .filter(boulder -> projectBoulderIds.contains(boulder.getId()))
+                    .toList();
+        }
+
+        // Add attributes to model
+        model.addAttribute("boulders", boulders);
+        model.addAttribute("gyms", gyms);
+        model.addAttribute("sectors", sectors);
+        model.addAttribute("grades", grades);
+        model.addAttribute("selectedGymId", gymId);
+        model.addAttribute("selectedSectorId", sectorId);
+        model.addAttribute("selectedGradeIds", gradeIds != null ? gradeIds : List.of());
+        model.addAttribute("projectBoulderIds", projectBoulderIds);
+        model.addAttribute("projectOnly", projectOnly);
+        model.addAttribute("breadcrumb", List.of(
+                Map.of("label", "Home", "url", "/"),
+                Map.of("label", "Dashboard", "url", "/dashboard"),
+                Map.of("label", "All Boulders", "url", "/boulders")
+        ));
+
+        return "pages/boulders";
     }
 
     /**
@@ -233,4 +343,3 @@ public class SessionController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }
-

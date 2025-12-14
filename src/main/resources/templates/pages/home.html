@@ -4,12 +4,32 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="text-center space-y-4 my-16">
-            <h1>Hello World</h1>
-            <p>
-                Welcome to Crusher - Track your climbing progress and
-                achievements
-            </p>
+        <div class="flex flex-col items-center space-y-4 my-16">
+            <h1>Welcome to Crusher</h1>
+            <p>Track your climbing progress and achievements</p>
+
+            <!-- Active Session -->
+            <a
+                th:if="${activeSession != null}"
+                th:href="@{/sessions/{id}(id=${activeSession.id})}"
+                class="button primary"
+            >
+                Continue your last Session
+            </a>
+
+            <!-- Last Gym Quick Start -->
+            <form
+                th:if="${activeSession == null && lastGym != null}"
+                th:action="@{/sessions}"
+                method="post"
+            >
+                <input type="hidden" name="gymId" th:value="${lastGym.id}" />
+                <button type="submit" class="button success">
+                    <span th:text="'Start Session in ' + ${lastGym.name}"
+                        >Start Session</span
+                    >
+                </button>
+            </form>
         </div>
     </th:block>
 </th:block>

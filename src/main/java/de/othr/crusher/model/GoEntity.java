@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -47,6 +48,10 @@ public class GoEntity {
     @Column(nullable = false)
     @NotNull(message = "Go must have a timestamp")
     private LocalDateTime timestamp;
+
+    @Column(name = "progressed_hold")
+    @Min(value = 0, message = "Progressed hold cannot be negative")
+    private Integer progressedHold;
 
     public GoEntity() {}
 
@@ -96,5 +101,13 @@ public class GoEntity {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Integer getProgressedHold() {
+        return progressedHold;
+    }
+
+    public void setProgressedHold(Integer progressedHold) {
+        this.progressedHold = progressedHold;
     }
 }

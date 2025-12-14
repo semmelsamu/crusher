@@ -62,6 +62,23 @@
         ></p>
     </div>
 
+    <div class="space-y-2">
+        <label class="block">Number of holds</label>
+        <input
+            type="number"
+            min="1"
+            step="1"
+            th:field="*{holdsCount}"
+            class="text-input w-full"
+            placeholder="e.g., 20"
+        />
+        <p
+            th:if="${#fields.hasErrors('holdsCount')}"
+            th:errors="*{holdsCount}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
     <button type="submit" class="button button-primary mt-8 ml-auto">
         Save
     </button>

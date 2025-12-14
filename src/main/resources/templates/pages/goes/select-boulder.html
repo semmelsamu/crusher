@@ -33,6 +33,54 @@
                 </div>
 
                 <div th:unless="${sectors.isEmpty()}" class="space-y-4">
+                    <!-- Projects Block -->
+                    <details
+                        th:if="${!projectBoulders.isEmpty()}"
+                        class="details"
+                    >
+                        <summary class="flex items-center gap-2">
+                            <x th:replace="~{components/icons :: star}"></x>
+                            <span>Projects</span>
+                        </summary>
+
+                        <div>
+                            <div
+                                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+                            >
+                                <div
+                                    th:each="boulder : ${projectBoulders}"
+                                    class="flex flex-col gap-2"
+                                >
+                                    <a
+                                        th:href="@{/sessions/{sessionId}/goes/create(sessionId=${currentSession.id}, boulderId=${boulder.id})}"
+                                        th:class="'border-2 rounded-base shadow-base p-4 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all flex items-center justify-center ' + ${boulder.color.cssColorClass}"
+                                    >
+                                        <span
+                                            class="grade-badge"
+                                            th:text="${boulder.grade.name}"
+                                        >
+                                            Grade
+                                        </span>
+                                    </a>
+                                    <div>
+                                        <p
+                                            class="text-sm text-center font-medium break-words"
+                                            th:text="${boulder.description}"
+                                        >
+                                            Description
+                                        </p>
+                                        <p
+                                            class="text-sm text-center font-medium break-words"
+                                            th:text="${boulder.sector.name}"
+                                        >
+                                            Sector
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
                     <details th:each="sector : ${sectors}" class="details">
                         <summary th:text="${sector.name}">Sector Name</summary>
 
@@ -53,7 +101,7 @@
                                     class="flex flex-col gap-2"
                                 >
                                     <a
-                                        th:href="@{/sessions/{sessionId}/goes/create(sessionId=${currentSession.id}, boulderId=${boulder.id})}"
+                                        th:href="@{/sessions/{sessionId}/goes/create/{boulderId}(sessionId=${currentSession.id}, boulderId=${boulder.id})}"
                                         th:class="'border-2 rounded-base shadow-base p-4 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all flex items-center justify-center ' + ${boulder.color.cssColorClass}"
                                     >
                                         <span

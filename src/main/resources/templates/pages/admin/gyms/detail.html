@@ -21,7 +21,7 @@
                     <div class="flex gap-4">
                         <a
                             th:href="@{/admin/gyms/{id}/update(id=${gym.id})}"
-                            class="button button-primary"
+                            class="button primary"
                         >
                             <x
                                 th:replace="~{components/icons :: pencil-ruler}"
@@ -30,7 +30,7 @@
                         </a>
                         <a
                             onclick="openDialog('delete-gym-dialog')"
-                            class="button button-danger button-square"
+                            class="button danger button-square"
                         >
                             <x th:replace="~{components/icons :: trash-2}"></x>
                         </a>
@@ -61,7 +61,7 @@
                                     <button
                                         autofocus
                                         type="submit"
-                                        class="button button-danger"
+                                        class="button danger"
                                     >
                                         Delete
                                     </button>
@@ -185,7 +185,7 @@
                                 <div class="flex gap-2 justify-end">
                                     <a
                                         th:href="@{/admin/gyms/{gymId}/grades/{gradeId}/update(gymId=${gym.id}, gradeId=${grade.id})}"
-                                        class="button button-primary button-square"
+                                        class="button primary button-square"
                                     >
                                         <x
                                             th:replace="~{components/icons :: pencil-ruler}"
@@ -193,7 +193,7 @@
                                     </a>
                                     <button
                                         th:onclick="|openDialog('delete-grade-dialog-${grade.id}')|"
-                                        class="button button-danger button-square"
+                                        class="button danger button-square"
                                     >
                                         <x
                                             th:replace="~{components/icons :: trash-2}"
@@ -234,7 +234,7 @@
                                                 <button
                                                     autofocus
                                                     type="submit"
-                                                    class="button button-danger"
+                                                    class="button danger"
                                                 >
                                                     Delete
                                                 </button>
@@ -249,7 +249,7 @@
 
                 <a
                     th:href="@{/admin/gyms/{gymId}/grades/create(gymId=${gym.id})}"
-                    class="button button-success"
+                    class="button success"
                 >
                     <x th:replace="~{components/icons :: badge-plus}"></x>
                     Create New Grade

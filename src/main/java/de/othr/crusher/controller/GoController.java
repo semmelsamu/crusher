@@ -8,6 +8,7 @@ import de.othr.crusher.model.SessionEntity;
 import de.othr.crusher.model.UserEntity;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
+import de.othr.crusher.repository.ProjectRepository;
 import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
@@ -49,70 +50,40 @@ public class GoController {
     private final BoulderRepository boulderRepository;
     private final SectorRepository sectorRepository;
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
     public GoController(
             GoRepository goRepository,
             SessionRepository sessionRepository,
             BoulderRepository boulderRepository,
             SectorRepository sectorRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            ProjectRepository projectRepository) {
         this.goRepository = goRepository;
         this.sessionRepository = sessionRepository;
         this.boulderRepository = boulderRepository;
         this.sectorRepository = sectorRepository;
         this.userRepository = userRepository;
+        this.projectRepository = projectRepository;
     }
 
     /**
-     * Displays the form for creating a new go in a session.
-     * Two-step process:
-     * - Without boulderId parameter: Shows boulder selection (step 1)
-     * - With boulderId parameter: Shows result selection (step 2)
+     * Displays the boulder selection step for creating a new go in a session.
      *
      * @param sessionId identifier of the parent session
-     * @param boulderId optional identifier of the selected boulder
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
-     * @return view name for the go creation form
+     * @return view name for the boulder selection step
      */
     @GetMapping("/create")
     @Transactional(readOnly = true)
-    public String showCreateForm(
+    public String showBoulderSelection(
             @PathVariable("sessionId") Long sessionId,
-            @RequestParam(required = false) Long boulderId,
-            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
             Principal principal,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
 
-        model.addAttribute("currentSession", session);
-
-        // Step 2: Boulder selected, show result selection
-        if (boulderId != null) {
-            BoulderEntity boulder = boulderRepository.findById(boulderId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
-
-            GoEntity go = new GoEntity();
-            go.setSession(session);
-            go.setBoulder(boulder);
-
-            model.addAttribute("go", go);
-            model.addAttribute("boulder", boulder);
-            model.addAttribute("availableResults", GoResult.values());
-            model.addAttribute("createAnother", createAnother);
-            model.addAttribute("breadcrumb", List.of(
-                    Map.of("label", "Home", "url", "/"),
-                    Map.of("label", "Dashboard", "url", "/dashboard"),
-                    Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                    Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/goes/create"),
-                    Map.of("label", "Select Result", "url", "")
-            ));
-
-            return "pages/goes/create-result";
-        }
-
-        // Step 1: Show boulder selection
         List<SectorEntity> sectors = sectorRepository.findByGymId(session.getGym().getId());
 
         // Load and sort boulders for each sector by grade (vScale)
@@ -120,18 +91,34 @@ public class GoController {
         for (SectorEntity sector : sectors) {
             List<BoulderEntity> boulders = boulderRepository.findBySectorId(sector.getId());
             boulders.sort((b1, b2) -> {
-                String v1 = b1.getGrade().getVScale();
-                String v2 = b2.getGrade().getVScale();
-                // Extract numeric value from V-scale (e.g., "V0" -> 0, "V10" -> 10)
-                int grade1 = Integer.parseInt(v1.substring(1));
-                int grade2 = Integer.parseInt(v2.substring(1));
+                int grade1 = parseIntegerForGrade(b1.getGrade().getVScale());
+                int grade2 = parseIntegerForGrade(b2.getGrade().getVScale());
                 return Integer.compare(grade1, grade2);
             });
             sectorBoulders.put(sector.getId(), boulders);
         }
 
+        model.addAttribute("currentSession", session);
+
+        List<de.othr.crusher.model.ProjectEntity> projects = projectRepository.findByUserIdAndBoulder_Sector_Gym_Id(user.getId(), session.getGym().getId());
+        List<BoulderEntity> projectBoulders = new java.util.ArrayList<>();
+        for (de.othr.crusher.model.ProjectEntity project : projects) {
+            projectBoulders.add(project.getBoulder());
+        }
+
+        projectBoulders.sort((b1, b2) -> {
+            int sectorCompare = b1.getSector().getId().compareTo(b2.getSector().getId());
+            if (sectorCompare != 0) {
+                return sectorCompare;
+            }
+            int grade1 = parseIntegerForGrade(b1.getGrade().getVScale());
+            int grade2 = parseIntegerForGrade(b2.getGrade().getVScale());
+            return Integer.compare(grade1, grade2);
+        });
+
         model.addAttribute("sectors", sectors);
         model.addAttribute("sectorBoulders", sectorBoulders);
+        model.addAttribute("projectBoulders", projectBoulders);
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),
@@ -140,6 +127,49 @@ public class GoController {
         ));
 
         return "pages/goes/select-boulder";
+    }
+
+    /**
+     * Displays the result selection step for creating a new go with a selected boulder.
+     *
+     * @param sessionId identifier of the parent session
+     * @param boulderId identifier of the selected boulder
+     * @param createAnother whether to remain on the create flow after saving
+     * @param principal the authenticated user
+     * @param model Spring model to pass data to the view
+     * @return view name for the go creation form
+     */
+    @GetMapping("/create/{boulderId}")
+    @Transactional(readOnly = true)
+    public String showCreateForm(
+            @PathVariable("sessionId") Long sessionId,
+            @PathVariable("boulderId") Long boulderId,
+            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
+            Principal principal,
+            Model model) {
+        UserEntity user = findUserByPrincipal(principal);
+        SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
+        BoulderEntity boulder = boulderRepository.findById(boulderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+
+        GoEntity go = new GoEntity();
+        go.setSession(session);
+        go.setBoulder(boulder);
+
+        model.addAttribute("currentSession", session);
+        model.addAttribute("go", go);
+        model.addAttribute("boulder", boulder);
+        model.addAttribute("availableResults", GoResult.values());
+        model.addAttribute("createAnother", createAnother);
+        model.addAttribute("breadcrumb", List.of(
+                Map.of("label", "Home", "url", "/"),
+                Map.of("label", "Dashboard", "url", "/dashboard"),
+                Map.of("label", "Session", "url", "/sessions/" + sessionId),
+                Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/goes/create"),
+                Map.of("label", "Select Result", "url", "")
+        ));
+
+        return "pages/goes/create-result";
     }
 
     /**
@@ -194,24 +224,33 @@ public class GoController {
     public String createGo(
             @PathVariable("sessionId") Long sessionId,
             @ModelAttribute("go") GoEntity go,
-            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
             BindingResult result,
+            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
+            @RequestParam(value = "trackProgress", required = false, defaultValue = "false") boolean trackProgress,
             Principal principal,
             RedirectAttributes redirectAttributes,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
 
-        if (result.hasErrors()) {
-            BoulderEntity boulder = go.getBoulder();
-            if (boulder != null && boulder.getId() != null) {
-                boulder = boulderRepository.findById(boulder.getId()).orElse(null);
-            }
+        BoulderEntity boulder = null;
+        if (go.getBoulder() != null && go.getBoulder().getId() != null) {
+            boulder = boulderRepository.findById(go.getBoulder().getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
+            go.setBoulder(boulder);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Boulder is required");
+        }
 
+        go.setSession(session);
+        validateProgressedHold(go, boulder, trackProgress, result);
+
+        if (result.hasErrors()) {
             model.addAttribute("currentSession", session);
             model.addAttribute("go", go);
             model.addAttribute("boulder", boulder);
             model.addAttribute("availableResults", GoResult.values());
+            model.addAttribute("createAnother", createAnother);
             model.addAttribute("breadcrumb", List.of(
                     Map.of("label", "Home", "url", "/"),
                     Map.of("label", "Dashboard", "url", "/dashboard"),
@@ -222,14 +261,6 @@ public class GoController {
             return "pages/goes/create-result";
         }
 
-        // Validate that the boulder exists
-        if (go.getBoulder() != null && go.getBoulder().getId() != null) {
-            BoulderEntity boulder = boulderRepository.findById(go.getBoulder().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
-            go.setBoulder(boulder);
-        }
-
-        go.setSession(session);
         // Set timestamp when save button is clicked
         go.setTimestamp(LocalDateTime.now());
         goRepository.save(go);
@@ -242,7 +273,7 @@ public class GoController {
 
         // If "create another" is checked, redirect back to create form with same boulder
         if (createAnother && go.getBoulder() != null) {
-            return "redirect:/sessions/" + sessionId + "/goes/create?boulderId=" + go.getBoulder().getId() + "&createAnother=true";
+            return "redirect:/sessions/" + sessionId + "/goes/create/" + go.getBoulder().getId() + "?createAnother=true";
         }
 
         return "redirect:/sessions/" + sessionId;
@@ -267,6 +298,7 @@ public class GoController {
             @PathVariable("goId") Long goId,
             @ModelAttribute("go") GoEntity formGo,
             BindingResult result,
+            @RequestParam(value = "trackProgress", required = false, defaultValue = "false") boolean trackProgress,
             Principal principal,
             RedirectAttributes redirectAttributes,
             Model model) {
@@ -274,13 +306,25 @@ public class GoController {
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
         GoEntity go = findGoInSessionOrThrow(sessionId, goId);
 
+        BoulderEntity boulder = null;
+        if (formGo.getBoulder() != null && formGo.getBoulder().getId() != null) {
+            boulder = boulderRepository.findById(formGo.getBoulder().getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
+        } else if (go.getBoulder() != null) {
+            boulder = go.getBoulder();
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Boulder is required");
+        }
+
+        formGo.setBoulder(boulder);
+        formGo.setSession(session);
+        validateProgressedHold(formGo, boulder, trackProgress, result);
+
         if (result.hasErrors()) {
-            List<BoulderEntity> availableBoulders = boulderRepository.findBySectorGymId(session.getGym().getId());
             formGo.setId(go.getId());
-            formGo.setSession(session);
             model.addAttribute("currentSession", session);
             model.addAttribute("go", formGo);
-            model.addAttribute("availableBoulders", availableBoulders);
+            model.addAttribute("boulder", boulder);
             model.addAttribute("availableResults", GoResult.values());
             model.addAttribute("breadcrumb", List.of(
                     Map.of("label", "Home", "url", "/"),
@@ -292,14 +336,10 @@ public class GoController {
             return "pages/goes/edit";
         }
 
-        // Validate that the boulder exists
-        if (formGo.getBoulder() != null && formGo.getBoulder().getId() != null) {
-            BoulderEntity boulder = boulderRepository.findById(formGo.getBoulder().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
-            go.setBoulder(boulder);
-        }
+        go.setBoulder(boulder);
 
         go.setResult(formGo.getResult());
+        go.setProgressedHold(formGo.getProgressedHold());
         // Timestamp is intentionally not updated - preserve original timestamp
         goRepository.save(go);
 
@@ -341,6 +381,32 @@ public class GoController {
         ));
 
         return "redirect:/sessions/" + sessionId;
+    }
+
+    private void validateProgressedHold(
+            GoEntity go, BoulderEntity boulder, boolean trackProgress, BindingResult result) {
+        if (!trackProgress) {
+            go.setProgressedHold(null);
+            return;
+        }
+
+        Integer progressedHold = go.getProgressedHold();
+        if (progressedHold == null) {
+            result.rejectValue("progressedHold", "progress.required", "Please select the last hold you reached");
+            return;
+        }
+
+        if (progressedHold < 0) {
+            result.rejectValue("progressedHold", "progress.invalid", "Progressed hold cannot be negative");
+        }
+
+        Integer holdsCount = boulder.getHoldsCount();
+        if (holdsCount != null && progressedHold > holdsCount) {
+            result.rejectValue(
+                    "progressedHold",
+                    "progress.tooHigh",
+                    "Progressed hold cannot exceed the boulder's total holds");
+        }
     }
 
     /**
@@ -391,5 +457,15 @@ public class GoController {
         }
 
         return go;
+    }
+
+    /**
+     * Extracts the numeric value from a V-scale grade string.
+     *
+     * @param vScale the V-scale string (e.g., "V0", "V10")
+     * @return the numeric grade value
+     */
+    private int parseIntegerForGrade(String vScale) {
+        return Integer.parseInt(vScale.substring(1));
     }
 }

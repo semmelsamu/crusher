@@ -1,0 +1,250 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/dashboard}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <h1>All Boulders</h1>
+                </header>
+            </div>
+
+            <section class="card p-4 space-y-4 max-w-lg mx-auto">
+                <div class="flex items-center justify-between">
+                    <h2>Filter Boulders</h2>
+
+                    <a th:href="@{/boulders}" class="button button-ghost">
+                        <x th:replace="~{components/icons :: rotate-ccw}"></x>
+                    </a>
+                </div>
+                <form
+                    id="filter-form"
+                    th:action="@{/boulders}"
+                    method="get"
+                    class="flex gap-4 flex-wrap"
+                >
+                    <div class="space-y-2">
+                        <label for="gym-select">Gym</label>
+                        <select
+                            id="gym-select"
+                            name="gymId"
+                            class="text-input w-full"
+                        >
+                            <option
+                                value=""
+                                th:selected="${selectedGymId == null}"
+                            >
+                                All Gyms
+                            </option>
+                            <option
+                                th:each="gym : ${gyms}"
+                                th:value="${gym.id}"
+                                th:text="${gym.name}"
+                                th:selected="${gym.id == selectedGymId}"
+                            >
+                                Gym
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="sector-select">Sector</label>
+                        <select
+                            id="sector-select"
+                            name="sectorId"
+                            class="text-input w-full"
+                        >
+                            <option value="">All Sectors</option>
+                            <option
+                                th:each="sector : ${sectors}"
+                                th:value="${sector.id}"
+                                th:text="${sector.name}"
+                                th:selected="${sector.id == selectedSectorId}"
+                            >
+                                Sector
+                            </option>
+                        </select>
+                    </div>
+
+                    <div
+                        th:if="${selectedGymId != null}"
+                        class="space-y-2 w-full"
+                    >
+                        <label>Grades</label>
+                        <div
+                            class="border-2 rounded-base p-4 bg-background flex flex-wrap gap-4"
+                        >
+                            <div
+                                th:if="${grades.isEmpty()}"
+                                class="text-muted-foreground text-sm"
+                            >
+                                No grades available
+                            </div>
+                            <div
+                                th:each="grade : ${grades}"
+                                class="flex items-center gap-2 w-fit"
+                            >
+                                <input
+                                    type="checkbox"
+                                    name="gradeIds"
+                                    th:value="${grade.id}"
+                                    th:id="'grade-' + ${grade.id}"
+                                    th:checked="${selectedGradeIds.contains(grade.id)}"
+                                    class="peer hidden"
+                                />
+                                <label
+                                    th:for="'grade-' + ${grade.id}"
+                                    th:text="${grade.name}"
+                                    class="grade-badge peer-checked:bg-main cursor-pointer"
+                                >
+                                    Grade
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 flex-wrap">
+                        <div class="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="project-only"
+                                name="projectOnly"
+                                class="checkbox"
+                                th:checked="${projectOnly}"
+                            />
+                            <label for="project-only">
+                                Show projects only
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="button button-primary ml-auto">
+                        <x th:replace="~{components/icons :: funnel}"></x>
+                        Filter
+                    </button>
+                </form>
+            </section>
+
+            <section class="card p-4 space-y-4">
+                <h2>Results</h2>
+
+                <table class="table w-full">
+                    <thead>
+                        <tr>
+                            <th class="w-20">Color</th>
+                            <th class="w-20">Grade</th>
+                            <th>Description</th>
+                            <th>Sector</th>
+                            <th>Gym</th>
+                            <th class="w-16 text-right"></th>
+                        </tr>
+                    </thead>
+
+                    <tbody th:if="${boulders.isEmpty()}">
+                        <tr>
+                            <td
+                                colspan="5"
+                                class="text-center text-muted-foreground"
+                            >
+                                No boulders available yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody th:unless="${boulders.isEmpty()}">
+                        <tr th:each="boulder : ${boulders}">
+                            <td>
+                                <div
+                                    th:class="'color-badge ' + ${boulder.color.cssColorClass}"
+                                ></div>
+                            </td>
+                            <td>
+                                <span
+                                    class="grade-badge"
+                                    th:text="${boulder.grade.name}"
+                                >
+                                    Grade
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${boulder.description}">
+                                    Description
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${boulder.sector.name}">
+                                    Sector
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${boulder.sector.gym.name}">
+                                    Gym
+                                </span>
+                            </td>
+                            <td class="text-right">
+                                <form
+                                    th:action="@{/boulders/{boulderId}/project/toggle(boulderId=${boulder.id})}"
+                                    method="post"
+                                    class="inline toggle-form"
+                                >
+                                    <input
+                                        th:if="${selectedGymId != null}"
+                                        type="hidden"
+                                        name="gymId"
+                                        th:value="${selectedGymId}"
+                                    />
+                                    <input
+                                        th:if="${selectedSectorId != null}"
+                                        type="hidden"
+                                        name="sectorId"
+                                        th:value="${selectedSectorId}"
+                                    />
+                                    <input
+                                        th:if="${selectedGradeIds != null}"
+                                        th:each="gradeId : ${selectedGradeIds}"
+                                        type="hidden"
+                                        name="gradeIds"
+                                        th:value="${gradeId}"
+                                    />
+                                    <input
+                                        th:if="${projectOnly}"
+                                        type="hidden"
+                                        name="projectOnly"
+                                        value="true"
+                                    />
+                                    <button
+                                        type="submit"
+                                        class="button button-square data-[active=true]:warning group toggle"
+                                        th:attr="data-active=${projectBoulderIds.contains(boulder.id)}"
+                                    >
+                                        <span class="active">
+                                            <x
+                                                th:replace="~{components/icons :: star}"
+                                            ></x>
+                                        </span>
+                                        <span class="deactivate">
+                                            <x
+                                                th:replace="~{components/icons :: star-off}"
+                                            ></x>
+                                        </span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </th:block>
+</th:block>

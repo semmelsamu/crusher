@@ -43,40 +43,70 @@ INSERT INTO sectors (name, description, image_path, gym_id) VALUES
     ('Tech-Deck', 'Schmale Leisten und Fußarbeitstraining.', '/images/default-sector.svg', 3),
     ('Höhle', 'Kompressionslastige Boulder in der Grotte.', '/images/default-sector.svg', 3);
 
-INSERT INTO boulders (description, color, grade_id, sector_id) VALUES
+INSERT INTO boulders (description, color, grade_id, sector_id, holds_count) VALUES
     -- Boulders for sector 1 (30er, gym 1)
-    ('Links hinten', 'YELLOW', 1, 1),
-    ('Rechts vorne, steil', 'BLUE', 3, 1),
-    ('Mittig, dynamisch', 'RED', 4, 1),
-    ('Kante rechts', 'PINK', 2, 1),
+    ('Links hinten', 'YELLOW', 1, 1, 18),
+    ('Rechts vorne, steil', 'BLUE', 3, 1, 22),
+    ('Mittig, dynamisch', 'RED', 4, 1, 20),
+    ('Kante rechts', 'PINK', 2, 1, 16),
     
     -- Boulders for sector 2 (Volldach, gym 1)
-    ('Dach links, Power', 'BLACK', 6, 2),
-    ('Campus rechts', 'BLUE', 7, 2),
-    ('Überhang mittig', 'DARK_GREEN', 5, 2),
-    ('Traversierung komplett', 'WHITE', 4, 2),
+    ('Dach links, Power', 'BLACK', 6, 2, 25),
+    ('Campus rechts', 'BLUE', 7, 2, 22),
+    ('Überhang mittig', 'DARK_GREEN', 5, 2, 21),
+    ('Traversierung komplett', 'WHITE', 4, 2, 30),
     
     -- Boulders for sector 3 (Slab-City, gym 2)
-    ('Balance links', 'YELLOW', 9, 3),
-    ('Platte rechts', 'WHITE', 10, 3),
-    ('Technik pur', 'PINK', 11, 3),
+    ('Balance links', 'YELLOW', 9, 3, 14),
+    ('Platte rechts', 'WHITE', 10, 3, 12),
+    ('Technik pur', 'PINK', 11, 3, 18),
     
     -- Boulders for sector 4 (45er, gym 2)
-    ('Überhang extrem', 'BLACK', 14, 4),
-    ('Power-Dynos', 'RED', 15, 4),
-    ('Sloper Challenge', 'BLUE', 16, 4),
-    ('Campus Board', 'DARK_GREEN', 13, 4),
+    ('Überhang extrem', 'BLACK', 14, 4, 26),
+    ('Power-Dynos', 'RED', 15, 4, 20),
+    ('Sloper Challenge', 'BLUE', 16, 4, 19),
+    ('Campus Board', 'DARK_GREEN', 13, 4, 24),
     
     -- Boulders for sector 5 (Tech-Deck, gym 3)
-    ('Crimp Heaven', 'YELLOW', 17, 5),
-    ('Fußarbeit Spezial', 'PINK', 18, 5),
-    ('Leisten links', 'WHITE', 19, 5),
+    ('Crimp Heaven', 'YELLOW', 17, 5, 18),
+    ('Fußarbeit Spezial', 'PINK', 18, 5, 16),
+    ('Leisten links', 'WHITE', 19, 5, 17),
     
     -- Boulders for sector 6 (Höhle, gym 3)
-    ('Compression Crack', 'BLACK', 22, 6),
-    ('Grotten-Traverse', 'BLUE', 23, 6),
-    ('Power-Kompression', 'RED', 24, 6),
-    ('Höhlen-Arete', 'DARK_GREEN', 21, 6);
+    ('Compression Crack', 'BLACK', 22, 6, 23),
+    ('Grotten-Traverse', 'BLUE', 23, 6, 28),
+    ('Power-Kompression', 'RED', 24, 6, 24),
+    ('Höhlen-Arete', 'DARK_GREEN', 21, 6, 21);
+
+INSERT INTO projects (user_id, boulder_id, created_at) VALUES
+    -- Alice's projects (2 per gym)
+    (1, 2, '2024-12-03 18:10:00'),   -- Gym 1
+    (1, 3, '2024-12-03 18:20:00'),   -- Gym 1
+    (1, 10, '2024-12-05 16:00:00'),  -- Gym 2
+    (1, 11, '2024-12-05 16:10:00'),  -- Gym 2
+    (1, 19, '2024-12-04 18:10:00'),  -- Gym 3
+    (1, 20, '2024-12-04 18:25:00'),  -- Gym 3
+    -- Bob's projects (2 per gym)
+    (2, 4, '2024-12-02 19:05:00'),   -- Gym 1
+    (2, 5, '2024-12-02 19:20:00'),   -- Gym 1
+    (2, 13, '2024-12-02 19:50:00'),  -- Gym 2
+    (2, 14, '2024-12-02 20:05:00'),  -- Gym 2
+    (2, 17, '2024-12-04 18:05:00'),  -- Gym 3
+    (2, 18, '2024-12-04 18:20:00'),  -- Gym 3
+    -- Klaus' projects (2 per gym)
+    (3, 1, '2024-12-01 17:45:00'),   -- Gym 1
+    (3, 6, '2024-12-01 18:05:00'),   -- Gym 1
+    (3, 12, '2024-12-03 16:45:00'),  -- Gym 2
+    (3, 15, '2024-12-03 17:00:00'),  -- Gym 2
+    (3, 21, '2024-12-06 18:15:00'),  -- Gym 3
+    (3, 22, '2024-12-06 18:35:00'),  -- Gym 3
+    -- Crusher's projects (2 per gym)
+    (4, 7, '2024-12-02 18:15:00'),   -- Gym 1
+    (4, 8, '2024-12-02 18:30:00'),   -- Gym 1
+    (4, 9, '2024-12-04 17:15:00'),   -- Gym 2
+    (4, 16, '2024-12-04 17:35:00'),  -- Gym 2
+    (4, 18, '2024-12-07 18:05:00'),  -- Gym 3
+    (4, 22, '2024-12-07 18:25:00');  -- Gym 3
 
 INSERT INTO sessions (started_at, ended_at, user_id, gym_id) VALUES
     -- Past sessions for alice (user_id = 1)
