@@ -58,4 +58,54 @@ document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.setItem("projectScroll", String(window.scrollY));
         });
     });
+
+    // Initialize bar charts
+    initializeBarCharts();
 });
+
+/**
+ * Initializes bar charts by calculating and setting heights based on data values
+ */
+function initializeBarCharts() {
+    // Process each bar chart group independently
+    document.querySelectorAll(".bar-chart-group").forEach((group) => {
+        const bars = group.querySelectorAll(".column-chart-bar");
+        const maxLabel = group.parentElement.querySelector(
+            ".column-chart-max-label",
+        );
+
+        // Find the maximum value in this group
+        let maxValue = 0;
+        bars.forEach((bar) => {
+            const value = parseInt(bar.getAttribute("data-value"), 10);
+            if (value > maxValue) {
+                maxValue = value;
+            }
+        });
+
+        // Set the max label
+        if (maxLabel && maxValue > 0) {
+            maxLabel.textContent = maxValue;
+        }
+
+        // Set height for each bar as percentage of max
+        if (maxValue > 0) {
+            bars.forEach((bar) => {
+                const value = parseInt(bar.getAttribute("data-value"), 10);
+
+                if (value === 0) {
+                    // Keep minimum height for zero values (set in CSS)
+                    setTimeout(() => {
+                        bar.style.height = "10px";
+                    }, 50);
+                } else {
+                    const percentage = (value / maxValue) * 100;
+                    // Use a small delay to trigger the CSS transition
+                    setTimeout(() => {
+                        bar.style.height = `${percentage}%`;
+                    }, 50);
+                }
+            });
+        }
+    });
+}

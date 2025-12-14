@@ -1,9 +1,11 @@
 package de.othr.crusher;
 
+import de.othr.crusher.dto.UserStatistics;
 import de.othr.crusher.model.SessionEntity;
 import de.othr.crusher.model.UserEntity;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
+import de.othr.crusher.service.StatisticsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +25,13 @@ public class HomeController {
 
     private final SessionRepository sessionRepository;
     private final UserRepository userRepository;
+    private final StatisticsService statisticsService;
 
-    public HomeController(SessionRepository sessionRepository, UserRepository userRepository) {
+    public HomeController(SessionRepository sessionRepository, UserRepository userRepository,
+                          StatisticsService statisticsService) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
+        this.statisticsService = statisticsService;
     }
 
     /**
@@ -56,6 +61,10 @@ public class HomeController {
 
             lastSession.ifPresent(session -> model.addAttribute("lastGym", session.getGym()));
         }
+
+        // Load user statistics
+        UserStatistics statistics = statisticsService.getUserStatistics(user.getId());
+        model.addAttribute("statistics", statistics);
 
         return "pages/home";
     }
