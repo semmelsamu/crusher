@@ -12,7 +12,7 @@
             <a
                 th:if="${activeSession != null}"
                 th:href="@{/sessions/{id}(id=${activeSession.id})}"
-                class="button button-primary"
+                class="button primary"
             >
                 Continue your last Session
             </a>
@@ -24,7 +24,7 @@
                 method="post"
             >
                 <input type="hidden" name="gymId" th:value="${lastGym.id}" />
-                <button type="submit" class="button button-success">
+                <button type="submit" class="button success">
                     <span th:text="'Start Session in ' + ${lastGym.name}"
                         >Start Session</span
                     >
