@@ -85,7 +85,7 @@
         <div class="flex justify-end">
             <button
                 type="button"
-                class="button button-danger whitespace-nowrap"
+                class="button whitespace-nowrap bg-error text-main-foreground"
                 data-remove-button
                 th:disabled="${!hasImage}"
             >
@@ -99,7 +99,10 @@
         </div>
     </section>
 
-    <button type="submit" class="button button-primary mt-8 ml-auto">
+    <button
+        type="submit"
+        class="button bg-main text-main-foreground mt-8 ml-auto"
+    >
         Save
     </button>
 </form>
