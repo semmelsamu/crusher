@@ -121,7 +121,7 @@
                     </div>
 
                     <div class="md:col-span-3 flex gap-2">
-                        <button type="submit" class="button button-primary">
+                        <button type="submit" class="button primary">
                             Apply Filters
                         </button>
                         <a th:href="@{/boulders}" class="button">
@@ -219,19 +219,17 @@
                                     />
                                     <button
                                         type="submit"
-                                        class="toggle-button"
+                                        class="button button-square data-[active=true]:warning group toggle"
                                         th:attr="data-active=${projectBoulderIds.contains(boulder.id)}"
-                                        th:attrappend=" aria-pressed=${projectBoulderIds.contains(boulder.id)}"
-                                        aria-label="Toggle project"
                                     >
-                                        <span class="icon-on">
-                                            <x
-                                                th:replace="~{components/icons :: star-off}"
-                                            ></x>
-                                        </span>
-                                        <span class="icon-off">
+                                        <span class="active">
                                             <x
                                                 th:replace="~{components/icons :: star}"
+                                            ></x>
+                                        </span>
+                                        <span class="deactivate">
+                                            <x
+                                                th:replace="~{components/icons :: star-off}"
                                             ></x>
                                         </span>
                                     </button>

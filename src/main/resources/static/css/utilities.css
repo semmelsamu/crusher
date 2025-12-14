@@ -1,3 +1,19 @@
 @utility border-pressed {
     @apply translate-[var(--box-shadow-size)] shadow-none;
 }
+
+@utility primary {
+    @apply bg-main text-main-foreground;
+}
+
+@utility danger {
+    @apply bg-error text-main-foreground;
+}
+
+@utility success {
+    @apply bg-success text-main-foreground;
+}
+
+@utility warning {
+    @apply bg-warning text-main-foreground;
+}
