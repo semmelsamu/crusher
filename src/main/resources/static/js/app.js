@@ -22,17 +22,27 @@ window.showToast = (message, type = "info") => {
 
     const toast = document.createElement("div");
     toast.id = "toast";
+    toast.className = "notification toast animate-slide-in-right";
+
+    const icons = {
+        success:
+            '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5" /></svg>',
+        error: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>',
+        info: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>',
+    };
+
     const typeClass =
         type === "success"
             ? "bg-success"
             : type === "error"
               ? "bg-error"
               : "bg-main";
-    toast.className = `notification toast animate-slide-in-right ${typeClass}`;
+    toast.classList.add(typeClass);
 
-    const text = document.createElement("p");
-    text.textContent = message;
-    toast.appendChild(text);
+    toast.innerHTML = `
+        <span>${icons[type] || icons.info}</span>
+        <p>${message}</p>
+    `;
 
     document.body.appendChild(toast);
     setTimeout(() => dismissToast(), 8000);
