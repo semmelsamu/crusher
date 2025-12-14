@@ -37,4 +37,13 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
      * @return list of matching project entries
      */
     List<ProjectEntity> findByUserIdAndBoulderIdIn(Long userId, List<Long> boulderIds);
+
+    /**
+     * Finds all projects for a user in a specific gym.
+     *
+     * @param userId identifier of the user
+     * @param gymId identifier of the gym
+     * @return list of projects for boulders in the specified gym
+     */
+    List<ProjectEntity> findByUserIdAndBoulder_Sector_Gym_Id(Long userId, Long gymId);
 }

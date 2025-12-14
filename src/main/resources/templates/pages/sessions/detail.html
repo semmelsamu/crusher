@@ -136,7 +136,7 @@
                                 <span
                                     class="badge"
                                     th:with="resultName=${go.result?.name()}"
-                                    th:classappend="${resultName == 'FINISHED' ? ' badge-success' : (resultName == 'CLOSE_TRY' ? ' badge-warning' : ' badge-danger')}"
+                                    th:classappend="${resultName == 'FINISHED' ? 'success' : (resultName == 'CLOSE_TRY' ? 'warning' : 'danger')}"
                                     th:text="${go.result != null ? go.result.displayName : 'Unknown'}"
                                 >
                                     Result
