@@ -101,7 +101,7 @@
                                     class="flex flex-col gap-2"
                                 >
                                     <a
-                                        th:href="@{/sessions/{sessionId}/goes/create(sessionId=${currentSession.id}, boulderId=${boulder.id})}"
+                                        th:href="@{/sessions/{sessionId}/goes/create/{boulderId}(sessionId=${currentSession.id}, boulderId=${boulder.id})}"
                                         th:class="'border-2 rounded-base shadow-base p-4 hover:translate-[var(--box-shadow-size)] hover:shadow-none transition-all flex items-center justify-center ' + ${boulder.color.cssColorClass}"
                                     >
                                         <span
