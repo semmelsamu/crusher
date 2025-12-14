@@ -297,7 +297,7 @@ public class SessionController {
             "message", "Session ended successfully!"
         ));
 
-        return "redirect:/sessions/" + id;
+        return "redirect:/dashboard";
     }
 
     /**
