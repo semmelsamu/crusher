@@ -16,6 +16,29 @@ window.dismissToast = () => {
     }
 };
 
+window.showToast = (message, type = "info") => {
+    const existing = document.getElementById("toast");
+    if (existing) existing.remove();
+
+    const toast = document.createElement("div");
+    toast.id = "toast";
+    const typeClass =
+        type === "success"
+            ? "bg-success"
+            : type === "error"
+              ? "bg-error"
+              : "bg-main";
+    toast.className = `notification toast animate-slide-in-right ${typeClass}`;
+
+    const text = document.createElement("p");
+    text.textContent = message;
+    toast.appendChild(text);
+
+    document.body.appendChild(toast);
+    setTimeout(() => dismissToast(), 8000);
+    toast.addEventListener("click", dismissToast);
+};
+
 // Auto-dismiss after 8 seconds and add click handler
 function setupImagePicker(picker) {
     const fileInput = picker.querySelector("[data-image-input]");
@@ -24,6 +47,7 @@ function setupImagePicker(picker) {
     const trigger = picker.querySelector("[data-image-trigger]");
     const removeButton = picker.querySelector("[data-remove-button]");
     const removeInput = picker.querySelector("[data-remove-input]");
+    const maxSizeBytes = parseInt(picker.dataset.maxSizeBytes || "5242880", 10);
 
     const hasImage = picker.dataset.hasImage === "true";
     const originalSrc = picker.dataset.originalSrc || "";
@@ -75,6 +99,15 @@ function setupImagePicker(picker) {
             }
             setRemoveFlag(false);
             updateRemoveButton(hasImage, false);
+            return;
+        }
+
+        if (file.size > maxSizeBytes) {
+            showPlaceholder();
+            setRemoveFlag(false);
+            if (fileInput) fileInput.value = "";
+            updateRemoveButton(hasImage, false);
+            showToast("Image too large. Maximum allowed size is 5MB.", "error");
             return;
         }
 

@@ -36,7 +36,7 @@
         class="space-y-3"
         data-image-picker
         th:with="hasImage=${sector.imagePath != null and !#strings.contains(sector.imagePath, 'default-sector')}"
-        th:attr="data-has-image=${hasImage}, data-original-src=${hasImage} ? ${sector.imagePath} : ''"
+        th:attr="data-has-image=${hasImage}, data-original-src=${hasImage} ? ${sector.imagePath} : '', data-max-size-bytes=${5 * 1024 * 1024}"
     >
         <div class="space-y-1">
             <p class="font-medium">Image</p>
