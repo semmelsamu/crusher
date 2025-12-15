@@ -1,0 +1,13 @@
+<input
+    th:fragment="slider(min, max, step, name, value, cssClass, xModel, inputId)"
+    type="range"
+    th:min="${min}"
+    th:max="${max}"
+    th:step="${step}"
+    th:name="${name}"
+    th:value="${value}"
+    th:class="${cssClass}"
+    th:attr="x-model=${xModel}"
+    th:id="${inputId}"
+    xmlns:th="http://www.thymeleaf.org"
+/>
