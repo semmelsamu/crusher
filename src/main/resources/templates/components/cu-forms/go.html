@@ -1,5 +1,5 @@
 <form
-    th:fragment="go(actionUrl, go, boulder, showCreateAnother, createAnother)"
+    th:fragment="go(actionUrl, go, boulder, showCreateAnother, createAnother, trackProgress)"
     th:action="${actionUrl}"
     th:object="${go}"
     method="post"
@@ -82,9 +82,8 @@
         <input
             type="checkbox"
             name="trackProgress"
-            value="true"
             class="checkbox peer"
-            th:checked="${go.progressedHold != null}"
+            th:checked="${go.progressedHold != null or trackProgress}"
             id="track-progress"
         />
         <div>

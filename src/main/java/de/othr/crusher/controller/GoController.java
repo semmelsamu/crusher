@@ -135,6 +135,7 @@ public class GoController {
      * @param sessionId identifier of the parent session
      * @param boulderId identifier of the selected boulder
      * @param createAnother whether to remain on the create flow after saving
+     * @param trackProgress whether to keep the track progress checkbox ticked
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
      * @return view name for the go creation form
@@ -145,6 +146,7 @@ public class GoController {
             @PathVariable("sessionId") Long sessionId,
             @PathVariable("boulderId") Long boulderId,
             @RequestParam(required = false, defaultValue = "false") boolean createAnother,
+            @RequestParam(required = false, defaultValue = "false") boolean trackProgress,
             Principal principal,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
@@ -161,6 +163,7 @@ public class GoController {
         model.addAttribute("boulder", boulder);
         model.addAttribute("availableResults", GoResult.values());
         model.addAttribute("createAnother", createAnother);
+        model.addAttribute("trackProgress", trackProgress);
         model.addAttribute("breadcrumb", List.of(
                 Map.of("label", "Home", "url", "/"),
                 Map.of("label", "Dashboard", "url", "/dashboard"),
@@ -251,6 +254,7 @@ public class GoController {
             model.addAttribute("boulder", boulder);
             model.addAttribute("availableResults", GoResult.values());
             model.addAttribute("createAnother", createAnother);
+            model.addAttribute("trackProgress", trackProgress);
             model.addAttribute("breadcrumb", List.of(
                     Map.of("label", "Home", "url", "/"),
                     Map.of("label", "Dashboard", "url", "/dashboard"),
@@ -273,7 +277,7 @@ public class GoController {
 
         // If "create another" is checked, redirect back to create form with same boulder
         if (createAnother && go.getBoulder() != null) {
-            return "redirect:/sessions/" + sessionId + "/goes/create/" + go.getBoulder().getId() + "?createAnother=true";
+            return "redirect:/sessions/" + sessionId + "/goes/create/" + go.getBoulder().getId() + "?createAnother=true&trackProgress=" + trackProgress;
         }
 
         return "redirect:/sessions/" + sessionId;
