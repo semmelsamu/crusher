@@ -1,13 +1,106 @@
-<input
+<div
     th:fragment="slider(min, max, step, name, value, cssClass, xModel, inputId)"
-    type="range"
-    th:min="${min}"
-    th:max="${max}"
-    th:step="${step}"
-    th:name="${name}"
-    th:value="${value}"
     th:class="${cssClass}"
-    th:attr="x-model=${xModel}"
-    th:id="${inputId}"
     xmlns:th="http://www.thymeleaf.org"
-/>
+    th:x-data="|{
+        min: ${min},
+        max: ${max},
+        step: ${step},
+        currentValue: ${value != null ? value : min},
+        isDragging: false,
+        percentage: 0,
+        xModelVar: '${xModel != null ? xModel : ''}',
+        
+        init() {
+            this.updatePercentage();
+            this.syncWithParent();
+        },
+        
+        updatePercentage() {
+            this.percentage = ((this.currentValue - this.min) / (this.max - this.min)) * 100;
+        },
+        
+        syncWithParent() {
+            if (this.xModelVar && this.$root[this.xModelVar] !== undefined) {
+                this.$root[this.xModelVar] = this.currentValue;
+            }
+        },
+        
+        updateValue(newValue) {
+            this.currentValue = newValue;
+            this.updatePercentage();
+            this.syncWithParent();
+        },
+        
+        handleTrackClick(event) {
+            if (this.isDragging) return;
+            const rect = event.currentTarget.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const newPercentage = Math.max(0, Math.min(100, (clickX / rect.width) * 100));
+            const newValue = this.snapToStep(this.min + (newPercentage / 100) * (this.max - this.min));
+            this.updateValue(newValue);
+        },
+        
+        startDrag(event) {
+            event.preventDefault();
+            this.isDragging = true;
+            this.onDrag(event);
+            
+            const onMouseMove = (e) => this.onDrag(e);
+            const onMouseUp = () => this.stopDrag(onMouseMove, onMouseUp);
+            
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        },
+        
+        onDrag(event) {
+            if (!this.isDragging) return;
+            const track = this.$refs.track;
+            const rect = track.getBoundingClientRect();
+            const mouseX = event.clientX - rect.left;
+            const newPercentage = Math.max(0, Math.min(100, (mouseX / rect.width) * 100));
+            const newValue = this.snapToStep(this.min + (newPercentage / 100) * (this.max - this.min));
+            this.updateValue(newValue);
+        },
+        
+        stopDrag(onMouseMove, onMouseUp) {
+            this.isDragging = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        },
+        
+        snapToStep(value) {
+            const rounded = Math.round((value - this.min) / this.step) * this.step + this.min;
+            return Math.max(this.min, Math.min(this.max, rounded));
+        }
+    }|"
+>
+    <!-- Track with progress fill -->
+    <div
+        x-ref="track"
+        @click="handleTrackClick"
+        class="border-2 rounded-base bg-secondary-background h-8 relative overflow-hidden cursor-pointer select-none"
+    >
+        <!-- Progress fill -->
+        <div
+            class="bg-main h-full absolute left-0 top-0 transition-all pointer-events-none"
+            :style="'width: ' + percentage + '%'"
+        ></div>
+
+        <!-- Handle -->
+        <div
+            @mousedown="startDrag"
+            class="w-6 h-6 rounded-full border-2 bg-white shadow-base absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all pointer-events-auto z-10"
+            :class="isDragging ? 'cursor-grabbing' : 'cursor-grab'"
+            :style="'left: ' + percentage + '%'"
+        ></div>
+    </div>
+
+    <!-- Hidden input for form submission -->
+    <input
+        type="hidden"
+        th:name="${name}"
+        th:id="${inputId}"
+        th:attr="x-model=${xModel != null and xModel != '' ? xModel : 'currentValue'}"
+    />
+</div>
