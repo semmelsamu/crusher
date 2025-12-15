@@ -21,8 +21,19 @@
         },
         
         syncWithParent() {
-            if (this.xModelVar && this.$root[this.xModelVar] !== undefined) {
-                this.$root[this.xModelVar] = this.currentValue;
+            if (this.xModelVar) {
+                // Find parent Alpine scope and update the variable
+                let parent = this.$el.parentElement;
+                while (parent) {
+                    if (parent._x_dataStack && parent._x_dataStack[0]) {
+                        const parentData = parent._x_dataStack[0];
+                        if (parentData[this.xModelVar] !== undefined) {
+                            parentData[this.xModelVar] = this.currentValue;
+                            break;
+                        }
+                    }
+                    parent = parent.parentElement;
+                }
             }
         },
         
@@ -101,6 +112,6 @@
         type="hidden"
         th:name="${name}"
         th:id="${inputId}"
-        th:attr="x-model=${xModel != null and xModel != '' ? xModel : 'currentValue'}"
+        :value="currentValue"
     />
 </div>
