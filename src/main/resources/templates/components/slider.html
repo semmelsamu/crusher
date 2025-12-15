@@ -90,18 +90,18 @@
     <div
         x-ref="track"
         @click="handleTrackClick"
-        class="border-2 rounded-base bg-secondary-background h-8 relative overflow-hidden cursor-pointer select-none"
+        class="border-2 rounded-full bg-secondary-background h-3 relative cursor-pointer select-none"
     >
         <!-- Progress fill -->
         <div
-            class="bg-main h-full absolute left-0 top-0 transition-all pointer-events-none"
+            class="bg-main h-full absolute left-0 top-0 pointer-events-none rounded-full"
             :style="'width: ' + percentage + '%'"
         ></div>
 
         <!-- Handle -->
         <div
             @mousedown="startDrag"
-            class="w-6 h-6 rounded-full border-2 bg-white shadow-base absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all pointer-events-auto z-10"
+            class="w-5 h-5 rounded-full border-2 bg-secondary-background absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-auto z-10"
             :class="isDragging ? 'cursor-grabbing' : 'cursor-grab'"
             :style="'left: ' + percentage + '%'"
         ></div>
