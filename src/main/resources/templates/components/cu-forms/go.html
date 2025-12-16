@@ -1,5 +1,5 @@
 <form
-    th:fragment="go(actionUrl, go, boulder, showCreateAnother, createAnother)"
+    th:fragment="go(actionUrl, go, boulder, showCreateAnother, createAnother, trackProgress)"
     th:action="${actionUrl}"
     th:object="${go}"
     method="post"
@@ -82,9 +82,8 @@
         <input
             type="checkbox"
             name="trackProgress"
-            value="true"
             class="checkbox peer"
-            th:checked="${go.progressedHold != null}"
+            th:checked="${go.progressedHold != null or trackProgress}"
             id="track-progress"
         />
         <div>
@@ -116,16 +115,18 @@
                 </span>
             </div>
 
-            <input
-                type="range"
-                min="0"
-                th:max="${boulder.holdsCount}"
-                step="1"
-                th:field="*{progressedHold}"
-                class="w-full"
-                x-model="hold"
-                id="reached-hold"
-            />
+            <x
+                th:replace="~{components/slider :: slider(
+                    min='0',
+                    max=${boulder.holdsCount},
+                    step='1',
+                    name='progressedHold',
+                    value=*{progressedHold},
+                    cssClass='w-full',
+                    xModel='hold',
+                    inputId='reached-hold'
+                )}"
+            ></x>
             <div
                 th:if="${#fields.hasErrors('progressedHold')}"
                 class="text-error text-sm"
