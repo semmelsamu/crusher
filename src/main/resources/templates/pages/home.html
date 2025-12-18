@@ -164,6 +164,112 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Highest Grade -->
+                    <div
+                        class="card p-6 flex flex-col items-center justify-center"
+                    >
+                        <p
+                            class="text-sm font-medium text-foreground-muted mb-2"
+                        >
+                            Highest Grade
+                        </p>
+                        <p
+                            th:if="${statistics.highestGrade != null}"
+                            class="text-8xl font-grade font-bold text-error"
+                            th:text="${statistics.highestGrade}"
+                        >
+                            V0
+                        </p>
+                        <p
+                            th:unless="${statistics.highestGrade != null}"
+                            class="text-4xl text-foreground-muted"
+                        >
+                            -
+                        </p>
+                    </div>
+
+                    <!-- Go Results Pie Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Go Results</h3>
+                        <div
+                            th:if="${statistics.totalAttempts == 0}"
+                            class="text-foreground-muted text-center py-8"
+                        >
+                            No attempts yet
+                        </div>
+                        <div
+                            th:unless="${statistics.totalAttempts == 0}"
+                            class="pie-chart-container"
+                        >
+                            <div class="pie-chart-group">
+                                <div
+                                    class="pie-chart-svg-wrapper"
+                                    style="display: none"
+                                >
+                                    <span
+                                        class="pie-chart-data-point"
+                                        th:attr="data-value=${statistics.didNotFinishCount},data-label='Did not finish',data-color='color-error'"
+                                    ></span>
+                                    <span
+                                        class="pie-chart-data-point"
+                                        th:attr="data-value=${statistics.closeTryCount},data-label='Close try',data-color='color-warning'"
+                                    ></span>
+                                    <span
+                                        class="pie-chart-data-point"
+                                        th:attr="data-value=${statistics.finishedCount},data-label='Finished',data-color='color-success'"
+                                    ></span>
+                                </div>
+                                <div class="pie-chart-svg-wrapper">
+                                    <svg
+                                        class="pie-chart-svg"
+                                        viewBox="0 0 192 192"
+                                    ></svg>
+                                </div>
+                            </div>
+                            <div class="pie-chart-legend">
+                                <div class="pie-chart-legend-item">
+                                    <div
+                                        class="pie-chart-legend-color bg-error"
+                                    ></div>
+                                    <span class="pie-chart-legend-text"
+                                        >Did not finish</span
+                                    >
+                                    <span
+                                        class="pie-chart-legend-value"
+                                        th:text="${statistics.didNotFinishCount}"
+                                        >0</span
+                                    >
+                                </div>
+                                <div class="pie-chart-legend-item">
+                                    <div
+                                        class="pie-chart-legend-color bg-warning"
+                                    ></div>
+                                    <span class="pie-chart-legend-text"
+                                        >Close try</span
+                                    >
+                                    <span
+                                        class="pie-chart-legend-value"
+                                        th:text="${statistics.closeTryCount}"
+                                        >0</span
+                                    >
+                                </div>
+                                <div class="pie-chart-legend-item">
+                                    <div
+                                        class="pie-chart-legend-color bg-success"
+                                    ></div>
+                                    <span class="pie-chart-legend-text"
+                                        >Finished</span
+                                    >
+                                    <span
+                                        class="pie-chart-legend-value"
+                                        th:text="${statistics.finishedCount}"
+                                        >0</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>

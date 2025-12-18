@@ -316,3 +316,59 @@
     @apply text-sm font-medium absolute;
     bottom: -1.75rem;
 }
+
+/*
+|-------------------------------------------------------------------------------
+| Pie Charts
+|-------------------------------------------------------------------------------
+*/
+
+.pie-chart-container {
+    @apply flex items-center justify-center gap-8;
+    min-height: 16rem;
+}
+
+.pie-chart-svg-wrapper {
+    @apply relative flex-shrink-0;
+    width: 12rem;
+    height: 12rem;
+}
+
+.pie-chart-svg {
+    @apply w-full h-full;
+    transform: rotate(-90deg);
+}
+
+.pie-chart-slice {
+    transition: opacity 0.2s ease;
+}
+
+.pie-chart-slice:hover {
+    opacity: 0.8;
+}
+
+.pie-chart-label {
+    @apply absolute text-sm font-semibold;
+    pointer-events: none;
+}
+
+.pie-chart-legend {
+    @apply flex flex-col gap-3;
+}
+
+.pie-chart-legend-item {
+    @apply flex items-center gap-3;
+}
+
+.pie-chart-legend-color {
+    @apply w-4 h-4  flex-shrink-0;
+    border-radius: 0.25rem;
+}
+
+.pie-chart-legend-text {
+    @apply text-sm font-medium flex-1;
+}
+
+.pie-chart-legend-value {
+    @apply text-sm font-bold;
+}

@@ -14,16 +14,28 @@ public class UserStatistics {
     private final long totalAttempts;
     private final Map<String, Long> finishedPerGrade;
     private final Map<String, Long> flashesPerGrade;
+    private final String highestGrade;
+    private final long didNotFinishCount;
+    private final long closeTryCount;
+    private final long finishedCount;
 
     public UserStatistics(
             long totalBouldersFinished,
             long totalAttempts,
             Map<String, Long> finishedPerGrade,
-            Map<String, Long> flashesPerGrade) {
+            Map<String, Long> flashesPerGrade,
+            String highestGrade,
+            long didNotFinishCount,
+            long closeTryCount,
+            long finishedCount) {
         this.totalBouldersFinished = totalBouldersFinished;
         this.totalAttempts = totalAttempts;
         this.finishedPerGrade = finishedPerGrade;
         this.flashesPerGrade = flashesPerGrade;
+        this.highestGrade = highestGrade;
+        this.didNotFinishCount = didNotFinishCount;
+        this.closeTryCount = closeTryCount;
+        this.finishedCount = finishedCount;
     }
 
     public long getTotalBouldersFinished() {
@@ -40,5 +52,21 @@ public class UserStatistics {
 
     public Map<String, Long> getFlashesPerGrade() {
         return flashesPerGrade;
+    }
+
+    public String getHighestGrade() {
+        return highestGrade;
+    }
+
+    public long getDidNotFinishCount() {
+        return didNotFinishCount;
+    }
+
+    public long getCloseTryCount() {
+        return closeTryCount;
+    }
+
+    public long getFinishedCount() {
+        return finishedCount;
     }
 }

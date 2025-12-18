@@ -61,6 +61,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize bar charts
     initializeBarCharts();
+
+    // Initialize pie charts
+    initializePieCharts();
 });
 
 /**
@@ -107,5 +110,98 @@ function initializeBarCharts() {
                 }
             });
         }
+    });
+}
+
+/**
+ * Initializes pie charts by drawing SVG segments based on data values
+ */
+function initializePieCharts() {
+    document.querySelectorAll(".pie-chart-group").forEach((group) => {
+        const dataPoints = group.querySelectorAll(".pie-chart-data-point");
+        const svg = group.querySelector(".pie-chart-svg");
+        const wrapper = group.querySelector(".pie-chart-svg-wrapper");
+
+        if (!svg || !wrapper || dataPoints.length === 0) {
+            return;
+        }
+
+        // Extract data values, labels, and colors
+        const data = Array.from(dataPoints).map((point) => ({
+            value: parseInt(point.getAttribute("data-value"), 10),
+            label: point.getAttribute("data-label"),
+            color: point.getAttribute("data-color"),
+        }));
+
+        // Calculate total
+        const total = data.reduce((sum, d) => sum + d.value, 0);
+
+        if (total === 0) {
+            return;
+        }
+
+        // SVG dimensions
+        const size = 192; // 12rem = 192px
+        const cx = size / 2; // center x
+        const cy = size / 2; // center y
+        const radius = size / 2 - 10; // radius with some padding
+
+        let currentAngle = -90; // Start at top (-90 degrees)
+
+        data.forEach((d, i) => {
+            if (d.value === 0) return; // Skip zero values
+
+            const percentage = d.value / total;
+            const angle = percentage * 360;
+
+            // Calculate start and end points on the circle
+            const startAngle = (currentAngle * Math.PI) / 180;
+            const endAngle = ((currentAngle + angle) * Math.PI) / 180;
+
+            const x1 = cx + radius * Math.cos(startAngle);
+            const y1 = cy + radius * Math.sin(startAngle);
+            const x2 = cx + radius * Math.cos(endAngle);
+            const y2 = cy + radius * Math.sin(endAngle);
+
+            // Create SVG path for pie slice
+            const largeArcFlag = angle > 180 ? 1 : 0;
+            const pathData = [
+                `M ${cx},${cy}`, // Move to center
+                `L ${x1},${y1}`, // Line to start point
+                `A ${radius},${radius} 0 ${largeArcFlag},1 ${x2},${y2}`, // Arc to end point
+                "Z", // Close path back to center
+            ].join(" ");
+
+            const path = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "path",
+            );
+            path.setAttribute("d", pathData);
+            path.setAttribute("fill", `var(--${d.color})`);
+            path.setAttribute("class", "pie-chart-slice");
+            path.setAttribute("stroke", "var(--background)");
+            path.setAttribute("stroke-width", "2");
+
+            svg.appendChild(path);
+
+            // Add label with count
+            const labelAngle = ((currentAngle + angle / 2) * Math.PI) / 180;
+            const labelRadius = radius * 0.65;
+            const labelX = cx + labelRadius * Math.cos(labelAngle);
+            const labelY = cy + labelRadius * Math.sin(labelAngle);
+
+            const label = document.createElement("div");
+            label.className = "pie-chart-label";
+            label.textContent = d.value;
+            label.style.left = `${labelX}px`;
+            label.style.top = `${labelY}px`;
+            label.style.transform = "translate(-50%, -50%)";
+            label.style.color = "var(--background)";
+            label.style.fontWeight = "bold";
+
+            wrapper.appendChild(label);
+
+            currentAngle += angle;
+        });
     });
 }

@@ -92,7 +92,34 @@ public class StatisticsService {
             flashesPerGrade.put(grade, flashesPerGradeRaw.getOrDefault(grade, 0L));
         }
 
-        return new UserStatistics(totalBouldersFinished, totalAttempts, finishedPerGrade, flashesPerGrade);
+        // Find highest grade from finished boulders
+        String highestGrade = allGoes.stream()
+                .filter(go -> go.getResult() == GoResult.FINISHED)
+                .map(go -> go.getBoulder().getGrade().getVScale())
+                .max(Comparator.comparingInt(this::extractVScaleValue))
+                .orElse(null);
+
+        // Count goes by result type
+        long didNotFinishCount = allGoes.stream()
+                .filter(go -> go.getResult() == GoResult.DID_NOT_FINISH)
+                .count();
+        long closeTryCount = allGoes.stream()
+                .filter(go -> go.getResult() == GoResult.CLOSE_TRY)
+                .count();
+        long finishedCount = allGoes.stream()
+                .filter(go -> go.getResult() == GoResult.FINISHED)
+                .count();
+
+        return new UserStatistics(
+                totalBouldersFinished,
+                totalAttempts,
+                finishedPerGrade,
+                flashesPerGrade,
+                highestGrade,
+                didNotFinishCount,
+                closeTryCount,
+                finishedCount
+        );
     }
 
     /**
