@@ -50,7 +50,7 @@ public class HomeController {
         UserEntity user = findUserByPrincipal(principal);
 
         // Check for active session
-        Optional<SessionEntity> activeSession = sessionRepository.findByUserIdAndEndedAtIsNull(user.getId());
+        Optional<SessionEntity> activeSession = sessionRepository.findFirstByUserIdAndEndedAtIsNullOrderByStartedAtDesc(user.getId());
 
         if (activeSession.isPresent()) {
             model.addAttribute("activeSession", activeSession.get());
