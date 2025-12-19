@@ -85,10 +85,6 @@ public class SessionController {
 
         model.addAttribute("sessions", sessions);
         model.addAttribute("user", user);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard")
-        ));
 
         return "pages/dashboard";
     }
