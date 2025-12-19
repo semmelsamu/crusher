@@ -5,7 +5,6 @@ import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -71,15 +70,6 @@ public class GradeController {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                Map.of("label", "Gyms", "url", "/admin/gyms"),
-                Map.of("label", grade.getGym().getName(), "url", "/admin/gyms/" + grade.getGym().getId()),
-                Map.of("label", "Grades", "url", "/admin/gyms/" + grade.getGym().getId()),
-                Map.of("label", grade.getName(), "url", "/admin/gyms/" + grade.getGym().getId() + "/grades/" + grade.getId()),
-                Map.of("label", "Edit", "url", "")
-        ));
         return "pages/admin/grades/update";
     }
 
@@ -98,14 +88,6 @@ public class GradeController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("grade", grade);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                Map.of("label", "Gyms", "url", "/admin/gyms"),
-                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
-                Map.of("label", "Grades", "url", "/admin/gyms/" + gym.getId()),
-                Map.of("label", "New Grade", "url", "")
-        ));
         return "pages/admin/grades/create";
     }
 
@@ -135,15 +117,6 @@ public class GradeController {
             formGrade.setGym(grade.getGym());
             model.addAttribute("gym", grade.getGym());
             model.addAttribute("grade", formGrade);
-            model.addAttribute("breadcrumb", List.of(
-                    Map.of("label", "Home", "url", "/"),
-                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                    Map.of("label", "Gyms", "url", "/admin/gyms"),
-                    Map.of("label", grade.getGym().getName(), "url", "/admin/gyms/" + grade.getGym().getId()),
-                    Map.of("label", "Grades", "url", "/admin/gyms/" + grade.getGym().getId()),
-                    Map.of("label", grade.getName(), "url", "/admin/gyms/" + grade.getGym().getId() + "/grades/" + grade.getId()),
-                    Map.of("label", "Edit", "url", "")
-            ));
             return "pages/admin/grades/update";
         }
 
@@ -184,14 +157,6 @@ public class GradeController {
         if (result.hasErrors()) {
             model.addAttribute("gym", gym);
             model.addAttribute("grade", formGrade);
-            model.addAttribute("breadcrumb", List.of(
-                    Map.of("label", "Home", "url", "/"),
-                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                    Map.of("label", "Gyms", "url", "/admin/gyms"),
-                    Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
-                    Map.of("label", "Grades", "url", "/admin/gyms/" + gym.getId()),
-                    Map.of("label", "New Grade", "url", "")
-            ));
             return "pages/admin/grades/create";
         }
 

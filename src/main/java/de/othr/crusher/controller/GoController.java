@@ -119,12 +119,6 @@ public class GoController {
         model.addAttribute("sectors", sectors);
         model.addAttribute("sectorBoulders", sectorBoulders);
         model.addAttribute("projectBoulders", projectBoulders);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard"),
-                Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                Map.of("label", "Record Go", "url", "")
-        ));
 
         return "pages/goes/select-boulder";
     }
@@ -164,13 +158,6 @@ public class GoController {
         model.addAttribute("availableResults", GoResult.values());
         model.addAttribute("createAnother", createAnother);
         model.addAttribute("trackProgress", trackProgress);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard"),
-                Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/goes/create"),
-                Map.of("label", "Select Result", "url", "")
-        ));
 
         return "pages/goes/create-result";
     }
@@ -199,13 +186,6 @@ public class GoController {
         model.addAttribute("go", go);
         model.addAttribute("boulder", go.getBoulder());
         model.addAttribute("availableResults", GoResult.values());
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard"),
-                Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                Map.of("label", "Go #" + goId, "url", "/sessions/" + sessionId + "/goes/" + goId),
-                Map.of("label", "Edit", "url", "")
-        ));
 
         return "pages/goes/edit";
     }
@@ -255,13 +235,6 @@ public class GoController {
             model.addAttribute("availableResults", GoResult.values());
             model.addAttribute("createAnother", createAnother);
             model.addAttribute("trackProgress", trackProgress);
-            model.addAttribute("breadcrumb", List.of(
-                    Map.of("label", "Home", "url", "/"),
-                    Map.of("label", "Dashboard", "url", "/dashboard"),
-                    Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                    Map.of("label", "Record Go", "url", "/sessions/" + sessionId + "/goes/create"),
-                    Map.of("label", "Select Result", "url", "")
-            ));
             return "pages/goes/create-result";
         }
 
@@ -330,13 +303,6 @@ public class GoController {
             model.addAttribute("go", formGo);
             model.addAttribute("boulder", boulder);
             model.addAttribute("availableResults", GoResult.values());
-            model.addAttribute("breadcrumb", List.of(
-                    Map.of("label", "Home", "url", "/"),
-                    Map.of("label", "Dashboard", "url", "/dashboard"),
-                    Map.of("label", "Session", "url", "/sessions/" + sessionId),
-                    Map.of("label", "Go #" + goId, "url", "/sessions/" + sessionId + "/goes/" + goId),
-                    Map.of("label", "Edit", "url", "")
-            ));
             return "pages/goes/edit";
         }
 
