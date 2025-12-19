@@ -99,8 +99,18 @@ tasks.register('dev', org.springframework.boot.gradle.tasks.run.BootRun) {
 		def tailwind = tailwindBuilder.start()
 		println "Tailwind CSS watcher started (PID ${tailwind.pid()})."
 
-		addShutdownHook {
-			tailwind.destroy()
+		gradle.buildFinished {
+			try {
+				def handle = tailwind.toHandle()
+				handle.descendants().each { it.destroy() }
+				handle.destroy()
+
+				if (!tailwind.waitFor(3, java.util.concurrent.TimeUnit.SECONDS)) {
+					handle.descendants().each { it.destroyForcibly() }
+					handle.destroyForcibly()
+				}
+			} catch (Throwable ignored) {
+			}
 		}
 	}
 }

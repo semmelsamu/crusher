@@ -74,3 +74,5 @@ yarn-error.log*
 
 ### Java Version Manager ###
 .java-version
+
+.gradle-home/
