@@ -56,8 +56,10 @@ public class HomeController {
 
             lastSession.ifPresent(session -> model.addAttribute("lastGym", session.getGym()));
         }
+        
+        throw new RuntimeException("Test error");
 
-        return "pages/home";
+        //return "pages/home";
     }
 
     /**
