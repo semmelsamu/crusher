@@ -26,4 +26,12 @@ public interface GoRepository extends JpaRepository<GoEntity, Long> {
      * @return list of goes for the boulder, sorted by timestamp descending
      */
     List<GoEntity> findByBoulderIdOrderByTimestampDesc(Long boulderId);
+
+    /**
+     * Finds all goes for a given user across all sessions.
+     *
+     * @param userId identifier of the user
+     * @return list of all goes belonging to the user
+     */
+    List<GoEntity> findBySession_UserId(Long userId);
 }

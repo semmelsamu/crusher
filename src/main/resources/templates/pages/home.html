@@ -4,32 +4,274 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="flex flex-col items-center space-y-4 my-16">
-            <h1>Welcome to Crusher</h1>
-            <p>Track your climbing progress and achievements</p>
+        <div class="wrapper">
+            <div class="flex flex-col items-center space-y-4 my-8">
+                <h1>Welcome to Crusher</h1>
+                <p>Track your climbing progress and achievements</p>
 
-            <!-- Active Session -->
-            <a
-                th:if="${activeSession != null}"
-                th:href="@{/sessions/{id}(id=${activeSession.id})}"
-                class="button primary"
-            >
-                Continue your last Session
-            </a>
+                <!-- Active Session -->
+                <a
+                    th:if="${activeSession != null}"
+                    th:href="@{/sessions/{id}(id=${activeSession.id})}"
+                    class="button primary"
+                >
+                    Continue your last Session
+                </a>
 
-            <!-- Last Gym Quick Start -->
-            <form
-                th:if="${activeSession == null && lastGym != null}"
-                th:action="@{/sessions}"
-                method="post"
-            >
-                <input type="hidden" name="gymId" th:value="${lastGym.id}" />
-                <button type="submit" class="button success">
-                    <span th:text="'Start Session in ' + ${lastGym.name}"
-                        >Start Session</span
+                <!-- Last Gym Quick Start -->
+                <form
+                    th:if="${activeSession == null && lastGym != null}"
+                    th:action="@{/sessions}"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="gymId"
+                        th:value="${lastGym.id}"
+                    />
+                    <button type="submit" class="button success">
+                        <span th:text="'Start Session in ' + ${lastGym.name}"
+                            >Start Session</span
+                        >
+                    </button>
+                </form>
+            </div>
+
+            <!-- Statistics Section -->
+            <section class="space-y-4">
+                <h2>Your Statistics</h2>
+
+                <!-- Simple number stats - 2 columns -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Total Boulders Finished -->
+                    <div
+                        class="card p-6 flex flex-col items-center justify-center"
                     >
-                </button>
-            </form>
+                        <p
+                            class="text-sm font-medium text-foreground-muted mb-2"
+                        >
+                            Total Boulders Finished
+                        </p>
+                        <p
+                            class="text-8xl font-bold text-accent"
+                            th:text="${statistics.totalBouldersFinished}"
+                        >
+                            0
+                        </p>
+                    </div>
+
+                    <!-- Total Attempts -->
+                    <div
+                        class="card p-6 flex flex-col items-center justify-center"
+                    >
+                        <p
+                            class="text-sm font-medium text-foreground-muted mb-2"
+                        >
+                            Total Attempts
+                        </p>
+                        <p
+                            class="text-8xl font-bold text-accent"
+                            th:text="${statistics.totalAttempts}"
+                        >
+                            0
+                        </p>
+                    </div>
+
+                    <!-- Finished Boulders per Grade - Bar Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">
+                            Finished Boulders per Grade
+                        </h3>
+                        <div
+                            th:if="${statistics.finishedPerGrade.isEmpty()}"
+                            class="text-foreground-muted text-center py-8"
+                        >
+                            No data yet - start climbing!
+                        </div>
+                        <div
+                            th:unless="${statistics.finishedPerGrade.isEmpty()}"
+                            class="column-chart-container"
+                        >
+                            <div class="column-chart-grid">
+                                <div class="column-chart-gridline-max">
+                                    <span class="column-chart-max-label"></span>
+                                </div>
+                                <div class="column-chart-gridline"></div>
+                                <div class="column-chart-gridline"></div>
+                            </div>
+                            <div
+                                class="column-chart-bars bar-chart-group"
+                                data-color="blue"
+                            >
+                                <div
+                                    th:each="entry : ${statistics.finishedPerGrade}"
+                                    class="column-chart-item"
+                                >
+                                    <div
+                                        class="column-chart-bar"
+                                        th:attr="data-value=${entry.value}"
+                                    ></div>
+                                    <span
+                                        class="column-chart-label"
+                                        th:text="${entry.key}"
+                                        >V0</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flashes per Grade - Bar Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">
+                            Flashes per Grade
+                        </h3>
+                        <div
+                            th:if="${statistics.flashesPerGrade.isEmpty()}"
+                            class="text-foreground-muted text-center py-8"
+                        >
+                            No flashes yet - keep trying!
+                        </div>
+                        <div
+                            th:unless="${statistics.flashesPerGrade.isEmpty()}"
+                            class="column-chart-container"
+                        >
+                            <div class="column-chart-grid">
+                                <div class="column-chart-gridline-max">
+                                    <span class="column-chart-max-label"></span>
+                                </div>
+                                <div class="column-chart-gridline"></div>
+                                <div class="column-chart-gridline"></div>
+                            </div>
+                            <div
+                                class="column-chart-bars bar-chart-group"
+                                data-color="red"
+                            >
+                                <div
+                                    th:each="entry : ${statistics.flashesPerGrade}"
+                                    class="column-chart-item"
+                                >
+                                    <div
+                                        class="column-chart-bar"
+                                        th:attr="data-value=${entry.value}"
+                                    ></div>
+                                    <span
+                                        class="column-chart-label"
+                                        th:text="${entry.key}"
+                                        >V0</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Highest Grade -->
+                    <div
+                        class="card p-6 flex flex-col items-center justify-center"
+                    >
+                        <p
+                            class="text-sm font-medium text-foreground-muted mb-2"
+                        >
+                            Highest Grade
+                        </p>
+                        <p
+                            th:if="${statistics.highestGrade != null}"
+                            class="text-8xl font-grade font-bold text-accent"
+                            th:text="${statistics.highestGrade}"
+                        >
+                            V0
+                        </p>
+                        <p
+                            th:unless="${statistics.highestGrade != null}"
+                            class="text-4xl text-foreground-muted"
+                        >
+                            -
+                        </p>
+                    </div>
+
+                    <!-- Go Results Pie Chart -->
+                    <div class="card p-6">
+                        <h3 class="text-lg font-semibold mb-4">Go Results</h3>
+                        <div
+                            th:if="${statistics.totalAttempts == 0}"
+                            class="text-foreground-muted text-center py-8"
+                        >
+                            No attempts yet
+                        </div>
+                        <div
+                            th:unless="${statistics.totalAttempts == 0}"
+                            class="pie-chart-container"
+                        >
+                            <div class="pie-chart-group">
+                                <div
+                                    class="pie-chart-svg-wrapper"
+                                    style="display: none"
+                                >
+                                    <span
+                                        class="pie-chart-data-point"
+                                        th:attr="data-value=${statistics.didNotFinishCount},data-label='Did not finish',data-color='color-error'"
+                                    ></span>
+                                    <span
+                                        class="pie-chart-data-point"
+                                        th:attr="data-value=${statistics.closeTryCount},data-label='Close try',data-color='color-warning'"
+                                    ></span>
+                                    <span
+                                        class="pie-chart-data-point"
+                                        th:attr="data-value=${statistics.finishedCount},data-label='Finished',data-color='color-success'"
+                                    ></span>
+                                </div>
+                                <div class="pie-chart-svg-wrapper">
+                                    <svg
+                                        class="pie-chart-svg"
+                                        viewBox="0 0 192 192"
+                                    ></svg>
+                                </div>
+                            </div>
+                            <div class="pie-chart-legend">
+                                <div class="pie-chart-legend-item">
+                                    <div
+                                        class="pie-chart-legend-color bg-error"
+                                    ></div>
+                                    <span class="pie-chart-legend-text"
+                                        >Did not finish</span
+                                    >
+                                    <span
+                                        class="pie-chart-legend-value"
+                                        th:text="${statistics.didNotFinishCount}"
+                                        >0</span
+                                    >
+                                </div>
+                                <div class="pie-chart-legend-item">
+                                    <div
+                                        class="pie-chart-legend-color bg-warning"
+                                    ></div>
+                                    <span class="pie-chart-legend-text"
+                                        >Close try</span
+                                    >
+                                    <span
+                                        class="pie-chart-legend-value"
+                                        th:text="${statistics.closeTryCount}"
+                                        >0</span
+                                    >
+                                </div>
+                                <div class="pie-chart-legend-item">
+                                    <div
+                                        class="pie-chart-legend-color bg-success"
+                                    ></div>
+                                    <span class="pie-chart-legend-text"
+                                        >Finished</span
+                                    >
+                                    <span
+                                        class="pie-chart-legend-value"
+                                        th:text="${statistics.finishedCount}"
+                                        >0</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </th:block>
 </th:block>

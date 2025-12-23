@@ -202,18 +202,40 @@ public class SessionController {
 
     /**
      * Creates a new session for the current user at the selected gym.
+     * If an active session already exists, shows an error message.
      *
      * @param gymId the ID of the selected gym
      * @param principal the authenticated user
      * @param redirectAttributes attributes for flash messages on redirect
-     * @return redirect to the newly created session detail page
+     * @return redirect to the newly created session detail page or back with error
      */
     @PostMapping("/sessions")
-    public String createSession(@RequestParam("gymId") Long gymId, Principal principal, RedirectAttributes redirectAttributes) {
+    public String createSession(
+            @RequestParam("gymId") Long gymId,
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         GymEntity gym = gymRepository.findById(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
+        // Check for active sessions
+        List<SessionEntity> activeSessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId())
+                .stream()
+                .filter(session -> session.getEndedAt() == null)
+                .toList();
+
+        // If active session exists, show error message and redirect to active session
+        if (!activeSessions.isEmpty()) {
+            SessionEntity activeSession = activeSessions.get(0);
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error",
+                "message", "You already have an active session at " + activeSession.getGym().getName() +
+                          ". Please end it before starting a new one."
+            ));
+            return "redirect:/sessions/" + activeSession.getId();
+        }
+
+        // No active session, create new one
         SessionEntity session = new SessionEntity();
         session.setStartedAt(LocalDateTime.now());
         session.setUser(user);
@@ -223,7 +245,7 @@ public class SessionController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
+            "type", "success",
             "message", "Session created successfully!"
         ));
 

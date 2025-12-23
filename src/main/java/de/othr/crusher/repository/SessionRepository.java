@@ -22,10 +22,11 @@ public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
 
     /**
      * Finds the active (running) session for a given user, if one exists.
+     * Returns the most recently started session if multiple active sessions exist.
      *
      * @param userId identifier of the user
      * @return optional containing the active session, or empty if no active session exists
      */
-    Optional<SessionEntity> findByUserIdAndEndedAtIsNull(Long userId);
+    Optional<SessionEntity> findFirstByUserIdAndEndedAtIsNullOrderByStartedAtDesc(Long userId);
 }
 
