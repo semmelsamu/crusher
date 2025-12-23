@@ -179,7 +179,7 @@ function initializePieCharts() {
             path.setAttribute("d", pathData);
             path.setAttribute("fill", `var(--${d.color})`);
             path.setAttribute("class", "pie-chart-slice");
-            path.setAttribute("stroke", "#000000");
+            path.setAttribute("stroke", "var(--color-border)");
             path.setAttribute("stroke-width", "2");
 
             svg.appendChild(path);
