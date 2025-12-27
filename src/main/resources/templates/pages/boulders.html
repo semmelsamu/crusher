@@ -181,9 +181,13 @@
                                 </span>
                             </td>
                             <td>
-                                <span th:text="${boulder.description}">
+                                <a
+                                    th:href="@{/boulders/{id}(id=${boulder.id})}"
+                                    th:text="${boulder.description}"
+                                    class="text-main hover:underline"
+                                >
                                     Description
-                                </span>
+                                </a>
                             </td>
                             <td>
                                 <span th:text="${boulder.sector.name}">
