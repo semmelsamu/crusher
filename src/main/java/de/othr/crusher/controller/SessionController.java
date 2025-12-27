@@ -85,10 +85,6 @@ public class SessionController {
 
         model.addAttribute("sessions", sessions);
         model.addAttribute("user", user);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard")
-        ));
 
         return "pages/dashboard";
     }
@@ -172,11 +168,6 @@ public class SessionController {
         model.addAttribute("selectedGradeIds", gradeIds != null ? gradeIds : List.of());
         model.addAttribute("projectBoulderIds", projectBoulderIds);
         model.addAttribute("projectOnly", projectOnly);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard"),
-                Map.of("label", "All Boulders", "url", "/boulders")
-        ));
 
         return "pages/boulders";
     }
@@ -191,11 +182,6 @@ public class SessionController {
     public String showCreateForm(Model model) {
         List<GymEntity> gyms = gymRepository.findAll();
         model.addAttribute("gyms", gyms);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard"),
-                Map.of("label", "Start Session", "url", "/sessions/create")
-        ));
 
         return "pages/sessions/create";
     }
@@ -276,11 +262,6 @@ public class SessionController {
 
         model.addAttribute("currentSession", session);
         model.addAttribute("goes", goes);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard"),
-                Map.of("label", "Session", "url", "/sessions/" + session.getId())
-        ));
 
         return "pages/sessions/detail";
     }

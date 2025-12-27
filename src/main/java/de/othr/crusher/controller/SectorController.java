@@ -67,16 +67,6 @@ public class SectorController {
         model.addAttribute("sector", sector);
         model.addAttribute("boulders", boulders);
         
-        // Add breadcrumb navigation
-        model.addAttribute("breadcrumb", List.of(
-            Map.of("label", "Home", "url", "/"),
-            Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-            Map.of("label", "Gyms", "url", "/admin/gyms"),
-            Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
-            Map.of("label", "Sectors", "url", "/admin/gyms/" + gym.getId()),
-            Map.of("label", sector.getName(), "url", "")
-        ));
-        
         return "pages/admin/sectors/detail";
     }
 
@@ -96,14 +86,6 @@ public class SectorController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                Map.of("label", "Gyms", "url", "/admin/gyms"),
-                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
-                Map.of("label", "Sectors", "url", "/admin/gyms/" + gym.getId()),
-                Map.of("label", "New Sector", "url", "")
-        ));
         return "pages/admin/sectors/create";
     }
 
@@ -125,15 +107,6 @@ public class SectorController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                Map.of("label", "Gyms", "url", "/admin/gyms"),
-                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
-                Map.of("label", "Sectors", "url", "/admin/gyms/" + gym.getId()),
-                Map.of("label", sector.getName(), "url", "/admin/gyms/" + gym.getId() + "/sectors/" + sector.getId()),
-                Map.of("label", "Edit", "url", "")
-        ));
         return "pages/admin/sectors/update";
     }
 
@@ -162,14 +135,6 @@ public class SectorController {
                 sector.setImagePath(DEFAULT_IMAGE_PATH);
             }
             model.addAttribute("gym", gym);
-            model.addAttribute("breadcrumb", List.of(
-                    Map.of("label", "Home", "url", "/"),
-                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                    Map.of("label", "Gyms", "url", "/admin/gyms"),
-                    Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
-                    Map.of("label", "Sectors", "url", "/admin/gyms/" + gym.getId()),
-                    Map.of("label", "New Sector", "url", "")
-            ));
             return "pages/admin/sectors/create";
         }
 
@@ -220,15 +185,6 @@ public class SectorController {
             }
             model.addAttribute("gym", gym);
             model.addAttribute("sector", formSector);
-            model.addAttribute("breadcrumb", List.of(
-                    Map.of("label", "Home", "url", "/"),
-                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                    Map.of("label", "Gyms", "url", "/admin/gyms"),
-                    Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
-                    Map.of("label", "Sectors", "url", "/admin/gyms/" + gym.getId()),
-                    Map.of("label", sector.getName(), "url", "/admin/gyms/" + gym.getId() + "/sectors/" + sector.getId()),
-                    Map.of("label", "Edit", "url", "")
-            ));
             return "pages/admin/sectors/update";
         }
 
