@@ -106,34 +106,185 @@
                     </div>
                 </section>
 
-                <!-- Card 3: Total Tries -->
+                <!-- Card 3: Your Rating -->
                 <section
-                    class="card p-6 flex flex-col items-center justify-center"
+                    class="card p-6 flex flex-col items-center justify-center space-y-4"
                 >
-                    <p class="text-sm font-medium text-foreground-muted mb-2">
-                        Total Tries
+                    <p class="text-sm font-medium text-foreground-muted">
+                        Your Rating
                     </p>
-                    <p
-                        class="text-8xl font-bold text-main"
-                        th:text="${totalTries}"
-                    >
-                        0
-                    </p>
+                    <div class="flex gap-2">
+                        <form
+                            th:action="@{/boulders/{id}/rating(id=${boulder.id})}"
+                            method="post"
+                        >
+                            <input type="hidden" name="rating" value="1" />
+                            <button
+                                type="submit"
+                                class="star-button transition-colors duration-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="48"
+                                    height="48"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="#000"
+                                    stroke-width="1"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    th:classappend="${currentRating >= 1} ? 'color-warning' : 'color-muted'"
+                                >
+                                    <path
+                                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                                    />
+                                </svg>
+                            </button>
+                        </form>
+                        <form
+                            th:action="@{/boulders/{id}/rating(id=${boulder.id})}"
+                            method="post"
+                        >
+                            <input type="hidden" name="rating" value="2" />
+                            <button
+                                type="submit"
+                                class="star-button transition-colors duration-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="48"
+                                    height="48"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="#000"
+                                    stroke-width="1"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    th:classappend="${currentRating >= 2} ? 'color-warning' : 'color-muted'"
+                                >
+                                    <path
+                                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                                    />
+                                </svg>
+                            </button>
+                        </form>
+                        <form
+                            th:action="@{/boulders/{id}/rating(id=${boulder.id})}"
+                            method="post"
+                        >
+                            <input type="hidden" name="rating" value="3" />
+                            <button
+                                type="submit"
+                                class="star-button transition-colors duration-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="48"
+                                    height="48"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="#000"
+                                    stroke-width="1"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    th:classappend="${currentRating >= 3} ? 'color-warning' : 'color-muted'"
+                                >
+                                    <path
+                                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                                    />
+                                </svg>
+                            </button>
+                        </form>
+                        <form
+                            th:action="@{/boulders/{id}/rating(id=${boulder.id})}"
+                            method="post"
+                        >
+                            <input type="hidden" name="rating" value="4" />
+                            <button
+                                type="submit"
+                                class="star-button transition-colors duration-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="48"
+                                    height="48"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="#000"
+                                    stroke-width="1"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    th:classappend="${currentRating >= 4} ? 'color-warning' : 'color-muted'"
+                                >
+                                    <path
+                                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                                    />
+                                </svg>
+                            </button>
+                        </form>
+                        <form
+                            th:action="@{/boulders/{id}/rating(id=${boulder.id})}"
+                            method="post"
+                        >
+                            <input type="hidden" name="rating" value="5" />
+                            <button
+                                type="submit"
+                                class="star-button transition-colors duration-200"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="48"
+                                    height="48"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="#000"
+                                    stroke-width="1"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    th:classappend="${currentRating >= 5} ? 'color-warning' : 'color-muted'"
+                                >
+                                    <path
+                                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                                    />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
                 </section>
 
-                <!-- Card 4: Total Ascents -->
-                <section
-                    class="card p-6 flex flex-col items-center justify-center"
-                >
-                    <p class="text-sm font-medium text-foreground-muted mb-2">
-                        Total Ascents
-                    </p>
-                    <p
-                        class="text-8xl font-bold text-success"
-                        th:text="${ascentsCount}"
-                    >
-                        0
-                    </p>
+                <!-- Card 4: Stats -->
+                <section class="card p-6">
+                    <div class="grid grid-cols-2 gap-6 h-full">
+                        <!-- Total Tries Column -->
+                        <div class="flex flex-col items-center justify-center">
+                            <p
+                                class="text-sm font-medium text-foreground-muted mb-2"
+                            >
+                                Total Tries
+                            </p>
+                            <p
+                                class="text-6xl font-bold text-main"
+                                th:text="${totalTries}"
+                            >
+                                0
+                            </p>
+                        </div>
+
+                        <!-- Total Ascents Column -->
+                        <div class="flex flex-col items-center justify-center">
+                            <p
+                                class="text-sm font-medium text-foreground-muted mb-2"
+                            >
+                                Total Ascents
+                            </p>
+                            <p
+                                class="text-6xl font-bold text-success"
+                                th:text="${ascentsCount}"
+                            >
+                                0
+                            </p>
+                        </div>
+                    </div>
                 </section>
             </div>
         </main>

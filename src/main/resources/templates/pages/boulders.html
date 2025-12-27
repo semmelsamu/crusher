@@ -149,6 +149,7 @@
                             <th class="w-20">Color</th>
                             <th class="w-20">Grade</th>
                             <th>Description</th>
+                            <th class="w-20">Rating</th>
                             <th>Sector</th>
                             <th>Gym</th>
                             <th class="w-16 text-right"></th>
@@ -158,7 +159,7 @@
                     <tbody th:if="${boulders.isEmpty()}">
                         <tr>
                             <td
-                                colspan="5"
+                                colspan="6"
                                 class="text-center text-muted-foreground"
                             >
                                 No boulders available yet.
@@ -188,6 +189,19 @@
                                 >
                                     Description
                                 </a>
+                            </td>
+                            <td>
+                                <span
+                                    th:if="${boulderRatings.containsKey(boulder.id)}"
+                                    th:text="${boulderRatings.get(boulder.id)} + '/5'"
+                                >
+                                    3/5
+                                </span>
+                                <span
+                                    th:unless="${boulderRatings.containsKey(boulder.id)}"
+                                >
+                                    -
+                                </span>
                             </td>
                             <td>
                                 <span th:text="${boulder.sector.name}">

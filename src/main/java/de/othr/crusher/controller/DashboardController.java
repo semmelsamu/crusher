@@ -7,6 +7,7 @@ import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.model.SectorEntity;
 import de.othr.crusher.model.SessionEntity;
 import de.othr.crusher.model.UserEntity;
+import de.othr.crusher.repository.BoulderRatingRepository;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
 import de.othr.crusher.repository.GradeRepository;
@@ -26,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,6 +47,7 @@ public class DashboardController {
     private final GradeRepository gradeRepository;
     private final ProjectRepository projectRepository;
     private final GoRepository goRepository;
+    private final BoulderRatingRepository ratingRepository;
 
     public DashboardController(
             SessionRepository sessionRepository,
@@ -54,7 +57,8 @@ public class DashboardController {
             SectorRepository sectorRepository,
             GradeRepository gradeRepository,
             ProjectRepository projectRepository,
-            GoRepository goRepository) {
+            GoRepository goRepository,
+            BoulderRatingRepository ratingRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.boulderRepository = boulderRepository;
@@ -63,6 +67,7 @@ public class DashboardController {
         this.gradeRepository = gradeRepository;
         this.projectRepository = projectRepository;
         this.goRepository = goRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     /**
@@ -153,6 +158,13 @@ public class DashboardController {
                     .toList();
         }
 
+        // Load ratings for current user
+        Map<Long, Integer> boulderRatings = ratingRepository.findByUserId(user.getId()).stream()
+                .collect(Collectors.toMap(
+                        rating -> rating.getBoulder().getId(),
+                        rating -> rating.getRating()
+                ));
+
         // Add attributes to model
         model.addAttribute("boulders", boulders);
         model.addAttribute("gyms", gyms);
@@ -163,6 +175,7 @@ public class DashboardController {
         model.addAttribute("selectedGradeIds", gradeIds != null ? gradeIds : List.of());
         model.addAttribute("projectBoulderIds", projectBoulderIds);
         model.addAttribute("projectOnly", projectOnly);
+        model.addAttribute("boulderRatings", boulderRatings);
 
         return "pages/boulders";
     }
@@ -199,10 +212,16 @@ public class DashboardController {
                 .filter(go -> go.getResult() != null && go.getResult() == GoResult.FINISHED)
                 .count();
 
+        // Get current user's rating for this boulder
+        Integer currentRating = ratingRepository.findByUserIdAndBoulderId(user.getId(), boulder.getId())
+                .map(rating -> rating.getRating())
+                .orElse(0);
+
         model.addAttribute("boulder", boulder);
         model.addAttribute("isProject", projectBoulderIds.contains(boulder.getId()));
         model.addAttribute("ascentsCount", ascentsCount);
         model.addAttribute("totalTries", totalTries);
+        model.addAttribute("currentRating", currentRating);
 
         return "pages/boulder-detail";
     }
