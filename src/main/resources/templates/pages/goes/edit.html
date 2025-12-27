@@ -4,7 +4,10 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <main class="wrapper">
+        <main
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Dashboard', url: '/dashboard'}, {label: 'Session', url: '/sessions/' + currentSession.id}, {label: 'Go #' + go.id, url: '/sessions/' + currentSession.id + '/goes/' + go.id}, {label: 'Edit', url: ''} } }"
+        >
             <div
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
             ></div>
