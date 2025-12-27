@@ -1,0 +1,70 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <section class="card space-y-8 p-8 text-center max-w-md mx-auto">
+                <h1>
+                    Error <span th:text="${status}">Error 500</span> -
+                    <span th:text="${error}">Internal Server Error</span>
+                </h1>
+                <p class="text-lg text-muted"></p>
+
+                <p class="text-base">
+                    Something went wrong on our end. We're working to fix the
+                    issue.
+                </p>
+
+                <a href="/" class="button primary"> Go to Home </a>
+            </section>
+
+            <div
+                class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 w-full overflow-x-hidden"
+            >
+                <section class="card space-y-8 p-8 pr-16">
+                    <h2>Details</h2>
+                    <strong>Exception</strong>
+                    <p th:text="${exception}">Internal Server Error</p>
+                    <strong>Error</strong>
+                    <p th:text="${error}">Internal Server Error</p>
+                    <strong>Message</strong>
+                    <p th:text="${message}">Internal Server Error</p>
+                    <strong>Path</strong>
+                    <p th:if="${path}" th:text="${path}">/some-path</p>
+                    <strong>Timestamp</strong>
+                    <p th:text="${timestamp}">2025-01-01T00:00:00Z</p>
+                </section>
+
+                <section
+                    class="card space-y-8 p-8 mx-auto max-w-full overflow-hidden"
+                >
+                    <div class="flex items-center justify-between">
+                        <h2>Stack trace</h2>
+                        <button
+                            class="button primary"
+                            onclick="
+                                navigator.clipboard.writeText(
+                                    document.getElementById('trace')
+                                        .textContent,
+                                )
+                            "
+                        >
+                            <x th:replace="~{components/icons :: copy}"></x>
+                            Copy
+                        </button>
+                    </div>
+                    <pre
+                        id="trace"
+                        class="overflow-auto p-4 bg-background border-2 rounded-base"
+                        th:text="${trace}"
+                    >
+                    Trace goes here
+                </pre
+                    >
+                </section>
+            </div>
+        </main>
+    </th:block>
+</th:block>

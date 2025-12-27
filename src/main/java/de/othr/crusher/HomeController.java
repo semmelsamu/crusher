@@ -61,6 +61,7 @@ public class HomeController {
 
             lastSession.ifPresent(session -> model.addAttribute("lastGym", session.getGym()));
         }
+        
 
         // Load user statistics
         UserStatistics statistics = statisticsService.getUserStatistics(user.getId());
