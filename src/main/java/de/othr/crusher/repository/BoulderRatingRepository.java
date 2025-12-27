@@ -28,4 +28,12 @@ public interface BoulderRatingRepository extends JpaRepository<BoulderRatingEnti
      * @return list of ratings for the user
      */
     List<BoulderRatingEntity> findByUserId(Long userId);
+
+    /**
+     * Finds all ratings for a given boulder.
+     *
+     * @param boulderId identifier of the boulder
+     * @return list of ratings for the boulder
+     */
+    List<BoulderRatingEntity> findByBoulderId(Long boulderId);
 }

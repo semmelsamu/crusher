@@ -1,130 +1,144 @@
 <div
-    th:fragment="star-rating(actionUrl, currentRating)"
-    class="flex gap-2"
+    th:fragment="star-rating(actionUrl, currentRating, averageRating)"
+    class="flex flex-col items-center gap-3"
     xmlns:th="http://www.thymeleaf.org"
 >
-    <!-- Star 1 -->
-    <form th:action="@{${actionUrl}(rating=1)}" method="post">
-        <button
-            type="submit"
-            class="star-button transition-colors duration-200"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000"
-                stroke-width="1"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                th:classappend="${currentRating >= 1} ? 'color-warning' : 'color-muted'"
+    <div class="flex gap-2">
+        <!-- Star 1 -->
+        <form th:action="@{${actionUrl}(rating=1)}" method="post">
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
             >
-                <path
-                    d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
-                />
-            </svg>
-        </button>
-    </form>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#000"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    th:classappend="${currentRating >= 1} ? 'color-warning' : 'color-muted'"
+                >
+                    <path
+                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                    />
+                </svg>
+            </button>
+        </form>
 
-    <!-- Star 2 -->
-    <form th:action="@{${actionUrl}(rating=2)}" method="post">
-        <button
-            type="submit"
-            class="star-button transition-colors duration-200"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000"
-                stroke-width="1"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                th:classappend="${currentRating >= 2} ? 'color-warning' : 'color-muted'"
+        <!-- Star 2 -->
+        <form th:action="@{${actionUrl}(rating=2)}" method="post">
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
             >
-                <path
-                    d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
-                />
-            </svg>
-        </button>
-    </form>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#000"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    th:classappend="${currentRating >= 2} ? 'color-warning' : 'color-muted'"
+                >
+                    <path
+                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                    />
+                </svg>
+            </button>
+        </form>
 
-    <!-- Star 3 -->
-    <form th:action="@{${actionUrl}(rating=3)}" method="post">
-        <button
-            type="submit"
-            class="star-button transition-colors duration-200"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000"
-                stroke-width="1"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                th:classappend="${currentRating >= 3} ? 'color-warning' : 'color-muted'"
+        <!-- Star 3 -->
+        <form th:action="@{${actionUrl}(rating=3)}" method="post">
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
             >
-                <path
-                    d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
-                />
-            </svg>
-        </button>
-    </form>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#000"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    th:classappend="${currentRating >= 3} ? 'color-warning' : 'color-muted'"
+                >
+                    <path
+                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                    />
+                </svg>
+            </button>
+        </form>
 
-    <!-- Star 4 -->
-    <form th:action="@{${actionUrl}(rating=4)}" method="post">
-        <button
-            type="submit"
-            class="star-button transition-colors duration-200"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000"
-                stroke-width="1"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                th:classappend="${currentRating >= 4} ? 'color-warning' : 'color-muted'"
+        <!-- Star 4 -->
+        <form th:action="@{${actionUrl}(rating=4)}" method="post">
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
             >
-                <path
-                    d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
-                />
-            </svg>
-        </button>
-    </form>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#000"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    th:classappend="${currentRating >= 4} ? 'color-warning' : 'color-muted'"
+                >
+                    <path
+                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                    />
+                </svg>
+            </button>
+        </form>
 
-    <!-- Star 5 -->
-    <form th:action="@{${actionUrl}(rating=5)}" method="post">
-        <button
-            type="submit"
-            class="star-button transition-colors duration-200"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000"
-                stroke-width="1"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                th:classappend="${currentRating >= 5} ? 'color-warning' : 'color-muted'"
+        <!-- Star 5 -->
+        <form th:action="@{${actionUrl}(rating=5)}" method="post">
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
             >
-                <path
-                    d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
-                />
-            </svg>
-        </button>
-    </form>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#000"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    th:classappend="${currentRating >= 5} ? 'color-warning' : 'color-muted'"
+                >
+                    <path
+                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"
+                    />
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <!-- Average Rating -->
+    <p class="text-sm font-medium text-foreground-muted">
+        <span th:if="${averageRating != null}">
+            <span th:text="${#numbers.formatDecimal(averageRating, 1, 1)}"
+                >0.0</span
+            >/5 Average Rating
+        </span>
+        <span th:if="${averageRating == null}">
+            No average rating calculated yet
+        </span>
+    </p>
 </div>

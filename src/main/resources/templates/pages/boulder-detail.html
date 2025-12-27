@@ -114,7 +114,7 @@
                         Your Rating
                     </p>
                     <div
-                        th:replace="~{components/star-rating :: star-rating('/boulders/' + ${boulder.id} + '/rating', ${currentRating})}"
+                        th:replace="~{components/star-rating :: star-rating('/boulders/' + ${boulder.id} + '/rating', ${currentRating}, ${averageRating})}"
                     ></div>
                 </section>
 

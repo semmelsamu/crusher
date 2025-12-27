@@ -1,12 +1,6 @@
 package de.othr.crusher.controller;
 
-import de.othr.crusher.model.BoulderEntity;
-import de.othr.crusher.model.GoResult;
-import de.othr.crusher.model.GradeEntity;
-import de.othr.crusher.model.GymEntity;
-import de.othr.crusher.model.SectorEntity;
-import de.othr.crusher.model.SessionEntity;
-import de.othr.crusher.model.UserEntity;
+import de.othr.crusher.model.*;
 import de.othr.crusher.repository.BoulderRatingRepository;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
@@ -217,11 +211,20 @@ public class DashboardController {
                 .map(rating -> rating.getRating())
                 .orElse(0);
 
+        // Calculate average rating for this boulder
+        List<BoulderRatingEntity> allRatings = ratingRepository.findByBoulderId(boulder.getId());
+        Double averageRating = allRatings.isEmpty() ? null :
+                allRatings.stream()
+                        .mapToInt(BoulderRatingEntity::getRating)
+                        .average()
+                        .orElse(0.0);
+
         model.addAttribute("boulder", boulder);
         model.addAttribute("isProject", projectBoulderIds.contains(boulder.getId()));
         model.addAttribute("ascentsCount", ascentsCount);
         model.addAttribute("totalTries", totalTries);
         model.addAttribute("currentRating", currentRating);
+        model.addAttribute("averageRating", averageRating);
 
         return "pages/boulder-detail";
     }
