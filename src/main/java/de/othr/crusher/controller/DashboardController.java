@@ -1,6 +1,7 @@
 package de.othr.crusher.controller;
 
 import de.othr.crusher.model.*;
+import de.othr.crusher.repository.BoulderCommentRepository;
 import de.othr.crusher.repository.BoulderRatingRepository;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
@@ -42,6 +43,7 @@ public class DashboardController {
     private final ProjectRepository projectRepository;
     private final GoRepository goRepository;
     private final BoulderRatingRepository ratingRepository;
+    private final BoulderCommentRepository commentRepository;
 
     public DashboardController(
             SessionRepository sessionRepository,
@@ -52,7 +54,8 @@ public class DashboardController {
             GradeRepository gradeRepository,
             ProjectRepository projectRepository,
             GoRepository goRepository,
-            BoulderRatingRepository ratingRepository) {
+            BoulderRatingRepository ratingRepository,
+            BoulderCommentRepository commentRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.boulderRepository = boulderRepository;
@@ -62,6 +65,7 @@ public class DashboardController {
         this.projectRepository = projectRepository;
         this.goRepository = goRepository;
         this.ratingRepository = ratingRepository;
+        this.commentRepository = commentRepository;
     }
 
     /**
@@ -219,12 +223,16 @@ public class DashboardController {
                         .average()
                         .orElse(0.0);
 
+        // Get all comments for this boulder
+        List<BoulderCommentEntity> comments = commentRepository.findByBoulderIdOrderByCreatedAtAsc(boulder.getId());
+
         model.addAttribute("boulder", boulder);
         model.addAttribute("isProject", projectBoulderIds.contains(boulder.getId()));
         model.addAttribute("ascentsCount", ascentsCount);
         model.addAttribute("totalTries", totalTries);
         model.addAttribute("currentRating", currentRating);
         model.addAttribute("averageRating", averageRating);
+        model.addAttribute("comments", comments);
 
         return "pages/boulder-detail";
     }

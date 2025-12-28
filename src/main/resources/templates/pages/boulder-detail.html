@@ -153,6 +153,11 @@
                     </div>
                 </section>
             </div>
+
+            <!-- Comments Section (full width) -->
+            <div
+                th:replace="~{components/comments :: comments('/boulders/' + ${boulder.id} + '/comments', ${comments})}"
+            ></div>
         </main>
     </th:block>
 </th:block>

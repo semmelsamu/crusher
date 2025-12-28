@@ -52,10 +52,38 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.removeItem("projectScroll");
     }
 
+    // Restore scroll after posting comments
+    const storedCommentScroll = sessionStorage.getItem("commentScroll");
+    if (storedCommentScroll) {
+        window.scrollTo(0, parseInt(storedCommentScroll, 10));
+        sessionStorage.removeItem("commentScroll");
+    }
+
+    // Restore scroll after rating
+    const storedRatingScroll = sessionStorage.getItem("ratingScroll");
+    if (storedRatingScroll) {
+        window.scrollTo(0, parseInt(storedRatingScroll, 10));
+        sessionStorage.removeItem("ratingScroll");
+    }
+
     // Persist scroll before submitting toggle forms
     document.querySelectorAll("form.toggle-form").forEach((form) => {
         form.addEventListener("submit", () => {
             sessionStorage.setItem("projectScroll", String(window.scrollY));
+        });
+    });
+
+    // Persist scroll before submitting comment forms
+    document.querySelectorAll("form.comment-form").forEach((form) => {
+        form.addEventListener("submit", () => {
+            sessionStorage.setItem("commentScroll", String(window.scrollY));
+        });
+    });
+
+    // Persist scroll before submitting rating forms
+    document.querySelectorAll("form.rating-form").forEach((form) => {
+        form.addEventListener("submit", () => {
+            sessionStorage.setItem("ratingScroll", String(window.scrollY));
         });
     });
 
