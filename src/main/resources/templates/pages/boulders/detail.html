@@ -155,9 +155,11 @@
             </div>
 
             <!-- Comments Section (full width) -->
-            <div
-                th:replace="~{components/comments :: comments('/boulders/' + ${boulder.id} + '/comments', ${comments}, '/boulders/' + ${boulder.id} + '/comments')}"
-            ></div>
+            <section class="card p-6 max-w-xl mx-auto">
+                <div
+                    th:replace="~{components/comments :: comments('/boulders/' + ${boulder.id} + '/comments', ${comments}, '/boulders/' + ${boulder.id} + '/comments')}"
+                ></div>
+            </section>
         </main>
     </th:block>
 </th:block>
