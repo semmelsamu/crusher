@@ -87,7 +87,7 @@
                 type="button"
                 class="button whitespace-nowrap bg-error text-main-foreground"
                 data-remove-button
-                th:disabled="${!hasImage}"
+                th:if="${hasImage}"
             >
                 <x th:replace="~{components/icons :: trash-2}"></x>
                 <span
