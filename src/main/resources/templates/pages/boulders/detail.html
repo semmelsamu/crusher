@@ -156,7 +156,7 @@
 
             <!-- Comments Section (full width) -->
             <div
-                th:replace="~{components/comments :: comments('/boulders/' + ${boulder.id} + '/comments', ${comments})}"
+                th:replace="~{components/comments :: comments('/boulders/' + ${boulder.id} + '/comments', ${comments}, null)}"
             ></div>
         </main>
     </th:block>
