@@ -9,6 +9,7 @@ import de.othr.crusher.repository.SectorRepository;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -219,13 +220,31 @@ public class SectorController {
             @PathVariable("gymId") long gymId, @PathVariable("sectorId") long sectorId, RedirectAttributes redirectAttributes) {
         findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
-        sectorRepository.delete(sector);
-
-        // Add success message for toast notification
-        redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Sector deleted successfully!"
-        ));
+        
+        // Check if any boulders reference this sector
+        List<BoulderEntity> referencingBoulders = boulderRepository.findBySectorId(sectorId);
+        if (!referencingBoulders.isEmpty()) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error", 
+                "message", "Cannot delete sector. Please delete all boulders in this sector first."
+            ));
+            return "redirect:/admin/gyms/" + gymId;
+        }
+        
+        try {
+            sectorRepository.delete(sector);
+            
+            // Add success message for toast notification
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "success", 
+                "message", "Sector deleted successfully!"
+            ));
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error", 
+                "message", "Cannot delete sector due to existing references."
+            ));
+        }
 
         return "redirect:/admin/gyms/" + gymId;
     }

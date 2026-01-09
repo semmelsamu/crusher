@@ -1,9 +1,14 @@
 package de.othr.crusher.controller;
 
 import de.othr.crusher.model.GymEntity;
+import de.othr.crusher.model.SectorEntity;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.repository.SectorRepository;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Map;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import java.util.Map;
 
 
 /**
@@ -24,16 +28,19 @@ public class GymController {
 
     private final GymRepository gymRepository;
     private final GradeRepository gradeRepository;
+    private final SectorRepository sectorRepository;
 
     /**
      * Creates a new GymController with the given repository.
      *
      * @param gymRepository repository for accessing gym data
      * @param gradeRepository repository for accessing grade data
+     * @param sectorRepository repository for accessing sector data
      */
-    public GymController(GymRepository gymRepository, GradeRepository gradeRepository) {
+    public GymController(GymRepository gymRepository, GradeRepository gradeRepository, SectorRepository sectorRepository) {
         this.gymRepository = gymRepository;
         this.gradeRepository = gradeRepository;
+        this.sectorRepository = sectorRepository;
     }
 
     /**
@@ -169,13 +176,33 @@ public class GymController {
      */
     @DeleteMapping("/{id}")
     public String deleteGym(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
-        gymRepository.deleteById(id);
-
-        // Add success message for toast notification
-        redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Gym deleted successfully!"
-        ));
+        // Verify gym exists
+        findGymOrThrow(id);
+        
+        // Check if any sectors reference this gym
+        List<SectorEntity> referencingSectors = sectorRepository.findByGymId(id);
+        if (!referencingSectors.isEmpty()) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error", 
+                "message", "Cannot delete gym. Please delete all sectors in this gym first."
+            ));
+            return "redirect:/admin/gyms";
+        }
+        
+        try {
+            gymRepository.deleteById(id);
+            
+            // Add success message for toast notification
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "success", 
+                "message", "Gym deleted successfully!"
+            ));
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error", 
+                "message", "Cannot delete gym due to existing references."
+            ));
+        }
 
         return "redirect:/admin/gyms";
     }

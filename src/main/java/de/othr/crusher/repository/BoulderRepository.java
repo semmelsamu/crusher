@@ -44,5 +44,13 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return list of boulders belonging to the sector with matching grades
      */
     List<BoulderEntity> findBySectorIdAndGradeIdIn(Long sectorId, List<Long> gradeIds);
+
+    /**
+     * Finds all boulders for the given grade.
+     *
+     * @param gradeId identifier of the grade
+     * @return list of boulders using this grade
+     */
+    List<BoulderEntity> findByGradeId(Long gradeId);
 }
 

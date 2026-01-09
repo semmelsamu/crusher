@@ -1,11 +1,15 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.model.BoulderEntity;
 import de.othr.crusher.model.GradeEntity;
 import de.othr.crusher.model.GymEntity;
+import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
 import jakarta.validation.Valid;
+import java.util.List;
 import java.util.Map;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,10 +33,12 @@ public class GradeController {
 
     private final GradeRepository gradeRepository;
     private final GymRepository gymRepository;
+    private final BoulderRepository boulderRepository;
 
-    public GradeController(GradeRepository gradeRepository, GymRepository gymRepository) {
+    public GradeController(GradeRepository gradeRepository, GymRepository gymRepository, BoulderRepository boulderRepository) {
         this.gradeRepository = gradeRepository;
         this.gymRepository = gymRepository;
+        this.boulderRepository = boulderRepository;
     }
 
     /**
@@ -183,13 +189,31 @@ public class GradeController {
     @DeleteMapping("/{gradeId}")
     public String deleteGrade(@PathVariable("gymId") long gymId, @PathVariable("gradeId") long gradeId, RedirectAttributes redirectAttributes) {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
-        gradeRepository.delete(grade);
-
-        // Add success message for toast notification
-        redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Grade deleted successfully!"
-        ));
+        
+        // Check if any boulders reference this grade
+        List<BoulderEntity> referencingBoulders = boulderRepository.findByGradeId(gradeId);
+        if (!referencingBoulders.isEmpty()) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error", 
+                "message", "Cannot delete grade. Please delete all boulders using this grade first."
+            ));
+            return "redirect:/admin/gyms/" + gymId;
+        }
+        
+        try {
+            gradeRepository.delete(grade);
+            
+            // Add success message for toast notification
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "success", 
+                "message", "Grade deleted successfully!"
+            ));
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error", 
+                "message", "Cannot delete grade due to existing references."
+            ));
+        }
 
         return "redirect:/admin/gyms/" + gymId;
     }
