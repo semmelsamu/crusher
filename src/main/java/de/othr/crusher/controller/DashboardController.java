@@ -69,7 +69,7 @@ public class DashboardController {
     }
 
     /**
-     * Displays the dashboard with all sessions for the current user.
+     * Displays the dashboard for the current user.
      *
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
@@ -79,9 +79,7 @@ public class DashboardController {
     @Transactional(readOnly = true)
     public String showDashboard(Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
-        List<SessionEntity> sessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId());
 
-        model.addAttribute("sessions", sessions);
         model.addAttribute("user", user);
 
         return "pages/dashboard";
