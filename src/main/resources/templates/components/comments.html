@@ -5,26 +5,22 @@
 >
     <h2>Comments</h2>
 
-    <form
-        th:action="@{${actionUrl}}"
-        method="post"
-        class="flex gap-3 comment-form"
-    >
-        <div
-            th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
-            class="self-start mt-3"
-        ></div>
-        <textarea
-            id="comment"
-            name="comment"
-            rows="3"
-            class="flex-1 p-3 border border-border rounded-base text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent"
-            placeholder="Add your comment"
-            required
-        ></textarea>
-        <button type="submit" class="button success self-end">
-            Post Comment
-        </button>
+    <form th:action="@{${actionUrl}}" method="post" class="w-full space-y-4">
+        <div class="flex gap-3">
+            <div
+                th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
+                class="self-start mt-3"
+            ></div>
+            <textarea
+                id="comment"
+                name="comment"
+                rows="3"
+                class="text-input w-full"
+                placeholder="Add your comment"
+                required
+            ></textarea>
+        </div>
+        <button type="submit" class="button ms-auto">Comment</button>
     </form>
 
     <div
