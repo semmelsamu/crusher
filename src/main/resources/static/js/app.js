@@ -52,10 +52,38 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.removeItem("projectScroll");
     }
 
+    // Restore scroll after posting comments
+    const storedCommentScroll = sessionStorage.getItem("commentScroll");
+    if (storedCommentScroll) {
+        window.scrollTo(0, parseInt(storedCommentScroll, 10));
+        sessionStorage.removeItem("commentScroll");
+    }
+
+    // Restore scroll after rating
+    const storedRatingScroll = sessionStorage.getItem("ratingScroll");
+    if (storedRatingScroll) {
+        window.scrollTo(0, parseInt(storedRatingScroll, 10));
+        sessionStorage.removeItem("ratingScroll");
+    }
+
     // Persist scroll before submitting toggle forms
     document.querySelectorAll("form.toggle-form").forEach((form) => {
         form.addEventListener("submit", () => {
             sessionStorage.setItem("projectScroll", String(window.scrollY));
+        });
+    });
+
+    // Persist scroll before submitting comment forms
+    document.querySelectorAll("form.comment-form").forEach((form) => {
+        form.addEventListener("submit", () => {
+            sessionStorage.setItem("commentScroll", String(window.scrollY));
+        });
+    });
+
+    // Persist scroll before submitting rating forms
+    document.querySelectorAll("form.rating-form").forEach((form) => {
+        form.addEventListener("submit", () => {
+            sessionStorage.setItem("ratingScroll", String(window.scrollY));
         });
     });
 
@@ -64,6 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initialize pie charts
     initializePieCharts();
+
+    // Initialize avatars
+    initAvatars();
 });
 
 /**
@@ -203,5 +234,47 @@ function initializePieCharts() {
 
             currentAngle += angle;
         });
+    });
+}
+
+/**
+ * Generates a deterministic numeric hash from a string
+ */
+function hashString(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = (hash << 5) - hash + char;
+        hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash);
+}
+
+/**
+ * Initializes all avatars by applying colors based on username hash
+ */
+function initAvatars() {
+    // Color palette with good contrast for light and dark themes
+    const colors = [
+        "#E53E3E", // Red
+        "#DD6B20", // Orange
+        "#D69E2E", // Yellow
+        "#38A169", // Green
+        "#319795", // Teal
+        "#3182CE", // Blue
+        "#5A67D8", // Indigo
+        "#805AD5", // Purple
+        "#D53F8C", // Pink
+        "#718096", // Gray
+    ];
+
+    // Select all avatars
+    document.querySelectorAll("[data-username]").forEach((avatar) => {
+        const username = avatar.getAttribute("data-username");
+        if (username) {
+            const hash = hashString(username);
+            const colorIndex = hash % colors.length;
+            avatar.style.backgroundColor = colors[colorIndex];
+        }
     });
 }

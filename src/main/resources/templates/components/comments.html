@@ -1,0 +1,67 @@
+<section
+    th:fragment="comments(actionUrl, comments)"
+    class="card p-4 space-y-4 max-w-xl mx-auto"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <h2>Comments</h2>
+
+    <form
+        th:action="@{${actionUrl}}"
+        method="post"
+        class="comment-form w-full space-y-4"
+        x-data="{ comment: '' }"
+    >
+        <div class="flex gap-3">
+            <div
+                th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
+                class="self-start mt-3"
+            ></div>
+            <textarea
+                id="comment"
+                name="comment"
+                rows="3"
+                class="text-input w-full"
+                placeholder="Add a comment"
+                required
+                x-model="comment"
+            ></textarea>
+        </div>
+        <button
+            type="submit"
+            class="button ms-auto"
+            x-bind:disabled="comment.length === 0"
+        >
+            Comment
+        </button>
+    </form>
+
+    <div
+        th:if="${comments == null || comments.isEmpty()}"
+        class="text-sm text-muted-foreground text-center py-8"
+    >
+        No comments yet. Be the first to comment!
+    </div>
+
+    <div
+        th:unless="${comments == null || comments.isEmpty()}"
+        class="space-y-6"
+    >
+        <div th:each="comment : ${comments}" class="flex gap-4">
+            <div
+                th:replace="~{components/avatar :: avatar(${comment.user.name})}"
+            ></div>
+            <div>
+                <p class="text-sm space-x-2">
+                    <strong th:text="${comment.user.name}"> Username </strong>
+                    <time
+                        class="text-foreground-muted"
+                        th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"
+                    >
+                        01.01.2024 12:00
+                    </time>
+                </p>
+                <p th:text="${comment.comment}">Comment text goes here</p>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,99 @@
+<div
+    th:fragment="star-rating(actionUrl, currentRating, averageRating)"
+    class="flex flex-col items-center gap-3"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <div class="flex gap-2">
+        <!-- Star 1 -->
+        <form
+            th:action="@{${actionUrl}(rating=1)}"
+            method="post"
+            class="rating-form"
+        >
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
+            >
+                <svg
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 1} ? 'color-warning' : 'color-muted')}"
+                ></svg>
+            </button>
+        </form>
+
+        <!-- Star 2 -->
+        <form
+            th:action="@{${actionUrl}(rating=2)}"
+            method="post"
+            class="rating-form"
+        >
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
+            >
+                <svg
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 2} ? 'color-warning' : 'color-muted')}"
+                ></svg>
+            </button>
+        </form>
+
+        <!-- Star 3 -->
+        <form
+            th:action="@{${actionUrl}(rating=3)}"
+            method="post"
+            class="rating-form"
+        >
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
+            >
+                <svg
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 3} ? 'color-warning' : 'color-muted')}"
+                ></svg>
+            </button>
+        </form>
+
+        <!-- Star 4 -->
+        <form
+            th:action="@{${actionUrl}(rating=4)}"
+            method="post"
+            class="rating-form"
+        >
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
+            >
+                <svg
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 4} ? 'color-warning' : 'color-muted')}"
+                ></svg>
+            </button>
+        </form>
+
+        <!-- Star 5 -->
+        <form
+            th:action="@{${actionUrl}(rating=5)}"
+            method="post"
+            class="rating-form"
+        >
+            <button
+                type="submit"
+                class="star-button transition-colors duration-200"
+            >
+                <svg
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 5} ? 'color-warning' : 'color-muted')}"
+                ></svg>
+            </button>
+        </form>
+    </div>
+
+    <!-- Average Rating -->
+    <p class="text-sm font-medium text-foreground-muted">
+        <span th:if="${averageRating != null}">
+            <span th:text="${#numbers.formatDecimal(averageRating, 1, 1)}"
+                >0.0</span
+            >/5 Average Rating
+        </span>
+        <span th:if="${averageRating == null}">
+            No average rating calculated yet
+        </span>
+    </p>
+</div>

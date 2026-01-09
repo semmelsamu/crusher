@@ -170,6 +170,10 @@
 |-------------------------------------------------------------------------------
 */
 
+.avatar {
+    @apply w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-white bg-main shrink-0;
+}
+
 .color-badge {
     @apply w-6 h-6 rounded-full border-2;
 }
@@ -184,6 +188,10 @@
 
 [data-progress-input] {
     accent-color: var(--color-main);
+}
+
+.star-button {
+    @apply cursor-pointer;
 }
 
 /*
