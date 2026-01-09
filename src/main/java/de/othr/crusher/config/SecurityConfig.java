@@ -71,6 +71,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
