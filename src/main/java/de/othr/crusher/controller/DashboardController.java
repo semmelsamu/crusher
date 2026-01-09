@@ -173,7 +173,7 @@ public class DashboardController {
         model.addAttribute("projectOnly", projectOnly);
         model.addAttribute("boulderRatings", boulderRatings);
 
-        return "pages/boulders";
+        return "pages/boulders/all";
     }
 
     /**
@@ -232,7 +232,7 @@ public class DashboardController {
         model.addAttribute("averageRating", averageRating);
         model.addAttribute("comments", comments);
 
-        return "pages/boulder-detail";
+        return "pages/boulders/detail";
     }
 
     /**
