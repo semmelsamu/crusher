@@ -2,7 +2,6 @@ package de.othr.crusher.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
@@ -35,7 +34,6 @@ public class NoticeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gym_id", nullable = false)
-    @NotNull(message = "Notice must belong to a gym")
     private GymEntity gym;
 
     public NoticeEntity() {}
