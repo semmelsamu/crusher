@@ -81,28 +81,25 @@
                 <p class="font-medium">Select image</p>
             </div>
         </button>
-
-        <div class="flex justify-end">
-            <button
-                type="button"
-                class="button whitespace-nowrap bg-error text-main-foreground"
-                data-remove-button
-                th:if="${hasImage}"
-            >
-                <x th:replace="~{components/icons :: trash-2}"></x>
-                <span
-                    th:text="${hasImage} ? 'Remove image' : 'No image to remove'"
-                >
-                    Remove image
-                </span>
-            </button>
-        </div>
     </section>
 
-    <button
-        type="submit"
-        class="button bg-main text-main-foreground mt-8 ml-auto"
+    <div
+        class="flex justify-end gap-3 mt-8"
+        th:with="hasImage=${sector.imagePath != null and !#strings.contains(sector.imagePath, 'default-sector')}"
     >
-        Save
-    </button>
+        <button
+            type="button"
+            class="button whitespace-nowrap bg-error text-main-foreground"
+            data-remove-button
+            th:if="${hasImage}"
+        >
+            <x th:replace="~{components/icons :: trash-2}"></x>
+            <span th:text="${hasImage} ? 'Remove image' : 'No image to remove'">
+                Remove image
+            </span>
+        </button>
+        <button type="submit" class="button bg-main text-main-foreground">
+            Save
+        </button>
+    </div>
 </form>

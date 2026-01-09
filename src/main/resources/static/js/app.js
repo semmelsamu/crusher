@@ -55,7 +55,9 @@ function setupImagePicker(picker) {
     const previewImage = picker.querySelector("[data-preview-image]");
     const placeholder = picker.querySelector("[data-placeholder]");
     const trigger = picker.querySelector("[data-image-trigger]");
-    const removeButton = picker.querySelector("[data-remove-button]");
+    const removeButton =
+        picker.closest("form")?.querySelector("[data-remove-button]") ??
+        picker.querySelector("[data-remove-button]");
     const removeInput = picker.querySelector("[data-remove-input]");
     const maxSizeBytes = parseInt(picker.dataset.maxSizeBytes || "5242880", 10);
 
@@ -150,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document
         .querySelectorAll("[data-image-picker]")
         .forEach((picker) => setupImagePicker(picker));
-  
+
     // Auto-submit filter form when gym changes (for cascading filters)
     const gymSelect = document.getElementById("gym-select");
     if (gymSelect) {
