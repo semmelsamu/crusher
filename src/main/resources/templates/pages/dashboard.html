@@ -4,29 +4,39 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <main
-            class="wrapper"
-            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Dashboard', url: '/dashboard'} } }"
-        >
-            <div
-                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
-            ></div>
-
-            <div class="flex items-center gap-4">
-                <a th:href="@{/}" class="button button-square">
-                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+        <main class="wrapper">
+            <section class="flex flex-col items-center space-y-4 my-8">
+                <!-- Active Session -->
+                <a
+                    th:if="${activeSession != null}"
+                    th:href="@{/sessions/{id}(id=${activeSession.id})}"
+                    class="button primary"
+                >
+                    Continue your last Session
                 </a>
 
-                <header
-                    class="card flex-1 p-4 flex items-center justify-between"
+                <!-- Last Gym Quick Start -->
+                <form
+                    th:if="${activeSession == null && lastGym != null}"
+                    th:action="@{/sessions}"
+                    method="post"
                 >
-                    <h1>Dashboard</h1>
+                    <input
+                        type="hidden"
+                        name="gymId"
+                        th:value="${lastGym.id}"
+                    />
+                    <button type="submit" class="button success">
+                        <span th:text="'Start Session in ' + ${lastGym.name}"
+                            >Start Session</span
+                        >
+                    </button>
+                </form>
+            </section>
 
-                    <a th:href="@{/boulders}" class="button ml-auto">
-                        Browse Boulders
-                    </a>
-                </header>
-            </div>
+            <section class="card p-4">
+                <a th:href="@{/boulders}" class="button"> Browse Boulders </a>
+            </section>
 
             <section class="card p-4 space-y-4">
                 <h2>Sessions</h2>
