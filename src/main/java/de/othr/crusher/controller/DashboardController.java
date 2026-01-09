@@ -224,7 +224,7 @@ public class DashboardController {
                         .orElse(0.0);
 
         // Get all comments for this boulder
-        List<BoulderCommentEntity> comments = commentRepository.findByBoulderIdOrderByCreatedAtAsc(boulder.getId());
+        List<BoulderCommentEntity> comments = commentRepository.findByBoulderIdOrderByCreatedAtDesc(boulder.getId());
 
         model.addAttribute("boulder", boulder);
         model.addAttribute("isProject", projectBoulderIds.contains(boulder.getId()));

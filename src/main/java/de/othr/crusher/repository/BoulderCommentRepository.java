@@ -13,10 +13,10 @@ import java.util.List;
 public interface BoulderCommentRepository extends JpaRepository<BoulderCommentEntity, Long> {
 
     /**
-     * Finds all comments for a given boulder, ordered by creation date (oldest first).
+     * Finds all comments for a given boulder, ordered by creation date (newest first).
      *
      * @param boulderId identifier of the boulder
      * @return list of comments for the boulder, ordered by creation date
      */
-    List<BoulderCommentEntity> findByBoulderIdOrderByCreatedAtAsc(Long boulderId);
+    List<BoulderCommentEntity> findByBoulderIdOrderByCreatedAtDesc(Long boulderId);
 }
