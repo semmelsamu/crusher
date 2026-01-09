@@ -190,6 +190,10 @@
     accent-color: var(--color-main);
 }
 
+.star-button {
+    @apply cursor-pointer;
+}
+
 /*
 |-------------------------------------------------------------------------------
 | Notifications
