@@ -17,7 +17,7 @@ views/
 │   └── ...           # Other layouts (admin, auth, etc.)
 │
 └── pages/            # Actual page templates
-    ├── home.html     # Home page
+    ├── stats.html    # Statistics page
     └── ...           # Other pages
 ```
 
@@ -93,9 +93,9 @@ Pages are the actual view templates rendered by controllers. They typically exte
 ```java
 @Controller
 public class HomeController {
-    @GetMapping("/")
+    @GetMapping("/stats")
     public String home() {
-        return "pages/home";  // Returns pages/home.html
+        return "pages/stats";  // Returns pages/stats.html
     }
 }
 ```
