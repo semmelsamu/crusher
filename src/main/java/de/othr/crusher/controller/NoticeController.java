@@ -15,11 +15,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
 
 /**
- * Controller for managing notices.
- * Provides endpoints for listing, viewing, creating, editing and deleting notices.
+ * Controller for managing notices within a gym in the admin area.
  */
 @Controller
-@RequestMapping("/admin/notices")
+@RequestMapping("/admin/gyms/{gymId}/notices")
 public class NoticeController {
 
     private final NoticeRepository noticeRepository;
@@ -37,86 +36,70 @@ public class NoticeController {
     }
 
     /**
-     * Displays a list of all notices.
+     * Displays the edit form for an existing notice.
      *
+     * @param gymId identifier of the parent gym
+     * @param noticeId identifier of the notice
      * @param model Spring model to pass data to the view
-     * @return view name for the notices overview page
+     * @return view name for the notice edit page
      */
-    @GetMapping
-    public String showAllNotices(Model model) {
-        model.addAttribute("notices", noticeRepository.findAll());
-        return "pages/admin/notices/all";
-    }
-
-    /**
-     * Displays details for a specific notice based on the given ID.
-     *
-     * @param id notice ID
-     * @param model Spring model to pass data to the view
-     * @return view name for the notice detail page
-     */
-    @GetMapping("/{id}")
-    public String showNoticeForId(@PathVariable("id") long id, Model model) {
-        NoticeEntity notice = noticeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notice not found"));
-
+    @GetMapping("/{noticeId}/update")
+    public String showEditForm(
+            @PathVariable("gymId") long gymId,
+            @PathVariable("noticeId") long noticeId,
+            Model model) {
+        NoticeEntity notice = findNoticeInGymOrThrow(gymId, noticeId);
+        model.addAttribute("gym", notice.getGym());
         model.addAttribute("notice", notice);
-        return "pages/admin/notices/detail";
+        return "pages/admin/gyms/notices/update";
     }
 
     /**
      * Displays the form for creating a new notice.
      *
-     * @param gymId optional gym ID to pre-select
+     * @param gymId identifier of the parent gym
      * @param model Spring model to pass data to the view
      * @return view name for the notice creation page
      */
     @GetMapping("/create")
-    public String showCreateForm(@RequestParam(value = "gymId", required = false) Long gymId, Model model) {
+    public String showCreateForm(@PathVariable("gymId") long gymId, Model model) {
+        GymEntity gym = findGymOrThrow(gymId);
         NoticeEntity notice = new NoticeEntity();
-        if (gymId != null) {
-            GymEntity gym = gymRepository.findById(gymId)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
-            notice.setGym(gym);
-        }
-        model.addAttribute("notice", notice);
-        model.addAttribute("gyms", gymRepository.findAll());
-        return "pages/admin/notices/create";
-    }
+        notice.setGym(gym);
 
-    /**
-     * Displays the edit form for an existing notice.
-     *
-     * @param id notice ID
-     * @param model Spring model to pass data to the view
-     * @return view name for the notice edit page
-     */
-    @GetMapping("/{id}/update")
-    public String showEditForm(@PathVariable("id") long id, Model model) {
-        NoticeEntity notice = findNoticeOrThrow(id);
+        model.addAttribute("gym", gym);
         model.addAttribute("notice", notice);
-        model.addAttribute("gyms", gymRepository.findAll());
-        return "pages/admin/notices/update";
+        return "pages/admin/gyms/notices/create";
     }
 
     /**
      * Handles the creation of a new notice. Validates input and either redisplays
      * the form with errors or saves the new notice.
      *
-     * @param notice notice object submitted from the form
+     * @param gymId identifier of the parent gym
+     * @param formNotice notice object submitted from the form
      * @param result validation result
      * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
-     * @return redirect to the notice list or the form view if errors occur
+     * @return redirect to the gym detail page or the form view if errors occur
      */
     @PostMapping
-    public String createNotice(@Valid @ModelAttribute("notice") NoticeEntity notice, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
+    public String createNotice(
+            @PathVariable("gymId") long gymId,
+            @Valid @ModelAttribute("notice") NoticeEntity formNotice,
+            BindingResult result,
+            RedirectAttributes redirectAttributes,
+            Model model) {
+        GymEntity gym = findGymOrThrow(gymId);
+
         if (result.hasErrors()) {
-            model.addAttribute("gyms", gymRepository.findAll());
-            return "pages/admin/notices/create";
+            model.addAttribute("gym", gym);
+            model.addAttribute("notice", formNotice);
+            return "pages/admin/gyms/notices/create";
         }
 
-        noticeRepository.save(notice);
+        formNotice.setGym(gym);
+        noticeRepository.save(formNotice);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
@@ -124,39 +107,41 @@ public class NoticeController {
             "message", "Notice created successfully!"
         ));
 
-        return "redirect:/admin/notices";
+        return "redirect:/admin/gyms/" + gymId;
     }
 
     /**
      * Updates an existing notice. Validates input and either redisplays
      * the form with errors or saves the changes.
      *
-     * @param id notice ID
+     * @param gymId identifier of the parent gym
+     * @param noticeId identifier of the notice
      * @param formNotice notice object submitted from the form
      * @param result validation result
      * @param redirectAttributes attributes for flash messages on redirect
      * @param model Spring model for re-rendering the form if needed
-     * @return redirect to the notice detail page or the form view if errors occur
+     * @return redirect to the gym detail page or the form view if errors occur
      */
-    @PutMapping("/{id}")
+    @PutMapping("/{noticeId}")
     public String updateNotice(
-            @PathVariable("id") long id,
+            @PathVariable("gymId") long gymId,
+            @PathVariable("noticeId") long noticeId,
             @Valid @ModelAttribute("notice") NoticeEntity formNotice,
             BindingResult result,
             RedirectAttributes redirectAttributes,
             Model model) {
-        NoticeEntity notice = findNoticeOrThrow(id);
+        NoticeEntity notice = findNoticeInGymOrThrow(gymId, noticeId);
 
         if (result.hasErrors()) {
             formNotice.setId(notice.getId());
+            formNotice.setGym(notice.getGym());
+            model.addAttribute("gym", notice.getGym());
             model.addAttribute("notice", formNotice);
-            model.addAttribute("gyms", gymRepository.findAll());
-            return "pages/admin/notices/update";
+            return "pages/admin/gyms/notices/update";
         }
 
         notice.setTitle(formNotice.getTitle());
         notice.setMessage(formNotice.getMessage());
-        notice.setGym(formNotice.getGym());
         noticeRepository.save(notice);
 
         // Add success message for toast notification
@@ -165,19 +150,24 @@ public class NoticeController {
             "message", "Notice updated successfully!"
         ));
 
-        return "redirect:/admin/notices/" + id;
+        return "redirect:/admin/gyms/" + gymId;
     }
 
     /**
      * Deletes a notice by its ID.
      *
-     * @param id notice ID
+     * @param gymId identifier of the parent gym
+     * @param noticeId identifier of the notice
      * @param redirectAttributes attributes for flash messages on redirect
-     * @return redirect to the notice list
+     * @return redirect to the gym detail page
      */
-    @DeleteMapping("/{id}")
-    public String deleteNotice(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
-        noticeRepository.deleteById(id);
+    @DeleteMapping("/{noticeId}")
+    public String deleteNotice(
+            @PathVariable("gymId") long gymId,
+            @PathVariable("noticeId") long noticeId,
+            RedirectAttributes redirectAttributes) {
+        NoticeEntity notice = findNoticeInGymOrThrow(gymId, noticeId);
+        noticeRepository.delete(notice);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
@@ -185,19 +175,39 @@ public class NoticeController {
             "message", "Notice deleted successfully!"
         ));
 
-        return "redirect:/admin/notices";
+        return "redirect:/admin/gyms/" + gymId;
     }
 
     /**
-     * Finds a notice by ID or throws a ResponseStatusException if not found.
+     * Finds a notice by ID and validates it belongs to the specified gym.
      *
-     * @param noticeId notice ID
+     * @param gymId identifier of the parent gym
+     * @param noticeId identifier of the notice
      * @return the notice entity
-     * @throws ResponseStatusException if notice not found
+     * @throws ResponseStatusException if notice not found or doesn't belong to gym
      */
-    private NoticeEntity findNoticeOrThrow(long noticeId) {
-        return noticeRepository
+    private NoticeEntity findNoticeInGymOrThrow(long gymId, long noticeId) {
+        NoticeEntity notice = noticeRepository
                 .findById(noticeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notice not found"));
+
+        if (notice.getGym() == null || notice.getGym().getId() == null
+                || !notice.getGym().getId().equals(gymId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Notice does not belong to gym");
+        }
+        return notice;
+    }
+
+    /**
+     * Finds a gym by ID or throws a ResponseStatusException if not found.
+     *
+     * @param gymId identifier of the gym
+     * @return the gym entity
+     * @throws ResponseStatusException if gym not found
+     */
+    private GymEntity findGymOrThrow(long gymId) {
+        return gymRepository
+                .findById(gymId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }

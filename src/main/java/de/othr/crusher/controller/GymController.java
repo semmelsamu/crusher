@@ -3,6 +3,7 @@ package de.othr.crusher.controller;
 import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.repository.NoticeRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -24,16 +25,19 @@ public class GymController {
 
     private final GymRepository gymRepository;
     private final GradeRepository gradeRepository;
+    private final NoticeRepository noticeRepository;
 
     /**
      * Creates a new GymController with the given repository.
      *
      * @param gymRepository repository for accessing gym data
      * @param gradeRepository repository for accessing grade data
+     * @param noticeRepository repository for accessing notice data
      */
-    public GymController(GymRepository gymRepository, GradeRepository gradeRepository) {
+    public GymController(GymRepository gymRepository, GradeRepository gradeRepository, NoticeRepository noticeRepository) {
         this.gymRepository = gymRepository;
         this.gradeRepository = gradeRepository;
+        this.noticeRepository = noticeRepository;
     }
 
     /**
@@ -62,6 +66,7 @@ public class GymController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymId(id));
+        model.addAttribute("notices", noticeRepository.findByGymIdOrderByCreationDateDesc(id));
 
         return "pages/admin/gyms/detail";
     }

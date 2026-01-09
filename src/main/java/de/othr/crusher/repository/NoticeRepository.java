@@ -13,4 +13,12 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
      * @return list of notices for the gym
      */
     List<NoticeEntity> findByGymId(Long gymId);
+
+    /**
+     * Finds all notices for a specific gym, ordered by creation date descending (newest first).
+     *
+     * @param gymId the ID of the gym
+     * @return list of notices for the gym, sorted by creation date descending
+     */
+    List<NoticeEntity> findByGymIdOrderByCreationDateDesc(Long gymId);
 }
