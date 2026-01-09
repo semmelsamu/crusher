@@ -81,9 +81,21 @@
     @apply border-foreground-muted;
 }
 
+/*
+|-------------------------------------------------------------------------------
+| File Inputs
+|-------------------------------------------------------------------------------
+*/
+
 .file-input {
     @apply text-sm text-foreground;
 }
+
+/*
+|-------------------------------------------------------------------------------
+| Image Picker
+|-------------------------------------------------------------------------------
+*/
 
 .image-picker-preview {
     @apply border-2 rounded-base overflow-hidden bg-background min-h-48 flex items-center justify-center;
