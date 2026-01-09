@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Controller for managing boulder comments.
@@ -42,6 +45,7 @@ public class BoulderCommentController {
      * @param boulderId the ID of the boulder to comment on
      * @param comment the comment text
      * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages
      * @return redirect back to the boulder detail page
      */
     @PostMapping("/boulders/{boulderId}/comments")
@@ -49,7 +53,8 @@ public class BoulderCommentController {
     public String createComment(
             @PathVariable("boulderId") Long boulderId,
             @RequestParam("comment") String comment,
-            Principal principal) {
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         BoulderEntity boulder = boulderRepository.findById(boulderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
@@ -60,6 +65,13 @@ public class BoulderCommentController {
 
         BoulderCommentEntity commentEntity = new BoulderCommentEntity(user, boulder, comment.trim());
         commentRepository.save(commentEntity);
+
+        // Add success toast
+        Map<String, String> toast = new HashMap<>();
+        toast.put("type", "success");
+        toast.put("title", "Comment posted!");
+        toast.put("message", "Your comment has been successfully added.");
+        redirectAttributes.addFlashAttribute("toast", toast);
 
         return "redirect:/boulders/" + boulderId;
     }

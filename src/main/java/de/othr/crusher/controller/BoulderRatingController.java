@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Controller for managing boulder ratings.
@@ -44,6 +47,7 @@ public class BoulderRatingController {
      * @param boulderId the ID of the boulder to rate
      * @param rating the rating value (1-5)
      * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages
      * @return redirect back to the boulder detail page
      */
     @PostMapping("/boulders/{boulderId}/rating")
@@ -51,7 +55,8 @@ public class BoulderRatingController {
     public String setRating(
             @PathVariable("boulderId") Long boulderId,
             @RequestParam("rating") Integer rating,
-            Principal principal) {
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         BoulderEntity boulder = boulderRepository.findById(boulderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
@@ -64,11 +69,20 @@ public class BoulderRatingController {
         BoulderRatingEntity ratingEntity = ratingRepository.findByUserIdAndBoulderId(user.getId(), boulderId)
                 .orElse(new BoulderRatingEntity());
 
+        boolean isNewRating = ratingEntity.getId() == null;
+
         ratingEntity.setUser(user);
         ratingEntity.setBoulder(boulder);
         ratingEntity.setRating(rating);
 
         ratingRepository.save(ratingEntity);
+
+        // Add success toast
+        Map<String, String> toast = new HashMap<>();
+        toast.put("type", "success");
+        toast.put("title", isNewRating ? "Rating added!" : "Rating updated!");
+        toast.put("message", "You rated this boulder " + rating + " out of 5 stars.");
+        redirectAttributes.addFlashAttribute("toast", toast);
 
         return "redirect:/boulders/" + boulderId;
     }
