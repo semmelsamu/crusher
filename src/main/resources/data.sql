@@ -166,3 +166,19 @@ INSERT INTO boulder_comments (user_id, boulder_id, comment, created_at) VALUES
     (4, 1, 'perfect warmup', '2024-12-03 17:20:00'),
     (1, 1, 'got it second try 🎉', '2024-12-03 20:00:00'),
     (2, 1, 'nice flow', '2024-12-04 18:45:00');
+
+INSERT INTO notices (title, message, creation_date, gym_id) VALUES
+    -- Notices for Boulderwelt München Ost (gym 1)
+    ('New Routes Set!', 'We''ve just finished setting 15 new routes in the Volldach sector. Come check out the fresh problems ranging from V2 to V8. The setters put extra focus on technical moves and balance.', '2024-12-15 10:00:00', 1),
+    ('Christmas Opening Hours', 'Please note that we will have special opening hours during the Christmas holidays. Dec 24-26: Closed. Dec 27-30: 10:00-20:00. Dec 31: 10:00-18:00. Jan 1: Closed. Regular hours resume Jan 2.', '2024-12-10 14:30:00', 1),
+    ('Youth Competition Registration', 'Registration is now open for our annual youth climbing competition on January 20th! Open to climbers aged 8-16. Sign up at the front desk or email us. Limited spots available.', '2024-12-08 09:15:00', 1),
+    
+    -- Notices for Einstein Boulderhalle (gym 2)
+    ('Maintenance Notice', 'The Slab-City sector will be closed for maintenance and resetting from Dec 18-20. All other sectors remain open during regular hours. Sorry for any inconvenience!', '2024-12-12 16:45:00', 2),
+    ('Beginner Course Starting Soon', 'Our next beginner boulder course starts January 8th! Learn proper technique, safety, and fundamentals over 4 weeks. Perfect for those new to climbing. Register online or at reception.', '2024-12-11 11:20:00', 2),
+    ('Holiday Party December 22nd', 'Join us for our annual holiday party on December 22nd from 18:00-22:00! Free food, drinks, climbing games, and prizes. Everyone is welcome. Bring your friends and family!', '2024-12-05 15:00:00', 2),
+    
+    -- Notices for BlocHütte Nürnberg (gym 3)
+    ('Winter Challenge Active', 'Our winter challenge is now live! Complete 50 routes of different grades before Feb 28th to win prizes. Track your progress on the board near the entrance. Good luck!', '2024-12-14 08:30:00', 3),
+    ('New Yoga Classes', 'We''re introducing climbing-specific yoga classes every Tuesday and Thursday at 19:00. Great for flexibility and injury prevention. First class is free! Sign up at the front desk.', '2024-12-09 13:00:00', 3),
+    ('Parking Reminder', 'Please remember to park in the designated gym parking area only. Cars parked in neighboring businesses'' lots may be towed. Thank you for your cooperation!', '2024-12-01 10:00:00', 3);

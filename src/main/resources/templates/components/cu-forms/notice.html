@@ -1,0 +1,40 @@
+<form
+    th:fragment="notice(actionUrl, notice, gym)"
+    th:action="${actionUrl}"
+    th:object="${notice}"
+    method="post"
+    class="space-y-4"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <input
+        type="hidden"
+        name="_method"
+        th:value="${notice.id} != null ? 'put' : 'post'"
+    />
+
+    <div class="space-y-2">
+        <label class="block">Title</label>
+        <input th:field="*{title}" class="text-input w-full" />
+        <p
+            th:if="${#fields.hasErrors('title')}"
+            th:errors="*{title}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="space-y-2">
+        <label class="block">Message</label>
+        <textarea
+            th:field="*{message}"
+            class="text-input w-full"
+            rows="8"
+        ></textarea>
+        <p
+            th:if="${#fields.hasErrors('message')}"
+            th:errors="*{message}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <button type="submit" class="button primary mt-8 ml-auto">Save</button>
+</form>

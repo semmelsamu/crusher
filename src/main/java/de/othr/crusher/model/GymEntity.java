@@ -52,6 +52,13 @@ public class GymEntity {
             fetch = FetchType.LAZY)
     private List<GradeEntity> grades = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "gym",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<NoticeEntity> notices = new ArrayList<>();
+
     public GymEntity() {}
 
     public GymEntity(String name, String street, String city, String email) {
@@ -110,6 +117,10 @@ public class GymEntity {
         return grades;
     }
 
+    public List<NoticeEntity> getNotices() {
+        return notices;
+    }
+
     public void addSector(SectorEntity sector) {
         sectors.add(sector);
         sector.setGym(this);
@@ -128,5 +139,15 @@ public class GymEntity {
     public void removeGrade(GradeEntity grade) {
         grades.remove(grade);
         grade.setGym(null);
+    }
+
+    public void addNotice(NoticeEntity notice) {
+        notices.add(notice);
+        notice.setGym(this);
+    }
+
+    public void removeNotice(NoticeEntity notice) {
+        notices.remove(notice);
+        notice.setGym(null);
     }
 }
