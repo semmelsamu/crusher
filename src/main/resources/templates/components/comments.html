@@ -5,7 +5,12 @@
 >
     <h2>Comments</h2>
 
-    <form th:action="@{${actionUrl}}" method="post" class="w-full space-y-4">
+    <form
+        th:action="@{${actionUrl}}"
+        method="post"
+        class="w-full space-y-4"
+        x-data="{ comment: '' }"
+    >
         <div class="flex gap-3">
             <div
                 th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
@@ -18,9 +23,16 @@
                 class="text-input w-full"
                 placeholder="Add your comment"
                 required
+                x-model="comment"
             ></textarea>
         </div>
-        <button type="submit" class="button ms-auto">Comment</button>
+        <button
+            type="submit"
+            class="button ms-auto"
+            x-bind:disabled="comment.length === 0"
+        >
+            Comment
+        </button>
     </form>
 
     <div
