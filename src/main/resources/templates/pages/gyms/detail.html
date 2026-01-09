@@ -52,7 +52,22 @@
                     </div>
                 </section>
 
-                <!-- Card 2: Your Rating -->
+                <!-- Card 2: Total Boulders -->
+                <section
+                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                >
+                    <p class="text-sm font-medium text-foreground-muted">
+                        Total Boulders
+                    </p>
+                    <p
+                        class="text-9xl font-bold text-success"
+                        th:text="${boulderCount}"
+                    >
+                        0
+                    </p>
+                </section>
+
+                <!-- Card 3: Your Rating -->
                 <section
                     class="card p-6 flex flex-col items-center justify-center space-y-4"
                 >
@@ -64,7 +79,7 @@
                     ></div>
                 </section>
 
-                <!-- Card 3: Current Weather -->
+                <!-- Card 4: Current Weather -->
                 <section
                     class="card p-6 flex flex-col items-center justify-center space-y-4"
                     th:if="${weather != null}"
@@ -72,13 +87,12 @@
                     <p class="text-sm font-medium text-foreground-muted">
                         Current Weather
                     </p>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4 text-accent">
                         <div
                             th:replace="~{components/icons :: ${weather.icon()}}"
-                            class="text-accent"
                         ></div>
                         <p
-                            class="text-5xl font-bold text-main"
+                            class="text-5xl font-bold"
                             th:text="${weather.text()}"
                         >
                             Sunny

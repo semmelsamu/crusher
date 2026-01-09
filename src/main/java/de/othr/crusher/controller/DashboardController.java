@@ -310,11 +310,15 @@ public class DashboardController {
         // Get weather for gym's city
         WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
 
+        // Count total boulders in this gym
+        long boulderCount = boulderRepository.findBySectorGymId(gym.getId()).size();
+
         model.addAttribute("gym", gym);
         model.addAttribute("currentRating", currentRating);
         model.addAttribute("averageRating", averageRating);
         model.addAttribute("comments", comments);
         model.addAttribute("weather", weather);
+        model.addAttribute("boulderCount", boulderCount);
 
         return "pages/gyms/detail";
     }
