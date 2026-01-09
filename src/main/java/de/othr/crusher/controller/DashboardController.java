@@ -11,6 +11,7 @@ import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymCommentRepository;
 import de.othr.crusher.repository.GymRatingRepository;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.repository.NoticeRepository;
 import de.othr.crusher.repository.ProjectRepository;
 import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
@@ -50,6 +51,7 @@ public class DashboardController {
     private final BoulderCommentRepository commentRepository;
     private final GymRatingRepository gymRatingRepository;
     private final GymCommentRepository gymCommentRepository;
+    private final NoticeRepository noticeRepository;
     private final WeatherService weatherService;
 
     public DashboardController(
@@ -65,6 +67,7 @@ public class DashboardController {
             BoulderCommentRepository commentRepository,
             GymRatingRepository gymRatingRepository,
             GymCommentRepository gymCommentRepository,
+            NoticeRepository noticeRepository,
             WeatherService weatherService) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
@@ -78,6 +81,7 @@ public class DashboardController {
         this.commentRepository = commentRepository;
         this.gymRatingRepository = gymRatingRepository;
         this.gymCommentRepository = gymCommentRepository;
+        this.noticeRepository = noticeRepository;
         this.weatherService = weatherService;
     }
 
@@ -307,6 +311,9 @@ public class DashboardController {
         // Get all comments for this gym
         List<GymCommentEntity> comments = gymCommentRepository.findByGymIdOrderByCreatedAtDesc(gym.getId());
 
+        // Get all notices for this gym
+        List<NoticeEntity> notices = noticeRepository.findByGymIdOrderByCreationDateDesc(gym.getId());
+
         // Get weather for gym's city
         WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
 
@@ -317,6 +324,7 @@ public class DashboardController {
         model.addAttribute("currentRating", currentRating);
         model.addAttribute("averageRating", averageRating);
         model.addAttribute("comments", comments);
+        model.addAttribute("notices", notices);
         model.addAttribute("weather", weather);
         model.addAttribute("boulderCount", boulderCount);
 
