@@ -4,18 +4,28 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div
+        <main
             class="wrapper"
-            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Stats', url: '/stats'} } }"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Statistics', url: '/stats'} } }"
         >
             <div
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
             ></div>
 
+            <div class="flex items-center gap-4">
+                <a th:href="@{/dashboard}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <h1>Your Statistics</h1>
+                </header>
+            </div>
+
             <!-- Statistics Section -->
             <section class="space-y-4">
-                <h2>Your Statistics</h2>
-
                 <!-- Simple number stats - 2 columns -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Total Boulders Finished -->
@@ -247,6 +257,6 @@
                     </div>
                 </div>
             </section>
-        </div>
+        </main>
     </th:block>
 </th:block>
