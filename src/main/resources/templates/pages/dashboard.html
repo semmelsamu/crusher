@@ -5,31 +5,20 @@
 >
     <th:block layout:fragment="content">
         <main class="wrapper">
-            <section class="flex flex-col items-center space-y-4 my-8">
-                <h1>Welcome to Crusher</h1>
-                <p class="text-muted-foreground">
-                    Track your climbing progress and sessions
-                </p>
-            </section>
-
-            <section class="card p-4 space-y-4">
-                <h2>Quick Actions</h2>
-
+            <h1 class="text-center my-8">Dashboard</h1>
+            <nav class="space-y-4 max-w-sm mx-auto">
                 <div class="flex flex-col gap-4">
-                    <a th:href="@{/sessions}" class="button primary">
-                        View Sessions
+                    <a href="/sessions" class="button primary">Sessions</a>
+                    <a href="/boulders" class="button primary">Boulders</a>
+                    <a href="#" class="button primary" disabled>
+                        Events (coming soon)
                     </a>
-
-                    <a th:href="@{/sessions/create}" class="button success">
-                        <x th:replace="~{components/icons :: play}"></x>
-                        Start New Session
+                    <a href="#" class="button primary" disabled>
+                        Notices (coming soon)
                     </a>
-
-                    <a th:href="@{/boulders}" class="button">
-                        Browse Boulders
-                    </a>
+                    <a href="/stats" class="button primary">Statistics</a>
                 </div>
-            </section>
+            </nav>
         </main>
     </th:block>
 </th:block>
