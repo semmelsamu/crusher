@@ -67,7 +67,7 @@
 
             <!-- Comments Section (full width) -->
             <div
-                th:replace="~{components/comments :: comments('/gyms/' + ${gym.id} + '/comments', ${comments})}"
+                th:replace="~{components/comments :: comments('/gyms/' + ${gym.id} + '/comments', ${comments}, '/gyms/' + ${gym.id} + '/comments')}"
             ></div>
         </main>
     </th:block>
