@@ -1,0 +1,23 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <section class="card space-y-8 p-8 text-center max-w-md mx-auto">
+                <h1>
+                    Error <span th:text="${status}">500</span> -
+                    <span th:text="${error}">Internal Server Error</span>
+                </h1>
+                <p class="text-lg text-muted"></p>
+
+                <p class="text-base" th:text="${message}">
+                    Error message goes here
+                </p>
+
+                <a href="/" class="button primary">Go to Home</a>
+            </section>
+        </main>
+    </th:block>
+</th:block>

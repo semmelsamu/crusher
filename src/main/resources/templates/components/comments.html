@@ -1,5 +1,5 @@
 <section
-    th:fragment="comments(actionUrl, comments, deleteActionUrlPattern)"
+    th:fragment="comments(actionUrl, comments, deleteUrlBase)"
     class="card p-4 space-y-4 max-w-xl mx-auto"
     xmlns:th="http://www.thymeleaf.org"
 >
@@ -101,7 +101,7 @@
                         Cancel
                     </button>
                     <form
-                        th:action="@{${deleteActionUrlPattern != null ? deleteActionUrlPattern : '/boulders/__' + comment.boulder.id + '__/comments/__' + comment.id + '__'}}"
+                        th:action="${deleteUrlBase + '/' + comment.id}"
                         method="post"
                         class="inline"
                     >
