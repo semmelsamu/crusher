@@ -15,6 +15,7 @@ import de.othr.crusher.repository.ProjectRepository;
 import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -221,13 +222,31 @@ public class SessionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
-        sessionRepository.delete(session);
+        // Check if any goes (climbing attempts) reference this session
+        List<GoEntity> referencingGoes = goRepository.findBySessionIdOrderByTimestampDesc(id);
+        if (!referencingGoes.isEmpty()) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error", 
+                "message", "Cannot delete session. Please delete all climbing attempts in this session first."
+            ));
+            return "redirect:/sessions/" + id;
+        }
 
-        // Add success message for toast notification
-        redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Session deleted successfully!"
-        ));
+        try {
+            sessionRepository.delete(session);
+
+            // Add success message for toast notification
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "success", 
+                "message", "Session deleted successfully!"
+            ));
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error", 
+                "message", "Cannot delete session due to existing references."
+            ));
+            return "redirect:/sessions/" + id;
+        }
 
         return "redirect:/dashboard";
     }
