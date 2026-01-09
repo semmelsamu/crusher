@@ -6,7 +6,7 @@
     <th:block layout:fragment="content">
         <main
             class="wrapper"
-            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Dashboard', url: '/dashboard'}, {label: 'Start Session', url: '/sessions/create'} } }"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Sessions', url: '/sessions'}, {label: 'Start Session', url: '/sessions/create'} } }"
         >
             <div
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"

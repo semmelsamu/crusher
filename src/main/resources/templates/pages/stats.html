@@ -4,7 +4,14 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="wrapper">
+        <div
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Stats', url: '/stats'} } }"
+        >
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
             <!-- Statistics Section -->
             <section class="space-y-4">
                 <h2>Your Statistics</h2>
