@@ -36,12 +36,12 @@ INSERT INTO grades (name, v_scale, font_scale, description, gym_id) VALUES
     ('8', 'V7', '7b', 'Power-Moves mit maximaler Compression.', 3);
 
 INSERT INTO sectors (name, description, image_path, gym_id) VALUES
-    ('30er', 'Klassische Züge mit leichtem Überhang.', '/images/default-sector.svg', 1),
-    ('Volldach', 'Steile Wand mit großen Zügen.', '/images/default-sector.svg', 1),
-    ('Slab-City', 'Technische Platten und Balance-Probleme.', '/images/default-sector.svg', 2),
-    ('45er', 'Starker Überhang und Campus-Style Moves.', '/images/default-sector.svg', 2),
-    ('Tech-Deck', 'Schmale Leisten und Fußarbeitstraining.', '/images/default-sector.svg', 3),
-    ('Höhle', 'Kompressionslastige Boulder in der Grotte.', '/images/default-sector.svg', 3);
+    ('30er', 'Klassische Züge mit leichtem Überhang.', '/uploads/sectors/1/f9f1d556-c811-4352-b72e-4c67095d3351.png', 1),
+    ('Volldach', 'Steile Wand mit großen Zügen.', '/uploads/sectors/2/a4e72d14-9cf0-421e-8f05-1975f3c724a9.png', 1),
+    ('Slab-City', 'Technische Platten und Balance-Probleme.', '/uploads/sectors/3/3d0e1dc4-9d5b-4470-ae75-fb41a9456a2d.png', 2),
+    ('45er', 'Starker Überhang und Campus-Style Moves.', '/uploads/sectors/4/0b9e6cfa-873e-46d6-b42f-a958602d9ff3.png', 2),
+    ('Tech-Deck', 'Schmale Leisten und Fußarbeitstraining.', '/uploads/sectors/5/c8f932c0-852a-4688-81f2-8b8e2671c2c4.png', 3),
+    ('Höhle', 'Kompressionslastige Boulder in der Grotte.', '/uploads/sectors/6/5ae55a50-9088-4b06-841e-50bd76f2a027.png', 3);
 
 INSERT INTO boulders (description, color, grade_id, sector_id, holds_count) VALUES
     -- Boulders for sector 1 (30er, gym 1)
