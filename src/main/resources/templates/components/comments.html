@@ -5,7 +5,28 @@
 >
     <h2>Comments</h2>
 
-    <!-- Comments List -->
+    <form
+        th:action="@{${actionUrl}}"
+        method="post"
+        class="flex gap-3 comment-form"
+    >
+        <div
+            th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
+            class="self-start mt-3"
+        ></div>
+        <textarea
+            id="comment"
+            name="comment"
+            rows="3"
+            class="flex-1 p-3 border border-border rounded-base text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent"
+            placeholder="Add your comment"
+            required
+        ></textarea>
+        <button type="submit" class="button success self-end">
+            Post Comment
+        </button>
+    </form>
+
     <div
         th:if="${comments == null || comments.isEmpty()}"
         class="text-sm text-muted-foreground text-center py-8"
@@ -19,6 +40,9 @@
     >
         <div th:each="comment : ${comments}" class="card p-4 space-y-3">
             <div class="flex items-center gap-2">
+                <div
+                    th:replace="~{components/avatar :: avatar(${comment.user.name})}"
+                ></div>
                 <span
                     class="font-bold text-xs text-muted-foreground"
                     th:text="${comment.user.name}"
@@ -42,26 +66,4 @@
             </p>
         </div>
     </div>
-
-    <!-- Separator -->
-    <div class="border-t-2 border-border mx-[10px]"></div>
-
-    <!-- Add Comment Form -->
-    <form
-        th:action="@{${actionUrl}}"
-        method="post"
-        class="flex gap-3 comment-form"
-    >
-        <textarea
-            id="comment"
-            name="comment"
-            rows="3"
-            class="flex-1 p-3 border border-border rounded-base text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-accent"
-            placeholder="Add your comment"
-            required
-        ></textarea>
-        <button type="submit" class="button success self-end">
-            Post Comment
-        </button>
-    </form>
 </section>
