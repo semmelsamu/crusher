@@ -77,4 +77,4 @@ yarn-error.log*
 .java-version
 
 ### Image Files ###
-uploads/
+# uploads/
