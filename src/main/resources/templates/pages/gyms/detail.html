@@ -1,0 +1,74 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Gyms', url: '/gyms'}, {label: gym.name, url: '/gyms/' + gym.id} } }"
+        >
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/gyms}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header class="card flex-1 p-4 flex items-center gap-4">
+                    <h1>Gym Details</h1>
+                </header>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Card 1: Gym Info -->
+                <section
+                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                >
+                    <p
+                        class="text-6xl font-bold text-accent text-center"
+                        th:text="${gym.name}"
+                    >
+                        Gym Name
+                    </p>
+
+                    <div class="space-y-2 text-center">
+                        <div class="flex items-center gap-2 justify-center">
+                            <span
+                                class="text-lg"
+                                th:text="${gym.city} + ', ' + ${gym.street}"
+                            >
+                                City, Street
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-2 justify-center">
+                            <span class="text-lg" th:text="${gym.email}">
+                                email@example.com
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Card 2: Your Rating -->
+                <section
+                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                >
+                    <p class="text-sm font-medium text-foreground-muted">
+                        Your Rating
+                    </p>
+                    <div
+                        th:replace="~{components/star-rating :: star-rating('/gyms/' + ${gym.id} + '/rating', ${currentRating}, ${averageRating})}"
+                    ></div>
+                </section>
+            </div>
+
+            <!-- Comments Section (full width) -->
+            <div
+                th:replace="~{components/comments :: comments('/gyms/' + ${gym.id} + '/comments', ${comments}, '/gyms/' + ${gym.id} + '/comments')}"
+            ></div>
+        </main>
+    </th:block>
+</th:block>

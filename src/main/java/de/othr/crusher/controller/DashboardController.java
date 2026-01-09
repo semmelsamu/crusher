@@ -6,6 +6,8 @@ import de.othr.crusher.repository.BoulderRatingRepository;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
 import de.othr.crusher.repository.GradeRepository;
+import de.othr.crusher.repository.GymCommentRepository;
+import de.othr.crusher.repository.GymRatingRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.ProjectRepository;
 import de.othr.crusher.repository.SectorRepository;
@@ -44,6 +46,8 @@ public class DashboardController {
     private final GoRepository goRepository;
     private final BoulderRatingRepository ratingRepository;
     private final BoulderCommentRepository commentRepository;
+    private final GymRatingRepository gymRatingRepository;
+    private final GymCommentRepository gymCommentRepository;
 
     public DashboardController(
             SessionRepository sessionRepository,
@@ -55,7 +59,9 @@ public class DashboardController {
             ProjectRepository projectRepository,
             GoRepository goRepository,
             BoulderRatingRepository ratingRepository,
-            BoulderCommentRepository commentRepository) {
+            BoulderCommentRepository commentRepository,
+            GymRatingRepository gymRatingRepository,
+            GymCommentRepository gymCommentRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.boulderRepository = boulderRepository;
@@ -66,6 +72,8 @@ public class DashboardController {
         this.goRepository = goRepository;
         this.ratingRepository = ratingRepository;
         this.commentRepository = commentRepository;
+        this.gymRatingRepository = gymRatingRepository;
+        this.gymCommentRepository = gymCommentRepository;
     }
 
     /**
@@ -233,6 +241,73 @@ public class DashboardController {
         model.addAttribute("comments", comments);
 
         return "pages/boulders/detail";
+    }
+
+    /**
+     * Displays all gyms with user ratings.
+     *
+     * @param principal the authenticated user
+     * @param model Spring model to pass data to the view
+     * @return view name for the gyms page
+     */
+    @GetMapping("/gyms")
+    @Transactional(readOnly = true)
+    public String showAllGyms(Principal principal, Model model) {
+        UserEntity user = findUserByPrincipal(principal);
+
+        // Fetch all gyms
+        List<GymEntity> gyms = gymRepository.findAll();
+
+        // Load ratings for current user
+        Map<Long, Integer> gymRatings = gymRatingRepository.findByUserId(user.getId()).stream()
+                .collect(Collectors.toMap(
+                        rating -> rating.getGym().getId(),
+                        rating -> rating.getRating()
+                ));
+
+        model.addAttribute("gyms", gyms);
+        model.addAttribute("gymRatings", gymRatings);
+
+        return "pages/gyms/all";
+    }
+
+    /**
+     * Displays details for a specific gym.
+     *
+     * @param id gym ID
+     * @param principal the authenticated user
+     * @param model Spring model to pass data to the view
+     * @return view name for the gym detail page
+     */
+    @GetMapping("/gyms/{id}")
+    @Transactional(readOnly = true)
+    public String showGym(@PathVariable("id") Long id, Principal principal, Model model) {
+        UserEntity user = findUserByPrincipal(principal);
+        GymEntity gym = gymRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+
+        // Get current user's rating for this gym
+        Integer currentRating = gymRatingRepository.findByUserIdAndGymId(user.getId(), gym.getId())
+                .map(rating -> rating.getRating())
+                .orElse(0);
+
+        // Calculate average rating for this gym
+        List<GymRatingEntity> allRatings = gymRatingRepository.findByGymId(gym.getId());
+        Double averageRating = allRatings.isEmpty() ? null :
+                allRatings.stream()
+                        .mapToInt(GymRatingEntity::getRating)
+                        .average()
+                        .orElse(0.0);
+
+        // Get all comments for this gym
+        List<GymCommentEntity> comments = gymCommentRepository.findByGymIdOrderByCreatedAtDesc(gym.getId());
+
+        model.addAttribute("gym", gym);
+        model.addAttribute("currentRating", currentRating);
+        model.addAttribute("averageRating", averageRating);
+        model.addAttribute("comments", comments);
+
+        return "pages/gyms/detail";
     }
 
     /**
