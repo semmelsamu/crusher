@@ -1,0 +1,163 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Boulders', url: '/boulders'}, {label: boulder.description, url: '/boulders/' + boulder.id} } }"
+        >
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/boulders}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header class="card flex-1 p-4 flex items-center gap-4">
+                    <h1>Boulder Details</h1>
+
+                    <span
+                        th:if="${isProject}"
+                        class="badge warning ml-auto flex items-center gap-3 text-lg px-4 py-5"
+                    >
+                        <x th:replace="~{components/icons :: star}"></x>
+                        Project
+                    </span>
+                </header>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Card 1: Boulder Title with Color and Grade -->
+                <section
+                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                >
+                    <p
+                        class="text-6xl font-bold text-accent text-center"
+                        th:text="${boulder.description}"
+                    >
+                        Boulder Description
+                    </p>
+
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <div
+                                th:class="'color-badge ' + ${boulder.color.cssColorClass}"
+                            ></div>
+                            <span
+                                class="text-sm text-muted-foreground"
+                                th:text="${boulder.color.displayName}"
+                            >
+                                Color
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="grade-badge"
+                                th:text="${boulder.grade.name}"
+                            >
+                                Grade
+                            </span>
+                            <span class="text-sm text-muted-foreground">
+                                Grade
+                            </span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Card 2: Location -->
+                <section class="card p-4 space-y-4">
+                    <h2>Location</h2>
+
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm text-muted-foreground">Gym</p>
+                            <p
+                                class="font-medium text-lg"
+                                th:text="${boulder.sector.gym.name}"
+                            >
+                                Gym Name
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="text-sm text-muted-foreground">Sector</p>
+                            <p
+                                class="font-medium text-lg"
+                                th:text="${boulder.sector.name}"
+                            >
+                                Sector Name
+                            </p>
+                        </div>
+
+                        <div>
+                            <p class="text-sm text-muted-foreground">Holds</p>
+                            <p
+                                class="font-medium text-lg"
+                                th:text="${boulder.holdsCount}"
+                            >
+                                0
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Card 3: Your Rating -->
+                <section
+                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                >
+                    <p class="text-sm font-medium text-foreground-muted">
+                        Your Rating
+                    </p>
+                    <div
+                        th:replace="~{components/star-rating :: star-rating('/boulders/' + ${boulder.id} + '/rating', ${currentRating}, ${averageRating})}"
+                    ></div>
+                </section>
+
+                <!-- Card 4: Stats -->
+                <section class="card p-6">
+                    <div class="grid grid-cols-2 gap-6 h-full">
+                        <!-- Total Tries Column -->
+                        <div class="flex flex-col items-center justify-center">
+                            <p
+                                class="text-sm font-medium text-foreground-muted mb-2"
+                            >
+                                Total Tries
+                            </p>
+                            <p
+                                class="text-6xl font-bold text-main"
+                                th:text="${totalTries}"
+                            >
+                                0
+                            </p>
+                        </div>
+
+                        <!-- Total Ascents Column -->
+                        <div class="flex flex-col items-center justify-center">
+                            <p
+                                class="text-sm font-medium text-foreground-muted mb-2"
+                            >
+                                Total Ascents
+                            </p>
+                            <p
+                                class="text-6xl font-bold text-success"
+                                th:text="${ascentsCount}"
+                            >
+                                0
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Comments Section (full width) -->
+            <div
+                th:replace="~{components/comments :: comments('/boulders/' + ${boulder.id} + '/comments', ${comments}, '/boulders/' + ${boulder.id} + '/comments')}"
+            ></div>
+        </main>
+    </th:block>
+</th:block>

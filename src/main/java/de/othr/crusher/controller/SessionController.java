@@ -71,114 +71,36 @@ public class SessionController {
     }
 
     /**
-     * Displays the dashboard with all sessions for the current user.
+     * Displays all sessions for the current user.
      *
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
-     * @return view name for the dashboard page
+     * @return view name for the sessions list page
      */
-    @GetMapping("/dashboard")
+    @GetMapping("/sessions")
     @Transactional(readOnly = true)
-    public String showDashboard(Principal principal, Model model) {
+    public String showAllSessions(Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
         List<SessionEntity> sessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId());
 
+        // Find the most recently used gym
+        GymEntity lastGym = sessions.stream()
+                .filter(session -> session.getGym() != null)
+                .findFirst()
+                .map(SessionEntity::getGym)
+                .orElse(null);
+
+        // Find active session (if any)
+        SessionEntity activeSession = sessions.stream()
+                .filter(session -> session.getEndedAt() == null)
+                .findFirst()
+                .orElse(null);
+
         model.addAttribute("sessions", sessions);
-        model.addAttribute("user", user);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard")
-        ));
+        model.addAttribute("lastGym", lastGym);
+        model.addAttribute("activeSession", activeSession);
 
-        return "pages/dashboard";
-    }
-
-    /**
-     * Displays all boulders with optional filtering by gym, sector, and grades.
-     *
-     * @param gymId optional gym ID to filter by
-     * @param sectorId optional sector ID to filter by
-     * @param gradeIds optional list of grade IDs to filter by
-     * @param projectOnly whether to show only boulders marked as projects by the current user
-     * @param principal the authenticated user
-     * @param model Spring model to pass data to the view
-     * @return view name for the boulders page
-     */
-    @GetMapping("/boulders")
-    @Transactional(readOnly = true)
-    public String showAllBoulders(
-            @RequestParam(value = "gymId", required = false) Long gymId,
-            @RequestParam(value = "sectorId", required = false) Long sectorId,
-            @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
-            @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
-            Principal principal,
-            Model model) {
-        UserEntity user = findUserByPrincipal(principal);
-
-        // Fetch all gyms for the dropdown
-        List<GymEntity> gyms = gymRepository.findAll();
-        
-        // Fetch sectors and grades for the selected gym
-        List<SectorEntity> sectors = List.of();
-        List<GradeEntity> grades = List.of();
-        if (gymId != null) {
-            sectors = sectorRepository.findByGymId(gymId);
-            grades = gradeRepository.findByGymId(gymId);
-        } else {
-            sectors = sectorRepository.findAll();
-            grades = gradeRepository.findAll();
-        }
-        
-        // Filter boulders based on selected criteria
-        List<BoulderEntity> boulders;
-        if (sectorId != null) {
-            // Filter by specific sector
-            if (gradeIds != null && !gradeIds.isEmpty()) {
-                boulders = boulderRepository.findBySectorIdAndGradeIdIn(sectorId, gradeIds);
-            } else {
-                boulders = boulderRepository.findBySectorId(sectorId);
-            }
-        } else if (gymId != null) {
-            // Filter by gym
-            if (gradeIds != null && !gradeIds.isEmpty()) {
-                boulders = boulderRepository.findBySectorGymIdAndGradeIdIn(gymId, gradeIds);
-            } else {
-                boulders = boulderRepository.findBySectorGymId(gymId);
-            }
-        } else {
-            // No filters - show all boulders
-            boulders = boulderRepository.findAll();
-        }
-
-        // Load project marks for current user (once) to drive UI and optional filtering
-        Set<Long> projectBoulderIds = projectRepository.findByUserId(user.getId()).stream()
-                .map(project -> project.getBoulder() != null ? project.getBoulder().getId() : null)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
-
-        if (projectOnly) {
-            boulders = boulders.stream()
-                    .filter(boulder -> projectBoulderIds.contains(boulder.getId()))
-                    .toList();
-        }
-
-        // Add attributes to model
-        model.addAttribute("boulders", boulders);
-        model.addAttribute("gyms", gyms);
-        model.addAttribute("sectors", sectors);
-        model.addAttribute("grades", grades);
-        model.addAttribute("selectedGymId", gymId);
-        model.addAttribute("selectedSectorId", sectorId);
-        model.addAttribute("selectedGradeIds", gradeIds != null ? gradeIds : List.of());
-        model.addAttribute("projectBoulderIds", projectBoulderIds);
-        model.addAttribute("projectOnly", projectOnly);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard"),
-                Map.of("label", "All Boulders", "url", "/boulders")
-        ));
-
-        return "pages/boulders";
+        return "pages/sessions/all";
     }
 
     /**
@@ -191,29 +113,46 @@ public class SessionController {
     public String showCreateForm(Model model) {
         List<GymEntity> gyms = gymRepository.findAll();
         model.addAttribute("gyms", gyms);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard"),
-                Map.of("label", "Start Session", "url", "/sessions/create")
-        ));
 
         return "pages/sessions/create";
     }
 
     /**
      * Creates a new session for the current user at the selected gym.
+     * If an active session already exists, shows an error message.
      *
      * @param gymId the ID of the selected gym
      * @param principal the authenticated user
      * @param redirectAttributes attributes for flash messages on redirect
-     * @return redirect to the newly created session detail page
+     * @return redirect to the newly created session detail page or back with error
      */
     @PostMapping("/sessions")
-    public String createSession(@RequestParam("gymId") Long gymId, Principal principal, RedirectAttributes redirectAttributes) {
+    public String createSession(
+            @RequestParam("gymId") Long gymId,
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         GymEntity gym = gymRepository.findById(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
+        // Check for active sessions
+        List<SessionEntity> activeSessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId())
+                .stream()
+                .filter(session -> session.getEndedAt() == null)
+                .toList();
+
+        // If active session exists, show error message and redirect to active session
+        if (!activeSessions.isEmpty()) {
+            SessionEntity activeSession = activeSessions.get(0);
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error",
+                "message", "You already have an active session at " + activeSession.getGym().getName() +
+                          ". Please end it before starting a new one."
+            ));
+            return "redirect:/sessions/" + activeSession.getId();
+        }
+
+        // No active session, create new one
         SessionEntity session = new SessionEntity();
         session.setStartedAt(LocalDateTime.now());
         session.setUser(user);
@@ -223,7 +162,7 @@ public class SessionController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
+            "type", "success",
             "message", "Session created successfully!"
         ));
 
@@ -254,11 +193,6 @@ public class SessionController {
 
         model.addAttribute("currentSession", session);
         model.addAttribute("goes", goes);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Dashboard", "url", "/dashboard"),
-                Map.of("label", "Session", "url", "/sessions/" + session.getId())
-        ));
 
         return "pages/sessions/detail";
     }
@@ -269,7 +203,7 @@ public class SessionController {
      * @param id session ID
      * @param principal the authenticated user
      * @param redirectAttributes attributes for flash messages on redirect
-     * @return redirect to the session detail page
+     * @return redirect to the sessions list page
      */
     @PostMapping("/sessions/{id}/end")
     @Transactional
@@ -297,7 +231,7 @@ public class SessionController {
             "message", "Session ended successfully!"
         ));
 
-        return "redirect:/sessions/" + id;
+        return "redirect:/sessions";
     }
 
     /**
@@ -306,7 +240,7 @@ public class SessionController {
      * @param id session ID
      * @param principal the authenticated user
      * @param redirectAttributes attributes for flash messages on redirect
-     * @return redirect to the dashboard
+     * @return redirect to the sessions list page
      */
     @DeleteMapping("/sessions/{id}")
     @Transactional
@@ -328,7 +262,7 @@ public class SessionController {
             "message", "Session deleted successfully!"
         ));
 
-        return "redirect:/dashboard";
+        return "redirect:/sessions";
     }
 
     /**

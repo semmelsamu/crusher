@@ -35,6 +35,8 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	runtimeOnly 'io.netty:netty-resolver-dns-native-macos::osx-aarch_64'
 	runtimeOnly 'com.h2database:h2'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -99,8 +101,18 @@ tasks.register('dev', org.springframework.boot.gradle.tasks.run.BootRun) {
 		def tailwind = tailwindBuilder.start()
 		println "Tailwind CSS watcher started (PID ${tailwind.pid()})."
 
-		addShutdownHook {
-			tailwind.destroy()
+		gradle.buildFinished {
+			try {
+				def handle = tailwind.toHandle()
+				handle.descendants().each { it.destroy() }
+				handle.destroy()
+
+				if (!tailwind.waitFor(3, java.util.concurrent.TimeUnit.SECONDS)) {
+					handle.descendants().each { it.destroyForcibly() }
+					handle.destroyForcibly()
+				}
+			} catch (Throwable ignored) {
+			}
 		}
 	}
 }

@@ -11,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import java.util.List;
 import java.util.Map;
 
 
@@ -46,11 +45,6 @@ public class GymController {
     @GetMapping
     public String showAllGyms(Model model) {
         model.addAttribute("gyms", gymRepository.findAll());
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                Map.of("label", "Gyms", "url", "")
-        ));
         return "pages/admin/gyms/all";
     }
 
@@ -69,14 +63,6 @@ public class GymController {
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymId(id));
 
-        // Add breadcrumb navigation
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                Map.of("label", "Gyms", "url", "/admin/gyms"),
-                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId())
-        ));
-
         return "pages/admin/gyms/detail";
     }
 
@@ -89,12 +75,6 @@ public class GymController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("gym", new GymEntity());
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                Map.of("label", "Gyms", "url", "/admin/gyms"),
-                Map.of("label", "New Gym", "url", "")
-        ));
         return "pages/admin/gyms/create";
     }
 
@@ -109,13 +89,6 @@ public class GymController {
     public String showEditForm(@PathVariable("id") long id, Model model) {
         GymEntity gym = findGymOrThrow(id);
         model.addAttribute("gym", gym);
-        model.addAttribute("breadcrumb", List.of(
-                Map.of("label", "Home", "url", "/"),
-                Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                Map.of("label", "Gyms", "url", "/admin/gyms"),
-                Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
-                Map.of("label", "Edit", "url", "")
-        ));
         return "pages/admin/gyms/update";
     }
 
@@ -132,12 +105,6 @@ public class GymController {
     @PostMapping
     public String createGym(@Valid @ModelAttribute("gym") GymEntity gym, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("breadcrumb", List.of(
-                    Map.of("label", "Home", "url", "/"),
-                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                    Map.of("label", "Gyms", "url", "/admin/gyms"),
-                    Map.of("label", "New Gym", "url", "")
-            ));
             return "pages/admin/gyms/create";
         }
 
@@ -175,13 +142,6 @@ public class GymController {
         if (result.hasErrors()) {
             formGym.setId(gym.getId());
             model.addAttribute("gym", formGym);
-            model.addAttribute("breadcrumb", List.of(
-                    Map.of("label", "Home", "url", "/"),
-                    Map.of("label", "Admin Panel", "url", "/admin/gyms"),
-                    Map.of("label", "Gyms", "url", "/admin/gyms"),
-                    Map.of("label", gym.getName(), "url", "/admin/gyms/" + gym.getId()),
-                    Map.of("label", "Edit", "url", "")
-            ));
             return "pages/admin/gyms/update";
         }
 

@@ -157,3 +157,12 @@ INSERT INTO goes (session_id, boulder_id, result, timestamp) VALUES
     (5, 19, 'CLOSE_TRY', '2024-12-04 19:00:00'),
     (5, 20, 'DID_NOT_FINISH', '2024-12-04 19:20:00'),
     (5, 21, 'CLOSE_TRY', '2024-12-04 19:45:00');
+
+INSERT INTO boulder_comments (user_id, boulder_id, comment, created_at) VALUES
+    -- Comments for boulder 1 (Links hinten)
+    (1, 1, 'sick boulder🔥', '2024-12-01 20:35:00'),
+    (2, 1, 'love this one!', '2024-12-02 18:15:00'),
+    (3, 1, 'crimpy and fun 💪', '2024-12-02 19:30:00'),
+    (4, 1, 'perfect warmup', '2024-12-03 17:20:00'),
+    (1, 1, 'got it second try 🎉', '2024-12-03 20:00:00'),
+    (2, 1, 'nice flow', '2024-12-04 18:45:00');

@@ -3,9 +3,9 @@
 }
 
 @theme {
-    --font-main: "DM Sans", ui-sans-serif, system-ui, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-        "Noto Color Emoji";
+    --font-main:
+        "DM Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
     --color-foreground: black; /* color for text */
     --color-foreground-muted: var(--color-gray-700); /* color muted text */
@@ -21,6 +21,7 @@
     --color-error: var(--color-rose-400);
     --color-success: var(--color-lime-400);
     --color-warning: var(--color-amber-300);
+    --color-accent: var(--color-indigo-500);
 
     --radius-*: initial;
     --radius-base: 0.25rem;

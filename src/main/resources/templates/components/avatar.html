@@ -1,0 +1,8 @@
+<div
+    th:fragment="avatar(username)"
+    class="avatar"
+    th:data-username="${username}"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <span th:text="${username.substring(0, 1).toUpperCase()}">U</span>
+</div>

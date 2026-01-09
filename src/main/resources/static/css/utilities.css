@@ -17,3 +17,11 @@
 @utility warning {
     @apply bg-warning text-main-foreground;
 }
+
+@utility color-warning {
+    fill: var(--color-warning);
+}
+
+@utility color-muted {
+    fill: #e5e5e5;
+}

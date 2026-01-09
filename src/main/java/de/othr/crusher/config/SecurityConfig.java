@@ -81,7 +81,9 @@ public class SecurityConfig {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
-                        .permitAll());
+                        .permitAll())
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/error"));
         return http.build();
     }
 }
