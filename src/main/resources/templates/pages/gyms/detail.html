@@ -63,6 +63,28 @@
                         th:replace="~{components/star-rating :: star-rating('/gyms/' + ${gym.id} + '/rating', ${currentRating}, ${averageRating})}"
                     ></div>
                 </section>
+
+                <!-- Card 3: Current Weather -->
+                <section
+                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                    th:if="${weather != null}"
+                >
+                    <p class="text-sm font-medium text-foreground-muted">
+                        Current Weather
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div
+                            th:replace="~{components/icons :: ${weather.icon()}}"
+                            class="text-accent"
+                        ></div>
+                        <p
+                            class="text-5xl font-bold text-main"
+                            th:text="${weather.text()}"
+                        >
+                            Sunny
+                        </p>
+                    </div>
+                </section>
             </div>
 
             <!-- Comments Section (full width) -->

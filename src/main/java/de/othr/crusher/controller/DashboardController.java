@@ -2,6 +2,8 @@ package de.othr.crusher.controller;
 
 import de.othr.crusher.model.*;
 import de.othr.crusher.repository.BoulderCommentRepository;
+import de.othr.crusher.service.WeatherService;
+import de.othr.crusher.service.WeatherService.WeatherInfo;
 import de.othr.crusher.repository.BoulderRatingRepository;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
@@ -48,6 +50,7 @@ public class DashboardController {
     private final BoulderCommentRepository commentRepository;
     private final GymRatingRepository gymRatingRepository;
     private final GymCommentRepository gymCommentRepository;
+    private final WeatherService weatherService;
 
     public DashboardController(
             SessionRepository sessionRepository,
@@ -61,7 +64,8 @@ public class DashboardController {
             BoulderRatingRepository ratingRepository,
             BoulderCommentRepository commentRepository,
             GymRatingRepository gymRatingRepository,
-            GymCommentRepository gymCommentRepository) {
+            GymCommentRepository gymCommentRepository,
+            WeatherService weatherService) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.boulderRepository = boulderRepository;
@@ -74,6 +78,7 @@ public class DashboardController {
         this.commentRepository = commentRepository;
         this.gymRatingRepository = gymRatingRepository;
         this.gymCommentRepository = gymCommentRepository;
+        this.weatherService = weatherService;
     }
 
     /**
@@ -302,10 +307,14 @@ public class DashboardController {
         // Get all comments for this gym
         List<GymCommentEntity> comments = gymCommentRepository.findByGymIdOrderByCreatedAtDesc(gym.getId());
 
+        // Get weather for gym's city
+        WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
+
         model.addAttribute("gym", gym);
         model.addAttribute("currentRating", currentRating);
         model.addAttribute("averageRating", averageRating);
         model.addAttribute("comments", comments);
+        model.addAttribute("weather", weather);
 
         return "pages/gyms/detail";
     }
