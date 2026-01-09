@@ -167,7 +167,11 @@
                         </tr>
                     </tbody>
                     <tbody th:unless="${boulders.isEmpty()}">
-                        <tr th:each="boulder : ${boulders}">
+                        <tr
+                            class="cursor-pointer hover:bg-main"
+                            th:each="boulder : ${boulders}"
+                            th:onclick="|window.location.href='@{/boulders/{id}(id=${boulder.id})}';|"
+                        >
                             <td>
                                 <div
                                     th:class="'color-badge ' + ${boulder.color.cssColorClass}"
@@ -181,14 +185,8 @@
                                     Grade
                                 </span>
                             </td>
-                            <td>
-                                <a
-                                    th:href="@{/boulders/{id}(id=${boulder.id})}"
-                                    th:text="${boulder.description}"
-                                    class="text-main hover:underline"
-                                >
-                                    Description
-                                </a>
+                            <td th:text="${boulder.description}">
+                                Description
                             </td>
                             <td>
                                 <span
