@@ -1,0 +1,44 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <section class="card space-y-8 p-8 text-center max-w-md mx-auto">
+                <h1>
+                    Error <span th:text="${status}">403</span> -
+                    <span th:text="${error}">Forbidden</span>
+                </h1>
+
+                <p class="text-lg text-muted" th:if="${status == 403}">
+                    You don't have permission to access this resource.
+                </p>
+                <p class="text-lg text-muted" th:if="${status == 401}">
+                    You need to be logged in to access this resource.
+                </p>
+                <p
+                    class="text-lg text-muted"
+                    th:if="${status != 403 && status != 401}"
+                >
+                    There was a problem with your request.
+                </p>
+
+                <p
+                    class="text-base text-muted"
+                    th:if="${message}"
+                    th:text="${message}"
+                >
+                    Error message goes here
+                </p>
+
+                <div class="flex gap-4 justify-center">
+                    <a href="javascript:history.back()" class="button secondary"
+                        >Go Back</a
+                    >
+                    <a href="/" class="button primary">Go to Home</a>
+                </div>
+            </section>
+        </main>
+    </th:block>
+</th:block>
