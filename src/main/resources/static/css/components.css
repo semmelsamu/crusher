@@ -30,8 +30,9 @@
     @apply px-0 aspect-square;
 }
 
-.button:disabled {
-    @apply shadow-none border-foreground-muted text-foreground-muted hover:translate-none cursor-default;
+.button:disabled,
+.button[disabled] {
+    @apply shadow-none border-foreground-muted text-foreground-muted! hover:translate-none cursor-default;
 }
 
 /*

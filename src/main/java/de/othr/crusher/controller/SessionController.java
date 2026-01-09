@@ -71,6 +71,39 @@ public class SessionController {
     }
 
     /**
+     * Displays all sessions for the current user.
+     *
+     * @param principal the authenticated user
+     * @param model Spring model to pass data to the view
+     * @return view name for the sessions list page
+     */
+    @GetMapping("/sessions")
+    @Transactional(readOnly = true)
+    public String showAllSessions(Principal principal, Model model) {
+        UserEntity user = findUserByPrincipal(principal);
+        List<SessionEntity> sessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId());
+
+        // Find the most recently used gym
+        GymEntity lastGym = sessions.stream()
+                .filter(session -> session.getGym() != null)
+                .findFirst()
+                .map(SessionEntity::getGym)
+                .orElse(null);
+
+        // Find active session (if any)
+        SessionEntity activeSession = sessions.stream()
+                .filter(session -> session.getEndedAt() == null)
+                .findFirst()
+                .orElse(null);
+
+        model.addAttribute("sessions", sessions);
+        model.addAttribute("lastGym", lastGym);
+        model.addAttribute("activeSession", activeSession);
+
+        return "pages/sessions/all";
+    }
+
+    /**
      * Displays the form for creating a new session (gym selection).
      *
      * @param model Spring model to pass data to the view
@@ -170,7 +203,7 @@ public class SessionController {
      * @param id session ID
      * @param principal the authenticated user
      * @param redirectAttributes attributes for flash messages on redirect
-     * @return redirect to the session detail page
+     * @return redirect to the sessions list page
      */
     @PostMapping("/sessions/{id}/end")
     @Transactional
@@ -198,7 +231,7 @@ public class SessionController {
             "message", "Session ended successfully!"
         ));
 
-        return "redirect:/dashboard";
+        return "redirect:/sessions";
     }
 
     /**
@@ -207,7 +240,7 @@ public class SessionController {
      * @param id session ID
      * @param principal the authenticated user
      * @param redirectAttributes attributes for flash messages on redirect
-     * @return redirect to the dashboard
+     * @return redirect to the sessions list page
      */
     @DeleteMapping("/sessions/{id}")
     @Transactional
@@ -229,7 +262,7 @@ public class SessionController {
             "message", "Session deleted successfully!"
         ));
 
-        return "redirect:/dashboard";
+        return "redirect:/sessions";
     }
 
     /**

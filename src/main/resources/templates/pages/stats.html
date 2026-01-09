@@ -4,43 +4,28 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <div class="wrapper">
-            <div class="flex flex-col items-center space-y-4 my-8">
-                <h1>Welcome to Crusher</h1>
-                <p>Track your climbing progress and achievements</p>
+        <main
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Statistics', url: '/stats'} } }"
+        >
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
 
-                <!-- Active Session -->
-                <a
-                    th:if="${activeSession != null}"
-                    th:href="@{/sessions/{id}(id=${activeSession.id})}"
-                    class="button primary"
-                >
-                    Continue your last Session
+            <div class="flex items-center gap-4">
+                <a th:href="@{/dashboard}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
                 </a>
 
-                <!-- Last Gym Quick Start -->
-                <form
-                    th:if="${activeSession == null && lastGym != null}"
-                    th:action="@{/sessions}"
-                    method="post"
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
                 >
-                    <input
-                        type="hidden"
-                        name="gymId"
-                        th:value="${lastGym.id}"
-                    />
-                    <button type="submit" class="button success">
-                        <span th:text="'Start Session in ' + ${lastGym.name}"
-                            >Start Session</span
-                        >
-                    </button>
-                </form>
+                    <h1>Your Statistics</h1>
+                </header>
             </div>
 
             <!-- Statistics Section -->
             <section class="space-y-4">
-                <h2>Your Statistics</h2>
-
                 <!-- Simple number stats - 2 columns -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Total Boulders Finished -->
@@ -272,6 +257,6 @@
                     </div>
                 </div>
             </section>
-        </div>
+        </main>
     </th:block>
 </th:block>
