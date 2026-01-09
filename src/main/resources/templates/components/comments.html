@@ -1,6 +1,6 @@
 <section
     th:fragment="comments(actionUrl, comments)"
-    class="card p-6 space-y-4"
+    class="card p-4 space-y-4"
     xmlns:th="http://www.thymeleaf.org"
 >
     <h2>Comments</h2>
@@ -15,102 +15,31 @@
 
     <div
         th:unless="${comments == null || comments.isEmpty()}"
-        class="grid grid-cols-1 md:grid-cols-3 gap-4"
+        class="flex flex-col gap-4"
     >
-        <!-- Spalte 1 -->
-        <div class="flex flex-col gap-4 md:mt-8">
-            <div
-                th:each="comment, iterStat : ${comments}"
-                th:if="${iterStat.index % 3 == 0}"
-                class="card p-4 space-y-3"
-            >
-                <div class="flex items-center gap-2">
-                    <span
-                        class="font-bold text-xs text-muted-foreground"
-                        th:text="${comment.user.name}"
-                    >
-                        Username
-                    </span>
-                    <span class="text-xs text-muted-foreground"> • </span>
-                    <span class="text-xs text-muted-foreground">
-                        <span
-                            th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"
-                        >
-                            01.01.2024 12:00
-                        </span>
-                    </span>
-                </div>
-                <p
-                    class="text-2xl font-bold text-accent whitespace-pre-wrap leading-tight"
-                    th:text="${comment.comment}"
+        <div th:each="comment : ${comments}" class="card p-4 space-y-3">
+            <div class="flex items-center gap-2">
+                <span
+                    class="font-bold text-xs text-muted-foreground"
+                    th:text="${comment.user.name}"
                 >
-                    Comment text goes here
-                </p>
-            </div>
-        </div>
-
-        <!-- Spalte 2 -->
-        <div class="flex flex-col gap-4">
-            <div
-                th:each="comment, iterStat : ${comments}"
-                th:if="${iterStat.index % 3 == 1}"
-                class="card p-4 space-y-3"
-            >
-                <div class="flex items-center gap-2">
+                    Username
+                </span>
+                <span class="text-xs text-muted-foreground"> • </span>
+                <span class="text-xs text-muted-foreground">
                     <span
-                        class="font-bold text-xs text-muted-foreground"
-                        th:text="${comment.user.name}"
+                        th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"
                     >
-                        Username
+                        01.01.2024 12:00
                     </span>
-                    <span class="text-xs text-muted-foreground"> • </span>
-                    <span class="text-xs text-muted-foreground">
-                        <span
-                            th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"
-                        >
-                            01.01.2024 12:00
-                        </span>
-                    </span>
-                </div>
-                <p
-                    class="text-2xl font-bold text-accent whitespace-pre-wrap leading-tight"
-                    th:text="${comment.comment}"
-                >
-                    Comment text goes here
-                </p>
+                </span>
             </div>
-        </div>
-
-        <!-- Spalte 3 -->
-        <div class="flex flex-col gap-4 md:mt-8">
-            <div
-                th:each="comment, iterStat : ${comments}"
-                th:if="${iterStat.index % 3 == 2}"
-                class="card p-4 space-y-3"
+            <p
+                class="text-2xl font-bold text-accent whitespace-pre-wrap leading-tight"
+                th:text="${comment.comment}"
             >
-                <div class="flex items-center gap-2">
-                    <span
-                        class="font-bold text-xs text-muted-foreground"
-                        th:text="${comment.user.name}"
-                    >
-                        Username
-                    </span>
-                    <span class="text-xs text-muted-foreground"> • </span>
-                    <span class="text-xs text-muted-foreground">
-                        <span
-                            th:text="${#temporals.format(comment.createdAt, 'dd.MM.yyyy HH:mm')}"
-                        >
-                            01.01.2024 12:00
-                        </span>
-                    </span>
-                </div>
-                <p
-                    class="text-2xl font-bold text-accent whitespace-pre-wrap leading-tight"
-                    th:text="${comment.comment}"
-                >
-                    Comment text goes here
-                </p>
-            </div>
+                Comment text goes here
+            </p>
         </div>
     </div>
 
