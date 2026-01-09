@@ -86,6 +86,7 @@ function setupImagePicker(picker) {
 
     const updateRemoveButton = (hasAnyImage, removing = false) => {
         if (!removeButton) return;
+        removeButton.classList.toggle("hidden", !hasAnyImage);
         removeButton.disabled = !hasAnyImage;
         const label = removeButton.querySelector("span");
         if (label) {
