@@ -4,497 +4,502 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <header class="mt-16 mb-8 text-center">
-            <div class="flex items-center justify-center gap-6">
-                <img
-                    src="/images/wordmark.svg"
-                    alt="crusher"
-                    class="h-10 -mb-1"
-                />
-                <div class="w-1 h-16 bg-foreground"></div>
-                <h1>Dashboard</h1>
-            </div>
-            <p class="block font-medium text-xl mt-4">
-                Welcome back,
-                <strong sec:authentication="principal.username"></strong>!
-            </p>
-            <p class="block mt-2 text-foreground-muted">
-                <time
-                    th:datetime="${currentDateTime}"
-                    th:text="${#temporals.format(currentDateTime, 'dd.MM.yyyy HH:mm')}"
-                ></time>
-            </p>
-        </header>
-        <main class="wrapper grid grid-cols-3 gap-8">
-            <section class="card self-start divide-y-2">
-                <h2 class="block p-6">Sessions</h2>
-                <div class="p-6 space-y-4">
-                    <!-- Session Stats -->
-                    <div class="flex justify-evenly gap-8">
-                        <div class="text-center">
-                            <p
-                                class="text-6xl font-bold text-success"
-                                th:text="${sessionCount}"
-                            >
-                                0
-                            </p>
-                            <p
-                                class="text-sm text-foreground-muted font-medium"
-                            >
-                                Total Sessions
-                            </p>
-                        </div>
-                        <div
-                            th:if="${lastSessionGoCount > 0}"
-                            class="text-center"
-                        >
-                            <p
-                                class="text-6xl font-bold text-accent"
-                                th:text="${lastSessionGoCount}"
-                            >
-                                0
-                            </p>
-                            <p
-                                class="text-sm text-foreground-muted font-medium"
-                            >
-                                Last Session Goes
-                            </p>
-                        </div>
-                    </div>
+        <main class="wrapper mt-0 mb-32">
+            <header class="my-16 text-center">
+                <div class="flex items-center justify-center gap-6">
+                    <img
+                        src="/images/wordmark.svg"
+                        alt="crusher"
+                        class="h-10 -mb-1"
+                    />
+                    <div class="w-1 h-16 bg-foreground"></div>
+                    <h1>Dashboard</h1>
                 </div>
-
-                <div class="p-6 space-y-4">
-                    <div th:if="${lastGym != null}" class="flex gap-2">
-                        <x th:replace="~{components/icons :: play}"></x>
-                        <div>
-                            <p>
-                                <span th:if="${activeSession == null}">
-                                    Last Session:
-                                </span>
-                                <span th:if="${activeSession != null}">
-                                    Current Session:
-                                </span>
-                            </p>
-                            <p>
-                                <strong th:text="${lastGym.name}">
-                                    Gym Name
-                                </strong>
-                                <time
-                                    class="text-foreground-muted"
-                                    th:datetime="${lastSession.startedAt}"
-                                    th:text="'(' + ${#temporals.format(lastSession.startedAt, 'dd.MM.yyyy HH:mm')} + ')'"
-                                ></time>
-                            </p>
-                        </div>
-                    </div>
-
-                    <p th:if="${lastGym == null}" class="text-foreground-muted">
-                        No sessions yet. Start your first climbing session!
-                    </p>
-
-                    <!-- Active Session -->
-                    <a
-                        th:if="${activeSession != null}"
-                        th:href="@{/sessions/{id}(id=${activeSession.id})}"
-                        class="button primary"
-                    >
-                        Continue Current Session
-                    </a>
-
-                    <!-- Last Gym Quick Start -->
-                    <form
-                        th:if="${activeSession == null && lastGym != null}"
-                        th:action="@{/sessions}"
-                        method="post"
-                    >
-                        <input
-                            type="hidden"
-                            name="gymId"
-                            th:value="${lastGym.id}"
-                        />
-                        <button type="submit" class="button success w-full">
-                            <span th:text="'New Session in ' + ${lastGym.name}">
-                                New Session
-                            </span>
-                        </button>
-                    </form>
-
-                    <!-- No sessions yet - go to create page -->
-                    <a
-                        th:if="${activeSession == null && lastGym == null}"
-                        th:href="@{/sessions/create}"
-                        class="button success"
-                    >
-                        Start New Session
-                    </a>
-                </div>
-                <div class="p-6 bg-background">
-                    <a href="/sessions" class="button">View All Sessions</a>
-                </div>
-            </section>
-
-            <section class="card self-start divide-y-2">
-                <h2 class="block p-6">Projects</h2>
-                <!-- Project Count Display -->
-                <div class="p-6 flex justify-evenly gap-8">
-                    <div
-                        th:if="${recentProjectAttempts > 0}"
-                        class="text-center"
-                    >
-                        <span
-                            th:text="${recentProjectAttempts}"
-                            class="text-6xl font-bold text-success"
-                            >0</span
-                        >
-                        <p class="text-sm font-medium text-foreground-muted">
-                            attempt<span th:if="${recentProjectAttempts != 1}"
-                                >s</span
-                            >
-                            this week
-                        </p>
-                    </div>
-                    <div class="text-center">
-                        <p
-                            class="text-6xl font-bold text-warning"
-                            th:text="${projectCount}"
-                        >
-                            0
-                        </p>
-                        <p class="text-sm font-medium text-foreground-muted">
-                            Active Projects
-                        </p>
-                    </div>
-                </div>
-                <!-- Recent Activity -->
-                <div class="p-6 space-y-4">
-                    <!-- Recent Projects List -->
-                    <div th:if="${!projects.isEmpty()}" class="space-y-4">
-                        <h3>Recent Projects</h3>
-                        <div class="space-y-4">
-                            <a
-                                th:each="project : ${projects}"
-                                th:href="@{/boulders/{id}(id=${project.boulder.id})}"
-                                class="flex gap-4 group"
-                            >
-                                <div
-                                    th:class="'border-2 rounded-base shadow-base p-4 group-hover:translate-[var(--box-shadow-size)] group-hover:shadow-none transition-all flex items-center justify-center ' + ${project.boulder.color.cssColorClass}"
+                <p class="block font-medium text-xl mt-4">
+                    Welcome back,
+                    <strong sec:authentication="principal.username"></strong>!
+                </p>
+                <p class="block mt-2 text-foreground-muted">
+                    <time
+                        th:datetime="${currentDateTime}"
+                        th:text="${#temporals.format(currentDateTime, 'dd.MM.yyyy HH:mm')}"
+                    ></time>
+                </p>
+            </header>
+            <div class="grid grid-cols-3 gap-8">
+                <section class="card self-start divide-y-2">
+                    <h2 class="block p-6">Sessions</h2>
+                    <div class="p-6 space-y-4">
+                        <!-- Session Stats -->
+                        <div class="flex justify-evenly gap-8">
+                            <div class="text-center">
+                                <p
+                                    class="text-6xl font-bold text-success"
+                                    th:text="${sessionCount}"
                                 >
-                                    <span
-                                        class="grade-badge"
-                                        th:text="${project.boulder.grade.name}"
-                                    >
-                                        Grade
-                                    </span>
-                                </div>
-                                <div class="flex flex-col justify-center">
-                                    <p th:text="${project.boulder.description}">
-                                        Description
-                                    </p>
-                                    <p
-                                        class="text-xs text-foreground-muted font-medium"
-                                    >
-                                        <span
-                                            th:text="${project.boulder.sector.gym.name}"
-                                        >
-                                            Gym </span
-                                        >,
-                                        <span
-                                            th:text="${project.boulder.sector.name}"
-                                        >
-                                            Sector
-                                        </span>
-                                    </p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- No Projects Message -->
-                    <p
-                        th:if="${projects.isEmpty()}"
-                        class="text-foreground-muted text-center py-4"
-                    >
-                        No projects yet. Mark boulders as projects to track your
-                        progress!
-                    </p>
-                </div>
-                <div class="p-6 bg-background space-y-4">
-                    <a
-                        th:href="@{/boulders(projectOnly=true)}"
-                        class="button primary"
-                    >
-                        View All Projects
-                    </a>
-                    <a href="/boulders" class="button">Find Boulders</a>
-                </div>
-            </section>
-
-            <section class="card divide-y-2 self-start">
-                <div class="flex items-center justify-between gap-4 p-6">
-                    <h2 th:text="${lastGym.name}">Gym Name</h2>
-                    <a
-                        th:href="@{/gyms/{id}(id=${lastGym.id})}"
-                        class="button primary"
-                    >
-                        Details
-                    </a>
-                </div>
-                <!-- Weather Widget -->
-                <div
-                    th:if="${lastGymWeather != null && lastGym != null}"
-                    class="p-6 flex items-center justify-center gap-4"
-                >
-                    <div
-                        th:replace="~{components/icons :: ${lastGymWeather.icon()}}"
-                        class="text-accent"
-                    ></div>
-                    <div>
-                        <p
-                            class="text-3xl font-bold text-accent"
-                            th:text="${lastGymWeather.text()}"
-                        >
-                            Sunny
-                        </p>
-                        <p class="text-sm text-foreground-muted font-medium">
-                            Current Weather
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Gym Metrics -->
-                <div class="p-6 flex justify-evenly gap-8">
-                    <!-- Boulder Count -->
-                    <div class="text-center">
-                        <p
-                            class="text-6xl font-bold text-primary"
-                            th:text="${lastGymBoulderCount}"
-                        >
-                            0
-                        </p>
-                        <p class="text-sm text-foreground-muted font-medium">
-                            Boulders
-                        </p>
-                    </div>
-
-                    <!-- User Rating -->
-                    <div
-                        th:if="${lastGymUserRating != null}"
-                        class="text-center"
-                    >
-                        <div class="flex items-center justify-center gap-1">
-                            <span
-                                class="text-6xl font-bold text-warning"
-                                th:text="${lastGymUserRating}"
+                                    0
+                                </p>
+                                <p
+                                    class="text-sm text-foreground-muted font-medium"
+                                >
+                                    Total Sessions
+                                </p>
+                            </div>
+                            <div
+                                th:if="${lastSessionGoCount > 0}"
+                                class="text-center"
                             >
-                                0
-                            </span>
-                            <div class="*:fill-warning">
-                                <x th:replace="~{components/icons :: star}"></x>
+                                <p
+                                    class="text-6xl font-bold text-accent"
+                                    th:text="${lastSessionGoCount}"
+                                >
+                                    0
+                                </p>
+                                <p
+                                    class="text-sm text-foreground-muted font-medium"
+                                >
+                                    Last Session Goes
+                                </p>
                             </div>
                         </div>
-                        <p class="text-sm text-foreground-muted font-medium">
-                            Your Rating
+                    </div>
+
+                    <div class="p-6 space-y-4">
+                        <div th:if="${lastGym != null}" class="flex gap-2">
+                            <x th:replace="~{components/icons :: play}"></x>
+                            <div>
+                                <p>
+                                    <span th:if="${activeSession == null}">
+                                        Last Session:
+                                    </span>
+                                    <span th:if="${activeSession != null}">
+                                        Current Session:
+                                    </span>
+                                </p>
+                                <p>
+                                    <strong th:text="${lastGym.name}">
+                                        Gym Name
+                                    </strong>
+                                    <time
+                                        class="text-foreground-muted"
+                                        th:datetime="${lastSession.startedAt}"
+                                        th:text="'(' + ${#temporals.format(lastSession.startedAt, 'dd.MM.yyyy HH:mm')} + ')'"
+                                    ></time>
+                                </p>
+                            </div>
+                        </div>
+
+                        <p
+                            th:if="${lastGym == null}"
+                            class="text-foreground-muted"
+                        >
+                            No sessions yet. Start your first climbing session!
+                        </p>
+
+                        <!-- Active Session -->
+                        <a
+                            th:if="${activeSession != null}"
+                            th:href="@{/sessions/{id}(id=${activeSession.id})}"
+                            class="button primary"
+                        >
+                            Continue Current Session
+                        </a>
+
+                        <!-- Last Gym Quick Start -->
+                        <form
+                            th:if="${activeSession == null && lastGym != null}"
+                            th:action="@{/sessions}"
+                            method="post"
+                        >
+                            <input
+                                type="hidden"
+                                name="gymId"
+                                th:value="${lastGym.id}"
+                            />
+                            <button type="submit" class="button success w-full">
+                                <span
+                                    th:text="'New Session in ' + ${lastGym.name}"
+                                >
+                                    New Session
+                                </span>
+                            </button>
+                        </form>
+
+                        <!-- No sessions yet - go to create page -->
+                        <a
+                            th:if="${activeSession == null && lastGym == null}"
+                            th:href="@{/sessions/create}"
+                            class="button success"
+                        >
+                            Start New Session
+                        </a>
+                    </div>
+                    <div class="p-6 bg-background">
+                        <a href="/sessions" class="button">View All Sessions</a>
+                    </div>
+                </section>
+
+                <section class="card self-start divide-y-2">
+                    <h2 class="block p-6">Projects</h2>
+                    <!-- Project Count Display -->
+                    <div class="p-6 flex justify-evenly gap-8">
+                        <div
+                            th:if="${recentProjectAttempts > 0}"
+                            class="text-center"
+                        >
+                            <span
+                                th:text="${recentProjectAttempts}"
+                                class="text-6xl font-bold text-success"
+                                >0</span
+                            >
+                            <p
+                                class="text-sm font-medium text-foreground-muted"
+                            >
+                                attempt<span
+                                    th:if="${recentProjectAttempts != 1}"
+                                    >s</span
+                                >
+                                this week
+                            </p>
+                        </div>
+                        <div class="text-center">
+                            <p
+                                class="text-6xl font-bold text-warning"
+                                th:text="${projectCount}"
+                            >
+                                0
+                            </p>
+                            <p
+                                class="text-sm font-medium text-foreground-muted"
+                            >
+                                Active Projects
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Recent Activity -->
+                    <div class="p-6 space-y-4">
+                        <!-- Recent Projects List -->
+                        <div th:if="${!projects.isEmpty()}" class="space-y-4">
+                            <h3>Recent Projects</h3>
+                            <div class="space-y-4">
+                                <a
+                                    th:each="project : ${projects}"
+                                    th:href="@{/boulders/{id}(id=${project.boulder.id})}"
+                                    class="flex gap-4 group"
+                                >
+                                    <div
+                                        th:class="'border-2 rounded-base shadow-base p-4 group-hover:translate-[var(--box-shadow-size)] group-hover:shadow-none transition-all flex items-center justify-center ' + ${project.boulder.color.cssColorClass}"
+                                    >
+                                        <span
+                                            class="grade-badge"
+                                            th:text="${project.boulder.grade.name}"
+                                        >
+                                            Grade
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col justify-center">
+                                        <p
+                                            th:text="${project.boulder.description}"
+                                        >
+                                            Description
+                                        </p>
+                                        <p
+                                            class="text-xs text-foreground-muted font-medium"
+                                        >
+                                            <span
+                                                th:text="${project.boulder.sector.gym.name}"
+                                            >
+                                                Gym </span
+                                            >,
+                                            <span
+                                                th:text="${project.boulder.sector.name}"
+                                            >
+                                                Sector
+                                            </span>
+                                        </p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- No Projects Message -->
+                        <p
+                            th:if="${projects.isEmpty()}"
+                            class="text-foreground-muted text-center py-4"
+                        >
+                            No projects yet. Mark boulders as projects to track
+                            your progress!
                         </p>
                     </div>
-                </div>
-
-                <div class="p-6 space-y-4">
-                    <h3>Notices</h3>
-                    <div
-                        th:if="${lastGymNotices.isEmpty()}"
-                        class="text-foreground-muted"
-                    >
-                        No notices yet
-                    </div>
-                    <ul th:if="${!lastGymNotices.isEmpty()}" class="space-y-4">
-                        <li
-                            th:each="notice : ${lastGymNotices}"
-                            class="border-2 p-4 rounded-base bg-background"
+                    <div class="p-6 bg-background space-y-4">
+                        <a
+                            th:href="@{/boulders(projectOnly=true)}"
+                            class="button primary"
                         >
-                            <strong th:text="${notice.title}">
-                                Notice Title
-                            </strong>
-                            <p class="text-sm text-foreground-muted">
-                                <time
-                                    th:datetime="${notice.creationDate}"
-                                    th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy HH:mm')}"
-                                >
-                                    Date
-                                </time>
-                            </p>
-                        </li>
-                    </ul>
-                    <div
-                        th:if="${lastGym == null}"
-                        class="text-foreground-muted"
-                    >
-                        No gym visited yet. Start your first climbing session!
+                            View All Projects
+                        </a>
+                        <a href="/boulders" class="button">Find Boulders</a>
                     </div>
-                </div>
-                <div class="p-6 bg-background">
-                    <a href="/gyms" class="button">View All Gyms</a>
-                </div>
-            </section>
+                </section>
 
-            <section class="card col-span-2">
-                <div class="p-6 space-y-6">
-                    <h2>Your Statistics</h2>
-
-                    <!-- Big Number Metrics Grid -->
-                    <div class="grid grid-cols-4 gap-4">
-                        <!-- Total Boulders Finished -->
+                <section class="card divide-y-2 self-start">
+                    <div class="flex items-center justify-between gap-4 p-6">
+                        <h2 th:text="${lastGym.name}">Gym Name</h2>
+                        <a
+                            th:href="@{/gyms/{id}(id=${lastGym.id})}"
+                            class="button primary"
+                        >
+                            Details
+                        </a>
+                    </div>
+                    <!-- Weather Widget -->
+                    <div
+                        th:if="${lastGymWeather != null && lastGym != null}"
+                        class="p-6 flex items-center justify-center gap-4"
+                    >
                         <div
-                            class="flex flex-col items-center justify-center p-4 rounded border-2"
-                        >
+                            th:replace="~{components/icons :: ${lastGymWeather.icon()}}"
+                            class="text-accent"
+                        ></div>
+                        <div>
                             <p
-                                class="text-sm font-medium text-foreground-muted mb-2 text-center"
+                                class="text-3xl font-bold text-accent"
+                                th:text="${lastGymWeather.text()}"
                             >
-                                Boulders Finished
+                                Sunny
                             </p>
                             <p
-                                class="text-5xl font-bold text-success"
-                                th:text="${stats.totalBouldersFinished}"
+                                class="text-sm text-foreground-muted font-medium"
+                            >
+                                Current Weather
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Gym Metrics -->
+                    <div class="p-6 flex justify-evenly gap-8">
+                        <!-- Boulder Count -->
+                        <div class="text-center">
+                            <p
+                                class="text-6xl font-bold text-primary"
+                                th:text="${lastGymBoulderCount}"
                             >
                                 0
                             </p>
-                        </div>
-
-                        <!-- Total Attempts -->
-                        <div
-                            class="flex flex-col items-center justify-center p-4 rounded border-2"
-                        >
                             <p
-                                class="text-sm font-medium text-foreground-muted mb-2 text-center"
+                                class="text-sm text-foreground-muted font-medium"
                             >
-                                Total Attempts
-                            </p>
-                            <p
-                                class="text-5xl font-bold text-main"
-                                th:text="${stats.totalAttempts}"
-                            >
-                                0
+                                Boulders
                             </p>
                         </div>
 
-                        <!-- Success Rate -->
+                        <!-- User Rating -->
                         <div
-                            class="flex flex-col items-center justify-center p-4 rounded border-2"
+                            th:if="${lastGymUserRating != null}"
+                            class="text-center"
                         >
-                            <p
-                                class="text-sm font-medium text-foreground-muted mb-2 text-center"
-                            >
-                                Success Rate
-                            </p>
-                            <p class="text-5xl font-bold text-primary">
+                            <div class="flex items-center justify-center gap-1">
                                 <span
-                                    th:text="${#numbers.formatDecimal(successRate, 1, 0)}"
+                                    class="text-6xl font-bold text-warning"
+                                    th:text="${lastGymUserRating}"
                                 >
                                     0
                                 </span>
-                                <span class="text-2xl">%</span>
-                            </p>
-                        </div>
-
-                        <!-- Highest Grade -->
-                        <div
-                            class="flex flex-col items-center justify-center p-4 rounded border-2"
-                        >
+                                <div class="*:fill-warning">
+                                    <x
+                                        th:replace="~{components/icons :: star}"
+                                    ></x>
+                                </div>
+                            </div>
                             <p
-                                class="text-sm font-medium text-foreground-muted mb-2 text-center"
+                                class="text-sm text-foreground-muted font-medium"
                             >
-                                Highest Grade
-                            </p>
-                            <p
-                                class="text-5xl font-bold text-accent"
-                                th:text="${stats.highestGrade != null ? stats.highestGrade : '-'}"
-                            >
-                                -
+                                Your Rating
                             </p>
                         </div>
                     </div>
 
-                    <!-- Result Breakdown -->
-                    <div>
-                        <h3 class="text-sm font-semibold mb-3">
-                            Result Breakdown
-                        </h3>
-                        <div class="grid grid-cols-3 gap-4">
-                            <!-- Finished -->
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="flex items-center justify-center w-10 h-10 rounded-full bg-success bg-opacity-20"
-                                >
-                                    <x
-                                        th:replace="~{components/icons :: check}"
-                                    ></x>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-2xl font-bold text-success"
-                                        th:text="${stats.finishedCount}"
-                                    >
-                                        0
-                                    </p>
-                                    <p
-                                        class="text-xs text-foreground-muted uppercase"
-                                    >
-                                        Finished
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Close Try -->
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="flex items-center justify-center w-10 h-10 rounded-full bg-warning bg-opacity-20"
-                                >
-                                    <x
-                                        th:replace="~{components/icons :: flame}"
-                                    ></x>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-2xl font-bold text-warning"
-                                        th:text="${stats.closeTryCount}"
-                                    >
-                                        0
-                                    </p>
-                                    <p
-                                        class="text-xs text-foreground-muted uppercase"
-                                    >
-                                        Close Try
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Did Not Finish -->
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="flex items-center justify-center w-10 h-10 rounded-full bg-danger bg-opacity-20"
-                                >
-                                    <x
-                                        th:replace="~{components/icons :: x}"
-                                    ></x>
-                                </div>
-                                <div>
-                                    <p
-                                        class="text-2xl font-bold text-danger"
-                                        th:text="${stats.didNotFinishCount}"
-                                    >
-                                        0
-                                    </p>
-                                    <p
-                                        class="text-xs text-foreground-muted uppercase"
-                                    >
-                                        Did Not Finish
-                                    </p>
-                                </div>
-                            </div>
+                    <div class="p-6 space-y-4">
+                        <h3>Notices</h3>
+                        <div
+                            th:if="${lastGymNotices.isEmpty()}"
+                            class="text-foreground-muted"
+                        >
+                            No notices yet
                         </div>
+                        <ul
+                            th:if="${!lastGymNotices.isEmpty()}"
+                            class="space-y-4"
+                        >
+                            <li
+                                th:each="notice : ${lastGymNotices}"
+                                class="border-2 p-4 rounded-base bg-background"
+                            >
+                                <strong th:text="${notice.title}">
+                                    Notice Title
+                                </strong>
+                                <p class="text-sm text-foreground-muted">
+                                    <time
+                                        th:datetime="${notice.creationDate}"
+                                        th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy HH:mm')}"
+                                    >
+                                        Date
+                                    </time>
+                                </p>
+                            </li>
+                        </ul>
+                        <div
+                            th:if="${lastGym == null}"
+                            class="text-foreground-muted"
+                        >
+                            No gym visited yet. Start your first climbing
+                            session!
+                        </div>
+                    </div>
+                    <div class="p-6 bg-background">
+                        <a href="/gyms" class="button">View All Gyms</a>
+                    </div>
+                </section>
+            </div>
+
+            <section class="card divide-y-2 max-w-5xl mx-auto">
+                <div class="p-6 flex items-center justify-between">
+                    <h2>Your Statistics</h2>
+                    <a href="/stats" class="button primary"
+                        >View All Statistics</a
+                    >
+                </div>
+                <div
+                    class="p-6 grid grid-cols-4 gap-4 bg-background *:bg-secondary-background *:rounded-base *:border-2 *:text-center *:p-6"
+                >
+                    <!-- Total Boulders Finished -->
+                    <div>
+                        <p
+                            class="text-5xl font-bold text-success"
+                            th:text="${stats.totalBouldersFinished}"
+                        >
+                            0
+                        </p>
+                        <p class="text-sm font-medium text-foreground-muted">
+                            Boulders Finished
+                        </p>
+                    </div>
+
+                    <!-- Total Attempts -->
+                    <div>
+                        <p
+                            class="text-5xl font-bold text-main"
+                            th:text="${stats.totalAttempts}"
+                        >
+                            0
+                        </p>
+                        <p class="text-sm font-medium text-foreground-muted">
+                            Total Attempts
+                        </p>
+                    </div>
+
+                    <!-- Success Rate -->
+                    <div>
+                        <p class="text-5xl font-bold text-primary">
+                            <span
+                                th:text="${#numbers.formatDecimal(successRate, 1, 0)}"
+                            >
+                                0
+                            </span>
+                            <span class="text-2xl">%</span>
+                        </p>
+                        <p class="text-sm font-medium text-foreground-muted">
+                            Success Rate
+                        </p>
+                    </div>
+
+                    <!-- Highest Grade -->
+                    <div>
+                        <p
+                            class="text-5xl font-bold text-accent"
+                            th:text="${stats.highestGrade != null ? stats.highestGrade : '-'}"
+                        >
+                            -
+                        </p>
+                        <p class="text-sm font-medium text-foreground-muted">
+                            Highest Grade
+                        </p>
                     </div>
                 </div>
-                <div class="p-6 bg-background border-t-2">
-                    <a href="/stats" class="button">View All Statistics</a>
+                <div class="p-6 space-y-4">
+                    <!-- Result Breakdown -->
+                    <h3>Result Breakdown</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <!-- Finished -->
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-full bg-success"
+                            >
+                                <x
+                                    th:replace="~{components/icons :: check}"
+                                ></x>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-3xl font-bold text-success"
+                                    th:text="${stats.finishedCount}"
+                                >
+                                    0
+                                </p>
+                                <p
+                                    class="text-sm text-foreground-muted font-medium"
+                                >
+                                    Finished
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Close Try -->
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-full bg-warning"
+                            >
+                                <x
+                                    th:replace="~{components/icons :: flame}"
+                                ></x>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-3xl font-bold text-warning"
+                                    th:text="${stats.closeTryCount}"
+                                >
+                                    0
+                                </p>
+                                <p
+                                    class="text-sm text-foreground-muted font-medium"
+                                >
+                                    Close Try
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Did Not Finish -->
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="flex items-center justify-center w-10 h-10 rounded-full bg-error"
+                            >
+                                <x th:replace="~{components/icons :: x}"></x>
+                            </div>
+                            <div>
+                                <p
+                                    class="text-3xl font-bold text-error"
+                                    th:text="${stats.didNotFinishCount}"
+                                >
+                                    0
+                                </p>
+                                <p
+                                    class="text-sm text-foreground-muted font-medium"
+                                >
+                                    Did Not Finish
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
