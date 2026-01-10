@@ -196,6 +196,13 @@ document.addEventListener("DOMContentLoaded", () => {
         sessionStorage.removeItem("ratingScroll");
     }
 
+    // Restore scroll after pagination
+    const storedPaginationScroll = sessionStorage.getItem("paginationScroll");
+    if (storedPaginationScroll) {
+        window.scrollTo(0, parseInt(storedPaginationScroll, 10));
+        sessionStorage.removeItem("paginationScroll");
+    }
+
     // Persist scroll before submitting toggle forms
     document.querySelectorAll("form.toggle-form").forEach((form) => {
         form.addEventListener("submit", () => {
@@ -216,6 +223,18 @@ document.addEventListener("DOMContentLoaded", () => {
             sessionStorage.setItem("ratingScroll", String(window.scrollY));
         });
     });
+
+    // Persist scroll before clicking pagination links
+    document
+        .querySelectorAll("nav[aria-label='Pagination'] a")
+        .forEach((link) => {
+            link.addEventListener("click", () => {
+                sessionStorage.setItem(
+                    "paginationScroll",
+                    String(window.scrollY),
+                );
+            });
+        });
 
     // Initialize bar charts
     initializeBarCharts();

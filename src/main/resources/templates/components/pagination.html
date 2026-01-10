@@ -1,0 +1,76 @@
+<nav
+    th:fragment="pagination(page, baseUrl)"
+    th:if="${page.totalPages > 1}"
+    class="flex justify-center items-center gap-3 mt-4"
+    role="navigation"
+    aria-label="Pagination"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <!-- Previous Button -->
+    <a
+        th:if="${!page.first}"
+        th:href="${baseUrl + '?page=' + (page.number - 1)}"
+        class="button button-square primary shadow-none mr-2"
+        aria-label="Previous page"
+    >
+        <x th:replace="~{components/icons :: chevron-left}"></x>
+    </a>
+    <button
+        th:if="${page.first}"
+        class="button button-square primary shadow-none mr-2"
+        disabled
+        aria-label="Previous page"
+    >
+        <x th:replace="~{components/icons :: chevron-left}"></x>
+    </button>
+
+    <!-- Page Numbers (max 3) -->
+    <th:block
+        th:with="
+            currentPage=${page.number},
+            totalPages=${page.totalPages},
+            tempStart=${currentPage - 1},
+            startPage=${tempStart < 0 ? 0 : (tempStart > totalPages - 3 ? (totalPages - 3 > 0 ? totalPages - 3 : 0) : tempStart)},
+            endPage=${startPage + 2 < totalPages - 1 ? startPage + 2 : totalPages - 1}"
+    >
+        <th:block th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
+            <a
+                th:if="${pageNum != currentPage}"
+                th:href="${baseUrl + '?page=' + pageNum}"
+                th:text="${pageNum + 1}"
+                class="button button-square primary shadow-none"
+                th:aria-label="|Page ${pageNum + 1}|"
+            >
+                1
+            </a>
+            <button
+                th:if="${pageNum == currentPage}"
+                th:text="${pageNum + 1}"
+                class="button button-square !bg-white shadow-none"
+                style="color: black !important"
+                disabled
+                th:aria-label="|Current page ${pageNum + 1}|"
+            >
+                1
+            </button>
+        </th:block>
+    </th:block>
+
+    <!-- Next Button -->
+    <a
+        th:if="${!page.last}"
+        th:href="${baseUrl + '?page=' + (page.number + 1)}"
+        class="button button-square primary shadow-none ml-2"
+        aria-label="Next page"
+    >
+        <x th:replace="~{components/icons :: chevron-right}"></x>
+    </a>
+    <button
+        th:if="${page.last}"
+        class="button button-square primary shadow-none ml-2"
+        disabled
+        aria-label="Next page"
+    >
+        <x th:replace="~{components/icons :: chevron-right}"></x>
+    </button>
+</nav>

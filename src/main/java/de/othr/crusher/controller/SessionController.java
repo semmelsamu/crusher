@@ -15,6 +15,9 @@ import de.othr.crusher.repository.ProjectRepository;
 import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -173,13 +176,18 @@ public class SessionController {
      * Displays details for a specific session.
      *
      * @param id session ID
+     * @param page current page number (0-indexed, defaults to 0)
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
      * @return view name for the session detail page
      */
     @GetMapping("/sessions/{id}")
     @Transactional(readOnly = true)
-    public String showSession(@PathVariable("id") Long id, Principal principal, Model model) {
+    public String showSession(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            Principal principal,
+            Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
@@ -189,10 +197,13 @@ public class SessionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
-        List<GoEntity> goes = goRepository.findBySessionIdOrderByTimestampDesc(session.getId());
+        // Create pagination request with 10 items per page
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<GoEntity> goesPage = goRepository.findBySessionIdOrderByTimestampDesc(session.getId(), pageable);
 
         model.addAttribute("currentSession", session);
-        model.addAttribute("goes", goes);
+        model.addAttribute("goesPage", goesPage);
+        model.addAttribute("goes", goesPage.getContent());
 
         return "pages/sessions/detail";
     }
