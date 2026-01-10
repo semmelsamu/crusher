@@ -7,6 +7,7 @@ import org.htmlunit.html.HtmlPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Matcher;
@@ -31,10 +32,12 @@ public class CrowdLevelService {
     /**
      * Fetches crowd level from a gym's website.
      * Uses HtmlUnit with JavaScript execution to handle dynamically loaded content.
+     * Results are cached for 5 minutes to avoid excessive scraping.
      *
      * @param url the URL of the gym's website
      * @return CrowdLevel with percentage and status, or null if unavailable
      */
+    @Cacheable(value = "crowdLevels", key = "#url", unless = "#result == null")
     public CrowdLevel getCrowdLevel(String url) {
         if (url == null || url.isBlank()) {
             logger.debug("Crowd level URL is null or empty");
@@ -56,7 +59,7 @@ public class CrowdLevelService {
             // Suppress HtmlUnit warnings
             java.util.logging.Logger.getLogger("org.htmlunit").setLevel(java.util.logging.Level.OFF);
 
-            logger.info("Fetching crowd level from: {} (cache miss)", url);
+            logger.info("Scraping crowd level from: {} (cache miss - will be cached for 5 minutes)", url);
             HtmlPage page = webClient.getPage(url);
 
             // Wait for JavaScript to execute
