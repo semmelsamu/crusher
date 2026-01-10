@@ -26,22 +26,11 @@
             endPage=${startPage + 2 < totalPages - 1 ? startPage + 2 : totalPages - 1}"
     >
         <th:block th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
-            <a
-                th:if="${pageNum != currentPage}"
-                th:href="${baseUrl + '?page=' + pageNum}"
-                th:text="${pageNum + 1}"
-                class="button button-square primary shadow-none"
-                th:aria-label="|Page ${pageNum + 1}|"
-            >
-                1
-            </a>
             <button
-                th:if="${pageNum == currentPage}"
                 th:text="${pageNum + 1}"
-                class="button button-square !bg-white shadow-none"
-                style="color: black !important"
-                disabled
-                th:aria-label="|Current page ${pageNum + 1}|"
+                th:class="'button button-square' + (${pageNum == currentPage} ? ' primary' : '')"
+                th:disabled="${pageNum == currentPage}"
+                th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${pageNum})}';|"
             >
                 1
             </button>
