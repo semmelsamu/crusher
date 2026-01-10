@@ -224,11 +224,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Persist scroll before clicking pagination links
+    // Persist scroll before clicking pagination buttons
     document
-        .querySelectorAll("nav[aria-label='Pagination'] a")
-        .forEach((link) => {
-            link.addEventListener("click", () => {
+        .querySelectorAll("nav[aria-label='Pagination'] button")
+        .forEach((button) => {
+            button.addEventListener("click", () => {
                 sessionStorage.setItem(
                     "paginationScroll",
                     String(window.scrollY),
@@ -427,3 +427,50 @@ function initAvatars() {
         }
     });
 }
+
+/**
+ * Lazy loads crowd level data for a gym
+ */
+function loadCrowdLevel() {
+    const container = document.getElementById("crowd-level-container");
+    if (!container) return;
+
+    const gymId = container.getAttribute("data-gym-id");
+    if (!gymId) return;
+
+    const loadingEl = document.getElementById("crowd-level-loading");
+    const dataEl = document.getElementById("crowd-level-data");
+    const errorEl = document.getElementById("crowd-level-error");
+
+    // Fetch crowd level from API
+    fetch(`/api/gyms/${gymId}/crowd-level`)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Crowd level not available");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            // Hide loading, show data
+            loadingEl.classList.add("hidden");
+            dataEl.classList.remove("hidden");
+
+            // Update UI with data
+            document.getElementById("crowd-level-percentage").textContent =
+                data.percentage.toFixed(1) + "%";
+            document.getElementById("crowd-level-bar").style.width =
+                data.percentage + "%";
+        })
+        .catch((error) => {
+            // Hide loading, show error
+            loadingEl.classList.add("hidden");
+            errorEl.classList.remove("hidden");
+            console.error("Error loading crowd level:", error);
+        });
+}
+
+// Initialize on page load
+document.addEventListener("DOMContentLoaded", () => {
+    initAvatars();
+    loadCrowdLevel();
+});

@@ -3,6 +3,8 @@ package de.othr.crusher.repository;
 import de.othr.crusher.model.SessionEntity;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +21,15 @@ public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
      * @return list of sessions belonging to the user, sorted by start time descending
      */
     List<SessionEntity> findByUserIdOrderByStartedAtDesc(Long userId);
+
+    /**
+     * Finds sessions for a given user with pagination, ordered by start time (most recent first).
+     *
+     * @param userId identifier of the user
+     * @param pageable pagination information
+     * @return page of sessions belonging to the user, sorted by start time descending
+     */
+    Page<SessionEntity> findByUserIdOrderByStartedAtDesc(Long userId, Pageable pageable);
 
     /**
      * Finds the active (running) session for a given user, if one exists.
