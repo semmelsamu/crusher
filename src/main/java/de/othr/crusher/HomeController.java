@@ -35,6 +35,16 @@ public class HomeController {
     }
 
     /**
+     * Displays the index/landing page accessible to everyone.
+     *
+     * @return view name for the index page
+     */
+    @GetMapping("/")
+    public String showIndex() {
+        return "pages/index";
+    }
+
+    /**
      * Displays the statistics page with quick session actions.
      * Shows either:
      * - A link to the active session if one exists
