@@ -1,7 +1,9 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.dto.UserStatistics;
 import de.othr.crusher.model.*;
 import de.othr.crusher.repository.BoulderCommentRepository;
+import de.othr.crusher.service.StatisticsService;
 import de.othr.crusher.service.WeatherService;
 import de.othr.crusher.service.WeatherService.WeatherInfo;
 import de.othr.crusher.repository.BoulderRatingRepository;
@@ -54,6 +56,7 @@ public class DashboardController {
     private final GymCommentRepository gymCommentRepository;
     private final NoticeRepository noticeRepository;
     private final WeatherService weatherService;
+    private final StatisticsService statisticsService;
 
     public DashboardController(
             SessionRepository sessionRepository,
@@ -69,7 +72,8 @@ public class DashboardController {
             GymRatingRepository gymRatingRepository,
             GymCommentRepository gymCommentRepository,
             NoticeRepository noticeRepository,
-            WeatherService weatherService) {
+            WeatherService weatherService,
+            StatisticsService statisticsService) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.boulderRepository = boulderRepository;
@@ -84,6 +88,7 @@ public class DashboardController {
         this.gymCommentRepository = gymCommentRepository;
         this.noticeRepository = noticeRepository;
         this.weatherService = weatherService;
+        this.statisticsService = statisticsService;
     }
 
     /**
@@ -125,12 +130,73 @@ public class DashboardController {
                     .toList();
         }
 
+        // Fetch project data
+        List<ProjectEntity> projects = projectRepository.findByUserId(user.getId());
+        List<ProjectEntity> recentProjects = projects.stream()
+                .limit(5)
+                .toList();
+        long projectCount = projects.size();
+
+        // Fetch recent project activity (last 7 days)
+        LocalDateTime weekAgo = LocalDateTime.now().minusDays(7);
+        long recentProjectAttempts = projects.stream()
+                .flatMap(p -> goRepository.findByBoulderIdOrderByTimestampDesc(p.getBoulder().getId()).stream())
+                .filter(go -> go.getTimestamp().isAfter(weekAgo))
+                .count();
+
+        // Fetch user statistics
+        UserStatistics stats = statisticsService.getUserStatistics(user.getId());
+
+        // Calculate success rate
+        double successRate = stats.getTotalAttempts() > 0 
+                ? (stats.getFinishedCount() * 100.0 / stats.getTotalAttempts()) 
+                : 0.0;
+
+        // Fetch session stats
+        long sessionCount = sessions.size();
+        long lastSessionGoCount = lastSession != null ? goRepository.findBySessionIdOrderByTimestampDesc(lastSession.getId()).size() : 0;
+
+        // Fetch gym-related data
+        WeatherInfo lastGymWeather = lastGym != null ? weatherService.getWeatherForCity(lastGym.getCity()) : null;
+        long lastGymBoulderCount = lastGym != null ? boulderRepository.findBySectorGymId(lastGym.getId()).size() : 0;
+        Integer lastGymUserRating = lastGym != null 
+                ? gymRatingRepository.findByUserIdAndGymId(user.getId(), lastGym.getId())
+                    .map(r -> r.getRating())
+                    .orElse(null) 
+                : null;
+        Double lastGymAverageRating = lastGym != null
+                ? gymRatingRepository.findByGymId(lastGym.getId()).stream()
+                    .mapToInt(GymRatingEntity::getRating)
+                    .average()
+                    .orElse(0.0)
+                : null;
+
+        // Add all attributes to model
         model.addAttribute("user", user);
         model.addAttribute("currentDateTime", LocalDateTime.now());
         model.addAttribute("lastGym", lastGym);
         model.addAttribute("lastSession", lastSession);
         model.addAttribute("activeSession", activeSession);
         model.addAttribute("lastGymNotices", lastGymNotices);
+        
+        // Project data
+        model.addAttribute("projects", recentProjects);
+        model.addAttribute("projectCount", projectCount);
+        model.addAttribute("recentProjectAttempts", recentProjectAttempts);
+        
+        // Statistics data
+        model.addAttribute("stats", stats);
+        model.addAttribute("successRate", successRate);
+        
+        // Session data
+        model.addAttribute("sessionCount", sessionCount);
+        model.addAttribute("lastSessionGoCount", lastSessionGoCount);
+        
+        // Gym data
+        model.addAttribute("lastGymWeather", lastGymWeather);
+        model.addAttribute("lastGymBoulderCount", lastGymBoulderCount);
+        model.addAttribute("lastGymUserRating", lastGymUserRating);
+        model.addAttribute("lastGymAverageRating", lastGymAverageRating);
 
         return "pages/dashboard";
     }
