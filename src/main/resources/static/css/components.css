@@ -282,7 +282,7 @@
 */
 
 .details {
-    @apply border-2 shadow-base rounded-base;
+    @apply border-2 shadow-base rounded-base overflow-clip;
 }
 
 .details summary {

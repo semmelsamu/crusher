@@ -1,0 +1,228 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+    <th:block layout:fragment="content">
+        <header class="bg-main">
+            <div class="wrapper my-48">
+                <img
+                    th:src="@{/images/wordmark.svg}"
+                    alt="Crusher"
+                    class="mx-auto h-16"
+                />
+
+                <h2 class="text-center max-w-xl mx-auto">
+                    Track your bouldering progress, log your sessions, and crush
+                    your goals.
+                </h2>
+
+                <div
+                    class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8"
+                >
+                    <div sec:authorize="isAuthenticated()">
+                        <a th:href="@{/dashboard}" class="button">
+                            Go to Dashboard
+                            <x
+                                th:replace="~{components/icons :: arrow-right}"
+                            ></x>
+                        </a>
+                    </div>
+                    <div sec:authorize="!isAuthenticated()">
+                        <a th:href="@{/login}" class="button">
+                            Get started
+                            <x th:replace="~{components/icons :: log-in}"></x>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="wrapper mx-auto my-16">
+            <h2 class="mb-4">Features</h2>
+            <p class="text-foreground-muted mb-8 max-w-prose text-balance">
+                crusher is a tool that helps you track your bouldering progress,
+                log your sessions, and crush your goals.
+            </p>
+            <div
+                class="grid grid-cols-1 md:grid-cols-3 gap-16 *:space-y-4 *:text-center *:p-12"
+            >
+                <div class="card">
+                    <div class="flex justify-center">
+                        <x th:replace="~{components/icons :: play}"></x>
+                    </div>
+                    <h3 class="font-bold text-xl">Track Sessions</h3>
+                    <p class="text-foreground-muted text-balance">
+                        Log your climbing sessions at different gyms and monitor
+                        your progress over time.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="flex justify-center">
+                        <x
+                            th:replace="~{components/icons :: star}"
+                            class="text-primary-500"
+                        ></x>
+                    </div>
+                    <h3 class="font-bold text-xl">Rate Boulders</h3>
+                    <p class="text-foreground-muted text-balance">
+                        Rate and comment on boulders to help the community and
+                        refine your skills.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="flex justify-center">
+                        <x
+                            th:replace="~{components/icons :: flame}"
+                            class="text-primary-500"
+                        ></x>
+                    </div>
+                    <h3 class="font-bold text-xl">View Statistics</h3>
+                    <p class="text-foreground-muted text-balance">
+                        Analyze your climbing data with detailed statistics and
+                        insights.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- App Screenshots Section -->
+        <section class="bg-secondary-background">
+            <div class="max-w-5xl mx-auto my-16">
+                <h2 class="text-center mb-4">See It In Action</h2>
+                <p
+                    class="text-center text-foreground-muted mb-16 max-w-prose mx-auto text-balance"
+                >
+                    The app is designed to be simple and easy to use, with a
+                    focus on providing a clean and intuitive user experience.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mx-auto">
+                    <div class="space-y-4">
+                        <img
+                            src="/images/landing-page/track.png"
+                            class="aspect-video border-2 object-cover w-full object-top"
+                        />
+                        <p class="text-center text-balance">
+                            Monitor your climbing sessions and see your
+                            improvement over time
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <img
+                            src="/images/landing-page/rate.png"
+                            class="aspect-video border-2 object-cover w-full object-top"
+                        />
+                        <p class="text-center text-balance">
+                            Share your feedback and help the community with
+                            detailed ratings
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <img
+                            src="/images/landing-page/stats.png"
+                            class="aspect-video border-2 object-cover w-full object-top"
+                        />
+                        <p class="text-center text-balance">
+                            Analyze your performance with comprehensive climbing
+                            statistics
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <img
+                            src="/images/landing-page/session.png"
+                            class="aspect-video border-2 object-cover w-full object-top"
+                        />
+                        <p class="text-center text-balance">
+                            Start, track, and review your climbing sessions
+                            effortlessly
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real Images Section -->
+        <section class="wrapper my-16">
+            <h2 class="text-center mb-16">Experience The Climb</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-16 mx-auto">
+                <img
+                    src="/images/landing-page/bouldergirl.png"
+                    class="object-cover w-full aspect-video"
+                />
+
+                <img
+                    src="/images/landing-page/chalkbag.png"
+                    class="object-cover w-full aspect-video"
+                />
+
+                <img
+                    src="/images/landing-page/sector.png"
+                    class="object-cover w-full aspect-video"
+                />
+            </div>
+        </section>
+
+        <section class="bg-main">
+            <div class="wrapper my-32">
+                <h2 class="text-center mb-2">Start using crusher today</h2>
+                <p class="text-center mb-8">The adventure starts here</p>
+                <a href="/login" class="button mx-auto w-fit">
+                    Get started
+                    <x th:replace="~{components/icons :: log-in}"></x>
+                </a>
+            </div>
+        </section>
+
+        <!-- Technical Details Section -->
+        <section class="bg-black py-16 *:text-white">
+            <div class="wrapper">
+                <div class="max-w-prose space-y-4">
+                    <h2>About this project</h2>
+                    <p>
+                        This application was built as a final project for the
+                        Software Engineering course at OTH Regensburg. It was
+                        developed by Samuel Kroiß, Hannes Weber, and Carl
+                        Czarnetzki.
+                    </p>
+                    <p>Technologies used:</p>
+                    <ul class="list-disc list-inside">
+                        <li>Spring Boot</li>
+                        <li>Spring Security</li>
+                        <li>Thymeleaf Templates</li>
+                        <li>Tailwind CSS</li>
+                    </ul>
+                    <p>Special thanks:</p>
+                    <ul class="list-disc list-inside">
+                        <li>
+                            <a
+                                href="https://www.neobrutalism.dev/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="underline"
+                                >Neobrutalism Components</a
+                            >
+                            for the design inspiration
+                        </li>
+                    </ul>
+                    <p>
+                        crusher is open source. The complete source code can be
+                        found on GitHub:<br />
+                        <a
+                            href="https://github.com/semmelsamu/crusher"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="underline"
+                            >https://github.com/semmelsamu/crusher</a
+                        >
+                    </p>
+                </div>
+            </div>
+        </section>
+    </th:block>
+</th:block>

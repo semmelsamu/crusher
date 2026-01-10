@@ -14,30 +14,33 @@
                 />
             </a>
 
-            <div class="flex items-center gap-4">
-                <p
-                    sec:authorize="isAuthenticated()"
-                    class="flex items-center gap-2 px-4"
+            <div
+                class="flex items-center gap-4"
+                sec:authorize="isAuthenticated()"
+            >
+                <a
+                    href="/admin/gyms"
+                    class="button button-ghost"
+                    sec:authorize="hasAnyRole('ADMIN', 'OWNER')"
                 >
-                    <x th:replace="~{components/icons :: user}"></x>
-                    <span sec:authentication="principal.username"></span>
-                </p>
+                    <x
+                        th:replace="~{components/icons :: sliders-horizontal}"
+                    ></x>
+                    Admin Panel
+                </a>
 
                 <a
                     href="/dashboard"
-                    class="button"
+                    class="button button-ghost"
                     sec:authorize="isAuthenticated()"
                 >
+                    <x th:replace="~{components/icons :: layout-dashboard}"></x>
                     Dashboard
                 </a>
 
-                <a
-                    href="/admin/gyms"
-                    class="button"
-                    sec:authorize="hasAnyRole('ADMIN', 'OWNER')"
-                >
-                    Admin Panel
-                </a>
+                <div
+                    th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
+                ></div>
 
                 <form
                     th:action="@{/logout}"
@@ -45,11 +48,24 @@
                     class="inline"
                     sec:authorize="isAuthenticated()"
                 >
-                    <button type="submit" class="button">
-                        Logout
+                    <button
+                        type="submit"
+                        class="button button-ghost button-square"
+                    >
                         <x th:replace="~{components/icons :: log-out}"></x>
                     </button>
                 </form>
+            </div>
+
+            <div
+                class="flex items-center gap-4"
+                sec:authorize="!isAuthenticated()"
+            >
+                You are not logged in.
+                <a href="/login" class="button button-ghost">
+                    Login
+                    <x th:replace="~{components/icons :: log-in}"></x>
+                </a>
             </div>
         </div>
     </div>

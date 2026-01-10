@@ -70,6 +70,7 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
