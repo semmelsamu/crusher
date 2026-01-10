@@ -92,9 +92,13 @@
         <!-- App Screenshots Section -->
         <section class="bg-secondary-background">
             <div class="max-w-5xl mx-auto my-16">
-                <h2 class="text-3xl font-bold text-center mb-16">
-                    See It In Action
-                </h2>
+                <h2 class="text-center mb-4">See It In Action</h2>
+                <p
+                    class="text-center text-foreground-muted mb-16 max-w-prose mx-auto text-balance"
+                >
+                    The app is designed to be simple and easy to use, with a
+                    focus on providing a clean and intuitive user experience.
+                </p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mx-auto">
                     <div class="space-y-4">
                         <img
@@ -144,148 +148,34 @@
         </section>
 
         <!-- Real Images Section -->
-        <section class="wrapper">
-            <h2 class="text-3xl font-bold text-center mb-8">
-                Experience The Climb
-            </h2>
-            <div
-                class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
-            >
-                <div
-                    class="aspect-square bg-gradient-to-br from-sky-400 to-sky-600 rounded-base border-2 shadow-base flex items-end p-6"
-                >
-                    <p class="text-xl font-medium text-main-foreground">
-                        Indoor Climbing Gyms
-                    </p>
-                </div>
+        <section class="wrapper my-16">
+            <h2 class="text-center mb-16">Experience The Climb</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-16 mx-auto">
+                <img
+                    src="/images/landing-page/bouldergirl.png"
+                    class="object-cover w-full aspect-video"
+                />
 
-                <div
-                    class="aspect-square bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-base border-2 shadow-base flex items-end p-6"
-                >
-                    <p class="text-xl font-medium text-main-foreground">
-                        Boulder Problems
-                    </p>
-                </div>
+                <img
+                    src="/images/landing-page/chalkbag.png"
+                    class="object-cover w-full aspect-video"
+                />
 
-                <div
-                    class="aspect-square bg-gradient-to-br from-lime-400 to-lime-600 rounded-base border-2 shadow-base flex items-end p-6"
-                >
-                    <p class="text-xl font-medium text-main-foreground">
-                        Climbers In Action
-                    </p>
-                </div>
+                <img
+                    src="/images/landing-page/sector.png"
+                    class="object-cover w-full aspect-video"
+                />
             </div>
         </section>
 
-        <!-- Trusted By Section -->
-        <section class="wrapper">
-            <h2 class="text-3xl font-bold text-center mb-8">
-                Trusted By Climbing Communities
-            </h2>
-            <div
-                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
-            >
-                <div class="card p-6 space-y-3 text-center">
-                    <div class="flex justify-center">
-                        <x th:replace="~{components/icons :: circle-plus}"></x>
-                    </div>
-                    <h3 class="font-bold text-lg">Boulderplanet Regensburg</h3>
-                    <span class="badge">Regensburg</span>
-                </div>
-
-                <div class="card p-6 space-y-3 text-center">
-                    <div class="flex justify-center">
-                        <x th:replace="~{components/icons :: circle-plus}"></x>
-                    </div>
-                    <h3 class="font-bold text-lg">
-                        Einstein Boulderhalle München
-                    </h3>
-                    <span class="badge">München</span>
-                </div>
-
-                <div class="card p-6 space-y-3 text-center">
-                    <div class="flex justify-center">
-                        <x th:replace="~{components/icons :: circle-plus}"></x>
-                    </div>
-                    <h3 class="font-bold text-lg">DAV Kletterzentrum</h3>
-                    <span class="badge">Bayern</span>
-                </div>
-
-                <div class="card p-6 space-y-3 text-center">
-                    <div class="flex justify-center">
-                        <x th:replace="~{components/icons :: circle-plus}"></x>
-                    </div>
-                    <h3 class="font-bold text-lg">Café Kraft</h3>
-                    <span class="badge">Nürnberg</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Testimonials Section -->
-        <section class="wrapper">
-            <h2 class="text-3xl font-bold text-center mb-8">
-                What Climbers Say
-            </h2>
-            <div
-                class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto"
-            >
-                <div class="card p-6 space-y-4">
-                    <div class="flex gap-1 justify-center">
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                    </div>
-                    <p class="text-foreground-muted italic">
-                        "Crusher has completely changed how I track my climbing
-                        progress. The session logs are invaluable!"
-                    </p>
-                    <div class="text-center pt-2">
-                        <p class="font-bold">Lisa M.</p>
-                        <p class="text-sm text-foreground-muted">
-                            Intermediate Boulderer
-                        </p>
-                    </div>
-                </div>
-
-                <div class="card p-6 space-y-4">
-                    <div class="flex gap-1 justify-center">
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                    </div>
-                    <p class="text-foreground-muted italic">
-                        "As a gym owner, having climbers rate our boulders helps
-                        us set better routes."
-                    </p>
-                    <div class="text-center pt-2">
-                        <p class="font-bold">Thomas K.</p>
-                        <p class="text-sm text-foreground-muted">Gym Owner</p>
-                    </div>
-                </div>
-
-                <div class="card p-6 space-y-4">
-                    <div class="flex gap-1 justify-center">
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                        <x th:replace="~{components/icons :: star}"></x>
-                    </div>
-                    <p class="text-foreground-muted italic">
-                        "Finally, a clean and simple tool to see my climbing
-                        statistics over time."
-                    </p>
-                    <div class="text-center pt-2">
-                        <p class="font-bold">Alex R.</p>
-                        <p class="text-sm text-foreground-muted">
-                            Advanced Climber
-                        </p>
-                    </div>
-                </div>
+        <section class="bg-main">
+            <div class="wrapper my-32">
+                <h2 class="text-center mb-2">Start using crusher today</h2>
+                <p class="text-center mb-8">The adventure starts here</p>
+                <a href="/login" class="button mx-auto w-fit">
+                    Get started
+                    <x th:replace="~{components/icons :: log-in}"></x>
+                </a>
             </div>
         </section>
 
