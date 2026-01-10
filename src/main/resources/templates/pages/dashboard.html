@@ -26,9 +26,19 @@
                     ></time>
                 </p>
             </header>
-            <div class="grid grid-cols-3 gap-8">
+            <div class="grid grid-cols-3 gap-4 2xl:gap-8">
                 <section class="card self-start divide-y-2">
-                    <h2 class="block p-6">Sessions</h2>
+                    <div class="p-6 flex items-center justify-between">
+                        <h2>Sessions</h2>
+                        <a
+                            href="/sessions"
+                            class="button button-ghost button-square"
+                        >
+                            <x
+                                th:replace="~{components/icons :: arrow-right}"
+                            ></x>
+                        </a>
+                    </div>
                     <div class="p-6 space-y-4">
                         <!-- Session Stats -->
                         <div class="flex justify-evenly gap-8">
@@ -134,13 +144,21 @@
                             Start New Session
                         </a>
                     </div>
-                    <div class="p-6 bg-background">
-                        <a href="/sessions" class="button">View All Sessions</a>
-                    </div>
                 </section>
 
                 <section class="card self-start divide-y-2">
-                    <h2 class="block p-6">Projects</h2>
+                    <div class="p-6 flex items-center justify-between">
+                        <h2>Projects</h2>
+                        <a
+                            th:href="@{/boulders(projectOnly=true)}"
+                            class="button button-ghost button-square"
+                        >
+                            <x
+                                th:replace="~{components/icons :: arrow-right}"
+                            ></x>
+                        </a>
+                    </div>
+
                     <!-- Project Count Display -->
                     <div class="p-6 flex justify-evenly gap-8">
                         <div
@@ -231,14 +249,10 @@
                             your progress!
                         </p>
                     </div>
-                    <div class="p-6 bg-background space-y-4">
-                        <a
-                            th:href="@{/boulders(projectOnly=true)}"
-                            class="button primary"
+                    <div class="p-6 bg-background">
+                        <a href="/boulders" class="button"
+                            >Browse All Boulders</a
                         >
-                            View All Projects
-                        </a>
-                        <a href="/boulders" class="button">Find Boulders</a>
                     </div>
                 </section>
 
@@ -247,9 +261,11 @@
                         <h2 th:text="${lastGym.name}">Gym Name</h2>
                         <a
                             th:href="@{/gyms/{id}(id=${lastGym.id})}"
-                            class="button primary"
+                            class="button button-ghost button-square"
                         >
-                            Details
+                            <x
+                                th:replace="~{components/icons :: arrow-right}"
+                            ></x>
                         </a>
                     </div>
                     <!-- Weather Widget -->
@@ -365,9 +381,9 @@
             <section class="card divide-y-2 max-w-5xl mx-auto">
                 <div class="p-6 flex items-center justify-between">
                     <h2>Your Statistics</h2>
-                    <a href="/stats" class="button primary"
-                        >View All Statistics</a
-                    >
+                    <a href="/stats" class="button button-ghost button-square">
+                        <x th:replace="~{components/icons :: arrow-right}"></x>
+                    </a>
                 </div>
                 <div
                     class="p-6 grid grid-cols-4 gap-4 bg-background *:bg-secondary-background *:rounded-base *:border-2 *:text-center *:p-6"
