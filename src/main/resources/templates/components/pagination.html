@@ -16,14 +16,14 @@
         <x th:replace="~{components/icons :: chevron-left}"></x>
     </button>
 
-    <!-- Page Numbers (max 3) -->
+    <!-- Page Numbers -->
     <th:block
         th:with="
             currentPage=${page.number},
             totalPages=${page.totalPages},
-            tempStart=${currentPage - 1},
-            startPage=${tempStart < 0 ? 0 : (tempStart > totalPages - 3 ? (totalPages - 3 > 0 ? totalPages - 3 : 0) : tempStart)},
-            endPage=${startPage + 2 < totalPages - 1 ? startPage + 2 : totalPages - 1}"
+            tempStart=${currentPage - 2},
+            startPage=${tempStart < 0 ? 0 : (tempStart > totalPages - 5 ? (totalPages - 5 > 0 ? totalPages - 5 : 0) : tempStart)},
+            endPage=${startPage + 4 < totalPages - 1 ? startPage + 4 : totalPages - 1}"
     >
         <th:block th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
             <button
