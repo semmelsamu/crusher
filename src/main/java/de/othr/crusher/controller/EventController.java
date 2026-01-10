@@ -151,6 +151,7 @@ public class EventController {
         event.setPeriodic(formEvent.isPeriodic());
         event.setWeekday(formEvent.getWeekday());
         event.setDate(formEvent.getDate());
+        event.setFrequency(formEvent.getFrequency());
         event.setTime(formEvent.getTime());
         normalizeSchedule(event);
         eventRepository.save(event);
@@ -227,6 +228,9 @@ public class EventController {
             if (event.getWeekday() == null) {
                 result.rejectValue("weekday", "NotNull", "Please select a weekday");
             }
+            if (event.getFrequency() == null) {
+                result.rejectValue("frequency", "NotNull", "Please select a frequency");
+            }
         } else if (event.getDate() == null) {
             result.rejectValue("date", "NotNull", "Please select a date");
         }
@@ -237,6 +241,7 @@ public class EventController {
             event.setDate(null);
         } else {
             event.setWeekday(null);
+            event.setFrequency(null);
         }
     }
 }

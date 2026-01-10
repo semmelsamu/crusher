@@ -2,9 +2,11 @@ package de.othr.crusher.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Entity representing an event for a gym.
@@ -29,6 +31,10 @@ public class EventEntity {
     @NotBlank(message = "Please enter a description")
     private String description;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
     @Column(nullable = false)
     private boolean periodic;
 
@@ -39,6 +45,10 @@ public class EventEntity {
     @Column(name = "event_date")
     @DateTimeFormat(pattern = "dd.MM.yy")
     private LocalDate date;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "recurrence_frequency")
+    private EventFrequency frequency;
 
     @Column(nullable = false)
     @NotBlank(message = "Please enter a time")
@@ -80,6 +90,14 @@ public class EventEntity {
         this.description = description;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public boolean isPeriodic() {
         return periodic;
     }
@@ -102,6 +120,14 @@ public class EventEntity {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public EventFrequency getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(EventFrequency frequency) {
+        this.frequency = frequency;
     }
 
     public String getTime() {

@@ -73,6 +73,29 @@
         ></p>
     </div>
 
+    <div class="space-y-2" x-show="periodic" x-cloak>
+        <label class="block">Frequency</label>
+        <select
+            th:field="*{frequency}"
+            class="text-input w-full"
+            x-bind:required="periodic"
+        >
+            <option value="">Select frequency</option>
+            <option
+                th:each="frequency : ${T(de.othr.crusher.model.EventFrequency).values()}"
+                th:value="${frequency}"
+                th:text="${frequency.label}"
+            >
+                Weekly
+            </option>
+        </select>
+        <p
+            th:if="${#fields.hasErrors('frequency')}"
+            th:errors="*{frequency}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
     <div class="space-y-2" x-show="!periodic" x-cloak>
         <label class="block">Date</label>
         <input
