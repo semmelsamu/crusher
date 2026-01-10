@@ -52,5 +52,23 @@
         ></p>
     </div>
 
+    <div class="space-y-2">
+        <label class="block">Crowd Level URL (optional)</label>
+        <input
+            th:field="*{crowdLevelUrl}"
+            type="url"
+            class="text-input w-full"
+            placeholder="https://www.boulderwelt-regensburg.de/"
+        />
+        <p class="text-foreground-muted text-sm">
+            URL zur Live-Auslastungsanzeige der Halle (falls verfügbar)
+        </p>
+        <p
+            th:if="${#fields.hasErrors('crowdLevelUrl')}"
+            th:errors="*{crowdLevelUrl}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
     <button type="submit" class="button primary mt-8 ml-auto">Save</button>
 </form>

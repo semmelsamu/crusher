@@ -2,6 +2,8 @@ package de.othr.crusher.controller;
 
 import de.othr.crusher.model.*;
 import de.othr.crusher.repository.BoulderCommentRepository;
+import de.othr.crusher.service.CrowdLevelService;
+import de.othr.crusher.service.CrowdLevelService.CrowdLevel;
 import de.othr.crusher.service.WeatherService;
 import de.othr.crusher.service.WeatherService.WeatherInfo;
 import de.othr.crusher.repository.BoulderRatingRepository;
@@ -53,6 +55,7 @@ public class DashboardController {
     private final GymCommentRepository gymCommentRepository;
     private final NoticeRepository noticeRepository;
     private final WeatherService weatherService;
+    private final CrowdLevelService crowdLevelService;
 
     public DashboardController(
             SessionRepository sessionRepository,
@@ -68,7 +71,8 @@ public class DashboardController {
             GymRatingRepository gymRatingRepository,
             GymCommentRepository gymCommentRepository,
             NoticeRepository noticeRepository,
-            WeatherService weatherService) {
+            WeatherService weatherService,
+            CrowdLevelService crowdLevelService) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.boulderRepository = boulderRepository;
@@ -83,6 +87,7 @@ public class DashboardController {
         this.gymCommentRepository = gymCommentRepository;
         this.noticeRepository = noticeRepository;
         this.weatherService = weatherService;
+        this.crowdLevelService = crowdLevelService;
     }
 
     /**
@@ -317,6 +322,12 @@ public class DashboardController {
         // Get weather for gym's city
         WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
 
+        // Get crowd level for gym (if URL is configured)
+        CrowdLevel crowdLevel = null;
+        if (gym.getCrowdLevelUrl() != null && !gym.getCrowdLevelUrl().isBlank()) {
+            crowdLevel = crowdLevelService.getCrowdLevel(gym.getCrowdLevelUrl());
+        }
+
         // Count total boulders in this gym
         long boulderCount = boulderRepository.findBySectorGymId(gym.getId()).size();
 
@@ -326,6 +337,7 @@ public class DashboardController {
         model.addAttribute("comments", comments);
         model.addAttribute("notices", notices);
         model.addAttribute("weather", weather);
+        model.addAttribute("crowdLevel", crowdLevel);
         model.addAttribute("boulderCount", boulderCount);
 
         return "pages/gyms/detail";

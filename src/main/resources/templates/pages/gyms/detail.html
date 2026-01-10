@@ -52,7 +52,7 @@
                     </div>
                 </section>
 
-                <!-- Total Boulders -->
+                <!-- Total Boulders / Crowd Level -->
                 <section
                     class="card p-6 flex flex-col items-center justify-center space-y-4"
                 >
@@ -65,6 +65,42 @@
                     >
                         0
                     </p>
+
+                    <!-- Crowd Level (if available) -->
+                    <div
+                        th:if="${crowdLevel != null}"
+                        class="w-full border-t-2 pt-4 space-y-3"
+                    >
+                        <p
+                            class="text-sm font-medium text-foreground-muted text-center"
+                        >
+                            Auslastung
+                        </p>
+                        <p
+                            class="text-2xl font-bold text-accent text-center"
+                            th:text="${crowdLevel.status()}"
+                        >
+                            Mittel
+                        </p>
+                        <div class="w-full max-w-xs mx-auto">
+                            <div
+                                class="h-6 bg-background border-2 border-accent rounded-lg relative overflow-hidden"
+                            >
+                                <div
+                                    class="h-full bg-gradient-to-r from-success via-warning to-danger transition-all duration-500"
+                                    th:style="'width: ' + ${crowdLevel.percentage()} + '%'"
+                                ></div>
+                            </div>
+                            <p
+                                class="text-xs text-center mt-2 text-foreground-muted"
+                            >
+                                <span
+                                    th:text="${#numbers.formatDecimal(crowdLevel.percentage(), 1, 1)}"
+                                    >0.0</span
+                                >% ausgelastet
+                            </p>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Your Rating -->

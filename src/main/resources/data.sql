@@ -4,10 +4,11 @@ INSERT INTO users (name, role, password) VALUES
     ('klaus', 'OWNER', 'test'),
     ('crusher', 'ADMIN', 'test');
 
-INSERT INTO gyms (name, street, city, email) VALUES
-    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de'),
-    ('Einstein Boulderhalle', 'Landsberger Straße 185', 'München', 'info@einstein-boulder.de'),
-    ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de');
+INSERT INTO gyms (name, street, city, email, crowd_level_url) VALUES
+    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', NULL),
+    ('Einstein Boulderhalle', 'Landsberger Straße 185', 'München', 'info@einstein-boulder.de', NULL),
+    ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de', NULL),
+    ('Boulderwelt Regensburg', 'Isarstraße 99', 'Regensburg', 'regensburg@boulderwelt.de', 'https://www.boulderwelt-regensburg.de/');
 
 INSERT INTO grades (name, v_scale, font_scale, description, gym_id) VALUES
     ('1', 'V0', '4', NULL, 1),
