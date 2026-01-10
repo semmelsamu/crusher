@@ -168,7 +168,7 @@
                 <!-- Recent Activity -->
                 <div class="p-6 space-y-4">
                     <!-- Recent Projects List -->
-                    <div th:if="${!projects.isEmpty()}" class="space-y-3">
+                    <div th:if="${!projects.isEmpty()}" class="space-y-4">
                         <h3>Recent Projects</h3>
                         <div class="space-y-4">
                             <a
@@ -186,7 +186,7 @@
                                         Grade
                                     </span>
                                 </div>
-                                <div class="py-2">
+                                <div class="flex flex-col justify-center">
                                     <p th:text="${project.boulder.description}">
                                         Description
                                     </p>
@@ -229,117 +229,101 @@
                 </div>
             </section>
 
-            <section class="card">
-                <div class="p-6 space-y-4">
-                    <div th:if="${lastGym != null}">
-                        <div class="flex items-center justify-between gap-4">
-                            <h2 th:text="${lastGym.name}">Gym Name</h2>
-                            <a
-                                th:href="@{/gyms/{id}(id=${lastGym.id})}"
-                                class="button primary"
-                            >
-                                Details
-                            </a>
-                        </div>
-
-                        <!-- Weather Widget -->
-                        <div
-                            th:if="${lastGymWeather != null}"
-                            class="flex items-center justify-center gap-4 py-4 border-y-2 my-4"
+            <section class="card divide-y-2 self-start">
+                <div class="flex items-center justify-between gap-4 p-6">
+                    <h2 th:text="${lastGym.name}">Gym Name</h2>
+                    <a
+                        th:href="@{/gyms/{id}(id=${lastGym.id})}"
+                        class="button primary"
+                    >
+                        Details
+                    </a>
+                </div>
+                <!-- Weather Widget -->
+                <div
+                    th:if="${lastGymWeather != null && lastGym != null}"
+                    class="p-6 flex items-center justify-center gap-4"
+                >
+                    <div
+                        th:replace="~{components/icons :: ${lastGymWeather.icon()}}"
+                        class="text-accent"
+                    ></div>
+                    <div>
+                        <p
+                            class="text-3xl font-bold text-accent"
+                            th:text="${lastGymWeather.text()}"
                         >
-                            <div
-                                th:replace="~{components/icons :: ${lastGymWeather.icon()}}"
-                                class="text-accent"
-                            ></div>
-                            <div class="text-center">
-                                <p
-                                    class="text-3xl font-bold text-accent"
-                                    th:text="${lastGymWeather.text()}"
-                                >
-                                    Sunny
-                                </p>
-                                <p class="text-xs text-foreground-muted">
-                                    Current Weather
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Gym Metrics -->
-                        <div class="grid grid-cols-2 gap-4 pb-4">
-                            <!-- Boulder Count -->
-                            <div class="text-center">
-                                <p
-                                    class="text-3xl font-bold text-primary"
-                                    th:text="${lastGymBoulderCount}"
-                                >
-                                    0
-                                </p>
-                                <p
-                                    class="text-xs text-foreground-muted uppercase"
-                                >
-                                    Boulders
-                                </p>
-                            </div>
-
-                            <!-- User Rating -->
-                            <div
-                                th:if="${lastGymUserRating != null}"
-                                class="text-center"
-                            >
-                                <div
-                                    class="flex items-center justify-center gap-1"
-                                >
-                                    <span
-                                        class="text-3xl font-bold text-warning"
-                                        th:text="${lastGymUserRating}"
-                                    >
-                                        0
-                                    </span>
-                                    <x
-                                        th:replace="~{components/icons :: star}"
-                                        class="text-warning"
-                                    ></x>
-                                </div>
-                                <p
-                                    class="text-xs text-foreground-muted uppercase"
-                                >
-                                    Your Rating
-                                </p>
-                            </div>
-                        </div>
-
-                        <h3 class="my-4">Notices</h3>
-                        <div
-                            th:if="${lastGymNotices.isEmpty()}"
-                            class="text-foreground-muted"
-                        >
-                            No notices yet
-                        </div>
-                        <ul
-                            th:if="${!lastGymNotices.isEmpty()}"
-                            class="space-y-3"
-                        >
-                            <li
-                                th:each="notice : ${lastGymNotices}"
-                                class="border-l-4 border-primary pl-3"
-                            >
-                                <p
-                                    class="font-semibold"
-                                    th:text="${notice.title}"
-                                >
-                                    Notice Title
-                                </p>
-                                <p class="text-sm text-foreground-muted">
-                                    <time
-                                        th:datetime="${notice.creationDate}"
-                                        th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy HH:mm')}"
-                                    >
-                                        Date
-                                    </time>
-                                </p>
-                            </li>
-                        </ul>
+                            Sunny
+                        </p>
+                        <p class="text-sm text-foreground-muted font-medium">
+                            Current Weather
+                        </p>
                     </div>
+                </div>
+
+                <!-- Gym Metrics -->
+                <div class="p-6 flex justify-evenly gap-8">
+                    <!-- Boulder Count -->
+                    <div class="text-center">
+                        <p
+                            class="text-6xl font-bold text-primary"
+                            th:text="${lastGymBoulderCount}"
+                        >
+                            0
+                        </p>
+                        <p class="text-sm text-foreground-muted font-medium">
+                            Boulders
+                        </p>
+                    </div>
+
+                    <!-- User Rating -->
+                    <div
+                        th:if="${lastGymUserRating != null}"
+                        class="text-center"
+                    >
+                        <div class="flex items-center justify-center gap-1">
+                            <span
+                                class="text-6xl font-bold text-warning"
+                                th:text="${lastGymUserRating}"
+                            >
+                                0
+                            </span>
+                            <div class="*:fill-warning">
+                                <x th:replace="~{components/icons :: star}"></x>
+                            </div>
+                        </div>
+                        <p class="text-sm text-foreground-muted font-medium">
+                            Your Rating
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-6 space-y-4">
+                    <h3>Notices</h3>
+                    <div
+                        th:if="${lastGymNotices.isEmpty()}"
+                        class="text-foreground-muted"
+                    >
+                        No notices yet
+                    </div>
+                    <ul th:if="${!lastGymNotices.isEmpty()}" class="space-y-4">
+                        <li
+                            th:each="notice : ${lastGymNotices}"
+                            class="border-2 p-4 rounded-base bg-background"
+                        >
+                            <strong th:text="${notice.title}">
+                                Notice Title
+                            </strong>
+                            <p class="text-sm text-foreground-muted">
+                                <time
+                                    th:datetime="${notice.creationDate}"
+                                    th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy HH:mm')}"
+                                >
+                                    Date
+                                </time>
+                            </p>
+                        </li>
+                    </ul>
                     <div
                         th:if="${lastGym == null}"
                         class="text-foreground-muted"
@@ -347,7 +331,7 @@
                         No gym visited yet. Start your first climbing session!
                     </div>
                 </div>
-                <div class="p-6 bg-background border-t-2">
+                <div class="p-6 bg-background">
                     <a href="/gyms" class="button">View All Gyms</a>
                 </div>
             </section>
