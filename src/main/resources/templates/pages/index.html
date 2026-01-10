@@ -5,26 +5,24 @@
     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
     <th:block layout:fragment="content">
-        <main class="wrapper flex-1">
-            <section class="card space-y-6 p-8 max-w-3xl mx-auto text-center">
+        <header class="bg-main">
+            <div class="wrapper my-48">
                 <img
                     th:src="@{/images/wordmark.svg}"
                     alt="Crusher"
                     class="mx-auto h-16"
                 />
 
-                <h1 class="text-4xl font-bold">Welcome to Crusher</h1>
-
-                <p class="text-lg text-gray-600 dark:text-gray-300">
+                <h2 class="text-center max-w-xl mx-auto">
                     Track your bouldering progress, log your sessions, and crush
                     your goals.
-                </p>
+                </h2>
 
                 <div
                     class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8"
                 >
                     <div sec:authorize="isAuthenticated()">
-                        <a th:href="@{/dashboard}" class="button primary">
+                        <a th:href="@{/dashboard}" class="button">
                             Go to Dashboard
                             <x
                                 th:replace="~{components/icons :: arrow-right}"
@@ -32,59 +30,55 @@
                         </a>
                     </div>
                     <div sec:authorize="!isAuthenticated()">
-                        <a th:href="@{/login}" class="button primary">
-                            Log In
+                        <a th:href="@{/login}" class="button">
+                            Get started
                             <x th:replace="~{components/icons :: log-in}"></x>
                         </a>
                     </div>
                 </div>
-            </section>
-
-            <section
-                class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-8"
-            >
-                <div class="card p-6 space-y-3 text-center">
-                    <div class="flex justify-center">
-                        <x
-                            th:replace="~{components/icons :: play}"
-                            class="text-primary-500"
-                        ></x>
-                    </div>
-                    <h3 class="font-bold text-xl">Track Sessions</h3>
-                    <p class="text-gray-600 dark:text-gray-300">
-                        Log your climbing sessions at different gyms and monitor
-                        your progress over time.
-                    </p>
+            </div>
+        </header>
+        <section
+            class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-8"
+        >
+            <div class="card p-6 space-y-3 text-center">
+                <div class="flex justify-center">
+                    <x th:replace="~{components/icons :: play}"></x>
                 </div>
+                <h3 class="font-bold text-xl">Track Sessions</h3>
+                <p class="text-foreground-muted">
+                    Log your climbing sessions at different gyms and monitor
+                    your progress over time.
+                </p>
+            </div>
 
-                <div class="card p-6 space-y-3 text-center">
-                    <div class="flex justify-center">
-                        <x
-                            th:replace="~{components/icons :: star}"
-                            class="text-primary-500"
-                        ></x>
-                    </div>
-                    <h3 class="font-bold text-xl">Rate Boulders</h3>
-                    <p class="text-gray-600 dark:text-gray-300">
-                        Rate and comment on boulders to help the community and
-                        refine your skills.
-                    </p>
+            <div class="card p-6 space-y-3 text-center">
+                <div class="flex justify-center">
+                    <x
+                        th:replace="~{components/icons :: star}"
+                        class="text-primary-500"
+                    ></x>
                 </div>
+                <h3 class="font-bold text-xl">Rate Boulders</h3>
+                <p class="text-foreground-muted">
+                    Rate and comment on boulders to help the community and
+                    refine your skills.
+                </p>
+            </div>
 
-                <div class="card p-6 space-y-3 text-center">
-                    <div class="flex justify-center">
-                        <x
-                            th:replace="~{components/icons :: flame}"
-                            class="text-primary-500"
-                        ></x>
-                    </div>
-                    <h3 class="font-bold text-xl">View Statistics</h3>
-                    <p class="text-gray-600 dark:text-gray-300">
-                        Analyze your climbing data with detailed statistics and
-                        insights.
-                    </p>
+            <div class="card p-6 space-y-3 text-center">
+                <div class="flex justify-center">
+                    <x
+                        th:replace="~{components/icons :: flame}"
+                        class="text-primary-500"
+                    ></x>
                 </div>
-            </section>
-        </main>
+                <h3 class="font-bold text-xl">View Statistics</h3>
+                <p class="text-foreground-muted">
+                    Analyze your climbing data with detailed statistics and
+                    insights.
+                </p>
+            </div>
+        </section>
     </th:block>
 </th:block>
