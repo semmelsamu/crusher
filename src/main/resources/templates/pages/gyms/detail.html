@@ -66,38 +66,46 @@
                         0
                     </p>
 
-                    <!-- Crowd Level (if available) -->
+                    <!-- Crowd Level (lazy loaded) -->
                     <div
-                        th:if="${crowdLevel != null}"
+                        th:if="${gym.crowdLevelUrl != null and !#strings.isEmpty(gym.crowdLevelUrl)}"
+                        id="crowd-level-container"
+                        th:data-gym-id="${gym.id}"
                         class="w-full border-t-2 pt-4 space-y-3"
                     >
                         <p
                             class="text-sm font-medium text-foreground-muted text-center"
                         >
-                            Auslastung
+                            Crowd Level
                         </p>
-                        <p
-                            class="text-2xl font-bold text-accent text-center"
-                            th:text="${crowdLevel.status()}"
-                        >
-                            Mittel
-                        </p>
-                        <div class="w-full max-w-xs mx-auto">
-                            <div
-                                class="h-6 bg-background border-2 border-accent rounded-lg relative overflow-hidden"
-                            >
-                                <div
-                                    class="h-full bg-gradient-to-r from-success via-warning to-danger transition-all duration-500"
-                                    th:style="'width: ' + ${crowdLevel.percentage()} + '%'"
-                                ></div>
-                            </div>
+                        <!-- Loading State -->
+                        <div id="crowd-level-loading" class="text-center">
+                            <p class="text-sm text-foreground-muted">
+                                Loading...
+                            </p>
+                        </div>
+                        <!-- Crowd Level Data (hidden initially) -->
+                        <div id="crowd-level-data" class="hidden">
                             <p
-                                class="text-xs text-center mt-2 text-foreground-muted"
-                            >
-                                <span
-                                    th:text="${#numbers.formatDecimal(crowdLevel.percentage(), 1, 1)}"
-                                    >0.0</span
-                                >% ausgelastet
+                                id="crowd-level-percentage"
+                                class="text-2xl font-bold text-accent text-center"
+                            ></p>
+                            <div class="w-full max-w-xs mx-auto">
+                                <div
+                                    class="h-6 bg-background border-2 border-accent rounded-lg relative overflow-hidden"
+                                >
+                                    <div
+                                        id="crowd-level-bar"
+                                        class="h-full bg-gradient-to-r from-success via-warning to-danger transition-all duration-500"
+                                        style="width: 0%"
+                                    ></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Error State (hidden initially) -->
+                        <div id="crowd-level-error" class="hidden text-center">
+                            <p class="text-sm text-foreground-muted">
+                                Not available
                             </p>
                         </div>
                     </div>

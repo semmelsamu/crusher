@@ -47,14 +47,16 @@ public class CrowdLevelService {
             webClient = new WebClient(BrowserVersion.CHROME);
             webClient.getOptions().setJavaScriptEnabled(true);
             webClient.getOptions().setCssEnabled(false);
+            webClient.getOptions().setDownloadImages(false);
             webClient.getOptions().setThrowExceptionOnScriptError(false);
             webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
             webClient.getOptions().setTimeout(timeout);
+            webClient.getOptions().setRedirectEnabled(true);
 
             // Suppress HtmlUnit warnings
             java.util.logging.Logger.getLogger("org.htmlunit").setLevel(java.util.logging.Level.OFF);
 
-            logger.debug("Fetching crowd level from: {}", url);
+            logger.info("Fetching crowd level from: {} (cache miss)", url);
             HtmlPage page = webClient.getPage(url);
 
             // Wait for JavaScript to execute
@@ -98,15 +100,15 @@ public class CrowdLevelService {
      */
     private String getCrowdStatus(double percentage) {
         if (percentage < 25) {
-            return "Leer";
+            return "Empty";
         } else if (percentage < 50) {
-            return "Wenig los";
+            return "Chill crowd";
         } else if (percentage < 75) {
-            return "Mittel";
+            return "Busy";
         } else if (percentage < 90) {
-            return "Viel los";
+            return "Lot going on";
         } else {
-            return "Sehr voll";
+            return "Completely full";
         }
     }
 

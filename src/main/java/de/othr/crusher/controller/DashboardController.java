@@ -322,12 +322,6 @@ public class DashboardController {
         // Get weather for gym's city
         WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
 
-        // Get crowd level for gym (if URL is configured)
-        CrowdLevel crowdLevel = null;
-        if (gym.getCrowdLevelUrl() != null && !gym.getCrowdLevelUrl().isBlank()) {
-            crowdLevel = crowdLevelService.getCrowdLevel(gym.getCrowdLevelUrl());
-        }
-
         // Count total boulders in this gym
         long boulderCount = boulderRepository.findBySectorGymId(gym.getId()).size();
 
@@ -337,7 +331,6 @@ public class DashboardController {
         model.addAttribute("comments", comments);
         model.addAttribute("notices", notices);
         model.addAttribute("weather", weather);
-        model.addAttribute("crowdLevel", crowdLevel);
         model.addAttribute("boulderCount", boulderCount);
 
         return "pages/gyms/detail";

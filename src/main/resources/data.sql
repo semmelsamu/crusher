@@ -5,7 +5,7 @@ INSERT INTO users (name, role, password) VALUES
     ('crusher', 'ADMIN', 'test');
 
 INSERT INTO gyms (name, street, city, email, crowd_level_url) VALUES
-    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', NULL),
+    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', 'https://www.boulderwelt-muenchen-ost.de/'),
     ('Einstein Boulderhalle', 'Landsberger Straße 185', 'München', 'info@einstein-boulder.de', NULL),
     ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de', NULL),
     ('Boulderwelt Regensburg', 'Isarstraße 99', 'Regensburg', 'regensburg@boulderwelt.de', 'https://www.boulderwelt-regensburg.de/');
@@ -225,4 +225,9 @@ INSERT INTO notices (title, message, creation_date, gym_id) VALUES
     -- Notices for BlocHütte Nürnberg (gym 3)
     ('Winter Challenge Active', 'Our winter challenge is now live! Complete 50 routes of different grades before Feb 28th to win prizes. Track your progress on the board near the entrance. Good luck!', '2024-12-14 08:30:00', 3),
     ('New Yoga Classes', 'We''re introducing climbing-specific yoga classes every Tuesday and Thursday at 19:00. Great for flexibility and injury prevention. First class is free! Sign up at the front desk.', '2024-12-09 13:00:00', 3),
-    ('Parking Reminder', 'Please remember to park in the designated gym parking area only. Cars parked in neighboring businesses'' lots may be towed. Thank you for your cooperation!', '2024-12-01 10:00:00', 3);
+    ('Parking Reminder', 'Please remember to park in the designated gym parking area only. Cars parked in neighboring businesses'' lots may be towed. Thank you for your cooperation!', '2024-12-01 10:00:00', 3),
+
+    -- Notices for Boulderwelt Regensburg (gym 4)
+    ('Live Crowd Level Available!', 'You can now see our real-time gym capacity directly in the app! Check the crowd level indicator to find the best time to climb when it''s less busy.', '2024-12-16 12:00:00', 4),
+    ('Fresh Routes in Overhang Section', 'Our route setters just finished 20 new boulders in the overhang area. Featuring everything from V3 to V8 with creative movement patterns. Come try them out!', '2024-12-13 09:30:00', 4),
+    ('New Year''s Eve Hours', 'On December 31st we''re open from 10:00-16:00. Start the new year with some climbing! Closed on January 1st. Regular hours resume January 2nd.', '2024-12-10 15:00:00', 4);
