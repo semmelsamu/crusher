@@ -248,3 +248,20 @@ INSERT INTO notices (title, message, creation_date, gym_id) VALUES
     ('Live Crowd Level Available!', 'You can now see our real-time gym capacity directly in the app! Check the crowd level indicator to find the best time to climb when it''s less busy.', '2024-12-16 12:00:00', 4),
     ('Fresh Routes in Overhang Section', 'Our route setters just finished 20 new boulders in the overhang area. Featuring everything from V3 to V8 with creative movement patterns. Come try them out!', '2024-12-13 09:30:00', 4),
     ('New Year''s Eve Hours', 'On December 31st we''re open from 10:00-16:00. Start the new year with some climbing! Closed on January 1st. Regular hours resume January 2nd.', '2024-12-10 15:00:00', 4);
+
+INSERT INTO events (title, description, created_at, gym_id) VALUES
+    -- Events for Boulderwelt Muenchen Ost (gym 1)
+    ('Community Climb Night', 'Join our monthly community climb night with a fun scramble format and prizes. All levels welcome. Starts at 18:30.', '2024-12-12 18:30:00', 1),
+    ('Technique Workshop', 'A two-hour workshop focused on footwork and balance. Limited to 16 participants. Register at the front desk.', '2024-12-06 17:00:00', 1),
+
+    -- Events for Einstein Boulderhalle (gym 2)
+    ('Holiday Boulder Jam', 'Celebrate the season with music, mini games, and a team relay. Free for members; guests welcome with day pass.', '2024-12-22 18:00:00', 2),
+    ('Intro to Bouldering', 'A beginner-friendly session covering safety, basics, and climbing etiquette. No prior experience required.', '2024-12-09 19:00:00', 2),
+
+    -- Events for BlocHutte Nuernberg (gym 3)
+    ('Women''s Climbing Meet', 'An open meetup for women climbers to connect and climb together. Casual session with a coach on site.', '2024-12-11 19:00:00', 3),
+    ('Youth Skills Day', 'A one-day clinic for ages 10-15 covering movement basics and warmup routines.', '2024-12-07 10:00:00', 3),
+
+    -- Events for Boulderwelt Regensburg (gym 4)
+    ('Route Setter Q&A', 'Meet the setters, ask questions, and get insights on the new overhang set.', '2024-12-14 19:30:00', 4),
+    ('New Year Warmup Session', 'Start the year with a guided warmup and easy problem circuit. Open to all members.', '2024-12-29 11:00:00', 4);
