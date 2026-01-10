@@ -258,8 +258,15 @@
 
                 <section class="card divide-y-2 self-start">
                     <div class="flex items-center justify-between gap-4 p-6">
-                        <h2 th:text="${lastGym.name}">Gym Name</h2>
+                        <h2
+                            th:if="${lastGym != null}"
+                            th:text="${lastGym.name}"
+                        >
+                            Gym Name
+                        </h2>
+                        <h2 th:if="${lastGym == null}">Your Gym</h2>
                         <a
+                            th:if="${lastGym != null}"
                             th:href="@{/gyms/{id}(id=${lastGym.id})}"
                             class="button button-ghost button-square"
                         >
