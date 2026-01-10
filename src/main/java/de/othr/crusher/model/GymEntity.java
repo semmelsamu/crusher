@@ -38,6 +38,9 @@ public class GymEntity {
     @Email(message = "Please enter a correct email")
     private String email;
 
+    @Column(nullable = true)
+    private String crowdLevelUrl;
+
     @OneToMany(
             mappedBy = "gym",
             cascade = CascadeType.ALL,
@@ -107,6 +110,14 @@ public class GymEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCrowdLevelUrl() {
+        return crowdLevelUrl;
+    }
+
+    public void setCrowdLevelUrl(String crowdLevelUrl) {
+        this.crowdLevelUrl = crowdLevelUrl;
     }
 
     public List<SectorEntity> getSectors() {

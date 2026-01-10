@@ -2,6 +2,8 @@ package de.othr.crusher.controller;
 
 import de.othr.crusher.model.*;
 import de.othr.crusher.repository.BoulderCommentRepository;
+import de.othr.crusher.service.CrowdLevelService;
+import de.othr.crusher.service.CrowdLevelService.CrowdLevel;
 import de.othr.crusher.service.WeatherService;
 import de.othr.crusher.service.WeatherService.WeatherInfo;
 import de.othr.crusher.repository.BoulderRatingRepository;
@@ -53,6 +55,7 @@ public class DashboardController {
     private final GymCommentRepository gymCommentRepository;
     private final NoticeRepository noticeRepository;
     private final WeatherService weatherService;
+    private final CrowdLevelService crowdLevelService;
 
     public DashboardController(
             SessionRepository sessionRepository,
@@ -68,7 +71,8 @@ public class DashboardController {
             GymRatingRepository gymRatingRepository,
             GymCommentRepository gymCommentRepository,
             NoticeRepository noticeRepository,
-            WeatherService weatherService) {
+            WeatherService weatherService,
+            CrowdLevelService crowdLevelService) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.boulderRepository = boulderRepository;
@@ -83,6 +87,7 @@ public class DashboardController {
         this.gymCommentRepository = gymCommentRepository;
         this.noticeRepository = noticeRepository;
         this.weatherService = weatherService;
+        this.crowdLevelService = crowdLevelService;
     }
 
     /**
