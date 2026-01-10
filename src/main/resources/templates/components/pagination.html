@@ -11,7 +11,7 @@
         class="button button-square"
         th:disabled="${page.first}"
         aria-label="Previous page"
-        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number - 1})}';|"
+        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number})}';|"
     >
         <x th:replace="~{components/icons :: chevron-left}"></x>
     </button>
@@ -30,7 +30,7 @@
                 th:text="${pageNum + 1}"
                 th:class="'button button-square' + (${pageNum == currentPage} ? ' primary' : '')"
                 th:disabled="${pageNum == currentPage}"
-                th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${pageNum})}';|"
+                th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${pageNum + 1})}';|"
             >
                 1
             </button>
@@ -42,7 +42,7 @@
         class="button button-square"
         th:disabled="${page.last}"
         aria-label="Next page"
-        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number + 1})}';|"
+        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number + 2})}';|"
     >
         <x th:replace="~{components/icons :: chevron-right}"></x>
     </button>
