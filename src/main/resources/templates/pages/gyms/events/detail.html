@@ -6,7 +6,7 @@
     <th:block layout:fragment="content">
         <main
             class="wrapper"
-            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Gyms', url: '/gyms'}, {label: gym.name, url: '/gyms/' + gym.id}, {label: event.title, url: '/gyms/' + gym.id + '/events/' + event.id} } }"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Gyms', url: '/gyms'}, {label: gym.name, url: '/gyms/' + gym.id}, {label: 'Events', url: '/gyms/' + gym.id}, {label: event.title, url: '/gyms/' + gym.id + '/events/' + event.id} } }"
         >
             <div
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
