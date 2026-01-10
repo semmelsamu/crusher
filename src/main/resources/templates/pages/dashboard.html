@@ -26,20 +26,21 @@
             </p>
         </header>
         <main class="wrapper grid grid-cols-3 gap-8">
-            <section class="card self-start">
+            <section class="card self-start divide-y-2">
+                <h2 class="block p-6">Sessions</h2>
                 <div class="p-6 space-y-4">
-                    <h2 class="block">Sessions</h2>
-
                     <!-- Session Stats -->
-                    <div class="grid grid-cols-2 gap-4 pb-4 border-b-2">
+                    <div class="flex justify-evenly gap-8">
                         <div class="text-center">
                             <p
-                                class="text-3xl font-bold text-primary"
+                                class="text-6xl font-bold text-success"
                                 th:text="${sessionCount}"
                             >
                                 0
                             </p>
-                            <p class="text-xs text-foreground-muted uppercase">
+                            <p
+                                class="text-sm text-foreground-muted font-medium"
+                            >
                                 Total Sessions
                             </p>
                         </div>
@@ -48,17 +49,21 @@
                             class="text-center"
                         >
                             <p
-                                class="text-3xl font-bold text-accent"
+                                class="text-6xl font-bold text-accent"
                                 th:text="${lastSessionGoCount}"
                             >
                                 0
                             </p>
-                            <p class="text-xs text-foreground-muted uppercase">
+                            <p
+                                class="text-sm text-foreground-muted font-medium"
+                            >
                                 Last Session Goes
                             </p>
                         </div>
                     </div>
+                </div>
 
+                <div class="p-6 space-y-4">
                     <div th:if="${lastGym != null}" class="flex gap-2">
                         <x th:replace="~{components/icons :: play}"></x>
                         <div>
@@ -123,83 +128,83 @@
                         Start New Session
                     </a>
                 </div>
-                <div class="p-6 bg-background border-t-2">
+                <div class="p-6 bg-background">
                     <a href="/sessions" class="button">View All Sessions</a>
                 </div>
             </section>
 
-            <section class="card self-start">
-                <div class="p-6 space-y-4">
-                    <h2 class="block">Projects</h2>
-
-                    <!-- Project Count Display -->
-                    <div class="flex flex-col items-center justify-center py-4">
-                        <p
-                            class="text-sm font-medium text-foreground-muted mb-2"
+            <section class="card self-start divide-y-2">
+                <h2 class="block p-6">Projects</h2>
+                <!-- Project Count Display -->
+                <div class="p-6 flex justify-evenly gap-8">
+                    <div
+                        th:if="${recentProjectAttempts > 0}"
+                        class="text-center"
+                    >
+                        <span
+                            th:text="${recentProjectAttempts}"
+                            class="text-6xl font-bold text-success"
+                            >0</span
                         >
-                            Active Projects
+                        <p class="text-sm font-medium text-foreground-muted">
+                            attempt<span th:if="${recentProjectAttempts != 1}"
+                                >s</span
+                            >
+                            this week
                         </p>
+                    </div>
+                    <div class="text-center">
                         <p
                             class="text-6xl font-bold text-warning"
                             th:text="${projectCount}"
                         >
                             0
                         </p>
+                        <p class="text-sm font-medium text-foreground-muted">
+                            Active Projects
+                        </p>
                     </div>
-
-                    <!-- Recent Activity -->
-                    <div
-                        th:if="${recentProjectAttempts > 0}"
-                        class="text-center text-sm text-foreground-muted"
-                    >
-                        <span th:text="${recentProjectAttempts}">0</span>
-                        attempt<span th:if="${recentProjectAttempts != 1}"
-                            >s</span
-                        >
-                        this week
-                    </div>
-
+                </div>
+                <!-- Recent Activity -->
+                <div class="p-6 space-y-4">
                     <!-- Recent Projects List -->
                     <div th:if="${!projects.isEmpty()}" class="space-y-3">
-                        <h3 class="text-sm font-semibold">Recent Projects</h3>
-                        <div
-                            th:each="project : ${projects}"
-                            class="border-l-4 border-warning pl-3"
-                        >
+                        <h3>Recent Projects</h3>
+                        <div class="space-y-4">
                             <a
+                                th:each="project : ${projects}"
                                 th:href="@{/boulders/{id}(id=${project.boulder.id})}"
-                                class="block hover:text-accent transition-colors"
+                                class="flex gap-4 group"
                             >
-                                <p
-                                    class="font-semibold"
-                                    th:text="${project.boulder.description}"
+                                <div
+                                    th:class="'border-2 rounded-base shadow-base p-4 group-hover:translate-[var(--box-shadow-size)] group-hover:shadow-none transition-all flex items-center justify-center ' + ${project.boulder.color.cssColorClass}"
                                 >
-                                    Boulder Description
-                                </p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <div
-                                        th:class="'color-badge ' + ${project.boulder.color.cssColorClass}"
-                                    ></div>
                                     <span
-                                        class="grade-badge text-xs"
+                                        class="grade-badge"
                                         th:text="${project.boulder.grade.name}"
                                     >
                                         Grade
                                     </span>
                                 </div>
-                                <p class="text-xs text-foreground-muted mt-1">
-                                    <span
-                                        th:text="${project.boulder.sector.gym.name}"
+                                <div class="py-2">
+                                    <p th:text="${project.boulder.description}">
+                                        Description
+                                    </p>
+                                    <p
+                                        class="text-xs text-foreground-muted font-medium"
                                     >
-                                        Gym
-                                    </span>
-                                    •
-                                    <span
-                                        th:text="${project.boulder.sector.name}"
-                                    >
-                                        Sector
-                                    </span>
-                                </p>
+                                        <span
+                                            th:text="${project.boulder.sector.gym.name}"
+                                        >
+                                            Gym </span
+                                        >,
+                                        <span
+                                            th:text="${project.boulder.sector.name}"
+                                        >
+                                            Sector
+                                        </span>
+                                    </p>
+                                </div>
                             </a>
                         </div>
                     </div>
@@ -213,7 +218,7 @@
                         progress!
                     </p>
                 </div>
-                <div class="p-6 bg-background border-t-2 space-y-2">
+                <div class="p-6 bg-background space-y-4">
                     <a
                         th:href="@{/boulders(projectOnly=true)}"
                         class="button primary"
