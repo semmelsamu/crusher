@@ -264,4 +264,5 @@ INSERT INTO events (title, description, periodic, weekday, event_date, time, rec
 
     -- Events for Boulderwelt Regensburg (gym 4)
     ('Route Setter Q&A', 'Meet the setters, ask questions, and get insights on the new overhang set.', FALSE, NULL, '2024-12-14', '19:30-20:30', NULL, '2024-11-29 14:00:00', 4),
-    ('New Year Warmup Session', 'Start the year with a guided warmup and easy problem circuit. Open to all members.', FALSE, NULL, '2024-12-29', '11:00-12:00', NULL, '2024-11-30 11:00:00', 4);
+    ('New Year Warmup Session', 'Start the year with a guided warmup and easy problem circuit. Open to all members.', FALSE, NULL, '2024-12-29', '11:00-12:00', NULL, '2024-11-30 11:00:00', 4),
+    ('Monthly Community Meetup', 'A casual monthly meetup to connect, climb, and share beta. Open to all levels.', TRUE, 'TUESDAY', NULL, '19:00-21:00', 'MONTHLY', '2024-11-05 18:00:00', 4);
