@@ -4,10 +4,12 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <main class="wrapper">
-            <section class="card space-y-4 p-4 max-w-lg mx-auto">
-                <h2>Login</h2>
-
+        <main class="bg-main flex-1 space-y-16 py-16">
+            <section class="card space-y-4 p-6 max-w-lg mx-auto">
+                <p>
+                    <strong class="text-lg">Login to your account</strong
+                    ><br />Enter your credentials
+                </p>
                 <form th:action="@{/login}" method="post" class="space-y-4">
                     <div class="space-y-2">
                         <label for="username" class="form-label"
@@ -45,20 +47,22 @@
                 </form>
             </section>
 
-            <aside class="card space-y-4 p-4 max-w-lg mx-auto">
-                <h3>Test Accounts</h3>
-                <p>All accounts use password: <strong>test</strong></p>
-                <dl>
-                    <dt>alice</dt>
-                    <dd>USER</dd>
-                    <dt>bob</dt>
-                    <dd>SETTER</dd>
-                    <dt>klaus</dt>
-                    <dd>OWNER</dd>
-                    <dt>crusher</dt>
-                    <dd>ADMIN</dd>
-                </dl>
-            </aside>
+            <details class="card max-w-lg mx-auto details">
+                <summary>Test Accounts</summary>
+                <div>
+                    <p>All accounts use password: <strong>test</strong></p>
+                    <dl>
+                        <dt>alice</dt>
+                        <dd>USER</dd>
+                        <dt>bob</dt>
+                        <dd>SETTER</dd>
+                        <dt>klaus</dt>
+                        <dd>OWNER</dd>
+                        <dt>crusher</dt>
+                        <dd>ADMIN</dd>
+                    </dl>
+                </div>
+            </details>
         </main>
     </th:block>
 </th:block>
