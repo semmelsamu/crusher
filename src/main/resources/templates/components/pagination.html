@@ -1,25 +1,17 @@
 <nav
     th:fragment="pagination(page, baseUrl)"
     th:if="${page.totalPages > 1}"
-    class="flex justify-center items-center gap-3 mt-4"
+    class="flex justify-center items-center gap-4"
     role="navigation"
     aria-label="Pagination"
     xmlns:th="http://www.thymeleaf.org"
 >
     <!-- Previous Button -->
-    <a
-        th:if="${!page.first}"
-        th:href="${baseUrl + '?page=' + (page.number - 1)}"
-        class="button button-square primary shadow-none mr-2"
-        aria-label="Previous page"
-    >
-        <x th:replace="~{components/icons :: chevron-left}"></x>
-    </a>
     <button
-        th:if="${page.first}"
-        class="button button-square primary shadow-none mr-2"
-        disabled
+        class="button button-square"
+        th:disabled="${page.first}"
         aria-label="Previous page"
+        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number - 1})}';|"
     >
         <x th:replace="~{components/icons :: chevron-left}"></x>
     </button>
@@ -57,19 +49,11 @@
     </th:block>
 
     <!-- Next Button -->
-    <a
-        th:if="${!page.last}"
-        th:href="${baseUrl + '?page=' + (page.number + 1)}"
-        class="button button-square primary shadow-none ml-2"
-        aria-label="Next page"
-    >
-        <x th:replace="~{components/icons :: chevron-right}"></x>
-    </a>
     <button
-        th:if="${page.last}"
-        class="button button-square primary shadow-none ml-2"
-        disabled
+        class="button button-square"
+        th:disabled="${page.last}"
         aria-label="Next page"
+        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number + 1})}';|"
     >
         <x th:replace="~{components/icons :: chevron-right}"></x>
     </button>
