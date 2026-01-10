@@ -483,11 +483,12 @@ public class DashboardController {
 
     private Optional<EventOccurrence> toOccurrence(EventEntity event, LocalDate today) {
         if (event.isPeriodic()) {
-            DayOfWeek weekday = event.getWeekday();
-            if (weekday == null) {
+            LocalDate startDate = resolveRecurringStart(event);
+            EventFrequency frequency = event.getFrequency();
+            if (startDate == null || frequency == null) {
                 return Optional.empty();
             }
-            LocalDate nextDate = today.with(TemporalAdjusters.nextOrSame(weekday));
+            LocalDate nextDate = nextRecurringDate(startDate, frequency, today);
             return Optional.of(new EventOccurrence(event, nextDate));
         }
 
@@ -497,5 +498,46 @@ public class DashboardController {
         }
 
         return Optional.of(new EventOccurrence(event, date));
+    }
+
+    private LocalDate resolveRecurringStart(EventEntity event) {
+        if (event.getCreatedAt() == null) {
+            return null;
+        }
+
+        LocalDate startDate = event.getCreatedAt().toLocalDate();
+        DayOfWeek weekday = event.getWeekday();
+        if (weekday != null) {
+            startDate = startDate.with(TemporalAdjusters.nextOrSame(weekday));
+        }
+        return startDate;
+    }
+
+    private LocalDate nextRecurringDate(LocalDate startDate, EventFrequency frequency, LocalDate today) {
+        if (!startDate.isBefore(today)) {
+            return startDate;
+        }
+
+        return switch (frequency) {
+            case WEEKLY -> advanceByWeeks(startDate, today, 1);
+            case BI_WEEKLY -> advanceByWeeks(startDate, today, 2);
+            case MONTHLY -> advanceByMonths(startDate, today, 1);
+        };
+    }
+
+    private LocalDate advanceByWeeks(LocalDate startDate, LocalDate today, int stepWeeks) {
+        LocalDate next = startDate;
+        while (next.isBefore(today)) {
+            next = next.plusWeeks(stepWeeks);
+        }
+        return next;
+    }
+
+    private LocalDate advanceByMonths(LocalDate startDate, LocalDate today, int stepMonths) {
+        LocalDate next = startDate;
+        while (next.isBefore(today)) {
+            next = next.plusMonths(stepMonths);
+        }
+        return next;
     }
 }
