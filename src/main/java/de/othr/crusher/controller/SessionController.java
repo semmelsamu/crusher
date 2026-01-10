@@ -76,15 +76,23 @@ public class SessionController {
     /**
      * Displays all sessions for the current user.
      *
+     * @param page current page number (1-indexed, defaults to 1)
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
      * @return view name for the sessions list page
      */
     @GetMapping("/sessions")
     @Transactional(readOnly = true)
-    public String showAllSessions(Principal principal, Model model) {
+    public String showAllSessions(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            Principal principal,
+            Model model) {
         UserEntity user = findUserByPrincipal(principal);
-        List<SessionEntity> sessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId());
+        
+        // Convert 1-based page to 0-based for Spring's PageRequest
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<SessionEntity> sessionsPage = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId(), pageable);
+        List<SessionEntity> sessions = sessionsPage.getContent();
 
         // Find the most recently used gym
         GymEntity lastGym = sessions.stream()
@@ -100,6 +108,7 @@ public class SessionController {
                 .orElse(null);
 
         model.addAttribute("sessions", sessions);
+        model.addAttribute("sessionsPage", sessionsPage);
         model.addAttribute("lastGym", lastGym);
         model.addAttribute("activeSession", activeSession);
 

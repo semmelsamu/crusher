@@ -151,6 +151,11 @@
                     </tbody>
                 </table>
 
+                <!-- Pagination -->
+                <div
+                    th:replace="~{components/pagination :: pagination(${sessionsPage}, '/sessions')}"
+                ></div>
+
                 <a th:href="@{/sessions/create}" class="button success">
                     <x th:replace="~{components/icons :: play}"></x>
                     Start New Session
