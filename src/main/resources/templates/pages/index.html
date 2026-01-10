@@ -38,46 +38,54 @@
                 </div>
             </div>
         </header>
-        <section
-            class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mt-8"
-        >
-            <div class="card p-6 space-y-3 text-center">
-                <div class="flex justify-center">
-                    <x th:replace="~{components/icons :: play}"></x>
-                </div>
-                <h3 class="font-bold text-xl">Track Sessions</h3>
-                <p class="text-foreground-muted">
-                    Log your climbing sessions at different gyms and monitor
-                    your progress over time.
-                </p>
-            </div>
 
-            <div class="card p-6 space-y-3 text-center">
-                <div class="flex justify-center">
-                    <x
-                        th:replace="~{components/icons :: star}"
-                        class="text-primary-500"
-                    ></x>
+        <section class="wrapper mx-auto my-16">
+            <h2 class="mb-4">Features</h2>
+            <p class="text-foreground-muted mb-8 max-w-prose text-balance">
+                Crusher is a tool that helps you track your bouldering progress,
+                log your sessions, and crush your goals.
+            </p>
+            <div
+                class="grid grid-cols-1 md:grid-cols-3 gap-16 *:space-y-4 *:text-center *:p-12"
+            >
+                <div class="card">
+                    <div class="flex justify-center">
+                        <x th:replace="~{components/icons :: play}"></x>
+                    </div>
+                    <h3 class="font-bold text-xl">Track Sessions</h3>
+                    <p class="text-foreground-muted text-balance">
+                        Log your climbing sessions at different gyms and monitor
+                        your progress over time.
+                    </p>
                 </div>
-                <h3 class="font-bold text-xl">Rate Boulders</h3>
-                <p class="text-foreground-muted">
-                    Rate and comment on boulders to help the community and
-                    refine your skills.
-                </p>
-            </div>
 
-            <div class="card p-6 space-y-3 text-center">
-                <div class="flex justify-center">
-                    <x
-                        th:replace="~{components/icons :: flame}"
-                        class="text-primary-500"
-                    ></x>
+                <div class="card">
+                    <div class="flex justify-center">
+                        <x
+                            th:replace="~{components/icons :: star}"
+                            class="text-primary-500"
+                        ></x>
+                    </div>
+                    <h3 class="font-bold text-xl">Rate Boulders</h3>
+                    <p class="text-foreground-muted text-balance">
+                        Rate and comment on boulders to help the community and
+                        refine your skills.
+                    </p>
                 </div>
-                <h3 class="font-bold text-xl">View Statistics</h3>
-                <p class="text-foreground-muted">
-                    Analyze your climbing data with detailed statistics and
-                    insights.
-                </p>
+
+                <div class="card">
+                    <div class="flex justify-center">
+                        <x
+                            th:replace="~{components/icons :: flame}"
+                            class="text-primary-500"
+                        ></x>
+                    </div>
+                    <h3 class="font-bold text-xl">View Statistics</h3>
+                    <p class="text-foreground-muted text-balance">
+                        Analyze your climbing data with detailed statistics and
+                        insights.
+                    </p>
+                </div>
             </div>
         </section>
 
