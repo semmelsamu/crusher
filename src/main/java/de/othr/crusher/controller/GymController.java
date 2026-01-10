@@ -75,7 +75,7 @@ public class GymController {
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymId(id));
         model.addAttribute("notices", noticeRepository.findByGymIdOrderByCreationDateDesc(id));
-        model.addAttribute("events", eventRepository.findByGymIdOrderByCreatedAtDesc(id));
+        model.addAttribute("events", eventRepository.findByGymId(id));
 
         return "pages/admin/gyms/detail";
     }

@@ -2,15 +2,14 @@ package de.othr.crusher.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 /**
  * Entity representing an event for a gym.
  * <p>
  * Maps to the {@code events} table and stores event information including
- * title, description, creation timestamp, and the associated gym.
+ * title, description, schedule, and the associated gym.
  * </p>
  */
 @Entity
@@ -29,9 +28,19 @@ public class EventEntity {
     @NotBlank(message = "Please enter a description")
     private String description;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column(nullable = false)
+    private boolean periodic;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "weekday")
+    private DayOfWeek weekday;
+
+    @Column(name = "event_date")
+    private LocalDate date;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Please enter a time")
+    private String time;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gym_id", nullable = false)
@@ -69,12 +78,36 @@ public class EventEntity {
         this.description = description;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public boolean isPeriodic() {
+        return periodic;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setPeriodic(boolean periodic) {
+        this.periodic = periodic;
+    }
+
+    public DayOfWeek getWeekday() {
+        return weekday;
+    }
+
+    public void setWeekday(DayOfWeek weekday) {
+        this.weekday = weekday;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public GymEntity getGym() {

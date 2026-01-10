@@ -266,14 +266,16 @@
                     <thead>
                         <tr>
                             <th class="w-48">Title</th>
-                            <th class="w-40">Created At</th>
+                            <th class="w-24">Type</th>
+                            <th class="w-40">Date/Weekday</th>
+                            <th class="w-32">Time</th>
                             <th>Description</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody th:if="${events.isEmpty()}">
                         <tr>
-                            <td colspan="4" class="text-center">
+                            <td colspan="6" class="text-center">
                                 No events added yet.
                             </td>
                         </tr>
@@ -282,10 +284,25 @@
                         <tr th:each="event : ${events}">
                             <td th:text="${event.title}">Title</td>
                             <td
-                                th:text="${#temporals.format(event.createdAt, 'dd.MM.yyyy HH:mm')}"
+                                th:text="${event.periodic ? 'Periodic' : 'Single'}"
                             >
-                                Created At
+                                Single
                             </td>
+                            <td>
+                                <span
+                                    th:if="${event.periodic}"
+                                    th:text="${#strings.capitalize(event.weekday.toString().toLowerCase())}"
+                                >
+                                    Monday
+                                </span>
+                                <span
+                                    th:if="${!event.periodic}"
+                                    th:text="${#temporals.format(event.date, 'dd.MM.yyyy')}"
+                                >
+                                    01.01.2024
+                                </span>
+                            </td>
+                            <td th:text="${event.time}">18:00</td>
                             <td>
                                 <span
                                     th:text="${#strings.length(event.description) > 100 ? #strings.substring(event.description, 0, 100) + '...' : event.description}"

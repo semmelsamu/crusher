@@ -5,6 +5,7 @@
     method="post"
     class="space-y-4"
     xmlns:th="http://www.thymeleaf.org"
+    th:x-data="'{ periodic: ' + ${event.periodic} + ' }'"
 >
     <input
         type="hidden"
@@ -32,6 +33,71 @@
         <p
             th:if="${#fields.hasErrors('description')}"
             th:errors="*{description}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <label class="switch">
+            <input
+                type="checkbox"
+                id="periodic-event"
+                th:field="*{periodic}"
+                x-model="periodic"
+            />
+            <span class="switch-thumb"></span>
+        </label>
+        <label for="periodic-event">Periodic event</label>
+    </div>
+
+    <div class="space-y-2" x-show="periodic" x-cloak>
+        <label class="block">Weekday</label>
+        <select
+            th:field="*{weekday}"
+            class="text-input w-full"
+            x-bind:required="periodic"
+        >
+            <option value="">Select weekday</option>
+            <option
+                th:each="day : ${T(java.time.DayOfWeek).values()}"
+                th:value="${day}"
+                th:text="${#strings.capitalize(day.toString().toLowerCase())}"
+            >
+                Monday
+            </option>
+        </select>
+        <p
+            th:if="${#fields.hasErrors('weekday')}"
+            th:errors="*{weekday}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="space-y-2" x-show="!periodic" x-cloak>
+        <label class="block">Date</label>
+        <input
+            type="date"
+            th:field="*{date}"
+            class="text-input w-full"
+            x-bind:required="!periodic"
+        />
+        <p
+            th:if="${#fields.hasErrors('date')}"
+            th:errors="*{date}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="space-y-2">
+        <label class="block">Time</label>
+        <input
+            th:field="*{time}"
+            class="text-input w-full"
+            placeholder="e.g. 18:00 or 18:00-20:00"
+        />
+        <p
+            th:if="${#fields.hasErrors('time')}"
+            th:errors="*{time}"
             class="text-error text-sm mt-1"
         ></p>
     </div>

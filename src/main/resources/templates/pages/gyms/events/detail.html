@@ -23,17 +23,7 @@
                 <header
                     class="card flex-1 p-4 flex items-center justify-between"
                 >
-                    <div class="space-y-1">
-                        <h1 th:text="${event.title}">Event Title</h1>
-                        <p class="text-sm text-foreground-muted">
-                            <time
-                                th:datetime="${event.createdAt}"
-                                th:text="${#temporals.format(event.createdAt, 'dd.MM.yyyy HH:mm')}"
-                            >
-                                01.01.2024 12:00
-                            </time>
-                        </p>
-                    </div>
+                    <h1 th:text="${event.title}">Event Title</h1>
                 </header>
             </div>
 
@@ -46,7 +36,7 @@
                 </section>
 
                 <section class="card p-6 space-y-4">
-                    <h2>Event Details</h2>
+                    <h2>Details</h2>
                     <div class="space-y-4">
                         <div>
                             <p class="text-sm text-foreground-muted">Gym</p>
@@ -58,14 +48,39 @@
                             </p>
                         </div>
                         <div>
-                            <p class="text-sm text-foreground-muted">
-                                Created At
-                            </p>
+                            <p class="text-sm text-foreground-muted">Type</p>
                             <p
                                 class="font-medium text-lg"
-                                th:text="${#temporals.format(event.createdAt, 'dd.MM.yyyy HH:mm')}"
+                                th:text="${event.periodic ? 'Periodic' : 'Single'}"
                             >
-                                01.01.2024 12:00
+                                Single
+                            </p>
+                        </div>
+                        <div th:if="${event.periodic}">
+                            <p class="text-sm text-foreground-muted">Weekday</p>
+                            <p
+                                class="font-medium text-lg"
+                                th:text="${#strings.capitalize(event.weekday.toString().toLowerCase())}"
+                            >
+                                Monday
+                            </p>
+                        </div>
+                        <div th:if="${!event.periodic}">
+                            <p class="text-sm text-foreground-muted">Date</p>
+                            <p
+                                class="font-medium text-lg"
+                                th:text="${#temporals.format(event.date, 'dd.MM.yyyy')}"
+                            >
+                                01.01.2024
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-foreground-muted">Time</p>
+                            <p
+                                class="font-medium text-lg"
+                                th:text="${event.time}"
+                            >
+                                18:00
                             </p>
                         </div>
                     </div>

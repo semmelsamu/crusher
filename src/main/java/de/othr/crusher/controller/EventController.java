@@ -93,12 +93,15 @@ public class EventController {
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
 
+        validateSchedule(formEvent, result);
+
         if (result.hasErrors()) {
             model.addAttribute("gym", gym);
             model.addAttribute("event", formEvent);
             return "pages/admin/gyms/events/create";
         }
 
+        normalizeSchedule(formEvent);
         formEvent.setGym(gym);
         eventRepository.save(formEvent);
 
@@ -133,6 +136,8 @@ public class EventController {
             Model model) {
         EventEntity event = findEventInGymOrThrow(gymId, eventId);
 
+        validateSchedule(formEvent, result);
+
         if (result.hasErrors()) {
             formEvent.setId(event.getId());
             formEvent.setGym(event.getGym());
@@ -143,6 +148,11 @@ public class EventController {
 
         event.setTitle(formEvent.getTitle());
         event.setDescription(formEvent.getDescription());
+        event.setPeriodic(formEvent.isPeriodic());
+        event.setWeekday(formEvent.getWeekday());
+        event.setDate(formEvent.getDate());
+        event.setTime(formEvent.getTime());
+        normalizeSchedule(event);
         eventRepository.save(event);
 
         // Add success message for toast notification
@@ -210,5 +220,23 @@ public class EventController {
         return gymRepository
                 .findById(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+    }
+
+    private void validateSchedule(EventEntity event, BindingResult result) {
+        if (event.isPeriodic()) {
+            if (event.getWeekday() == null) {
+                result.rejectValue("weekday", "NotNull", "Please select a weekday");
+            }
+        } else if (event.getDate() == null) {
+            result.rejectValue("date", "NotNull", "Please select a date");
+        }
+    }
+
+    private void normalizeSchedule(EventEntity event) {
+        if (event.isPeriodic()) {
+            event.setDate(null);
+        } else {
+            event.setWeekday(null);
+        }
     }
 }

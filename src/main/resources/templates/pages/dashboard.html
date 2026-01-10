@@ -362,12 +362,18 @@
                                     Event Title
                                 </strong>
                                 <p class="text-sm text-foreground-muted">
-                                    <time
-                                        th:datetime="${event.createdAt}"
-                                        th:text="${#temporals.format(event.createdAt, 'dd.MM.yyyy HH:mm')}"
+                                    <span
+                                        th:if="${event.periodic}"
+                                        th:text="${#strings.capitalize(event.weekday.toString().toLowerCase())}"
                                     >
-                                        Date
-                                    </time>
+                                        Monday
+                                    </span>
+                                    <span
+                                        th:if="${!event.periodic}"
+                                        th:text="${#temporals.format(event.date, 'dd.MM.yyyy')}"
+                                    >
+                                        01.01.2024
+                                    </span>
                                 </p>
                             </li>
                         </ul>

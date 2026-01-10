@@ -142,7 +142,7 @@ public class DashboardController {
         // Get last 3 events from the last gym
         List<EventEntity> lastGymEvents = List.of();
         if (lastGym != null) {
-            List<EventEntity> allEvents = eventRepository.findByGymIdOrderByCreatedAtDesc(lastGym.getId());
+            List<EventEntity> allEvents = eventRepository.findByGymId(lastGym.getId());
             lastGymEvents = allEvents.stream()
                     .limit(3)
                     .toList();
@@ -433,7 +433,7 @@ public class DashboardController {
         List<NoticeEntity> notices = noticeRepository.findByGymIdOrderByCreationDateDesc(gym.getId());
 
         // Get all events for this gym
-        List<EventEntity> events = eventRepository.findByGymIdOrderByCreatedAtDesc(gym.getId());
+        List<EventEntity> events = eventRepository.findByGymId(gym.getId());
 
         // Get weather for gym's city
         WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
