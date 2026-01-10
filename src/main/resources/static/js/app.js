@@ -224,11 +224,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Persist scroll before clicking pagination links
+    // Persist scroll before clicking pagination buttons
     document
-        .querySelectorAll("nav[aria-label='Pagination'] a")
-        .forEach((link) => {
-            link.addEventListener("click", () => {
+        .querySelectorAll("nav[aria-label='Pagination'] button")
+        .forEach((button) => {
+            button.addEventListener("click", () => {
                 sessionStorage.setItem(
                     "paginationScroll",
                     String(window.scrollY),
