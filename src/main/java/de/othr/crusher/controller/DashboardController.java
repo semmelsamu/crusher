@@ -116,11 +116,21 @@ public class DashboardController {
                 .findFirst()
                 .orElse(null);
 
+        // Get last 3 notices from the last gym
+        List<NoticeEntity> lastGymNotices = List.of();
+        if (lastGym != null) {
+            List<NoticeEntity> allNotices = noticeRepository.findByGymIdOrderByCreationDateDesc(lastGym.getId());
+            lastGymNotices = allNotices.stream()
+                    .limit(3)
+                    .toList();
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("currentDateTime", LocalDateTime.now());
         model.addAttribute("lastGym", lastGym);
         model.addAttribute("lastSession", lastSession);
         model.addAttribute("activeSession", activeSession);
+        model.addAttribute("lastGymNotices", lastGymNotices);
 
         return "pages/dashboard";
     }

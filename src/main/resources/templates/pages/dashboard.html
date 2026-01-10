@@ -109,12 +109,54 @@
 
             <section class="card">
                 <div class="p-6 space-y-4">
-                    <div class="flex items-center gap-4">
-                        <h2>Boulderwelt Regensburg</h2>
-                        <a href="#" class="button primary">Details</a>
+                    <div th:if="${lastGym != null}">
+                        <div class="flex items-center justify-between gap-4">
+                            <h2 th:text="${lastGym.name}">Gym Name</h2>
+                            <a
+                                th:href="@{/gyms/{id}(id=${lastGym.id})}"
+                                class="button primary"
+                            >
+                                Details
+                            </a>
+                        </div>
+                        <h3 class="my-4">Notices</h3>
+                        <div
+                            th:if="${lastGymNotices.isEmpty()}"
+                            class="text-foreground-muted"
+                        >
+                            No notices yet
+                        </div>
+                        <ul
+                            th:if="${!lastGymNotices.isEmpty()}"
+                            class="space-y-3"
+                        >
+                            <li
+                                th:each="notice : ${lastGymNotices}"
+                                class="border-l-4 border-primary pl-3"
+                            >
+                                <p
+                                    class="font-semibold"
+                                    th:text="${notice.title}"
+                                >
+                                    Notice Title
+                                </p>
+                                <p class="text-sm text-foreground-muted">
+                                    <time
+                                        th:datetime="${notice.creationDate}"
+                                        th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy HH:mm')}"
+                                    >
+                                        Date
+                                    </time>
+                                </p>
+                            </li>
+                        </ul>
                     </div>
-                    <h3>Notices</h3>
-                    <p>No notices yet</p>
+                    <div
+                        th:if="${lastGym == null}"
+                        class="text-foreground-muted"
+                    >
+                        No gym visited yet. Start your first climbing session!
+                    </div>
                 </div>
                 <div class="p-6 bg-background border-t-2">
                     <a href="/gyms" class="button">View All Gyms</a>
