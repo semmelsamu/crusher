@@ -1,6 +1,7 @@
 package de.othr.crusher.controller;
 
 import de.othr.crusher.model.GymEntity;
+import de.othr.crusher.repository.EventRepository;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.NoticeRepository;
@@ -26,6 +27,7 @@ public class GymController {
     private final GymRepository gymRepository;
     private final GradeRepository gradeRepository;
     private final NoticeRepository noticeRepository;
+    private final EventRepository eventRepository;
 
     /**
      * Creates a new GymController with the given repository.
@@ -33,11 +35,17 @@ public class GymController {
      * @param gymRepository repository for accessing gym data
      * @param gradeRepository repository for accessing grade data
      * @param noticeRepository repository for accessing notice data
+     * @param eventRepository repository for accessing event data
      */
-    public GymController(GymRepository gymRepository, GradeRepository gradeRepository, NoticeRepository noticeRepository) {
+    public GymController(
+            GymRepository gymRepository,
+            GradeRepository gradeRepository,
+            NoticeRepository noticeRepository,
+            EventRepository eventRepository) {
         this.gymRepository = gymRepository;
         this.gradeRepository = gradeRepository;
         this.noticeRepository = noticeRepository;
+        this.eventRepository = eventRepository;
     }
 
     /**
@@ -67,6 +75,7 @@ public class GymController {
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymId(id));
         model.addAttribute("notices", noticeRepository.findByGymIdOrderByCreationDateDesc(id));
+        model.addAttribute("events", eventRepository.findByGymIdOrderByCreatedAtDesc(id));
 
         return "pages/admin/gyms/detail";
     }

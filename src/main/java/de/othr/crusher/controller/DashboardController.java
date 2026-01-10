@@ -10,6 +10,7 @@ import de.othr.crusher.service.WeatherService;
 import de.othr.crusher.service.WeatherService.WeatherInfo;
 import de.othr.crusher.repository.BoulderRatingRepository;
 import de.othr.crusher.repository.BoulderRepository;
+import de.othr.crusher.repository.EventRepository;
 import de.othr.crusher.repository.GoRepository;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymCommentRepository;
@@ -57,6 +58,7 @@ public class DashboardController {
     private final GymRatingRepository gymRatingRepository;
     private final GymCommentRepository gymCommentRepository;
     private final NoticeRepository noticeRepository;
+    private final EventRepository eventRepository;
     private final WeatherService weatherService;
     private final CrowdLevelService crowdLevelService;
     private final StatisticsService statisticsService;
@@ -75,6 +77,7 @@ public class DashboardController {
             GymRatingRepository gymRatingRepository,
             GymCommentRepository gymCommentRepository,
             NoticeRepository noticeRepository,
+            EventRepository eventRepository,
             WeatherService weatherService,
             CrowdLevelService crowdLevelService,
             StatisticsService statisticsService) {
@@ -91,6 +94,7 @@ public class DashboardController {
         this.gymRatingRepository = gymRatingRepository;
         this.gymCommentRepository = gymCommentRepository;
         this.noticeRepository = noticeRepository;
+        this.eventRepository = eventRepository;
         this.weatherService = weatherService;
         this.crowdLevelService = crowdLevelService;
         this.statisticsService = statisticsService;
@@ -131,6 +135,15 @@ public class DashboardController {
         if (lastGym != null) {
             List<NoticeEntity> allNotices = noticeRepository.findByGymIdOrderByCreationDateDesc(lastGym.getId());
             lastGymNotices = allNotices.stream()
+                    .limit(3)
+                    .toList();
+        }
+
+        // Get last 3 events from the last gym
+        List<EventEntity> lastGymEvents = List.of();
+        if (lastGym != null) {
+            List<EventEntity> allEvents = eventRepository.findByGymIdOrderByCreatedAtDesc(lastGym.getId());
+            lastGymEvents = allEvents.stream()
                     .limit(3)
                     .toList();
         }
@@ -183,6 +196,7 @@ public class DashboardController {
         model.addAttribute("lastSession", lastSession);
         model.addAttribute("activeSession", activeSession);
         model.addAttribute("lastGymNotices", lastGymNotices);
+        model.addAttribute("lastGymEvents", lastGymEvents);
         
         // Project data
         model.addAttribute("projects", recentProjects);
@@ -418,6 +432,9 @@ public class DashboardController {
         // Get all notices for this gym
         List<NoticeEntity> notices = noticeRepository.findByGymIdOrderByCreationDateDesc(gym.getId());
 
+        // Get all events for this gym
+        List<EventEntity> events = eventRepository.findByGymIdOrderByCreatedAtDesc(gym.getId());
+
         // Get weather for gym's city
         WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
 
@@ -429,6 +446,7 @@ public class DashboardController {
         model.addAttribute("averageRating", averageRating);
         model.addAttribute("comments", comments);
         model.addAttribute("notices", notices);
+        model.addAttribute("events", events);
         model.addAttribute("weather", weather);
         model.addAttribute("boulderCount", boulderCount);
 

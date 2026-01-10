@@ -371,6 +371,34 @@
                                 </p>
                             </li>
                         </ul>
+                        <h3>Events</h3>
+                        <div
+                            th:if="${lastGymEvents.isEmpty()}"
+                            class="text-foreground-muted"
+                        >
+                            No events yet
+                        </div>
+                        <ul
+                            th:if="${!lastGymEvents.isEmpty()}"
+                            class="space-y-4"
+                        >
+                            <li
+                                th:each="event : ${lastGymEvents}"
+                                class="border-2 p-4 rounded-base bg-background"
+                            >
+                                <strong th:text="${event.title}">
+                                    Event Title
+                                </strong>
+                                <p class="text-sm text-foreground-muted">
+                                    <time
+                                        th:datetime="${event.createdAt}"
+                                        th:text="${#temporals.format(event.createdAt, 'dd.MM.yyyy HH:mm')}"
+                                    >
+                                        Date
+                                    </time>
+                                </p>
+                            </li>
+                        </ul>
                         <div
                             th:if="${lastGym == null}"
                             class="text-foreground-muted"
