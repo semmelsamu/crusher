@@ -4,22 +4,131 @@
     xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
     <th:block layout:fragment="content">
-        <main class="wrapper">
-            <h1 class="text-center my-8">Dashboard</h1>
-            <nav class="space-y-4 max-w-sm mx-auto">
-                <div class="flex flex-col gap-4">
-                    <a href="/sessions" class="button primary">Sessions</a>
-                    <a href="/boulders" class="button primary">Boulders</a>
-                    <a href="/gyms" class="button primary">Gyms</a>
-                    <a href="#" class="button primary" disabled>
-                        Events (coming soon)
+        <header class="mt-16 mb-8 text-center">
+            <div class="flex items-center justify-center gap-6">
+                <img
+                    src="/images/wordmark.svg"
+                    alt="crusher"
+                    class="h-10 -mb-1"
+                />
+                <div class="w-1 h-16 bg-foreground"></div>
+                <h1>Dashboard</h1>
+            </div>
+            <p class="block font-medium text-xl mt-4">
+                Welcome back,
+                <strong sec:authentication="principal.username"></strong>!
+            </p>
+            <p class="block mt-2 text-foreground-muted">
+                <time
+                    th:datetime="${currentDateTime}"
+                    th:text="${#temporals.format(currentDateTime, 'dd.MM.yyyy HH:mm')}"
+                ></time>
+            </p>
+        </header>
+        <main class="wrapper grid grid-cols-3 gap-8">
+            <section class="card self-start">
+                <div class="p-6 space-y-4">
+                    <h2 class="block">Sessions</h2>
+                    <div th:if="${lastGym != null}" class="flex gap-2">
+                        <x th:replace="~{components/icons :: play}"></x>
+                        <div>
+                            <p>
+                                <span th:if="${activeSession == null}">
+                                    Last Session:
+                                </span>
+                                <span th:if="${activeSession != null}">
+                                    Current Session:
+                                </span>
+                            </p>
+                            <p>
+                                <strong th:text="${lastGym.name}">
+                                    Gym Name
+                                </strong>
+                                <time
+                                    class="text-foreground-muted"
+                                    th:datetime="${lastSession.startedAt}"
+                                    th:text="'(' + ${#temporals.format(lastSession.startedAt, 'dd.MM.yyyy HH:mm')} + ')'"
+                                ></time>
+                            </p>
+                        </div>
+                    </div>
+
+                    <p th:if="${lastGym == null}" class="text-foreground-muted">
+                        No sessions yet. Start your first climbing session!
+                    </p>
+
+                    <!-- Active Session -->
+                    <a
+                        th:if="${activeSession != null}"
+                        th:href="@{/sessions/{id}(id=${activeSession.id})}"
+                        class="button primary"
+                    >
+                        Continue Current Session
                     </a>
-                    <a href="#" class="button primary" disabled>
-                        Notices (coming soon)
+
+                    <!-- Last Gym Quick Start -->
+                    <form
+                        th:if="${activeSession == null && lastGym != null}"
+                        th:action="@{/sessions}"
+                        method="post"
+                    >
+                        <input
+                            type="hidden"
+                            name="gymId"
+                            th:value="${lastGym.id}"
+                        />
+                        <button type="submit" class="button success w-full">
+                            <span th:text="'New Session in ' + ${lastGym.name}">
+                                New Session
+                            </span>
+                        </button>
+                    </form>
+
+                    <!-- No sessions yet - go to create page -->
+                    <a
+                        th:if="${activeSession == null && lastGym == null}"
+                        th:href="@{/sessions/create}"
+                        class="button success"
+                    >
+                        Start New Session
                     </a>
-                    <a href="/stats" class="button primary">Statistics</a>
                 </div>
-            </nav>
+                <div class="p-6 bg-background border-t-2">
+                    <a href="/sessions" class="button">View All Sessions</a>
+                </div>
+            </section>
+
+            <section class="card self-start">
+                <div class="p-6 space-y-4">
+                    <h2 class="block">Boulders</h2>
+                </div>
+                <div class="p-6 bg-background border-t-2">
+                    <a href="/boulders" class="button">View All Boulders</a>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="p-6 space-y-4">
+                    <div class="flex items-center gap-4">
+                        <h2>Boulderwelt Regensburg</h2>
+                        <a href="#" class="button primary">Details</a>
+                    </div>
+                    <h3>Notices</h3>
+                    <p>No notices yet</p>
+                </div>
+                <div class="p-6 bg-background border-t-2">
+                    <a href="/gyms" class="button">View All Gyms</a>
+                </div>
+            </section>
+
+            <section class="card col-span-2">
+                <div class="p-6 space-y-4">
+                    <h2>Your Statistics</h2>
+                </div>
+                <div class="p-6 bg-background border-t-2">
+                    <a href="/stats" class="button">View All Statistics</a>
+                </div>
+            </section>
         </main>
     </th:block>
 </th:block>

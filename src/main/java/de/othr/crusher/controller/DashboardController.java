@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -97,7 +98,29 @@ public class DashboardController {
     public String showDashboard(Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
 
+        // Get sessions for active session and last gym logic
+        List<SessionEntity> sessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId());
+
+        // Find the last session (most recent)
+        SessionEntity lastSession = sessions.stream()
+                .filter(session -> session.getGym() != null)
+                .findFirst()
+                .orElse(null);
+
+        // Find the most recently used gym
+        GymEntity lastGym = lastSession != null ? lastSession.getGym() : null;
+
+        // Find active session (if any)
+        SessionEntity activeSession = sessions.stream()
+                .filter(session -> session.getEndedAt() == null)
+                .findFirst()
+                .orElse(null);
+
         model.addAttribute("user", user);
+        model.addAttribute("currentDateTime", LocalDateTime.now());
+        model.addAttribute("lastGym", lastGym);
+        model.addAttribute("lastSession", lastSession);
+        model.addAttribute("activeSession", activeSession);
 
         return "pages/dashboard";
     }
