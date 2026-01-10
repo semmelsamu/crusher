@@ -284,9 +284,9 @@
                         <tr th:each="event : ${events}">
                             <td th:text="${event.title}">Title</td>
                             <td
-                                th:text="${event.periodic ? 'Periodic' : 'Single'}"
+                                th:text="${event.periodic ? 'Recurring' : 'One-off'}"
                             >
-                                Single
+                                One-off
                             </td>
                             <td>
                                 <span

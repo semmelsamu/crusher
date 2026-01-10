@@ -51,9 +51,9 @@
                             <p class="text-sm text-foreground-muted">Type</p>
                             <p
                                 class="font-medium text-lg"
-                                th:text="${event.periodic ? 'Periodic' : 'Single'}"
+                                th:text="${event.periodic ? 'Recurring' : 'One-off'}"
                             >
-                                Single
+                                One-off
                             </p>
                         </div>
                         <div th:if="${event.periodic}">
