@@ -151,7 +151,11 @@
                 >
                     <h2>Events</h2>
                     <div class="space-y-4">
-                        <div th:each="event : ${events}" class="card">
+                        <a
+                            th:each="event : ${events}"
+                            th:href="@{/gyms/{gymId}/events/{eventId}(gymId=${gym.id}, eventId=${event.id})}"
+                            class="card block"
+                        >
                             <div
                                 class="flex items-center justify-between gap-4 bg-background border-b-2 p-4"
                             >
@@ -171,7 +175,7 @@
                             <p class="block p-4" th:text="${event.description}">
                                 Event description goes here...
                             </p>
-                        </div>
+                        </a>
                     </div>
                 </section>
 

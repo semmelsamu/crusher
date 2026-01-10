@@ -1,0 +1,93 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Gyms', url: '/gyms'}, {label: gym.name, url: '/gyms/' + gym.id}, {label: event.title, url: '/gyms/' + gym.id + '/events/' + event.id} } }"
+        >
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a
+                    th:href="@{/gyms/{gymId}(gymId=${gym.id})}"
+                    class="button button-square"
+                >
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <div class="space-y-1">
+                        <h1 th:text="${event.title}">Event Title</h1>
+                        <p class="text-sm text-foreground-muted">
+                            <time
+                                th:datetime="${event.createdAt}"
+                                th:text="${#temporals.format(event.createdAt, 'dd.MM.yyyy HH:mm')}"
+                            >
+                                01.01.2024 12:00
+                            </time>
+                        </p>
+                    </div>
+                </header>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <section class="card p-6 space-y-3">
+                    <h2>Description</h2>
+                    <p th:text="${event.description}">
+                        Event description goes here...
+                    </p>
+                </section>
+
+                <section class="card p-6 space-y-4">
+                    <h2>Event Details</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-sm text-foreground-muted">Gym</p>
+                            <p
+                                class="font-medium text-lg"
+                                th:text="${gym.name}"
+                            >
+                                Gym Name
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-foreground-muted">
+                                Created At
+                            </p>
+                            <p
+                                class="font-medium text-lg"
+                                th:text="${#temporals.format(event.createdAt, 'dd.MM.yyyy HH:mm')}"
+                            >
+                                01.01.2024 12:00
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section
+                    class="card p-6 flex flex-col items-center justify-center space-y-4 md:col-span-2"
+                >
+                    <p class="text-sm font-medium text-foreground-muted">
+                        Your Rating
+                    </p>
+                    <div
+                        th:replace="~{components/star-rating :: star-rating('/gyms/' + ${gym.id} + '/events/' + ${event.id} + '/rating', ${currentRating}, ${averageRating})}"
+                    ></div>
+                </section>
+            </div>
+
+            <section class="card p-6 max-w-xl mx-auto">
+                <div
+                    th:replace="~{components/comments :: comments('/gyms/' + ${gym.id} + '/events/' + ${event.id} + '/comments', ${comments}, '/gyms/' + ${gym.id} + '/events/' + ${event.id} + '/comments')}"
+                ></div>
+            </section>
+        </main>
+    </th:block>
+</th:block>
