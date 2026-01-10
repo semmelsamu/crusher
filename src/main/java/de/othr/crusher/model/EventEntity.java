@@ -2,6 +2,7 @@ package de.othr.crusher.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
@@ -36,6 +37,7 @@ public class EventEntity {
     private DayOfWeek weekday;
 
     @Column(name = "event_date")
+    @DateTimeFormat(pattern = "dd.MM.yy")
     private LocalDate date;
 
     @Column(nullable = false)

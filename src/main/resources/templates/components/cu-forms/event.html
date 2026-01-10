@@ -76,11 +76,13 @@
     <div class="space-y-2" x-show="!periodic" x-cloak>
         <label class="block">Date</label>
         <input
-            type="date"
+            type="text"
             th:field="*{date}"
             class="text-input w-full"
+            placeholder="DD.MM.YY"
             x-bind:required="!periodic"
         />
+        <p class="text-sm text-foreground-muted">Format: DD.MM.YY</p>
         <p
             th:if="${#fields.hasErrors('date')}"
             th:errors="*{date}"
