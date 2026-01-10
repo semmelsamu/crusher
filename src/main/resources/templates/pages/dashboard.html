@@ -343,34 +343,6 @@
                     </div>
 
                     <div class="p-6 space-y-4">
-                        <h3>Notices</h3>
-                        <div
-                            th:if="${lastGymNotices.isEmpty()}"
-                            class="text-foreground-muted"
-                        >
-                            No notices yet
-                        </div>
-                        <ul
-                            th:if="${!lastGymNotices.isEmpty()}"
-                            class="space-y-4"
-                        >
-                            <li
-                                th:each="notice : ${lastGymNotices}"
-                                class="border-2 p-4 rounded-base bg-background"
-                            >
-                                <strong th:text="${notice.title}">
-                                    Notice Title
-                                </strong>
-                                <p class="text-sm text-foreground-muted">
-                                    <time
-                                        th:datetime="${notice.creationDate}"
-                                        th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy HH:mm')}"
-                                    >
-                                        Date
-                                    </time>
-                                </p>
-                            </li>
-                        </ul>
                         <h3>Events</h3>
                         <div
                             th:if="${lastGymEvents.isEmpty()}"
@@ -393,6 +365,34 @@
                                     <time
                                         th:datetime="${event.createdAt}"
                                         th:text="${#temporals.format(event.createdAt, 'dd.MM.yyyy HH:mm')}"
+                                    >
+                                        Date
+                                    </time>
+                                </p>
+                            </li>
+                        </ul>
+                        <h3>Notices</h3>
+                        <div
+                            th:if="${lastGymNotices.isEmpty()}"
+                            class="text-foreground-muted"
+                        >
+                            No notices yet
+                        </div>
+                        <ul
+                            th:if="${!lastGymNotices.isEmpty()}"
+                            class="space-y-4"
+                        >
+                            <li
+                                th:each="notice : ${lastGymNotices}"
+                                class="border-2 p-4 rounded-base bg-background"
+                            >
+                                <strong th:text="${notice.title}">
+                                    Notice Title
+                                </strong>
+                                <p class="text-sm text-foreground-muted">
+                                    <time
+                                        th:datetime="${notice.creationDate}"
+                                        th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy HH:mm')}"
                                     >
                                         Date
                                     </time>
