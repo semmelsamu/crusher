@@ -180,130 +180,48 @@
         </section>
 
         <!-- Technical Details Section -->
-        <section class="bg-main py-16">
+        <section class="bg-black py-16 *:text-white">
             <div class="wrapper">
-                <h2 class="text-3xl font-bold text-center mb-8">
-                    Built With Modern Technology
-                </h2>
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto"
-                >
-                    <div class="card p-8 space-y-4">
-                        <div class="flex justify-center mb-4">
-                            <x th:replace="~{components/icons :: info}"></x>
-                        </div>
-                        <h3 class="font-bold text-2xl text-center">
-                            Academic Project
-                        </h3>
-                        <div class="space-y-2">
-                            <p class="text-center text-foreground-muted">
-                                Built at
-                                <strong>OTH Regensburg</strong>
-                            </p>
-                            <p class="text-center">
-                                <span class="badge">Software Entwicklung</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="card p-8 space-y-4">
-                        <div class="flex justify-center mb-4">
-                            <x
-                                th:replace="~{components/icons :: pencil-ruler}"
-                            ></x>
-                        </div>
-                        <h3 class="font-bold text-2xl text-center">
-                            Powered by Java Spring
-                        </h3>
-                        <div
-                            class="space-y-2 text-center text-foreground-muted"
+                <div class="max-w-prose space-y-4">
+                    <h2>About this project</h2>
+                    <p>
+                        This application was built as a final project for the
+                        Software Engineering course at OTH Regensburg. It was
+                        developed by Samuel Kroiß, Hannes Weber, and Carl
+                        Czarnetzki.
+                    </p>
+                    <p>Technologies used:</p>
+                    <ul class="list-disc list-inside">
+                        <li>Spring Boot</li>
+                        <li>Spring Security</li>
+                        <li>Thymeleaf Templates</li>
+                        <li>Tailwind CSS</li>
+                    </ul>
+                    <p>Special thanks:</p>
+                    <ul class="list-disc list-inside">
+                        <li>
+                            <a
+                                href="https://www.neobrutalism.dev/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="underline"
+                                >Neobrutalism Components</a
+                            >
+                            for the design inspiration
+                        </li>
+                    </ul>
+                    <p>
+                        crusher is open source. The complete source code can be
+                        found on GitHub:<br />
+                        <a
+                            href="https://github.com/semmelsamu/crusher"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="underline"
+                            >https://github.com/semmelsamu/crusher</a
                         >
-                            <p>Spring Boot</p>
-                            <p>Spring Security</p>
-                            <p>Thymeleaf Templates</p>
-                            <p>Tailwind CSS</p>
-                        </div>
-                    </div>
+                    </p>
                 </div>
-            </div>
-        </section>
-
-        <!-- Developers Section -->
-        <section class="wrapper">
-            <h2 class="text-3xl font-bold text-center mb-8">Meet The Team</h2>
-            <div
-                class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto"
-            >
-                <div class="card p-8 space-y-4 text-center">
-                    <div
-                        class="w-24 h-24 rounded-full bg-sky-400 border-2 shadow-base mx-auto flex items-center justify-center"
-                    >
-                        <span class="text-3xl font-bold text-main-foreground"
-                            >SK</span
-                        >
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-xl">Samuel Kroiß</h3>
-                        <p class="text-sm text-foreground-muted">Developer</p>
-                    </div>
-                </div>
-
-                <div class="card p-8 space-y-4 text-center">
-                    <div
-                        class="w-24 h-24 rounded-full bg-indigo-400 border-2 shadow-base mx-auto flex items-center justify-center"
-                    >
-                        <span class="text-3xl font-bold text-main-foreground"
-                            >HW</span
-                        >
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-xl">Hannes Weber</h3>
-                        <p class="text-sm text-foreground-muted">Developer</p>
-                    </div>
-                </div>
-
-                <div class="card p-8 space-y-4 text-center">
-                    <div
-                        class="w-24 h-24 rounded-full bg-lime-400 border-2 shadow-base mx-auto flex items-center justify-center"
-                    >
-                        <span class="text-3xl font-bold text-main-foreground"
-                            >CC</span
-                        >
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-xl">Carl Czarnetzki</h3>
-                        <p class="text-sm text-foreground-muted">Developer</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- GitHub CTA Section -->
-        <section class="wrapper">
-            <div class="card p-12 max-w-2xl mx-auto text-center space-y-6">
-                <div class="flex justify-center">
-                    <x
-                        th:replace="~{components/icons :: square-arrow-out-up-right}"
-                    ></x>
-                </div>
-                <h2 class="text-3xl font-bold">
-                    Open Source & Available on GitHub
-                </h2>
-                <p class="text-lg text-foreground-muted">
-                    Crusher is open source. Check out the code, contribute, or
-                    fork it for your own use.
-                </p>
-                <a
-                    href="https://github.com/semmelsamu/crusher"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="button inline-flex"
-                >
-                    View on GitHub
-                    <x
-                        th:replace="~{components/icons :: square-arrow-out-up-right}"
-                    ></x>
-                </a>
             </div>
         </section>
     </th:block>
