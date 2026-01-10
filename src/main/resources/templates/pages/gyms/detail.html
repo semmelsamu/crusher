@@ -152,29 +152,25 @@
                     <h2>Events</h2>
                     <ul class="space-y-4">
                         <li
-                            th:each="event : ${events}"
+                            th:each="eventOccurrence : ${events}"
                             class="border-2 p-4 rounded-base bg-background"
                         >
                             <a
-                                th:href="@{/gyms/{gymId}/events/{eventId}(gymId=${gym.id}, eventId=${event.id})}"
+                                th:href="@{/gyms/{gymId}/events/{eventId}(gymId=${gym.id}, eventId=${eventOccurrence.event.id})}"
                                 class="block space-y-1"
                             >
-                                <strong th:text="${event.title}">
+                                <strong
+                                    th:text="${eventOccurrence.event.title}"
+                                >
                                     Event Title
                                 </strong>
                                 <p class="text-sm text-foreground-muted">
-                                    <span
-                                        th:if="${event.periodic}"
-                                        th:text="${#strings.capitalize(event.weekday.toString().toLowerCase())}"
-                                    >
-                                        Monday
-                                    </span>
-                                    <span
-                                        th:if="${!event.periodic}"
-                                        th:text="${#temporals.format(event.date, 'dd.MM.yyyy')}"
+                                    <time
+                                        th:datetime="${eventOccurrence.date}"
+                                        th:text="${#temporals.format(eventOccurrence.date, 'dd.MM.yyyy')}"
                                     >
                                         01.01.2024
-                                    </span>
+                                    </time>
                                 </p>
                             </a>
                         </li>

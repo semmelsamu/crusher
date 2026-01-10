@@ -1,5 +1,6 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.dto.EventOccurrence;
 import de.othr.crusher.dto.UserStatistics;
 import de.othr.crusher.model.*;
 import de.othr.crusher.repository.BoulderCommentRepository;
@@ -31,12 +32,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.time.temporal.TemporalAdjusters;
 
 /**
  * Controller for managing the dashboard and boulder views.
@@ -139,11 +145,11 @@ public class DashboardController {
                     .toList();
         }
 
-        // Get last 3 events from the last gym
-        List<EventEntity> lastGymEvents = List.of();
+        // Get next 3 events from the last gym
+        List<EventOccurrence> lastGymEvents = List.of();
         if (lastGym != null) {
             List<EventEntity> allEvents = eventRepository.findByGymId(lastGym.getId());
-            lastGymEvents = allEvents.stream()
+            lastGymEvents = buildUpcomingEvents(allEvents).stream()
                     .limit(3)
                     .toList();
         }
@@ -432,8 +438,8 @@ public class DashboardController {
         // Get all notices for this gym
         List<NoticeEntity> notices = noticeRepository.findByGymIdOrderByCreationDateDesc(gym.getId());
 
-        // Get all events for this gym
-        List<EventEntity> events = eventRepository.findByGymId(gym.getId());
+        // Get upcoming events for this gym
+        List<EventOccurrence> events = buildUpcomingEvents(eventRepository.findByGymId(gym.getId()));
 
         // Get weather for gym's city
         WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
@@ -463,5 +469,33 @@ public class DashboardController {
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+    }
+
+    private List<EventOccurrence> buildUpcomingEvents(List<EventEntity> events) {
+        LocalDate today = LocalDate.now();
+        return events.stream()
+                .map(event -> toOccurrence(event, today))
+                .flatMap(Optional::stream)
+                .filter(occurrence -> !occurrence.date().isBefore(today))
+                .sorted(Comparator.comparing(EventOccurrence::date))
+                .toList();
+    }
+
+    private Optional<EventOccurrence> toOccurrence(EventEntity event, LocalDate today) {
+        if (event.isPeriodic()) {
+            DayOfWeek weekday = event.getWeekday();
+            if (weekday == null) {
+                return Optional.empty();
+            }
+            LocalDate nextDate = today.with(TemporalAdjusters.nextOrSame(weekday));
+            return Optional.of(new EventOccurrence(event, nextDate));
+        }
+
+        LocalDate date = event.getDate();
+        if (date == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new EventOccurrence(event, date));
     }
 }
