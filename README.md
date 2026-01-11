@@ -29,10 +29,10 @@ java -version
 
 - Open the app at: http://localhost:8080 — you will be redirected to the login page if not authenticated.
 - Test accounts (seeded from `src/main/resources/data.sql`, password for all accounts is `test` before encoding by the startup runner):
-	- alice / test (ROLE_USER)
-	- bob / test (ROLE_SETTER)
-	- klaus / test (ROLE_OWNER)
-	- crusher / test (ROLE_ADMIN)
+    - alice / test (ROLE_USER)
+    - bob / test (ROLE_SETTER)
+    - klaus / test (ROLE_OWNER)
+    - crusher / test (ROLE_ADMIN)
 
 - H2 Console: http://localhost:8080/h2-console (restricted to ADMIN role). JDBC URL: `jdbc:h2:mem:app`, user `sa`, password `password`.
 
@@ -40,4 +40,18 @@ java -version
 
 ```zsh
 SPRING_PROFILES_ACTIVE=prod ./gradlew bootRun
+```
+
+## Docker
+
+Build the image:
+
+```zsh
+docker build -t crusher .
+```
+
+Run the container (persists uploads on the host):
+
+```zsh
+docker run --rm -p 8080:8080 -v "$(pwd)/uploads:/app/uploads" crusher
 ```
