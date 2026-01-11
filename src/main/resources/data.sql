@@ -4,11 +4,11 @@ INSERT INTO users (name, role, password) VALUES
     ('klaus', 'OWNER', 'test'),
     ('crusher', 'ADMIN', 'test');
 
-INSERT INTO gyms (name, street, city, email, crowd_level_url) VALUES
-    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', 'https://www.boulderwelt-muenchen-ost.de/'),
-    ('Einstein Boulderhalle', 'Landsberger Straße 185', 'München', 'info@einstein-boulder.de', NULL),
-    ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de', NULL),
-    ('Boulderwelt Regensburg', 'Isarstraße 99', 'Regensburg', 'regensburg@boulderwelt.de', 'https://www.boulderwelt-regensburg.de/');
+INSERT INTO gyms (name, street, city, email, crowd_level_url, deleted) VALUES
+    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', 'https://www.boulderwelt-muenchen-ost.de/', FALSE),
+    ('Einstein Boulderhalle', 'Landsberger Straße 185', 'München', 'info@einstein-boulder.de', NULL, FALSE),
+    ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de', NULL, FALSE),
+    ('Boulderwelt Regensburg', 'Isarstraße 99', 'Regensburg', 'regensburg@boulderwelt.de', 'https://www.boulderwelt-regensburg.de/', FALSE);
 
 INSERT INTO grades (name, v_scale, font_scale, description, gym_id) VALUES
     ('1', 'V0', '4', NULL, 1),
@@ -44,40 +44,40 @@ INSERT INTO sectors (name, description, image_path, gym_id) VALUES
     ('Tech-Deck', 'Schmale Leisten und Fußarbeitstraining.', '/uploads/sectors/5/c8f932c0-852a-4688-81f2-8b8e2671c2c4.png', 3),
     ('Höhle', 'Kompressionslastige Boulder in der Grotte.', '/uploads/sectors/6/5ae55a50-9088-4b06-841e-50bd76f2a027.png', 3);
 
-INSERT INTO boulders (description, color, grade_id, sector_id, holds_count) VALUES
+INSERT INTO boulders (description, color, grade_id, sector_id, holds_count, deleted) VALUES
     -- Boulders for sector 1 (30er, gym 1)
-    ('Links hinten', 'YELLOW', 1, 1, 18),
-    ('Rechts vorne, steil', 'BLUE', 3, 1, 22),
-    ('Mittig, dynamisch', 'RED', 4, 1, 20),
-    ('Kante rechts', 'PINK', 2, 1, 16),
+    ('Links hinten', 'YELLOW', 1, 1, 18, FALSE),
+    ('Rechts vorne, steil', 'BLUE', 3, 1, 22, FALSE),
+    ('Mittig, dynamisch', 'RED', 4, 1, 20, FALSE),
+    ('Kante rechts', 'PINK', 2, 1, 16, FALSE),
     
     -- Boulders for sector 2 (Volldach, gym 1)
-    ('Dach links, Power', 'BLACK', 6, 2, 25),
-    ('Campus rechts', 'BLUE', 7, 2, 22),
-    ('Überhang mittig', 'DARK_GREEN', 5, 2, 21),
-    ('Traversierung komplett', 'WHITE', 4, 2, 30),
+    ('Dach links, Power', 'BLACK', 6, 2, 25, FALSE),
+    ('Campus rechts', 'BLUE', 7, 2, 22, FALSE),
+    ('Überhang mittig', 'DARK_GREEN', 5, 2, 21, FALSE),
+    ('Traversierung komplett', 'WHITE', 4, 2, 30, FALSE),
     
     -- Boulders for sector 3 (Slab-City, gym 2)
-    ('Balance links', 'YELLOW', 9, 3, 14),
-    ('Platte rechts', 'WHITE', 10, 3, 12),
-    ('Technik pur', 'PINK', 11, 3, 18),
+    ('Balance links', 'YELLOW', 9, 3, 14, FALSE),
+    ('Platte rechts', 'WHITE', 10, 3, 12, FALSE),
+    ('Technik pur', 'PINK', 11, 3, 18, FALSE),
     
     -- Boulders for sector 4 (45er, gym 2)
-    ('Überhang extrem', 'BLACK', 14, 4, 26),
-    ('Power-Dynos', 'RED', 15, 4, 20),
-    ('Sloper Challenge', 'BLUE', 16, 4, 19),
-    ('Campus Board', 'DARK_GREEN', 13, 4, 24),
+    ('Überhang extrem', 'BLACK', 14, 4, 26, FALSE),
+    ('Power-Dynos', 'RED', 15, 4, 20, FALSE),
+    ('Sloper Challenge', 'BLUE', 16, 4, 19, FALSE),
+    ('Campus Board', 'DARK_GREEN', 13, 4, 24, FALSE),
     
     -- Boulders for sector 5 (Tech-Deck, gym 3)
-    ('Crimp Heaven', 'YELLOW', 17, 5, 18),
-    ('Fußarbeit Spezial', 'PINK', 18, 5, 16),
-    ('Leisten links', 'WHITE', 19, 5, 17),
+    ('Crimp Heaven', 'YELLOW', 17, 5, 18, FALSE),
+    ('Fußarbeit Spezial', 'PINK', 18, 5, 16, FALSE),
+    ('Leisten links', 'WHITE', 19, 5, 17, FALSE),
     
     -- Boulders for sector 6 (Höhle, gym 3)
-    ('Compression Crack', 'BLACK', 22, 6, 23),
-    ('Grotten-Traverse', 'BLUE', 23, 6, 28),
-    ('Power-Kompression', 'RED', 24, 6, 24),
-    ('Höhlen-Arete', 'DARK_GREEN', 21, 6, 21);
+    ('Compression Crack', 'BLACK', 22, 6, 23, FALSE),
+    ('Grotten-Traverse', 'BLUE', 23, 6, 28, FALSE),
+    ('Power-Kompression', 'RED', 24, 6, 24, FALSE),
+    ('Höhlen-Arete', 'DARK_GREEN', 21, 6, 21, FALSE);
 
 INSERT INTO projects (user_id, boulder_id, created_at) VALUES
     -- Alice's projects (2 per gym)
@@ -249,20 +249,20 @@ INSERT INTO notices (title, message, creation_date, gym_id) VALUES
     ('Fresh Routes in Overhang Section', 'Our route setters just finished 20 new boulders in the overhang area. Featuring everything from V3 to V8 with creative movement patterns. Come try them out!', '2024-12-13 09:30:00', 4),
     ('New Year''s Eve Hours', 'On December 31st we''re open from 10:00-16:00. Start the new year with some climbing! Closed on January 1st. Regular hours resume January 2nd.', '2024-12-10 15:00:00', 4);
 
-INSERT INTO events (title, description, periodic, weekday, event_date, time, recurrence_frequency, created_at, gym_id) VALUES
+INSERT INTO events (title, description, periodic, weekday, event_date, time, recurrence_frequency, created_at, gym_id, deleted) VALUES
     -- Events for Boulderwelt Muenchen Ost (gym 1)
-    ('Community Climb Night', 'Join our monthly community climb night with a fun scramble format and prizes. All levels welcome.', TRUE, 'THURSDAY', NULL, '18:30-21:00', 'WEEKLY', '2024-11-28 12:00:00', 1),
-    ('Technique Workshop', 'A two-hour workshop focused on footwork and balance. Limited to 16 participants. Register at the front desk.', FALSE, NULL, '2024-12-06', '17:00-19:00', NULL, '2024-11-20 09:00:00', 1),
+    ('Community Climb Night', 'Join our monthly community climb night with a fun scramble format and prizes. All levels welcome.', TRUE, 'THURSDAY', NULL, '18:30-21:00', 'WEEKLY', '2024-11-28 12:00:00', 1, FALSE),
+    ('Technique Workshop', 'A two-hour workshop focused on footwork and balance. Limited to 16 participants. Register at the front desk.', FALSE, NULL, '2024-12-06', '17:00-19:00', NULL, '2024-11-20 09:00:00', 1, FALSE),
 
     -- Events for Einstein Boulderhalle (gym 2)
-    ('Holiday Boulder Jam', 'Celebrate the season with music, mini games, and a team relay. Free for members; guests welcome with day pass.', FALSE, NULL, '2024-12-22', '18:00-22:00', NULL, '2024-11-25 10:00:00', 2),
-    ('Intro to Bouldering', 'A beginner-friendly session covering safety, basics, and climbing etiquette. No prior experience required.', TRUE, 'MONDAY', NULL, '19:00-20:30', 'BI_WEEKLY', '2024-11-18 08:30:00', 2),
+    ('Holiday Boulder Jam', 'Celebrate the season with music, mini games, and a team relay. Free for members; guests welcome with day pass.', FALSE, NULL, '2024-12-22', '18:00-22:00', NULL, '2024-11-25 10:00:00', 2, FALSE),
+    ('Intro to Bouldering', 'A beginner-friendly session covering safety, basics, and climbing etiquette. No prior experience required.', TRUE, 'MONDAY', NULL, '19:00-20:30', 'BI_WEEKLY', '2024-11-18 08:30:00', 2, FALSE),
 
     -- Events for BlocHutte Nuernberg (gym 3)
-    ('Women''s Climbing Meet', 'An open meetup for women climbers to connect and climb together. Casual session with a coach on site.', TRUE, 'WEDNESDAY', NULL, '19:00-21:00', 'WEEKLY', '2024-11-13 15:00:00', 3),
-    ('Youth Skills Day', 'A one-day clinic for ages 10-15 covering movement basics and warmup routines.', FALSE, NULL, '2024-12-07', '10:00-13:00', NULL, '2024-11-10 09:30:00', 3),
+    ('Women''s Climbing Meet', 'An open meetup for women climbers to connect and climb together. Casual session with a coach on site.', TRUE, 'WEDNESDAY', NULL, '19:00-21:00', 'WEEKLY', '2024-11-13 15:00:00', 3, FALSE),
+    ('Youth Skills Day', 'A one-day clinic for ages 10-15 covering movement basics and warmup routines.', FALSE, NULL, '2024-12-07', '10:00-13:00', NULL, '2024-11-10 09:30:00', 3, FALSE),
 
     -- Events for Boulderwelt Regensburg (gym 4)
-    ('Route Setter Q&A', 'Meet the setters, ask questions, and get insights on the new overhang set.', FALSE, NULL, '2024-12-14', '19:30-20:30', NULL, '2024-11-29 14:00:00', 4),
-    ('New Year Warmup Session', 'Start the year with a guided warmup and easy problem circuit. Open to all members.', FALSE, NULL, '2024-12-29', '11:00-12:00', NULL, '2024-11-30 11:00:00', 4),
-    ('Monthly Community Meetup', 'A casual monthly meetup to connect, climb, and share beta. Open to all levels.', TRUE, 'TUESDAY', NULL, '19:00-21:00', 'MONTHLY', '2024-11-05 18:00:00', 4);
+    ('Route Setter Q&A', 'Meet the setters, ask questions, and get insights on the new overhang set.', FALSE, NULL, '2024-12-14', '19:30-20:30', NULL, '2024-11-29 14:00:00', 4, FALSE),
+    ('New Year Warmup Session', 'Start the year with a guided warmup and easy problem circuit. Open to all members.', FALSE, NULL, '2024-12-29', '11:00-12:00', NULL, '2024-11-30 11:00:00', 4, FALSE),
+    ('Monthly Community Meetup', 'A casual monthly meetup to connect, climb, and share beta. Open to all levels.', TRUE, 'TUESDAY', NULL, '19:00-21:00', 'MONTHLY', '2024-11-05 18:00:00', 4, FALSE);
