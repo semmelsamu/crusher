@@ -163,6 +163,9 @@ public class GymController {
         gym.setStreet(formGym.getStreet());
         gym.setCity(formGym.getCity());
         gym.setEmail(formGym.getEmail());
+        gym.setLatitude(formGym.getLatitude());
+        gym.setLongitude(formGym.getLongitude());
+        gym.setCrowdLevelUrl(formGym.getCrowdLevelUrl());
         gymRepository.save(gym);
 
         // Add success message for toast notification

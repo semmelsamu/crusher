@@ -50,6 +50,20 @@
                             </span>
                         </div>
                     </div>
+
+                    <div
+                        class="w-full"
+                        th:if="${gym.latitude != null and gym.longitude != null}"
+                    >
+                        <div
+                            id="gym-map"
+                            class="gym-map border-2 rounded-base overflow-hidden"
+                            th:data-lat="${gym.latitude}"
+                            th:data-lng="${gym.longitude}"
+                            th:data-name="${gym.name}"
+                            th:data-address="${gym.city} + ', ' + ${gym.street}"
+                        ></div>
+                    </div>
                 </section>
 
                 <!-- Total Boulders / Crowd Level -->
