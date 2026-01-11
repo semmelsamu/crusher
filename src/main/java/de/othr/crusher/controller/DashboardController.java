@@ -22,6 +22,9 @@ import de.othr.crusher.repository.ProjectRepository;
 import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -240,6 +243,7 @@ public class DashboardController {
     @GetMapping("/boulders")
     @Transactional(readOnly = true)
     public String showAllBoulders(
+            @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "gymId", required = false) Long gymId,
             @RequestParam(value = "sectorId", required = false) Long sectorId,
             @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
@@ -247,6 +251,9 @@ public class DashboardController {
             Principal principal,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
+
+        // Convert 1-based page to 0-based for Spring's PageRequest
+        Pageable pageable = PageRequest.of(page - 1, 10);
 
         // Fetch all gyms for the dropdown
         List<GymEntity> gyms = gymRepository.findByDeletedFalse();
@@ -262,38 +269,79 @@ public class DashboardController {
             grades = gradeRepository.findByDeletedFalse();
         }
 
-        // Filter boulders based on selected criteria
-        List<BoulderEntity> boulders;
-        if (sectorId != null) {
-            // Filter by specific sector
-            if (gradeIds != null && !gradeIds.isEmpty()) {
-                boulders = boulderRepository.findBySectorIdAndGradeIdInAndDeletedFalse(sectorId, gradeIds);
-            } else {
-                boulders = boulderRepository.findBySectorIdAndDeletedFalse(sectorId);
-            }
-        } else if (gymId != null) {
-            // Filter by gym
-            if (gradeIds != null && !gradeIds.isEmpty()) {
-                boulders = boulderRepository.findBySectorGymIdAndGradeIdInAndDeletedFalse(gymId, gradeIds);
-            } else {
-                boulders = boulderRepository.findBySectorGymIdAndDeletedFalse(gymId);
-            }
-        } else {
-            // No filters - show all boulders
-            boulders = boulderRepository.findByDeletedFalse();
-        }
-
         // Load project marks for current user (once) to drive UI and optional filtering
         Set<Long> projectBoulderIds = projectRepository.findByUserId(user.getId()).stream()
                 .map(project -> project.getBoulder() != null ? project.getBoulder().getId() : null)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
+        List<Long> projectBoulderIdList = projectBoulderIds.stream().toList();
+        boolean hasGradeFilter = gradeIds != null && !gradeIds.isEmpty();
+
+        // Filter boulders based on selected criteria
+        Page<BoulderEntity> bouldersPage;
         if (projectOnly) {
-            boulders = boulders.stream()
-                    .filter(boulder -> projectBoulderIds.contains(boulder.getId()))
-                    .toList();
+            if (projectBoulderIdList.isEmpty()) {
+                bouldersPage = Page.empty(pageable);
+            } else if (sectorId != null) {
+                if (hasGradeFilter) {
+                    bouldersPage = boulderRepository
+                            .findBySectorIdAndGradeIdInAndIdInAndDeletedFalse(
+                                    sectorId,
+                                    gradeIds,
+                                    projectBoulderIdList,
+                                    pageable);
+                } else {
+                    bouldersPage = boulderRepository.findBySectorIdAndIdInAndDeletedFalse(
+                            sectorId,
+                            projectBoulderIdList,
+                            pageable);
+                }
+            } else if (gymId != null) {
+                if (hasGradeFilter) {
+                    bouldersPage = boulderRepository
+                            .findBySectorGymIdAndGradeIdInAndIdInAndDeletedFalse(
+                                    gymId,
+                                    gradeIds,
+                                    projectBoulderIdList,
+                                    pageable);
+                } else {
+                    bouldersPage = boulderRepository.findBySectorGymIdAndIdInAndDeletedFalse(
+                            gymId,
+                            projectBoulderIdList,
+                            pageable);
+                }
+            } else {
+                bouldersPage = boulderRepository.findByIdInAndDeletedFalse(
+                        projectBoulderIdList,
+                        pageable);
+            }
+        } else if (sectorId != null) {
+            // Filter by specific sector
+            if (hasGradeFilter) {
+                bouldersPage = boulderRepository.findBySectorIdAndGradeIdInAndDeletedFalse(
+                        sectorId,
+                        gradeIds,
+                        pageable);
+            } else {
+                bouldersPage = boulderRepository.findBySectorIdAndDeletedFalse(sectorId, pageable);
+            }
+        } else if (gymId != null) {
+            // Filter by gym
+            if (hasGradeFilter) {
+                bouldersPage = boulderRepository.findBySectorGymIdAndGradeIdInAndDeletedFalse(
+                        gymId,
+                        gradeIds,
+                        pageable);
+            } else {
+                bouldersPage = boulderRepository.findBySectorGymIdAndDeletedFalse(gymId, pageable);
+            }
+        } else {
+            // No filters - show all boulders
+            bouldersPage = boulderRepository.findByDeletedFalse(pageable);
         }
+
+        List<BoulderEntity> boulders = bouldersPage.getContent();
 
         // Load ratings for current user
         Map<Long, Integer> boulderRatings = ratingRepository.findByUserId(user.getId()).stream()
@@ -304,6 +352,7 @@ public class DashboardController {
 
         // Add attributes to model
         model.addAttribute("boulders", boulders);
+        model.addAttribute("bouldersPage", bouldersPage);
         model.addAttribute("gyms", gyms);
         model.addAttribute("sectors", sectors);
         model.addAttribute("grades", grades);
