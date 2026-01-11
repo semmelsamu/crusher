@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import de.othr.crusher.model.UserEntity;
 import de.othr.crusher.repository.UserRepository;
+import de.othr.crusher.service.EmailService;
 import de.othr.crusher.utils.login.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -31,14 +32,17 @@ public class SignUpController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService userDetailsService;
+    private final EmailService emailService;
 
     public SignUpController(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            CustomUserDetailsService userDetailsService) {
+            CustomUserDetailsService userDetailsService,
+            EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
+        this.emailService = emailService;
     }
 
     /**
@@ -53,9 +57,10 @@ public class SignUpController {
 
     /**
      * Processes user registration.
-     * Validates input, creates new user, and automatically logs them in.
+     * Validates input, creates new user, sends welcome email, and automatically logs them in.
      *
      * @param username the chosen username
+     * @param email the user's email address
      * @param password the chosen password
      * @param confirmPassword password confirmation
      * @param request the HTTP request for session management
@@ -66,6 +71,7 @@ public class SignUpController {
     @PostMapping("/signup")
     public String registerUser(
             @RequestParam String username,
+            @RequestParam String email,
             @RequestParam String password,
             @RequestParam String confirmPassword,
             HttpServletRequest request,
@@ -80,6 +86,7 @@ public class SignUpController {
                 "message", "Password must be at least 4 characters long"
             ));
             redirectAttributes.addFlashAttribute("username", username);
+            redirectAttributes.addFlashAttribute("email", email);
             return "redirect:/signup";
         }
 
@@ -91,6 +98,7 @@ public class SignUpController {
                 "message", "Passwords do not match"
             ));
             redirectAttributes.addFlashAttribute("username", username);
+            redirectAttributes.addFlashAttribute("email", email);
             return "redirect:/signup";
         }
 
@@ -102,15 +110,37 @@ public class SignUpController {
                 "message", "Username already exists"
             ));
             redirectAttributes.addFlashAttribute("username", username);
+            redirectAttributes.addFlashAttribute("email", email);
+            return "redirect:/signup";
+        }
+
+        // Check if email already exists
+        if (userRepository.findByEmail(email).isPresent()) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error",
+                "title", "Registration failed",
+                "message", "Email address already registered"
+            ));
+            redirectAttributes.addFlashAttribute("username", username);
+            redirectAttributes.addFlashAttribute("email", email);
             return "redirect:/signup";
         }
 
         // Create new user with BCrypt encoded password
         UserEntity newUser = new UserEntity();
         newUser.setName(username);
+        newUser.setEmail(email);
         newUser.setPassword(passwordEncoder.encode(password));
         newUser.setRole("USER"); // Default role for new users
         userRepository.save(newUser);
+
+        // Send welcome email
+        try {
+            emailService.sendWelcomeEmail(email, username);
+        } catch (Exception e) {
+            // Log the error but don't fail registration if email fails
+            System.err.println("Failed to send welcome email to " + email + ": " + e.getMessage());
+        }
 
         // Automatically log in the new user
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);

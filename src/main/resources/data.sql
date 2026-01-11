@@ -1,8 +1,8 @@
-INSERT INTO users (name, role, password) VALUES
-    ('alice', 'USER', 'test'),
-    ('bob', 'SETTER', 'test'),
-    ('klaus', 'OWNER', 'test'),
-    ('crusher', 'ADMIN', 'test');
+INSERT INTO users (name, email, role, password) VALUES
+    ('alice', 'alice@crusher-test.de', 'USER', 'test'),
+    ('bob', 'bob@crusher-test.de', 'SETTER', 'test'),
+    ('klaus', 'klaus@crusher-test.de', 'OWNER', 'test'),
+    ('crusher', 'admin@crusher-test.de', 'ADMIN', 'test');
 
 INSERT INTO gyms (name, street, city, email, crowd_level_url) VALUES
     ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', 'https://www.boulderwelt-muenchen-ost.de/'),
