@@ -2,6 +2,7 @@ package de.othr.crusher.controller;
 
 import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.model.SectorEntity;
+import de.othr.crusher.repository.EventRepository;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.NoticeRepository;
@@ -31,6 +32,7 @@ public class GymController {
     private final GradeRepository gradeRepository;
     private final SectorRepository sectorRepository;
     private final NoticeRepository noticeRepository;
+    private final EventRepository eventRepository;
 
     /**
      * Creates a new GymController with the given repository.
@@ -39,12 +41,19 @@ public class GymController {
      * @param gradeRepository repository for accessing grade data
      * @param sectorRepository repository for accessing sector data
      * @param noticeRepository repository for accessing notice data
+     * @param eventRepository repository for accessing event data
      */
-    public GymController(GymRepository gymRepository, GradeRepository gradeRepository, SectorRepository sectorRepository, NoticeRepository noticeRepository) {
+    public GymController(
+            GymRepository gymRepository,
+            GradeRepository gradeRepository,
+            SectorRepository sectorRepository,
+            NoticeRepository noticeRepository,
+            EventRepository eventRepository) {
         this.gymRepository = gymRepository;
         this.gradeRepository = gradeRepository;
         this.sectorRepository = sectorRepository;
         this.noticeRepository = noticeRepository;
+        this.eventRepository = eventRepository;
     }
 
     /**
@@ -74,6 +83,7 @@ public class GymController {
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymId(id));
         model.addAttribute("notices", noticeRepository.findByGymIdOrderByCreationDateDesc(id));
+        model.addAttribute("events", eventRepository.findByGymId(id));
 
         return "pages/admin/gyms/detail";
     }

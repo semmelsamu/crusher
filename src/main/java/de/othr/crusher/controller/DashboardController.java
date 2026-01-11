@@ -1,5 +1,6 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.dto.EventOccurrence;
 import de.othr.crusher.dto.UserStatistics;
 import de.othr.crusher.model.*;
 import de.othr.crusher.repository.BoulderCommentRepository;
@@ -10,6 +11,7 @@ import de.othr.crusher.service.WeatherService;
 import de.othr.crusher.service.WeatherService.WeatherInfo;
 import de.othr.crusher.repository.BoulderRatingRepository;
 import de.othr.crusher.repository.BoulderRepository;
+import de.othr.crusher.repository.EventRepository;
 import de.othr.crusher.repository.GoRepository;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymCommentRepository;
@@ -30,12 +32,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.time.temporal.TemporalAdjusters;
 
 /**
  * Controller for managing the dashboard and boulder views.
@@ -57,6 +64,7 @@ public class DashboardController {
     private final GymRatingRepository gymRatingRepository;
     private final GymCommentRepository gymCommentRepository;
     private final NoticeRepository noticeRepository;
+    private final EventRepository eventRepository;
     private final WeatherService weatherService;
     private final CrowdLevelService crowdLevelService;
     private final StatisticsService statisticsService;
@@ -75,6 +83,7 @@ public class DashboardController {
             GymRatingRepository gymRatingRepository,
             GymCommentRepository gymCommentRepository,
             NoticeRepository noticeRepository,
+            EventRepository eventRepository,
             WeatherService weatherService,
             CrowdLevelService crowdLevelService,
             StatisticsService statisticsService) {
@@ -91,6 +100,7 @@ public class DashboardController {
         this.gymRatingRepository = gymRatingRepository;
         this.gymCommentRepository = gymCommentRepository;
         this.noticeRepository = noticeRepository;
+        this.eventRepository = eventRepository;
         this.weatherService = weatherService;
         this.crowdLevelService = crowdLevelService;
         this.statisticsService = statisticsService;
@@ -131,6 +141,15 @@ public class DashboardController {
         if (lastGym != null) {
             List<NoticeEntity> allNotices = noticeRepository.findByGymIdOrderByCreationDateDesc(lastGym.getId());
             lastGymNotices = allNotices.stream()
+                    .limit(3)
+                    .toList();
+        }
+
+        // Get next 3 events from the last gym
+        List<EventOccurrence> lastGymEvents = List.of();
+        if (lastGym != null) {
+            List<EventEntity> allEvents = eventRepository.findByGymId(lastGym.getId());
+            lastGymEvents = buildUpcomingEvents(allEvents).stream()
                     .limit(3)
                     .toList();
         }
@@ -183,6 +202,7 @@ public class DashboardController {
         model.addAttribute("lastSession", lastSession);
         model.addAttribute("activeSession", activeSession);
         model.addAttribute("lastGymNotices", lastGymNotices);
+        model.addAttribute("lastGymEvents", lastGymEvents);
         
         // Project data
         model.addAttribute("projects", recentProjects);
@@ -418,6 +438,9 @@ public class DashboardController {
         // Get all notices for this gym
         List<NoticeEntity> notices = noticeRepository.findByGymIdOrderByCreationDateDesc(gym.getId());
 
+        // Get upcoming events for this gym
+        List<EventOccurrence> events = buildUpcomingEvents(eventRepository.findByGymId(gym.getId()));
+
         // Get weather for gym's city
         WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
 
@@ -429,6 +452,7 @@ public class DashboardController {
         model.addAttribute("averageRating", averageRating);
         model.addAttribute("comments", comments);
         model.addAttribute("notices", notices);
+        model.addAttribute("events", events);
         model.addAttribute("weather", weather);
         model.addAttribute("boulderCount", boulderCount);
 
@@ -445,5 +469,75 @@ public class DashboardController {
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+    }
+
+    private List<EventOccurrence> buildUpcomingEvents(List<EventEntity> events) {
+        LocalDate today = LocalDate.now();
+        return events.stream()
+                .map(event -> toOccurrence(event, today))
+                .flatMap(Optional::stream)
+                .filter(occurrence -> !occurrence.date().isBefore(today))
+                .sorted(Comparator.comparing(EventOccurrence::date))
+                .toList();
+    }
+
+    private Optional<EventOccurrence> toOccurrence(EventEntity event, LocalDate today) {
+        if (event.isPeriodic()) {
+            LocalDate startDate = resolveRecurringStart(event);
+            EventFrequency frequency = event.getFrequency();
+            if (startDate == null || frequency == null) {
+                return Optional.empty();
+            }
+            LocalDate nextDate = nextRecurringDate(startDate, frequency, today);
+            return Optional.of(new EventOccurrence(event, nextDate));
+        }
+
+        LocalDate date = event.getDate();
+        if (date == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new EventOccurrence(event, date));
+    }
+
+    private LocalDate resolveRecurringStart(EventEntity event) {
+        if (event.getCreatedAt() == null) {
+            return null;
+        }
+
+        LocalDate startDate = event.getCreatedAt().toLocalDate();
+        DayOfWeek weekday = event.getWeekday();
+        if (weekday != null) {
+            startDate = startDate.with(TemporalAdjusters.nextOrSame(weekday));
+        }
+        return startDate;
+    }
+
+    private LocalDate nextRecurringDate(LocalDate startDate, EventFrequency frequency, LocalDate today) {
+        if (!startDate.isBefore(today)) {
+            return startDate;
+        }
+
+        return switch (frequency) {
+            case WEEKLY -> advanceByWeeks(startDate, today, 1);
+            case BI_WEEKLY -> advanceByWeeks(startDate, today, 2);
+            case MONTHLY -> advanceByMonths(startDate, today, 1);
+        };
+    }
+
+    private LocalDate advanceByWeeks(LocalDate startDate, LocalDate today, int stepWeeks) {
+        LocalDate next = startDate;
+        while (next.isBefore(today)) {
+            next = next.plusWeeks(stepWeeks);
+        }
+        return next;
+    }
+
+    private LocalDate advanceByMonths(LocalDate startDate, LocalDate today, int stepMonths) {
+        LocalDate next = startDate;
+        while (next.isBefore(today)) {
+            next = next.plusMonths(stepMonths);
+        }
+        return next;
     }
 }
