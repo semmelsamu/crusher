@@ -473,16 +473,9 @@ function applyTheme(theme) {
 
 function initThemeToggle() {
     const storedTheme = getStoredTheme();
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-    const initialTheme =
-        storedTheme || (prefersDark.matches ? "dark" : "light");
+    const initialTheme = storedTheme || "light";
 
     applyTheme(initialTheme);
-
-    prefersDark.addEventListener("change", (event) => {
-        if (getStoredTheme()) return;
-        applyTheme(event.matches ? "dark" : "light");
-    });
 
     const toggle = document.querySelector("[data-theme-toggle]");
     if (!toggle) return;
