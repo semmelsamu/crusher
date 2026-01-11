@@ -7,10 +7,10 @@
         <main class="bg-main flex-1 space-y-16 py-16">
             <section class="card space-y-4 p-6 max-w-lg mx-auto">
                 <p>
-                    <strong class="text-lg">Login to your account</strong
-                    ><br />Enter your credentials
+                    <strong class="text-lg">Create an account</strong
+                    ><br />Enter your details to sign up
                 </p>
-                <form th:action="@{/login}" method="post" class="space-y-4">
+                <form th:action="@{/signup}" method="post" class="space-y-4">
                     <div class="space-y-2">
                         <label for="username" class="form-label"
                             >Username</label
@@ -22,7 +22,9 @@
                             class="text-input block w-full"
                             required
                             autofocus
-                            placeholder="Enter your username"
+                            minlength="4"
+                            placeholder="Choose a username"
+                            th:value="${username}"
                         />
                     </div>
 
@@ -36,40 +38,38 @@
                             name="password"
                             class="text-input block w-full"
                             required
-                            placeholder="Enter your password"
+                            minlength="4"
+                            placeholder="Choose a password"
+                        />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="confirmPassword" class="form-label"
+                            >Confirm Password</label
+                        >
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            class="text-input block w-full"
+                            required
+                            minlength="4"
+                            placeholder="Confirm your password"
                         />
                     </div>
 
                     <button type="submit" class="button primary w-full mt-8">
-                        Log In
-                        <x th:replace="~{components/icons :: log-in}"></x>
+                        Sign Up
                     </button>
                 </form>
 
                 <div class="text-center text-sm mt-6">
-                    Don't have an account?
-                    <a th:href="@{/signup}" class="underline underline-offset-4"
-                        >Sign up</a
+                    Already have an account?
+                    <a th:href="@{/login}" class="underline underline-offset-4"
+                        >Log in</a
                     >
                 </div>
             </section>
-
-            <details class="card max-w-lg mx-auto details">
-                <summary>Test Accounts</summary>
-                <div>
-                    <p>All accounts use password: <strong>test</strong></p>
-                    <dl>
-                        <dt>alice</dt>
-                        <dd>USER</dd>
-                        <dt>bob</dt>
-                        <dd>SETTER</dd>
-                        <dt>klaus</dt>
-                        <dd>OWNER</dd>
-                        <dt>crusher</dt>
-                        <dd>ADMIN</dd>
-                    </dl>
-                </div>
-            </details>
         </main>
     </th:block>
 </th:block>
