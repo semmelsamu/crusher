@@ -38,23 +38,23 @@
 
 :root[data-theme="dark"] {
     color-scheme: dark;
-    --color-foreground: var(--color-zinc-50);
-    --color-foreground-muted: var(--color-zinc-400);
-    --color-main-foreground: var(--color-zinc-950);
+    --color-foreground: var(--color-sky-50);
+    --color-foreground-muted: var(--color-sky-200);
+    --color-main-foreground: var(--color-sky-950);
 
-    --color-background: var(--color-zinc-950);
-    --color-secondary-background: var(--color-zinc-900);
+    --color-background: var(--color-sky-950);
+    --color-secondary-background: var(--color-zinc-800);
 
-    --color-border: var(--color-zinc-100);
-    --color-overlay: rgba(9, 9, 11, 0.85);
+    --color-border: black;
+    --color-overlay: rgba(2, 6, 23, 0.85);
 
-    --color-main: var(--color-lime-300);
+    --color-main: var(--color-sky-600);
     --color-error: var(--color-rose-400);
-    --color-success: var(--color-emerald-300);
+    --color-success: var(--color-emerald-500);
     --color-warning: var(--color-amber-300);
-    --color-accent: var(--color-cyan-300);
-    --color-disabled: var(--color-zinc-700);
+    --color-accent: var(--color-sky-300);
+    --color-disabled: var(--color-sky-800);
     --color-theme: var(--color-background);
-    --color-switch-thumb: var(--color-zinc-100);
+    --color-switch-thumb: var(--color-sky-50);
     --logo-filter: invert(1);
 }
