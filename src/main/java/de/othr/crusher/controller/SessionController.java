@@ -123,7 +123,7 @@ public class SessionController {
      */
     @GetMapping("/sessions/create")
     public String showCreateForm(Model model) {
-        List<GymEntity> gyms = gymRepository.findAll();
+        List<GymEntity> gyms = gymRepository.findByDeletedFalse();
         model.addAttribute("gyms", gyms);
 
         return "pages/sessions/create";
@@ -144,7 +144,7 @@ public class SessionController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
-        GymEntity gym = gymRepository.findById(gymId)
+        GymEntity gym = gymRepository.findByIdAndDeletedFalse(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         // Check for active sessions

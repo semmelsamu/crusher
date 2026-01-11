@@ -84,7 +84,7 @@ public class EventViewController {
 
     private EventEntity findEventInGymOrThrow(Long gymId, Long eventId) {
         EventEntity event = eventRepository
-                .findById(eventId)
+                .findByIdAndDeletedFalse(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
 
         if (event.getGym() == null || event.getGym().getId() == null

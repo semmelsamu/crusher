@@ -138,8 +138,8 @@ public class DashboardController {
 
         // Get last 3 notices from the last gym
         List<NoticeEntity> lastGymNotices = List.of();
-        if (lastGym != null) {
-            List<NoticeEntity> allNotices = noticeRepository.findByGymIdOrderByCreationDateDesc(lastGym.getId());
+        if (lastGym != null && !lastGym.isDeleted()) {
+            List<NoticeEntity> allNotices = noticeRepository.findByGymIdAndDeletedFalseOrderByCreationDateDesc(lastGym.getId());
             lastGymNotices = allNotices.stream()
                     .limit(3)
                     .toList();
@@ -147,8 +147,8 @@ public class DashboardController {
 
         // Get next 3 events from the last gym
         List<EventOccurrence> lastGymEvents = List.of();
-        if (lastGym != null) {
-            List<EventEntity> allEvents = eventRepository.findByGymId(lastGym.getId());
+        if (lastGym != null && !lastGym.isDeleted()) {
+            List<EventEntity> allEvents = eventRepository.findByGymIdAndDeletedFalse(lastGym.getId());
             lastGymEvents = buildUpcomingEvents(allEvents).stream()
                     .limit(3)
                     .toList();
@@ -181,8 +181,8 @@ public class DashboardController {
         long lastSessionGoCount = lastSession != null ? goRepository.findBySessionIdOrderByTimestampDesc(lastSession.getId()).size() : 0;
 
         // Fetch gym-related data
-        WeatherInfo lastGymWeather = lastGym != null ? weatherService.getWeatherForCity(lastGym.getCity()) : null;
-        long lastGymBoulderCount = lastGym != null ? boulderRepository.findBySectorGymId(lastGym.getId()).size() : 0;
+        WeatherInfo lastGymWeather = lastGym != null && !lastGym.isDeleted() ? weatherService.getWeatherForCity(lastGym.getCity()) : null;
+        long lastGymBoulderCount = lastGym != null && !lastGym.isDeleted() ? boulderRepository.findBySectorGymIdAndDeletedFalse(lastGym.getId()).size() : 0;
         Integer lastGymUserRating = lastGym != null 
                 ? gymRatingRepository.findByUserIdAndGymId(user.getId(), lastGym.getId())
                     .map(r -> r.getRating())
@@ -249,17 +249,17 @@ public class DashboardController {
         UserEntity user = findUserByPrincipal(principal);
 
         // Fetch all gyms for the dropdown
-        List<GymEntity> gyms = gymRepository.findAll();
+        List<GymEntity> gyms = gymRepository.findByDeletedFalse();
 
         // Fetch sectors and grades for the selected gym
         List<SectorEntity> sectors = List.of();
         List<GradeEntity> grades = List.of();
         if (gymId != null) {
-            sectors = sectorRepository.findByGymId(gymId);
-            grades = gradeRepository.findByGymId(gymId);
+            sectors = sectorRepository.findByGymIdAndDeletedFalse(gymId);
+            grades = gradeRepository.findByGymIdAndDeletedFalse(gymId);
         } else {
-            sectors = sectorRepository.findAll();
-            grades = gradeRepository.findAll();
+            sectors = sectorRepository.findByDeletedFalse();
+            grades = gradeRepository.findByDeletedFalse();
         }
 
         // Filter boulders based on selected criteria
@@ -267,20 +267,20 @@ public class DashboardController {
         if (sectorId != null) {
             // Filter by specific sector
             if (gradeIds != null && !gradeIds.isEmpty()) {
-                boulders = boulderRepository.findBySectorIdAndGradeIdIn(sectorId, gradeIds);
+                boulders = boulderRepository.findBySectorIdAndGradeIdInAndDeletedFalse(sectorId, gradeIds);
             } else {
-                boulders = boulderRepository.findBySectorId(sectorId);
+                boulders = boulderRepository.findBySectorIdAndDeletedFalse(sectorId);
             }
         } else if (gymId != null) {
             // Filter by gym
             if (gradeIds != null && !gradeIds.isEmpty()) {
-                boulders = boulderRepository.findBySectorGymIdAndGradeIdIn(gymId, gradeIds);
+                boulders = boulderRepository.findBySectorGymIdAndGradeIdInAndDeletedFalse(gymId, gradeIds);
             } else {
-                boulders = boulderRepository.findBySectorGymId(gymId);
+                boulders = boulderRepository.findBySectorGymIdAndDeletedFalse(gymId);
             }
         } else {
             // No filters - show all boulders
-            boulders = boulderRepository.findAll();
+            boulders = boulderRepository.findByDeletedFalse();
         }
 
         // Load project marks for current user (once) to drive UI and optional filtering
@@ -329,7 +329,7 @@ public class DashboardController {
     @Transactional(readOnly = true)
     public String showBoulder(@PathVariable("id") Long id, Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
-        BoulderEntity boulder = boulderRepository.findById(id)
+        BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         // Load project status for the current user
@@ -389,7 +389,7 @@ public class DashboardController {
         UserEntity user = findUserByPrincipal(principal);
 
         // Fetch all gyms
-        List<GymEntity> gyms = gymRepository.findAll();
+        List<GymEntity> gyms = gymRepository.findByDeletedFalse();
 
         // Load ratings for current user
         Map<Long, Integer> gymRatings = gymRatingRepository.findByUserId(user.getId()).stream()
@@ -416,7 +416,7 @@ public class DashboardController {
     @Transactional(readOnly = true)
     public String showGym(@PathVariable("id") Long id, Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
-        GymEntity gym = gymRepository.findById(id)
+        GymEntity gym = gymRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         // Get current user's rating for this gym
@@ -436,16 +436,16 @@ public class DashboardController {
         List<GymCommentEntity> comments = gymCommentRepository.findByGymIdOrderByCreatedAtDesc(gym.getId());
 
         // Get all notices for this gym
-        List<NoticeEntity> notices = noticeRepository.findByGymIdOrderByCreationDateDesc(gym.getId());
+        List<NoticeEntity> notices = noticeRepository.findByGymIdAndDeletedFalseOrderByCreationDateDesc(gym.getId());
 
         // Get upcoming events for this gym
-        List<EventOccurrence> events = buildUpcomingEvents(eventRepository.findByGymId(gym.getId()));
+        List<EventOccurrence> events = buildUpcomingEvents(eventRepository.findByGymIdAndDeletedFalse(gym.getId()));
 
         // Get weather for gym's city
         WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
 
         // Count total boulders in this gym
-        long boulderCount = boulderRepository.findBySectorGymId(gym.getId()).size();
+        long boulderCount = boulderRepository.findBySectorGymIdAndDeletedFalse(gym.getId()).size();
 
         model.addAttribute("gym", gym);
         model.addAttribute("currentRating", currentRating);

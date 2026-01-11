@@ -36,6 +36,9 @@ public class NoticeEntity {
     @JoinColumn(name = "gym_id", nullable = false)
     private GymEntity gym;
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
     public NoticeEntity() {}
 
     public NoticeEntity(String title, String message, GymEntity gym) {
@@ -83,5 +86,13 @@ public class NoticeEntity {
 
     public void setGym(GymEntity gym) {
         this.gym = gym;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

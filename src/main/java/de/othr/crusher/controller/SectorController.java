@@ -70,7 +70,7 @@ public class SectorController {
             Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
-        List<BoulderEntity> boulders = boulderRepository.findBySectorId(sectorId);
+        List<BoulderEntity> boulders = boulderRepository.findBySectorIdAndDeletedFalse(sectorId);
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
@@ -251,7 +251,7 @@ public class SectorController {
     }
 
     /**
-     * Deletes an existing sector.
+     * Soft-deletes an existing sector by setting its deleted flag.
      *
      * @param gymId identifier of the parent gym
      * @param sectorId identifier of the sector
@@ -263,8 +263,8 @@ public class SectorController {
             @PathVariable("gymId") long gymId, @PathVariable("sectorId") long sectorId, RedirectAttributes redirectAttributes) {
         findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
-        sectorImageStorageService.deleteIfStored(sector.getImagePath());
-        sectorRepository.delete(sector);
+        sector.setDeleted(true);
+        sectorRepository.save(sector);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
@@ -277,13 +277,13 @@ public class SectorController {
 
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findById(gymId)
+                .findByIdAndDeletedFalse(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 
     private SectorEntity findSectorInGymOrThrow(long gymId, long sectorId) {
         SectorEntity sector = sectorRepository
-                .findById(sectorId)
+                .findByIdAndDeletedFalse(sectorId)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sector not found"));
 

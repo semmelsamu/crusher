@@ -41,6 +41,9 @@ public class SectorEntity {
     @JoinColumn(name = "gym_id", nullable = false)
     private GymEntity gym;
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
     public SectorEntity() {}
 
     public SectorEntity(String name, String description, String imagePath, GymEntity gym) {
@@ -88,5 +91,13 @@ public class SectorEntity {
 
     public void setGym(GymEntity gym) {
         this.gym = gym;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

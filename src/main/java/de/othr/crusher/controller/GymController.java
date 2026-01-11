@@ -56,7 +56,7 @@ public class GymController {
      */
     @GetMapping
     public String showAllGyms(Model model) {
-        model.addAttribute("gyms", gymRepository.findAll());
+        model.addAttribute("gyms", gymRepository.findByDeletedFalse());
         return "pages/admin/gyms/all";
     }
 
@@ -69,13 +69,13 @@ public class GymController {
      */
     @GetMapping("/{id}")
     public String showGymForId(@PathVariable("id") long id, Model model) {
-        GymEntity gym = gymRepository.findById(id)
+        GymEntity gym = gymRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         model.addAttribute("gym", gym);
-        model.addAttribute("grades", gradeRepository.findByGymId(id));
-        model.addAttribute("notices", noticeRepository.findByGymIdOrderByCreationDateDesc(id));
-        model.addAttribute("events", eventRepository.findByGymId(id));
+        model.addAttribute("grades", gradeRepository.findByGymIdAndDeletedFalse(id));
+        model.addAttribute("notices", noticeRepository.findByGymIdAndDeletedFalseOrderByCreationDateDesc(id));
+        model.addAttribute("events", eventRepository.findByGymIdAndDeletedFalse(id));
 
         return "pages/admin/gyms/detail";
     }
@@ -175,7 +175,7 @@ public class GymController {
     }
 
     /**
-     * Deletes a gym by its ID.
+     * Soft-deletes a gym by setting its deleted flag.
      *
      * @param id gym ID
      * @param redirectAttributes attributes for flash messages on redirect
@@ -183,7 +183,9 @@ public class GymController {
      */
     @DeleteMapping("/{id}")
     public String deleteGym(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
-        gymRepository.deleteById(id);
+        GymEntity gym = findGymOrThrow(id);
+        gym.setDeleted(true);
+        gymRepository.save(gym);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
@@ -197,7 +199,7 @@ public class GymController {
 
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findById(gymId)
+                .findByIdAndDeletedFalse(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }

@@ -72,7 +72,7 @@ public class BoulderController {
         BoulderEntity boulder = new BoulderEntity();
         boulder.setSector(sector);
 
-        List<GradeEntity> availableGrades = gradeRepository.findByGymId(gymId);
+        List<GradeEntity> availableGrades = gradeRepository.findByGymIdAndDeletedFalse(gymId);
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
@@ -101,7 +101,7 @@ public class BoulderController {
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
         BoulderEntity boulder = findBoulderInSectorOrThrow(sectorId, boulderId);
 
-        List<GradeEntity> availableGrades = gradeRepository.findByGymId(gymId);
+        List<GradeEntity> availableGrades = gradeRepository.findByGymIdAndDeletedFalse(gymId);
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
@@ -135,7 +135,7 @@ public class BoulderController {
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
         if (result.hasErrors()) {
-            List<GradeEntity> availableGrades = gradeRepository.findByGymId(gymId);
+            List<GradeEntity> availableGrades = gradeRepository.findByGymIdAndDeletedFalse(gymId);
             model.addAttribute("gym", gym);
             model.addAttribute("sector", sector);
             model.addAttribute("boulder", boulder);
@@ -192,7 +192,7 @@ public class BoulderController {
         BoulderEntity boulder = findBoulderInSectorOrThrow(sectorId, boulderId);
 
         if (result.hasErrors()) {
-            List<GradeEntity> availableGrades = gradeRepository.findByGymId(gymId);
+            List<GradeEntity> availableGrades = gradeRepository.findByGymIdAndDeletedFalse(gymId);
             formBoulder.setId(boulder.getId());
             formBoulder.setSector(sector);
             model.addAttribute("gym", gym);
@@ -228,7 +228,7 @@ public class BoulderController {
     }
 
     /**
-     * Deletes an existing boulder.
+     * Soft-deletes an existing boulder by setting its deleted flag.
      *
      * @param gymId identifier of the parent gym
      * @param sectorId identifier of the parent sector
@@ -245,7 +245,8 @@ public class BoulderController {
         findGymOrThrow(gymId);
         findSectorInGymOrThrow(gymId, sectorId);
         BoulderEntity boulder = findBoulderInSectorOrThrow(sectorId, boulderId);
-        boulderRepository.delete(boulder);
+        boulder.setDeleted(true);
+        boulderRepository.save(boulder);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
@@ -258,13 +259,13 @@ public class BoulderController {
 
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findById(gymId)
+                .findByIdAndDeletedFalse(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 
     private SectorEntity findSectorInGymOrThrow(long gymId, long sectorId) {
         SectorEntity sector = sectorRepository
-                .findById(sectorId)
+                .findByIdAndDeletedFalse(sectorId)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sector not found"));
 
@@ -277,7 +278,7 @@ public class BoulderController {
 
     private BoulderEntity findBoulderInSectorOrThrow(long sectorId, long boulderId) {
         BoulderEntity boulder = boulderRepository
-                .findById(boulderId)
+                .findByIdAndDeletedFalse(boulderId)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 

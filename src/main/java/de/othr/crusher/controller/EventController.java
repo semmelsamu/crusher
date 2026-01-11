@@ -166,7 +166,7 @@ public class EventController {
     }
 
     /**
-     * Deletes an event by its ID.
+     * Soft-deletes an event by setting its deleted flag.
      *
      * @param gymId identifier of the parent gym
      * @param eventId identifier of the event
@@ -179,7 +179,8 @@ public class EventController {
             @PathVariable("eventId") long eventId,
             RedirectAttributes redirectAttributes) {
         EventEntity event = findEventInGymOrThrow(gymId, eventId);
-        eventRepository.delete(event);
+        event.setDeleted(true);
+        eventRepository.save(event);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
@@ -200,7 +201,7 @@ public class EventController {
      */
     private EventEntity findEventInGymOrThrow(long gymId, long eventId) {
         EventEntity event = eventRepository
-                .findById(eventId)
+                .findByIdAndDeletedFalse(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
 
         if (event.getGym() == null || event.getGym().getId() == null
@@ -219,7 +220,7 @@ public class EventController {
      */
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findById(gymId)
+                .findByIdAndDeletedFalse(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 
