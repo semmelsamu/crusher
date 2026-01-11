@@ -1,24 +1,40 @@
 <nav
     th:fragment="nav"
-    class="border-b-4 bg-secondary-background h-20"
+    class="border-b-4 bg-secondary-background h-20 overflow-hidden data-[open=true]:h-screen fixed top-0 left-0 right-0 z-50"
     xmlns:th="http://www.thymeleaf.org"
     xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
     id="main-nav"
+    data-open="false"
 >
     <div
-        class="container h-full mx-auto px-4 flex items-center justify-between"
+        class="container h-full mx-auto px-4 md:flex items-center justify-between"
     >
-        <a href="/">
-            <img
-                src="/images/wordmark.svg"
-                alt="crusher"
-                class="h-4 nav-logo"
-            />
-        </a>
+        <div class="h-20 flex items-center justify-between">
+            <a href="/">
+                <img
+                    src="/images/wordmark.svg"
+                    alt="crusher"
+                    class="h-4 nav-logo"
+                />
+            </a>
 
-        <div class="flex items-center gap-4">
+            <button
+                class="button button-ghost button-square md:hidden"
+                onclick="
+                    document.getElementById('main-nav').dataset.open =
+                        document.getElementById('main-nav').dataset.open ===
+                        'true'
+                            ? 'false'
+                            : 'true'
+                "
+            >
+                <x th:replace="~{components/icons :: menu}"></x>
+            </button>
+        </div>
+
+        <div class="flex-1 flex flex-col md:flex-row items-start gap-4">
             <div
-                class="flex items-center gap-4"
+                class="flex flex-col md:flex-row items-start md:items-center gap-4"
                 sec:authorize="isAuthenticated()"
             >
                 <a
@@ -61,10 +77,10 @@
             </div>
 
             <div
-                class="flex items-center gap-4"
+                class="flex flex-col md:flex-row items-start md:items-center gap-4"
                 sec:authorize="!isAuthenticated()"
             >
-                You are not logged in.
+                <p>You are not logged in.</p>
                 <a href="/login" class="button button-ghost">
                     Login
                     <x th:replace="~{components/icons :: log-in}"></x>
