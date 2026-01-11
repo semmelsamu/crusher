@@ -32,15 +32,15 @@
                         class="block"
                     >
                         <div
-                            class="aspect-video rounded-base border-2 overflow-clip bg-background flex flex-col items-center justify-center gap-2 text-main-foreground text-center p-4"
+                            class="aspect-video rounded-base border-2 overflow-clip bg-background flex flex-col items-center justify-center gap-2 text-foreground text-center p-4"
                         >
                             <h3 th:text="${gym.name}">Gym Name</h3>
-                            <p class="text-sm text-main-foreground">
+                            <p class="text-sm text-foreground-muted">
                                 <span th:text="${gym.street}">Street</span>,
                                 <span th:text="${gym.city}">City</span>
                             </p>
                             <p
-                                class="text-sm text-main-foreground"
+                                class="text-sm text-foreground-muted"
                                 th:text="${gym.email}"
                             >
                                 Email
@@ -50,7 +50,7 @@
 
                     <a th:href="@{/admin/gyms/create}" class="block space-y-2">
                         <div
-                            class="bg-success aspect-video rounded-base border-2 flex flex-col items-center justify-center gap-2 text-center"
+                            class="bg-success aspect-video rounded-base border-2 flex flex-col items-center justify-center gap-2 text-center text-black"
                         >
                             <x
                                 th:replace="~{components/icons :: circle-plus}"

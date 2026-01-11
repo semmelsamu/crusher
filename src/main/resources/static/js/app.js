@@ -407,6 +407,56 @@ function hashString(str) {
     return Math.abs(hash);
 }
 
+function getStoredTheme() {
+    try {
+        return localStorage.getItem("theme");
+    } catch (error) {
+        return null;
+    }
+}
+
+function setStoredTheme(theme) {
+    try {
+        localStorage.setItem("theme", theme);
+    } catch (error) {
+        // Ignore storage errors for privacy-restricted environments.
+    }
+}
+
+function updateThemeToggle(theme) {
+    const toggle = document.querySelector("[data-theme-toggle]");
+    if (!toggle) return;
+    const isDark = theme === "dark";
+    const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+    toggle.setAttribute("aria-pressed", isDark ? "true" : "false");
+    toggle.setAttribute("aria-label", label);
+    toggle.setAttribute("title", label);
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    updateThemeToggle(theme);
+}
+
+function initThemeToggle() {
+    const storedTheme = getStoredTheme();
+    const initialTheme = storedTheme || "light";
+
+    applyTheme(initialTheme);
+
+    const toggle = document.querySelector("[data-theme-toggle]");
+    if (!toggle) return;
+    toggle.addEventListener("click", () => {
+        const currentTheme =
+            document.documentElement.getAttribute("data-theme") === "dark"
+                ? "dark"
+                : "light";
+        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        setStoredTheme(nextTheme);
+        applyTheme(nextTheme);
+    });
+}
+
 /**
  * Initializes all avatars by applying colors based on username hash
  */
@@ -479,6 +529,7 @@ function loadCrowdLevel() {
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
+    initThemeToggle();
     initAvatars();
     loadCrowdLevel();
 });

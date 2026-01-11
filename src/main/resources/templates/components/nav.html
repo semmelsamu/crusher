@@ -10,62 +10,82 @@
                 <img
                     src="/images/wordmark.svg"
                     alt="crusher"
-                    class="h-4 -mb-1"
+                    class="h-4 -mb-1 nav-logo"
                 />
             </a>
 
-            <div
-                class="flex items-center gap-4"
-                sec:authorize="isAuthenticated()"
-            >
-                <a
-                    href="/admin/gyms"
-                    class="button button-ghost"
-                    sec:authorize="hasAnyRole('ADMIN', 'OWNER')"
-                >
-                    <x
-                        th:replace="~{components/icons :: sliders-horizontal}"
-                    ></x>
-                    Admin Panel
-                </a>
-
-                <a
-                    href="/dashboard"
-                    class="button button-ghost"
+            <div class="flex items-center gap-4">
+                <div
+                    class="flex items-center gap-4"
                     sec:authorize="isAuthenticated()"
                 >
-                    <x th:replace="~{components/icons :: layout-dashboard}"></x>
-                    Dashboard
-                </a>
+                    <a
+                        href="/admin/gyms"
+                        class="button button-ghost"
+                        sec:authorize="hasAnyRole('ADMIN', 'OWNER')"
+                    >
+                        <x
+                            th:replace="~{components/icons :: sliders-horizontal}"
+                        ></x>
+                        Admin Panel
+                    </a>
+
+                    <a
+                        href="/dashboard"
+                        class="button button-ghost"
+                        sec:authorize="isAuthenticated()"
+                    >
+                        <x
+                            th:replace="~{components/icons :: layout-dashboard}"
+                        ></x>
+                        Dashboard
+                    </a>
+
+                    <div
+                        th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
+                    ></div>
+
+                    <form
+                        th:action="@{/logout}"
+                        method="post"
+                        class="inline"
+                        sec:authorize="isAuthenticated()"
+                    >
+                        <button
+                            type="submit"
+                            class="button button-ghost button-square"
+                        >
+                            <x th:replace="~{components/icons :: log-out}"></x>
+                        </button>
+                    </form>
+                </div>
 
                 <div
-                    th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
-                ></div>
-
-                <form
-                    th:action="@{/logout}"
-                    method="post"
-                    class="inline"
-                    sec:authorize="isAuthenticated()"
+                    class="flex items-center gap-4"
+                    sec:authorize="!isAuthenticated()"
                 >
-                    <button
-                        type="submit"
-                        class="button button-ghost button-square"
-                    >
-                        <x th:replace="~{components/icons :: log-out}"></x>
-                    </button>
-                </form>
-            </div>
+                    You are not logged in.
+                    <a href="/login" class="button button-ghost">
+                        Login
+                        <x th:replace="~{components/icons :: log-in}"></x>
+                    </a>
+                </div>
 
-            <div
-                class="flex items-center gap-4"
-                sec:authorize="!isAuthenticated()"
-            >
-                You are not logged in.
-                <a href="/login" class="button button-ghost">
-                    Login
-                    <x th:replace="~{components/icons :: log-in}"></x>
-                </a>
+                <button
+                    type="button"
+                    class="button button-ghost button-square theme-toggle"
+                    data-theme-toggle
+                    aria-pressed="false"
+                    aria-label="Toggle dark mode"
+                    title="Toggle dark mode"
+                >
+                    <span class="theme-icon theme-icon-sun">
+                        <x th:replace="~{components/icons :: sun-small}"></x>
+                    </span>
+                    <span class="theme-icon theme-icon-moon">
+                        <x th:replace="~{components/icons :: moon}"></x>
+                    </span>
+                </button>
             </div>
         </div>
     </div>

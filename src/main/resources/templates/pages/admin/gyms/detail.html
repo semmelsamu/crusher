@@ -79,11 +79,16 @@
                 <h2>General Information</h2>
 
                 <div class="space-y-1">
-                    <p th:text="${gym.name}">Name</p>
-                    <p th:text="${gym.street}">Street</p>
-                    <p th:text="${gym.city}">City</p>
+                    <p class="text-foreground" th:text="${gym.name}">Name</p>
+                    <p class="text-foreground-muted" th:text="${gym.street}">
+                        Street
+                    </p>
+                    <p class="text-foreground-muted" th:text="${gym.city}">
+                        City
+                    </p>
                     <a
                         th:href="@{mailto:{email}(email=${gym.email})}"
+                        class="text-foreground-muted"
                         th:text="${gym.email}"
                     >
                         Email
@@ -133,7 +138,7 @@
                         class="block space-y-2"
                     >
                         <div
-                            class="bg-success aspect-video rounded-base border-2 flex items-center justify-center"
+                            class="bg-success aspect-video rounded-base border-2 flex items-center justify-center text-black"
                         >
                             <x
                                 th:replace="~{components/icons :: circle-plus}"

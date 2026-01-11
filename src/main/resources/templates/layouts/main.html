@@ -12,6 +12,21 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Crusher" />
 
+        <script>
+            (() => {
+                try {
+                    const storedTheme = localStorage.getItem("theme");
+                    const theme = storedTheme || "light";
+                    document.documentElement.setAttribute("data-theme", theme);
+                } catch (error) {
+                    document.documentElement.setAttribute(
+                        "data-theme",
+                        "light",
+                    );
+                }
+            })();
+        </script>
+
         <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">
             Crusher
         </title>
