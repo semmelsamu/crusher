@@ -260,6 +260,113 @@
             </section>
 
             <section class="card p-4 space-y-4">
+                <h2>Notices</h2>
+
+                <table class="table w-full">
+                    <thead>
+                        <tr>
+                            <th class="w-48">Title</th>
+                            <th class="w-40">Creation Date</th>
+                            <th>Message</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody th:if="${notices.isEmpty()}">
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                No notices added yet.
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody th:unless="${notices.isEmpty()}">
+                        <tr th:each="notice : ${notices}">
+                            <td th:text="${notice.title}">Title</td>
+                            <td
+                                th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy HH:mm')}"
+                            >
+                                Creation Date
+                            </td>
+                            <td>
+                                <span
+                                    th:text="${#strings.length(notice.message) > 100 ? #strings.substring(notice.message, 0, 100) + '...' : notice.message}"
+                                >
+                                    Message preview
+                                </span>
+                            </td>
+                            <td>
+                                <div class="flex gap-2 justify-end">
+                                    <a
+                                        th:href="@{/admin/gyms/{gymId}/notices/{noticeId}/update(gymId=${gym.id}, noticeId=${notice.id})}"
+                                        class="button primary button-square"
+                                    >
+                                        <x
+                                            th:replace="~{components/icons :: pencil-ruler}"
+                                        ></x>
+                                    </a>
+                                    <button
+                                        th:onclick="|openDialog('delete-notice-dialog-${notice.id}')|"
+                                        class="button danger button-square"
+                                    >
+                                        <x
+                                            th:replace="~{components/icons :: trash-2}"
+                                        ></x>
+                                    </button>
+                                    <dialog
+                                        th:id="|delete-notice-dialog-${notice.id}|"
+                                        class="dialog space-y-4"
+                                        closedby="any"
+                                    >
+                                        <h3>Confirm Deletion</h3>
+                                        <p>
+                                            Are you sure you want to delete
+                                            notice "<span
+                                                th:text="${notice.title}"
+                                            ></span
+                                            >"?
+                                        </p>
+                                        <div class="flex justify-end gap-4">
+                                            <button
+                                                class="button"
+                                                th:onclick="|closeDialog('delete-notice-dialog-${notice.id}')|"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <form
+                                                th:action="@{/admin/gyms/{gymId}/notices/{noticeId}(gymId=${gym.id}, noticeId=${notice.id})}"
+                                                method="post"
+                                                class="inline"
+                                            >
+                                                <input
+                                                    type="hidden"
+                                                    name="_method"
+                                                    value="delete"
+                                                />
+                                                <button
+                                                    autofocus
+                                                    type="submit"
+                                                    class="button danger"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </dialog>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <a
+                    th:href="@{/admin/gyms/{gymId}/notices/create(gymId=${gym.id})}"
+                    class="button success"
+                >
+                    <x th:replace="~{components/icons :: badge-plus}"></x>
+                    Create New Notice
+                </a>
+            </section>
+
+            <section class="card p-4 space-y-4">
                 <h2>Events</h2>
 
                 <table class="table w-full">
@@ -384,113 +491,6 @@
                 >
                     <x th:replace="~{components/icons :: badge-plus}"></x>
                     Create New Event
-                </a>
-            </section>
-
-            <section class="card p-4 space-y-4">
-                <h2>Notices</h2>
-
-                <table class="table w-full">
-                    <thead>
-                        <tr>
-                            <th class="w-48">Title</th>
-                            <th class="w-40">Creation Date</th>
-                            <th>Message</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody th:if="${notices.isEmpty()}">
-                        <tr>
-                            <td colspan="4" class="text-center">
-                                No notices added yet.
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody th:unless="${notices.isEmpty()}">
-                        <tr th:each="notice : ${notices}">
-                            <td th:text="${notice.title}">Title</td>
-                            <td
-                                th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy HH:mm')}"
-                            >
-                                Creation Date
-                            </td>
-                            <td>
-                                <span
-                                    th:text="${#strings.length(notice.message) > 100 ? #strings.substring(notice.message, 0, 100) + '...' : notice.message}"
-                                >
-                                    Message preview
-                                </span>
-                            </td>
-                            <td>
-                                <div class="flex gap-2 justify-end">
-                                    <a
-                                        th:href="@{/admin/gyms/{gymId}/notices/{noticeId}/update(gymId=${gym.id}, noticeId=${notice.id})}"
-                                        class="button primary button-square"
-                                    >
-                                        <x
-                                            th:replace="~{components/icons :: pencil-ruler}"
-                                        ></x>
-                                    </a>
-                                    <button
-                                        th:onclick="|openDialog('delete-notice-dialog-${notice.id}')|"
-                                        class="button danger button-square"
-                                    >
-                                        <x
-                                            th:replace="~{components/icons :: trash-2}"
-                                        ></x>
-                                    </button>
-                                    <dialog
-                                        th:id="|delete-notice-dialog-${notice.id}|"
-                                        class="dialog space-y-4"
-                                        closedby="any"
-                                    >
-                                        <h3>Confirm Deletion</h3>
-                                        <p>
-                                            Are you sure you want to delete
-                                            notice "<span
-                                                th:text="${notice.title}"
-                                            ></span
-                                            >"?
-                                        </p>
-                                        <div class="flex justify-end gap-4">
-                                            <button
-                                                class="button"
-                                                th:onclick="|closeDialog('delete-notice-dialog-${notice.id}')|"
-                                            >
-                                                Cancel
-                                            </button>
-                                            <form
-                                                th:action="@{/admin/gyms/{gymId}/notices/{noticeId}(gymId=${gym.id}, noticeId=${notice.id})}"
-                                                method="post"
-                                                class="inline"
-                                            >
-                                                <input
-                                                    type="hidden"
-                                                    name="_method"
-                                                    value="delete"
-                                                />
-                                                <button
-                                                    autofocus
-                                                    type="submit"
-                                                    class="button danger"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </dialog>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <a
-                    th:href="@{/admin/gyms/{gymId}/notices/create(gymId=${gym.id})}"
-                    class="button success"
-                >
-                    <x th:replace="~{components/icons :: badge-plus}"></x>
-                    Create New Notice
                 </a>
             </section>
         </main>
