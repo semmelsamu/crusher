@@ -32,7 +32,7 @@
 
 .button:disabled,
 .button[disabled] {
-    @apply shadow-none border-foreground-muted text-foreground-muted! hover:translate-none cursor-default;
+    @apply shadow-none border-border/80! text-foreground-muted! hover:translate-none cursor-default;
 }
 
 /*
