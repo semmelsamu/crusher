@@ -247,7 +247,7 @@
 */
 
 .notification {
-    @apply border-2 rounded-base shadow-base p-4 bg-background text-foreground w-full mx-4 sm:max-w-md sm:mx-auto;
+    @apply border-2 rounded-base shadow-base p-4 bg-background text-foreground w-full mx-4 max-w-[80vw] sm:max-w-md sm:mx-auto;
 }
 
 .notification:has(svg) {
