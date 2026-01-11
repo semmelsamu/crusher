@@ -26,31 +26,3 @@ self.addEventListener("activate", (event) => {
             .then(() => self.clients.claim()),
     );
 });
-
-self.addEventListener("fetch", (event) => {
-    if (event.request.method !== "GET") {
-        return;
-    }
-
-    const url = new URL(event.request.url);
-    if (url.origin !== self.location.origin) {
-        return;
-    }
-
-    if (event.request.mode === "navigate") {
-        event.respondWith(
-            caches
-                .match("/", { ignoreSearch: true })
-                .then((cached) => cached || fetch(event.request)),
-        );
-        return;
-    }
-
-    if (PRECACHE_URLS.includes(url.pathname)) {
-        event.respondWith(
-            caches
-                .match(event.request)
-                .then((cached) => cached || fetch(event.request)),
-        );
-    }
-});
