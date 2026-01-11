@@ -408,6 +408,96 @@ function hashString(str) {
 }
 
 /**
+ * Resolves a CSS custom property to its concrete value.
+ */
+function resolveThemeValue(name, depth = 0) {
+    if (depth > 5) return "";
+    const value = getComputedStyle(document.documentElement)
+        .getPropertyValue(name)
+        .trim();
+    if (!value) return "";
+    const match = value.match(/^var\((--[^)]+)\)$/);
+    if (!match) return value;
+    return resolveThemeValue(match[1], depth + 1);
+}
+
+function getStoredTheme() {
+    try {
+        return localStorage.getItem("theme");
+    } catch (error) {
+        return null;
+    }
+}
+
+function setStoredTheme(theme) {
+    try {
+        localStorage.setItem("theme", theme);
+    } catch (error) {
+        // Ignore storage errors for privacy-restricted environments.
+    }
+}
+
+function updateThemeMeta() {
+    const themeColor =
+        resolveThemeValue("--color-theme") || resolveThemeValue("--color-main");
+    if (!themeColor) return;
+
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+        metaTheme.setAttribute("content", themeColor);
+    }
+
+    const appleTouchIcon = document.querySelector(
+        'link[rel="apple-touch-icon"]',
+    );
+    if (window.iosPWASplash && appleTouchIcon) {
+        window.iosPWASplash(appleTouchIcon.href, themeColor);
+    }
+}
+
+function updateThemeToggle(theme) {
+    const toggle = document.querySelector("[data-theme-toggle]");
+    if (!toggle) return;
+    const isDark = theme === "dark";
+    const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+    toggle.setAttribute("aria-pressed", isDark ? "true" : "false");
+    toggle.setAttribute("aria-label", label);
+    toggle.setAttribute("title", label);
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    updateThemeMeta();
+    updateThemeToggle(theme);
+}
+
+function initThemeToggle() {
+    const storedTheme = getStoredTheme();
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+    const initialTheme =
+        storedTheme || (prefersDark.matches ? "dark" : "light");
+
+    applyTheme(initialTheme);
+
+    prefersDark.addEventListener("change", (event) => {
+        if (getStoredTheme()) return;
+        applyTheme(event.matches ? "dark" : "light");
+    });
+
+    const toggle = document.querySelector("[data-theme-toggle]");
+    if (!toggle) return;
+    toggle.addEventListener("click", () => {
+        const currentTheme =
+            document.documentElement.getAttribute("data-theme") === "dark"
+                ? "dark"
+                : "light";
+        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        setStoredTheme(nextTheme);
+        applyTheme(nextTheme);
+    });
+}
+
+/**
  * Initializes all avatars by applying colors based on username hash
  */
 function initAvatars() {
@@ -479,6 +569,7 @@ function loadCrowdLevel() {
 
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
+    initThemeToggle();
     initAvatars();
     loadCrowdLevel();
 });

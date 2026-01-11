@@ -7,7 +7,7 @@
 }
 
 body {
-    @apply antialiased bg-background font-main;
+    @apply antialiased bg-background font-main text-foreground;
 }
 
 body:has(.dialog[open]) {
@@ -40,4 +40,8 @@ dd {
 
 label {
     @apply inline-block;
+}
+
+.nav-logo {
+    filter: var(--logo-filter);
 }

@@ -1,5 +1,6 @@
 :root {
     --box-shadow-size: 0.25rem;
+    color-scheme: light;
 }
 
 @theme {
@@ -23,6 +24,9 @@
     --color-warning: var(--color-amber-300);
     --color-accent: var(--color-indigo-500);
     --color-disabled: var(--color-gray-300);
+    --color-theme: var(--color-background);
+    --color-switch-thumb: white;
+    --logo-filter: none;
 
     --radius-*: initial;
     --radius-base: 0.25rem;
@@ -30,4 +34,27 @@
     --shadow-*: initial;
     --shadow-base: var(--box-shadow-size) var(--box-shadow-size) 0
         var(--color-border);
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-foreground: var(--color-zinc-50);
+    --color-foreground-muted: var(--color-zinc-400);
+    --color-main-foreground: var(--color-zinc-950);
+
+    --color-background: var(--color-zinc-950);
+    --color-secondary-background: var(--color-zinc-900);
+
+    --color-border: var(--color-zinc-100);
+    --color-overlay: rgba(9, 9, 11, 0.85);
+
+    --color-main: var(--color-lime-300);
+    --color-error: var(--color-rose-400);
+    --color-success: var(--color-emerald-300);
+    --color-warning: var(--color-amber-300);
+    --color-accent: var(--color-cyan-300);
+    --color-disabled: var(--color-zinc-700);
+    --color-theme: var(--color-background);
+    --color-switch-thumb: var(--color-zinc-100);
+    --logo-filter: invert(1);
 }

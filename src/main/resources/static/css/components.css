@@ -160,7 +160,8 @@
 }
 
 .switch-thumb {
-    @apply pointer-events-none block h-4 w-4 translate-x-1 rounded-full bg-white border-2 transition-transform;
+    @apply pointer-events-none block h-4 w-4 translate-x-1 rounded-full border-2 transition-transform;
+    background-color: var(--color-switch-thumb);
 }
 
 /*
@@ -205,6 +206,18 @@
 
 .avatar {
     @apply w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-white bg-main shrink-0;
+}
+
+.theme-toggle .theme-icon {
+    @apply flex items-center justify-center;
+}
+
+:root[data-theme="dark"] .theme-toggle .theme-icon-sun {
+    @apply hidden;
+}
+
+:root:not([data-theme="dark"]) .theme-toggle .theme-icon-moon {
+    @apply hidden;
 }
 
 .color-badge {
