@@ -49,6 +49,14 @@ window.showToast = (message, type = "info") => {
     toast.addEventListener("click", dismissToast);
 };
 
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js").catch((error) => {
+            console.error("Service worker registration failed:", error);
+        });
+    });
+}
+
 // Auto-dismiss after 8 seconds and add click handler
 function setupImagePicker(picker) {
     const fileInput = picker.querySelector("[data-image-input]");
