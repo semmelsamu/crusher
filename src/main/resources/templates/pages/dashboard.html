@@ -6,13 +6,13 @@
     <th:block layout:fragment="content">
         <main class="wrapper mt-0 mb-32">
             <header class="my-16 text-center">
-                <div class="flex items-center justify-center gap-6">
+                <div class="flex items-center justify-center gap-6 flex-wrap">
                     <img
                         src="/images/wordmark.svg"
                         alt="crusher"
                         class="h-10 -mb-1 nav-logo"
                     />
-                    <div class="w-1 h-16 bg-foreground"></div>
+                    <div class="w-1 h-16 bg-foreground hidden md:block"></div>
                     <h1>Dashboard</h1>
                 </div>
                 <p class="block font-medium text-xl mt-4">
@@ -26,7 +26,7 @@
                     ></time>
                 </p>
             </header>
-            <div class="grid grid-cols-3 gap-4 2xl:gap-8">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 2xl:gap-8">
                 <section class="card self-start divide-y-2">
                     <div class="p-6 flex items-center justify-between">
                         <h2>Sessions</h2>
@@ -423,7 +423,7 @@
                     </a>
                 </div>
                 <div
-                    class="p-6 grid grid-cols-4 gap-4 bg-background *:bg-secondary-background *:rounded-base *:border-2 *:text-center *:p-6"
+                    class="p-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 bg-background *:bg-secondary-background *:rounded-base *:border-2 *:text-center *:p-6"
                 >
                     <!-- Total Boulders Finished -->
                     <div>
@@ -482,7 +482,7 @@
                 <div class="p-6 space-y-4">
                     <!-- Result Breakdown -->
                     <h3>Result Breakdown</h3>
-                    <div class="grid grid-cols-3 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <!-- Finished -->
                         <div class="flex items-center gap-4">
                             <div
