@@ -52,5 +52,48 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return list of boulders using this grade
      */
     List<BoulderEntity> findByGradeId(Long gradeId);
+
+    // ---- Methods that filter out soft-deleted boulders ----
+
+    /**
+     * Finds all non-deleted boulders.
+     *
+     * @return list of non-deleted boulders
+     */
+    List<BoulderEntity> findByDeletedFalse();
+
+    /**
+     * Finds all non-deleted boulders for the given sector.
+     *
+     * @param sectorId identifier of the sector
+     * @return list of non-deleted boulders belonging to the sector
+     */
+    List<BoulderEntity> findBySectorIdAndDeletedFalse(Long sectorId);
+
+    /**
+     * Finds all non-deleted boulders for the given gym.
+     *
+     * @param gymId identifier of the gym
+     * @return list of non-deleted boulders belonging to the gym
+     */
+    List<BoulderEntity> findBySectorGymIdAndDeletedFalse(Long gymId);
+
+    /**
+     * Finds all non-deleted boulders for the given gym filtered by grade IDs.
+     *
+     * @param gymId identifier of the gym
+     * @param gradeIds list of grade identifiers
+     * @return list of non-deleted boulders belonging to the gym with matching grades
+     */
+    List<BoulderEntity> findBySectorGymIdAndGradeIdInAndDeletedFalse(Long gymId, List<Long> gradeIds);
+
+    /**
+     * Finds all non-deleted boulders for the given sector filtered by grade IDs.
+     *
+     * @param sectorId identifier of the sector
+     * @param gradeIds list of grade identifiers
+     * @return list of non-deleted boulders belonging to the sector with matching grades
+     */
+    List<BoulderEntity> findBySectorIdAndGradeIdInAndDeletedFalse(Long sectorId, List<Long> gradeIds);
 }
 

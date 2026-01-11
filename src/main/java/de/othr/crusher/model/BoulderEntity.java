@@ -52,6 +52,9 @@ public class BoulderEntity {
     @Min(value = 1, message = "Boulder must have at least one hold")
     private Integer holdsCount;
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
     public BoulderEntity() {}
 
     public BoulderEntity(String description, BoulderColor color, GradeEntity grade, SectorEntity sector) {
@@ -107,5 +110,13 @@ public class BoulderEntity {
 
     public void setHoldsCount(Integer holdsCount) {
         this.holdsCount = holdsCount;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

@@ -124,7 +124,8 @@ public class SessionController {
      */
     @GetMapping("/sessions/create")
     public String showCreateForm(Model model) {
-        List<GymEntity> gyms = gymRepository.findAll();
+        // Only show non-deleted gyms for selection
+        List<GymEntity> gyms = gymRepository.findByDeletedFalse();
         model.addAttribute("gyms", gyms);
 
         return "pages/sessions/create";

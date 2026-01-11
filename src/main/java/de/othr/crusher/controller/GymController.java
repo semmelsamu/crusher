@@ -1,16 +1,12 @@
 package de.othr.crusher.controller;
 
 import de.othr.crusher.model.GymEntity;
-import de.othr.crusher.model.SectorEntity;
 import de.othr.crusher.repository.EventRepository;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.NoticeRepository;
-import de.othr.crusher.repository.SectorRepository;
 import jakarta.validation.Valid;
-import java.util.List;
 import java.util.Map;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +26,6 @@ public class GymController {
 
     private final GymRepository gymRepository;
     private final GradeRepository gradeRepository;
-    private final SectorRepository sectorRepository;
     private final NoticeRepository noticeRepository;
     private final EventRepository eventRepository;
 
@@ -39,19 +34,16 @@ public class GymController {
      *
      * @param gymRepository repository for accessing gym data
      * @param gradeRepository repository for accessing grade data
-     * @param sectorRepository repository for accessing sector data
      * @param noticeRepository repository for accessing notice data
      * @param eventRepository repository for accessing event data
      */
     public GymController(
             GymRepository gymRepository,
             GradeRepository gradeRepository,
-            SectorRepository sectorRepository,
             NoticeRepository noticeRepository,
             EventRepository eventRepository) {
         this.gymRepository = gymRepository;
         this.gradeRepository = gradeRepository;
-        this.sectorRepository = sectorRepository;
         this.noticeRepository = noticeRepository;
         this.eventRepository = eventRepository;
     }
@@ -183,7 +175,7 @@ public class GymController {
     }
 
     /**
-     * Deletes a gym by its ID.
+     * Soft-deletes a gym by setting its deleted flag to true.
      *
      * @param id gym ID
      * @param redirectAttributes attributes for flash messages on redirect
@@ -191,33 +183,17 @@ public class GymController {
      */
     @DeleteMapping("/{id}")
     public String deleteGym(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
-        // Verify gym exists
-        findGymOrThrow(id);
+        GymEntity gym = findGymOrThrow(id);
         
-        // Check if any sectors reference this gym
-        List<SectorEntity> referencingSectors = sectorRepository.findByGymId(id);
-        if (!referencingSectors.isEmpty()) {
-            redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error", 
-                "message", "Cannot delete gym. Please delete all sectors in this gym first."
-            ));
-            return "redirect:/admin/gyms";
-        }
+        // Soft delete: set deleted flag instead of removing from database
+        gym.setDeleted(true);
+        gymRepository.save(gym);
         
-        try {
-            gymRepository.deleteById(id);
-            
-            // Add success message for toast notification
-            redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "success", 
-                "message", "Gym deleted successfully!"
-            ));
-        } catch (DataIntegrityViolationException e) {
-            redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error", 
-                "message", "Cannot delete gym due to existing references."
-            ));
-        }
+        // Add success message for toast notification
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success", 
+            "message", "Gym deleted successfully!"
+        ));
 
         return "redirect:/admin/gyms";
     }

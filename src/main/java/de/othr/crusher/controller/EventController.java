@@ -166,7 +166,7 @@ public class EventController {
     }
 
     /**
-     * Deletes an event by its ID.
+     * Soft-deletes an event by setting its deleted flag to true.
      *
      * @param gymId identifier of the parent gym
      * @param eventId identifier of the event
@@ -179,7 +179,10 @@ public class EventController {
             @PathVariable("eventId") long eventId,
             RedirectAttributes redirectAttributes) {
         EventEntity event = findEventInGymOrThrow(gymId, eventId);
-        eventRepository.delete(event);
+        
+        // Soft delete: set deleted flag instead of removing from database
+        event.setDeleted(true);
+        eventRepository.save(event);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(

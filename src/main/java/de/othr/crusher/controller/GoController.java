@@ -86,10 +86,10 @@ public class GoController {
 
         List<SectorEntity> sectors = sectorRepository.findByGymId(session.getGym().getId());
 
-        // Load and sort boulders for each sector by grade (vScale)
+        // Load and sort non-deleted boulders for each sector by grade (vScale)
         Map<Long, List<BoulderEntity>> sectorBoulders = new HashMap<>();
         for (SectorEntity sector : sectors) {
-            List<BoulderEntity> boulders = boulderRepository.findBySectorId(sector.getId());
+            List<BoulderEntity> boulders = boulderRepository.findBySectorIdAndDeletedFalse(sector.getId());
             boulders.sort((b1, b2) -> {
                 int grade1 = parseIntegerForGrade(b1.getGrade().getVScale());
                 int grade2 = parseIntegerForGrade(b2.getGrade().getVScale());
@@ -100,10 +100,14 @@ public class GoController {
 
         model.addAttribute("currentSession", session);
 
+        // Load project boulders, filtering out deleted ones
         List<de.othr.crusher.model.ProjectEntity> projects = projectRepository.findByUserIdAndBoulder_Sector_Gym_Id(user.getId(), session.getGym().getId());
         List<BoulderEntity> projectBoulders = new java.util.ArrayList<>();
         for (de.othr.crusher.model.ProjectEntity project : projects) {
-            projectBoulders.add(project.getBoulder());
+            BoulderEntity boulder = project.getBoulder();
+            if (boulder != null && !boulder.isDeleted()) {
+                projectBoulders.add(boulder);
+            }
         }
 
         projectBoulders.sort((b1, b2) -> {

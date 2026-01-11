@@ -41,6 +41,9 @@ public class GymEntity {
     @Column(nullable = true)
     private String crowdLevelUrl;
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
     @OneToMany(
             mappedBy = "gym",
             cascade = CascadeType.ALL,
@@ -181,5 +184,13 @@ public class GymEntity {
     public void removeEvent(EventEntity event) {
         events.remove(event);
         event.setGym(null);
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

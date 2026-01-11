@@ -228,7 +228,7 @@ public class BoulderController {
     }
 
     /**
-     * Deletes an existing boulder.
+     * Soft-deletes an existing boulder by setting its deleted flag to true.
      *
      * @param gymId identifier of the parent gym
      * @param sectorId identifier of the parent sector
@@ -245,7 +245,10 @@ public class BoulderController {
         findGymOrThrow(gymId);
         findSectorInGymOrThrow(gymId, sectorId);
         BoulderEntity boulder = findBoulderInSectorOrThrow(sectorId, boulderId);
-        boulderRepository.delete(boulder);
+        
+        // Soft delete: set deleted flag instead of removing from database
+        boulder.setDeleted(true);
+        boulderRepository.save(boulder);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(

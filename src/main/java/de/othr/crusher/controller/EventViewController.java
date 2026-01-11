@@ -87,6 +87,11 @@ public class EventViewController {
                 .findById(eventId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
 
+        // Check if event is soft-deleted
+        if (event.isDeleted()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+        }
+
         if (event.getGym() == null || event.getGym().getId() == null
                 || !event.getGym().getId().equals(gymId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event does not belong to gym");
