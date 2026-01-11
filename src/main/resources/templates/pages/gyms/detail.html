@@ -52,6 +52,22 @@
                     </div>
                 </section>
 
+                <!-- Map -->
+                <section
+                    class="card p-6 space-y-4"
+                    th:if="${gym.latitude != null and gym.longitude != null}"
+                >
+                    <h2>Map</h2>
+                    <div
+                        id="gym-map"
+                        class="gym-map border-2 rounded-base overflow-hidden"
+                        th:data-lat="${gym.latitude}"
+                        th:data-lng="${gym.longitude}"
+                        th:data-name="${gym.name}"
+                        th:data-address="${gym.city} + ', ' + ${gym.street}"
+                    ></div>
+                </section>
+
                 <!-- Total Boulders / Crowd Level -->
                 <section
                     class="card p-6 flex flex-col items-center justify-center space-y-4"

@@ -527,9 +527,50 @@ function loadCrowdLevel() {
         });
 }
 
+/**
+ * Initializes the gym map if coordinates are available.
+ */
+function initGymMap() {
+    const mapEl = document.getElementById("gym-map");
+    if (!mapEl) return;
+
+    if (typeof L === "undefined") {
+        console.warn("Leaflet is not loaded.");
+        return;
+    }
+
+    const lat = parseFloat(mapEl.getAttribute("data-lat"));
+    const lng = parseFloat(mapEl.getAttribute("data-lng"));
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+        return;
+    }
+
+    const name = mapEl.getAttribute("data-name") || "Gym";
+    const address = mapEl.getAttribute("data-address");
+    const popupText = address ? `${name}<br>${address}` : name;
+
+    const map = L.map(mapEl, {
+        zoomControl: true,
+        scrollWheelZoom: false,
+    }).setView([lat, lng], 15);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    L.marker([lat, lng]).addTo(map).bindPopup(popupText);
+
+    map.on("click", () => map.scrollWheelZoom.enable());
+    map.on("mouseout", () => map.scrollWheelZoom.disable());
+}
+
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
     initThemeToggle();
     initAvatars();
     loadCrowdLevel();
+    initGymMap();
 });
