@@ -26,8 +26,7 @@
 
             <section class="card p-4 space-y-4">
                 <h2>Gyms</h2>
-
-                <table class="table w-full">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -35,7 +34,6 @@
                             <th>Street</th>
                             <th>Email</th>
                             <th class="w-20">Rating</th>
-                            <th class="w-16 text-right"></th>
                         </tr>
                     </thead>
 
@@ -71,17 +69,6 @@
                                 >
                                     -
                                 </span>
-                            </td>
-                            <td class="text-right">
-                                <a
-                                    th:href="@{/gyms/{id}(id=${gym.id})}"
-                                    class="button button-square"
-                                    onclick="event.stopPropagation()"
-                                >
-                                    <x
-                                        th:replace="~{components/icons :: chevron-right}"
-                                    ></x>
-                                </a>
                             </td>
                         </tr>
                     </tbody>

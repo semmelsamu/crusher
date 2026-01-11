@@ -185,7 +185,7 @@
 */
 
 .table {
-    @apply w-full overflow-x-auto table-fixed border-2 bg-background;
+    @apply w-max min-w-full overflow-x-auto table-fixed border-2 bg-background;
 }
 
 .table th,
@@ -196,6 +196,10 @@
 .table tr:not(:last-child),
 .table thead {
     @apply border-b-2;
+}
+
+:has(> .table) {
+    @apply overflow-x-auto;
 }
 
 /*
