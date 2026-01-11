@@ -232,7 +232,7 @@ public class EventController {
                 result.rejectValue("frequency", "NotNull", "Please select a frequency");
             }
         } else if (event.getDate() == null) {
-            result.rejectValue("date", "NotNull", "Please select a date");
+            result.rejectValue("date", "NotNull", "Please enter a date");
         }
     }
 
@@ -244,4 +244,5 @@ public class EventController {
             event.setFrequency(null);
         }
     }
+
 }
