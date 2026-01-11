@@ -173,7 +173,7 @@ public class GradeController {
     }
 
     /**
-     * Deletes a grade.
+     * Soft-deletes a grade by setting its deleted flag.
      *
      * @param gymId identifier of the parent gym
      * @param gradeId identifier of the grade
@@ -183,7 +183,8 @@ public class GradeController {
     @DeleteMapping("/{gradeId}")
     public String deleteGrade(@PathVariable("gymId") long gymId, @PathVariable("gradeId") long gradeId, RedirectAttributes redirectAttributes) {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
-        gradeRepository.delete(grade);
+        grade.setDeleted(true);
+        gradeRepository.save(grade);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
@@ -196,7 +197,7 @@ public class GradeController {
 
     private GradeEntity findGradeInGymOrThrow(long gymId, long gradeId) {
         GradeEntity grade = gradeRepository
-                .findById(gradeId)
+                .findByIdAndDeletedFalse(gradeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Grade not found"));
 
         if (grade.getGym() == null || grade.getGym().getId() == null
@@ -208,7 +209,7 @@ public class GradeController {
 
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findById(gymId)
+                .findByIdAndDeletedFalse(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }

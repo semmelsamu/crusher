@@ -154,7 +154,7 @@ public class NoticeController {
     }
 
     /**
-     * Deletes a notice by its ID.
+     * Soft-deletes a notice by setting its deleted flag.
      *
      * @param gymId identifier of the parent gym
      * @param noticeId identifier of the notice
@@ -167,7 +167,8 @@ public class NoticeController {
             @PathVariable("noticeId") long noticeId,
             RedirectAttributes redirectAttributes) {
         NoticeEntity notice = findNoticeInGymOrThrow(gymId, noticeId);
-        noticeRepository.delete(notice);
+        notice.setDeleted(true);
+        noticeRepository.save(notice);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
@@ -188,7 +189,7 @@ public class NoticeController {
      */
     private NoticeEntity findNoticeInGymOrThrow(long gymId, long noticeId) {
         NoticeEntity notice = noticeRepository
-                .findById(noticeId)
+                .findByIdAndDeletedFalse(noticeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notice not found"));
 
         if (notice.getGym() == null || notice.getGym().getId() == null
@@ -207,7 +208,7 @@ public class NoticeController {
      */
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findById(gymId)
+                .findByIdAndDeletedFalse(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }

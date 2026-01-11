@@ -57,7 +57,7 @@ public class BoulderCommentController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
-        BoulderEntity boulder = boulderRepository.findById(boulderId)
+        BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         if (comment == null || comment.trim().isEmpty()) {

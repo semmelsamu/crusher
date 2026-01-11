@@ -84,12 +84,12 @@ public class GoController {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
 
-        List<SectorEntity> sectors = sectorRepository.findByGymId(session.getGym().getId());
+        List<SectorEntity> sectors = sectorRepository.findByGymIdAndDeletedFalse(session.getGym().getId());
 
         // Load and sort boulders for each sector by grade (vScale)
         Map<Long, List<BoulderEntity>> sectorBoulders = new HashMap<>();
         for (SectorEntity sector : sectors) {
-            List<BoulderEntity> boulders = boulderRepository.findBySectorId(sector.getId());
+            List<BoulderEntity> boulders = boulderRepository.findBySectorIdAndDeletedFalse(sector.getId());
             boulders.sort((b1, b2) -> {
                 int grade1 = parseIntegerForGrade(b1.getGrade().getVScale());
                 int grade2 = parseIntegerForGrade(b2.getGrade().getVScale());
@@ -145,7 +145,7 @@ public class GoController {
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
-        BoulderEntity boulder = boulderRepository.findById(boulderId)
+        BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         GoEntity go = new GoEntity();
@@ -218,7 +218,7 @@ public class GoController {
 
         BoulderEntity boulder = null;
         if (go.getBoulder() != null && go.getBoulder().getId() != null) {
-            boulder = boulderRepository.findById(go.getBoulder().getId())
+            boulder = boulderRepository.findByIdAndDeletedFalse(go.getBoulder().getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
             go.setBoulder(boulder);
         } else {
@@ -285,7 +285,7 @@ public class GoController {
 
         BoulderEntity boulder = null;
         if (formGo.getBoulder() != null && formGo.getBoulder().getId() != null) {
-            boulder = boulderRepository.findById(formGo.getBoulder().getId())
+            boulder = boulderRepository.findByIdAndDeletedFalse(formGo.getBoulder().getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
         } else if (go.getBoulder() != null) {
             boulder = go.getBoulder();
