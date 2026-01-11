@@ -1,0 +1,166 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Sessions', url: '/sessions'} } }"
+        >
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/dashboard}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <h1>Sessions</h1>
+                </header>
+            </div>
+
+            <section class="flex flex-col items-center space-y-4 my-8">
+                <!-- Active Session -->
+                <a
+                    th:if="${activeSession != null}"
+                    th:href="@{/sessions/{id}(id=${activeSession.id})}"
+                    class="button primary"
+                >
+                    Continue your last Session
+                </a>
+
+                <!-- Last Gym Quick Start -->
+                <form
+                    th:if="${activeSession == null && lastGym != null}"
+                    th:action="@{/sessions}"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="gymId"
+                        th:value="${lastGym.id}"
+                    />
+                    <button type="submit" class="button success">
+                        <span th:text="'Start Session in ' + ${lastGym.name}">
+                            Start Session
+                        </span>
+                    </button>
+                </form>
+            </section>
+
+            <section class="card p-4 space-y-4">
+                <h2>Sessions</h2>
+
+                <table class="table w-full">
+                    <thead>
+                        <tr>
+                            <th class="w-32">Date</th>
+                            <th>Gym</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody th:if="${sessions.isEmpty()}">
+                        <tr>
+                            <td
+                                colspan="3"
+                                class="text-center text-muted-foreground"
+                            >
+                                No sessions yet. Start your first climbing
+                                session!
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody th:unless="${sessions.isEmpty()}">
+                        <tr th:each="sess : ${sessions}">
+                            <td>
+                                <span
+                                    th:text="${#temporals.format(sess.startedAt, 'dd.MM.yyyy')}"
+                                >
+                                    Date
+                                </span>
+                            </td>
+                            <td>
+                                <span th:text="${sess.gym.name}">
+                                    Gym Name
+                                </span>
+                            </td>
+                            <td>
+                                <div class="flex gap-2 justify-end">
+                                    <a
+                                        th:href="@{/sessions/{id}(id=${sess.id})}"
+                                        class="button primary button-square"
+                                    >
+                                        <x
+                                            th:replace="~{components/icons :: pencil-ruler}"
+                                        ></x>
+                                    </a>
+                                    <button
+                                        th:onclick="|openDialog('delete-session-dialog-${sess.id}')|"
+                                        class="button danger button-square"
+                                    >
+                                        <x
+                                            th:replace="~{components/icons :: trash-2}"
+                                        ></x>
+                                    </button>
+                                    <dialog
+                                        th:id="|delete-session-dialog-${sess.id}|"
+                                        class="dialog space-y-4"
+                                        closedby="any"
+                                    >
+                                        <h3>Confirm Deletion</h3>
+                                        <p>
+                                            Are you sure you want to delete this
+                                            session?
+                                        </p>
+                                        <div class="flex justify-end gap-4">
+                                            <button
+                                                class="button"
+                                                th:onclick="|closeDialog('delete-session-dialog-${sess.id}')|"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <form
+                                                th:action="@{/sessions/{id}(id=${sess.id})}"
+                                                method="post"
+                                                class="inline"
+                                            >
+                                                <input
+                                                    type="hidden"
+                                                    name="_method"
+                                                    value="delete"
+                                                />
+                                                <button
+                                                    autofocus
+                                                    type="submit"
+                                                    class="button danger"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </dialog>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div
+                    th:replace="~{components/pagination :: pagination(${sessionsPage}, '/sessions')}"
+                ></div>
+
+                <a th:href="@{/sessions/create}" class="button success">
+                    <x th:replace="~{components/icons :: play}"></x>
+                    Start New Session
+                </a>
+            </section>
+        </main>
+    </th:block>
+</th:block>

@@ -30,8 +30,9 @@
     @apply px-0 aspect-square;
 }
 
-.button:disabled {
-    @apply shadow-none border-foreground-muted text-foreground-muted hover:translate-none cursor-default;
+.button:disabled,
+.button[disabled] {
+    @apply shadow-none border-foreground-muted text-foreground-muted! hover:translate-none cursor-default;
 }
 
 /*
@@ -79,6 +80,38 @@
 
 .text-input:disabled {
     @apply border-foreground-muted;
+}
+
+/*
+|-------------------------------------------------------------------------------
+| File Inputs
+|-------------------------------------------------------------------------------
+*/
+
+.file-input {
+    @apply text-sm text-foreground;
+}
+
+/*
+|-------------------------------------------------------------------------------
+| Image Picker
+|-------------------------------------------------------------------------------
+*/
+
+.image-picker-preview {
+    @apply border-2 rounded-base overflow-hidden bg-background min-h-48 flex items-center justify-center;
+}
+
+.image-picker-img {
+    @apply w-full h-full object-cover;
+}
+
+.image-picker-placeholder {
+    @apply w-full h-full flex flex-col items-center justify-center gap-2 text-center px-4 py-8 text-main-foreground;
+}
+
+.image-picker-frame {
+    @apply border-2 rounded-base overflow-clip bg-background;
 }
 
 /*
@@ -249,7 +282,7 @@
 */
 
 .details {
-    @apply border-2 shadow-base rounded-base;
+    @apply border-2 shadow-base rounded-base overflow-clip;
 }
 
 .details summary {

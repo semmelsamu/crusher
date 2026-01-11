@@ -6,14 +6,14 @@
     <th:block layout:fragment="content">
         <main
             class="wrapper"
-            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Dashboard', url: '/dashboard'}, {label: 'Session', url: '/sessions/' + currentSession.id} } }"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Sessions', url: '/sessions'}, {label: 'Session', url: '/sessions/' + currentSession.id} } }"
         >
             <div
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
             ></div>
 
             <div class="flex items-center gap-4">
-                <a th:href="@{/dashboard}" class="button button-square">
+                <a th:href="@{/sessions}" class="button button-square">
                     <x th:replace="~{components/icons :: arrow-big-left}"></x>
                 </a>
 
@@ -249,6 +249,11 @@
                         </button>
                     </div>
                 </dialog>
+
+                <!-- Pagination -->
+                <div
+                    th:replace="~{components/pagination :: pagination(${goesPage}, '/sessions/' + ${currentSession.id})}"
+                ></div>
             </section>
         </main>
     </th:block>

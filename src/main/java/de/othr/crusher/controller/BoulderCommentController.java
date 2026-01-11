@@ -9,6 +9,7 @@ import de.othr.crusher.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -71,6 +72,49 @@ public class BoulderCommentController {
         toast.put("type", "success");
         toast.put("title", "Comment posted!");
         toast.put("message", "Your comment has been successfully added.");
+        redirectAttributes.addFlashAttribute("toast", toast);
+
+        return "redirect:/boulders/" + boulderId;
+    }
+
+    /**
+     * Deletes a comment.
+     * Only the comment owner can delete their own comment.
+     *
+     * @param boulderId the ID of the boulder
+     * @param commentId the ID of the comment to delete
+     * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages
+     * @return redirect back to the boulder detail page
+     */
+    @DeleteMapping("/boulders/{boulderId}/comments/{commentId}")
+    @Transactional
+    public String deleteComment(
+            @PathVariable("boulderId") Long boulderId,
+            @PathVariable("commentId") Long commentId,
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+        UserEntity user = findUserByPrincipal(principal);
+        BoulderCommentEntity comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+
+        // Ensure the comment belongs to the current user
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own comments");
+        }
+
+        // Ensure the comment belongs to the specified boulder
+        if (!comment.getBoulder().getId().equals(boulderId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment does not belong to this boulder");
+        }
+
+        commentRepository.delete(comment);
+
+        // Add success toast
+        Map<String, String> toast = new HashMap<>();
+        toast.put("type", "success");
+        toast.put("title", "Comment deleted!");
+        toast.put("message", "Your comment has been successfully deleted.");
         redirectAttributes.addFlashAttribute("toast", toast);
 
         return "redirect:/boulders/" + boulderId;

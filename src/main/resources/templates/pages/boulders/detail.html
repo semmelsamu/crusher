@@ -6,7 +6,7 @@
     <th:block layout:fragment="content">
         <main
             class="wrapper"
-            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Dashboard', url: '/dashboard'}, {label: 'All Boulders', url: '/boulders'}, {label: boulder.description, url: '/boulders/' + boulder.id} } }"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Boulders', url: '/boulders'}, {label: boulder.description, url: '/boulders/' + boulder.id} } }"
         >
             <div
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
@@ -155,9 +155,11 @@
             </div>
 
             <!-- Comments Section (full width) -->
-            <div
-                th:replace="~{components/comments :: comments('/boulders/' + ${boulder.id} + '/comments', ${comments})}"
-            ></div>
+            <section class="card p-6 max-w-xl mx-auto">
+                <div
+                    th:replace="~{components/comments :: comments('/boulders/' + ${boulder.id} + '/comments', ${comments}, '/boulders/' + ${boulder.id} + '/comments')}"
+                ></div>
+            </section>
         </main>
     </th:block>
 </th:block>

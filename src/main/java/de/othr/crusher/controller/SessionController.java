@@ -16,6 +16,9 @@ import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +72,48 @@ public class SessionController {
         this.sectorRepository = sectorRepository;
         this.gradeRepository = gradeRepository;
         this.projectRepository = projectRepository;
+    }
+
+    /**
+     * Displays all sessions for the current user.
+     *
+     * @param page current page number (1-indexed, defaults to 1)
+     * @param principal the authenticated user
+     * @param model Spring model to pass data to the view
+     * @return view name for the sessions list page
+     */
+    @GetMapping("/sessions")
+    @Transactional(readOnly = true)
+    public String showAllSessions(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            Principal principal,
+            Model model) {
+        UserEntity user = findUserByPrincipal(principal);
+        
+        // Convert 1-based page to 0-based for Spring's PageRequest
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<SessionEntity> sessionsPage = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId(), pageable);
+        List<SessionEntity> sessions = sessionsPage.getContent();
+
+        // Find the most recently used gym
+        GymEntity lastGym = sessions.stream()
+                .filter(session -> session.getGym() != null)
+                .findFirst()
+                .map(SessionEntity::getGym)
+                .orElse(null);
+
+        // Find active session (if any)
+        SessionEntity activeSession = sessions.stream()
+                .filter(session -> session.getEndedAt() == null)
+                .findFirst()
+                .orElse(null);
+
+        model.addAttribute("sessions", sessions);
+        model.addAttribute("sessionsPage", sessionsPage);
+        model.addAttribute("lastGym", lastGym);
+        model.addAttribute("activeSession", activeSession);
+
+        return "pages/sessions/all";
     }
 
     /**
@@ -141,13 +186,18 @@ public class SessionController {
      * Displays details for a specific session.
      *
      * @param id session ID
+     * @param page current page number (1-indexed, defaults to 1)
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
      * @return view name for the session detail page
      */
     @GetMapping("/sessions/{id}")
     @Transactional(readOnly = true)
-    public String showSession(@PathVariable("id") Long id, Principal principal, Model model) {
+    public String showSession(
+            @PathVariable("id") Long id,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            Principal principal,
+            Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
@@ -157,10 +207,13 @@ public class SessionController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
-        List<GoEntity> goes = goRepository.findBySessionIdOrderByTimestampDesc(session.getId());
+        // Convert 1-based page to 0-based for Spring's PageRequest
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<GoEntity> goesPage = goRepository.findBySessionIdOrderByTimestampDesc(session.getId(), pageable);
 
         model.addAttribute("currentSession", session);
-        model.addAttribute("goes", goes);
+        model.addAttribute("goesPage", goesPage);
+        model.addAttribute("goes", goesPage.getContent());
 
         return "pages/sessions/detail";
     }
@@ -171,7 +224,7 @@ public class SessionController {
      * @param id session ID
      * @param principal the authenticated user
      * @param redirectAttributes attributes for flash messages on redirect
-     * @return redirect to the session detail page
+     * @return redirect to the sessions list page
      */
     @PostMapping("/sessions/{id}/end")
     @Transactional
@@ -199,7 +252,7 @@ public class SessionController {
             "message", "Session ended successfully!"
         ));
 
-        return "redirect:/dashboard";
+        return "redirect:/sessions";
     }
 
     /**
@@ -208,7 +261,7 @@ public class SessionController {
      * @param id session ID
      * @param principal the authenticated user
      * @param redirectAttributes attributes for flash messages on redirect
-     * @return redirect to the dashboard
+     * @return redirect to the sessions list page
      */
     @DeleteMapping("/sessions/{id}")
     @Transactional
@@ -248,7 +301,7 @@ public class SessionController {
             return "redirect:/sessions/" + id;
         }
 
-        return "redirect:/dashboard";
+        return "redirect:/sessions";
     }
 
     /**

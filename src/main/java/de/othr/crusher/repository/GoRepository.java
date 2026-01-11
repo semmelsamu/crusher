@@ -2,6 +2,8 @@ package de.othr.crusher.repository;
 
 import de.othr.crusher.model.GoEntity;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +20,15 @@ public interface GoRepository extends JpaRepository<GoEntity, Long> {
      * @return list of goes belonging to the session, sorted by timestamp descending
      */
     List<GoEntity> findBySessionIdOrderByTimestampDesc(Long sessionId);
+
+    /**
+     * Finds goes for a given session with pagination, ordered by timestamp (most recent first).
+     *
+     * @param sessionId identifier of the session
+     * @param pageable pagination information
+     * @return page of goes belonging to the session, sorted by timestamp descending
+     */
+    Page<GoEntity> findBySessionIdOrderByTimestampDesc(Long sessionId, Pageable pageable);
 
     /**
      * Finds all goes for a given boulder, ordered by timestamp (most recent first).

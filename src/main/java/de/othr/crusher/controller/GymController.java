@@ -4,6 +4,7 @@ import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.model.SectorEntity;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.repository.NoticeRepository;
 import de.othr.crusher.repository.SectorRepository;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -29,6 +30,7 @@ public class GymController {
     private final GymRepository gymRepository;
     private final GradeRepository gradeRepository;
     private final SectorRepository sectorRepository;
+    private final NoticeRepository noticeRepository;
 
     /**
      * Creates a new GymController with the given repository.
@@ -36,11 +38,13 @@ public class GymController {
      * @param gymRepository repository for accessing gym data
      * @param gradeRepository repository for accessing grade data
      * @param sectorRepository repository for accessing sector data
+     * @param noticeRepository repository for accessing notice data
      */
-    public GymController(GymRepository gymRepository, GradeRepository gradeRepository, SectorRepository sectorRepository) {
+    public GymController(GymRepository gymRepository, GradeRepository gradeRepository, SectorRepository sectorRepository, NoticeRepository noticeRepository) {
         this.gymRepository = gymRepository;
         this.gradeRepository = gradeRepository;
         this.sectorRepository = sectorRepository;
+        this.noticeRepository = noticeRepository;
     }
 
     /**
@@ -69,6 +73,7 @@ public class GymController {
 
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymId(id));
+        model.addAttribute("notices", noticeRepository.findByGymIdOrderByCreationDateDesc(id));
 
         return "pages/admin/gyms/detail";
     }

@@ -35,8 +35,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         SessionFlashMapManager flashMapManager = new SessionFlashMapManager();
         flashMapManager.saveOutputFlashMap(flashMap, request, response);
         
-        // Redirect to home page
-        response.sendRedirect("/");
+        // Redirect to dashboard page
+        response.sendRedirect("/dashboard");
     }
 }
 

@@ -70,7 +70,9 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").hasRole("ADMIN")
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "OWNER")
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/").permitAll()
                         .requestMatchers("/login").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
@@ -80,7 +82,9 @@ public class SecurityConfig {
                         .permitAll())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
-                        .permitAll());
+                        .permitAll())
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/error"));
         return http.build();
     }
 }

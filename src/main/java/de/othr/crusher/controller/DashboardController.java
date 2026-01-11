@@ -1,12 +1,21 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.dto.UserStatistics;
 import de.othr.crusher.model.*;
 import de.othr.crusher.repository.BoulderCommentRepository;
+import de.othr.crusher.service.CrowdLevelService;
+import de.othr.crusher.service.CrowdLevelService.CrowdLevel;
+import de.othr.crusher.service.StatisticsService;
+import de.othr.crusher.service.WeatherService;
+import de.othr.crusher.service.WeatherService.WeatherInfo;
 import de.othr.crusher.repository.BoulderRatingRepository;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GoRepository;
 import de.othr.crusher.repository.GradeRepository;
+import de.othr.crusher.repository.GymCommentRepository;
+import de.othr.crusher.repository.GymRatingRepository;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.repository.NoticeRepository;
 import de.othr.crusher.repository.ProjectRepository;
 import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
@@ -21,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -44,6 +54,12 @@ public class DashboardController {
     private final GoRepository goRepository;
     private final BoulderRatingRepository ratingRepository;
     private final BoulderCommentRepository commentRepository;
+    private final GymRatingRepository gymRatingRepository;
+    private final GymCommentRepository gymCommentRepository;
+    private final NoticeRepository noticeRepository;
+    private final WeatherService weatherService;
+    private final CrowdLevelService crowdLevelService;
+    private final StatisticsService statisticsService;
 
     public DashboardController(
             SessionRepository sessionRepository,
@@ -55,7 +71,13 @@ public class DashboardController {
             ProjectRepository projectRepository,
             GoRepository goRepository,
             BoulderRatingRepository ratingRepository,
-            BoulderCommentRepository commentRepository) {
+            BoulderCommentRepository commentRepository,
+            GymRatingRepository gymRatingRepository,
+            GymCommentRepository gymCommentRepository,
+            NoticeRepository noticeRepository,
+            WeatherService weatherService,
+            CrowdLevelService crowdLevelService,
+            StatisticsService statisticsService) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.boulderRepository = boulderRepository;
@@ -66,10 +88,16 @@ public class DashboardController {
         this.goRepository = goRepository;
         this.ratingRepository = ratingRepository;
         this.commentRepository = commentRepository;
+        this.gymRatingRepository = gymRatingRepository;
+        this.gymCommentRepository = gymCommentRepository;
+        this.noticeRepository = noticeRepository;
+        this.weatherService = weatherService;
+        this.crowdLevelService = crowdLevelService;
+        this.statisticsService = statisticsService;
     }
 
     /**
-     * Displays the dashboard with all sessions for the current user.
+     * Displays the dashboard for the current user.
      *
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
@@ -79,10 +107,101 @@ public class DashboardController {
     @Transactional(readOnly = true)
     public String showDashboard(Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
+
+        // Get sessions for active session and last gym logic
         List<SessionEntity> sessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId());
 
-        model.addAttribute("sessions", sessions);
+        // Find the last session (most recent)
+        SessionEntity lastSession = sessions.stream()
+                .filter(session -> session.getGym() != null)
+                .findFirst()
+                .orElse(null);
+
+        // Find the most recently used gym
+        GymEntity lastGym = lastSession != null ? lastSession.getGym() : null;
+
+        // Find active session (if any)
+        SessionEntity activeSession = sessions.stream()
+                .filter(session -> session.getEndedAt() == null)
+                .findFirst()
+                .orElse(null);
+
+        // Get last 3 notices from the last gym
+        List<NoticeEntity> lastGymNotices = List.of();
+        if (lastGym != null) {
+            List<NoticeEntity> allNotices = noticeRepository.findByGymIdOrderByCreationDateDesc(lastGym.getId());
+            lastGymNotices = allNotices.stream()
+                    .limit(3)
+                    .toList();
+        }
+
+        // Fetch project data
+        List<ProjectEntity> projects = projectRepository.findByUserId(user.getId());
+        List<ProjectEntity> recentProjects = projects.stream()
+                .limit(5)
+                .toList();
+        long projectCount = projects.size();
+
+        // Fetch recent project activity (last 7 days)
+        LocalDateTime weekAgo = LocalDateTime.now().minusDays(7);
+        long recentProjectAttempts = projects.stream()
+                .flatMap(p -> goRepository.findByBoulderIdOrderByTimestampDesc(p.getBoulder().getId()).stream())
+                .filter(go -> go.getTimestamp().isAfter(weekAgo))
+                .count();
+
+        // Fetch user statistics
+        UserStatistics stats = statisticsService.getUserStatistics(user.getId());
+
+        // Calculate success rate
+        double successRate = stats.getTotalAttempts() > 0 
+                ? (stats.getFinishedCount() * 100.0 / stats.getTotalAttempts()) 
+                : 0.0;
+
+        // Fetch session stats
+        long sessionCount = sessions.size();
+        long lastSessionGoCount = lastSession != null ? goRepository.findBySessionIdOrderByTimestampDesc(lastSession.getId()).size() : 0;
+
+        // Fetch gym-related data
+        WeatherInfo lastGymWeather = lastGym != null ? weatherService.getWeatherForCity(lastGym.getCity()) : null;
+        long lastGymBoulderCount = lastGym != null ? boulderRepository.findBySectorGymId(lastGym.getId()).size() : 0;
+        Integer lastGymUserRating = lastGym != null 
+                ? gymRatingRepository.findByUserIdAndGymId(user.getId(), lastGym.getId())
+                    .map(r -> r.getRating())
+                    .orElse(null) 
+                : null;
+        Double lastGymAverageRating = lastGym != null
+                ? gymRatingRepository.findByGymId(lastGym.getId()).stream()
+                    .mapToInt(GymRatingEntity::getRating)
+                    .average()
+                    .orElse(0.0)
+                : null;
+
+        // Add all attributes to model
         model.addAttribute("user", user);
+        model.addAttribute("currentDateTime", LocalDateTime.now());
+        model.addAttribute("lastGym", lastGym);
+        model.addAttribute("lastSession", lastSession);
+        model.addAttribute("activeSession", activeSession);
+        model.addAttribute("lastGymNotices", lastGymNotices);
+        
+        // Project data
+        model.addAttribute("projects", recentProjects);
+        model.addAttribute("projectCount", projectCount);
+        model.addAttribute("recentProjectAttempts", recentProjectAttempts);
+        
+        // Statistics data
+        model.addAttribute("stats", stats);
+        model.addAttribute("successRate", successRate);
+        
+        // Session data
+        model.addAttribute("sessionCount", sessionCount);
+        model.addAttribute("lastSessionGoCount", lastSessionGoCount);
+        
+        // Gym data
+        model.addAttribute("lastGymWeather", lastGymWeather);
+        model.addAttribute("lastGymBoulderCount", lastGymBoulderCount);
+        model.addAttribute("lastGymUserRating", lastGymUserRating);
+        model.addAttribute("lastGymAverageRating", lastGymAverageRating);
 
         return "pages/dashboard";
     }
@@ -175,7 +294,7 @@ public class DashboardController {
         model.addAttribute("projectOnly", projectOnly);
         model.addAttribute("boulderRatings", boulderRatings);
 
-        return "pages/boulders";
+        return "pages/boulders/all";
     }
 
     /**
@@ -234,7 +353,86 @@ public class DashboardController {
         model.addAttribute("averageRating", averageRating);
         model.addAttribute("comments", comments);
 
-        return "pages/boulder-detail";
+        return "pages/boulders/detail";
+    }
+
+    /**
+     * Displays all gyms with user ratings.
+     *
+     * @param principal the authenticated user
+     * @param model Spring model to pass data to the view
+     * @return view name for the gyms page
+     */
+    @GetMapping("/gyms")
+    @Transactional(readOnly = true)
+    public String showAllGyms(Principal principal, Model model) {
+        UserEntity user = findUserByPrincipal(principal);
+
+        // Fetch all gyms
+        List<GymEntity> gyms = gymRepository.findAll();
+
+        // Load ratings for current user
+        Map<Long, Integer> gymRatings = gymRatingRepository.findByUserId(user.getId()).stream()
+                .collect(Collectors.toMap(
+                        rating -> rating.getGym().getId(),
+                        rating -> rating.getRating()
+                ));
+
+        model.addAttribute("gyms", gyms);
+        model.addAttribute("gymRatings", gymRatings);
+
+        return "pages/gyms/all";
+    }
+
+    /**
+     * Displays details for a specific gym.
+     *
+     * @param id gym ID
+     * @param principal the authenticated user
+     * @param model Spring model to pass data to the view
+     * @return view name for the gym detail page
+     */
+    @GetMapping("/gyms/{id}")
+    @Transactional(readOnly = true)
+    public String showGym(@PathVariable("id") Long id, Principal principal, Model model) {
+        UserEntity user = findUserByPrincipal(principal);
+        GymEntity gym = gymRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+
+        // Get current user's rating for this gym
+        Integer currentRating = gymRatingRepository.findByUserIdAndGymId(user.getId(), gym.getId())
+                .map(rating -> rating.getRating())
+                .orElse(0);
+
+        // Calculate average rating for this gym
+        List<GymRatingEntity> allRatings = gymRatingRepository.findByGymId(gym.getId());
+        Double averageRating = allRatings.isEmpty() ? null :
+                allRatings.stream()
+                        .mapToInt(GymRatingEntity::getRating)
+                        .average()
+                        .orElse(0.0);
+
+        // Get all comments for this gym
+        List<GymCommentEntity> comments = gymCommentRepository.findByGymIdOrderByCreatedAtDesc(gym.getId());
+
+        // Get all notices for this gym
+        List<NoticeEntity> notices = noticeRepository.findByGymIdOrderByCreationDateDesc(gym.getId());
+
+        // Get weather for gym's city
+        WeatherInfo weather = weatherService.getWeatherForCity(gym.getCity());
+
+        // Count total boulders in this gym
+        long boulderCount = boulderRepository.findBySectorGymId(gym.getId()).size();
+
+        model.addAttribute("gym", gym);
+        model.addAttribute("currentRating", currentRating);
+        model.addAttribute("averageRating", averageRating);
+        model.addAttribute("comments", comments);
+        model.addAttribute("notices", notices);
+        model.addAttribute("weather", weather);
+        model.addAttribute("boulderCount", boulderCount);
+
+        return "pages/gyms/detail";
     }
 
     /**

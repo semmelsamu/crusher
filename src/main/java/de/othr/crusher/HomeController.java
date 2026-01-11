@@ -17,7 +17,7 @@ import java.security.Principal;
 import java.util.Optional;
 
 /**
- * Controller for the home page.
+ * Controller for the statistics page.
  * Provides quick access to start a new session or continue an active one.
  */
 @Controller
@@ -35,16 +35,26 @@ public class HomeController {
     }
 
     /**
-     * Displays the home page with quick session actions.
+     * Displays the index/landing page accessible to everyone.
+     *
+     * @return view name for the index page
+     */
+    @GetMapping("/")
+    public String showIndex() {
+        return "pages/index";
+    }
+
+    /**
+     * Displays the statistics page with quick session actions.
      * Shows either:
      * - A link to the active session if one exists
      * - A quick-start button for the last used gym if no active session
      *
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
-     * @return view name for the home page
+     * @return view name for the statistics page
      */
-    @GetMapping("/")
+    @GetMapping("/stats")
     @Transactional(readOnly = true)
     public String showHome(Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
@@ -67,7 +77,7 @@ public class HomeController {
         UserStatistics statistics = statisticsService.getUserStatistics(user.getId());
         model.addAttribute("statistics", statistics);
 
-        return "pages/home";
+        return "pages/stats";
     }
 
     /**

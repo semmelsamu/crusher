@@ -38,6 +38,9 @@ public class GymEntity {
     @Email(message = "Please enter a correct email")
     private String email;
 
+    @Column(nullable = true)
+    private String crowdLevelUrl;
+
     @OneToMany(
             mappedBy = "gym",
             cascade = CascadeType.ALL,
@@ -51,6 +54,13 @@ public class GymEntity {
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     private List<GradeEntity> grades = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "gym",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<NoticeEntity> notices = new ArrayList<>();
 
     public GymEntity() {}
 
@@ -102,12 +112,24 @@ public class GymEntity {
         this.email = email;
     }
 
+    public String getCrowdLevelUrl() {
+        return crowdLevelUrl;
+    }
+
+    public void setCrowdLevelUrl(String crowdLevelUrl) {
+        this.crowdLevelUrl = crowdLevelUrl;
+    }
+
     public List<SectorEntity> getSectors() {
         return sectors;
     }
 
     public List<GradeEntity> getGrades() {
         return grades;
+    }
+
+    public List<NoticeEntity> getNotices() {
+        return notices;
     }
 
     public void addSector(SectorEntity sector) {
@@ -128,5 +150,15 @@ public class GymEntity {
     public void removeGrade(GradeEntity grade) {
         grades.remove(grade);
         grade.setGym(null);
+    }
+
+    public void addNotice(NoticeEntity notice) {
+        notices.add(notice);
+        notice.setGym(this);
+    }
+
+    public void removeNotice(NoticeEntity notice) {
+        notices.remove(notice);
+        notice.setGym(null);
     }
 }

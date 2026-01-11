@@ -15,7 +15,7 @@
                 class="star-button transition-colors duration-200"
             >
                 <svg
-                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 1} ? 'color-warning' : 'color-muted')}"
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 1} ? 'fill-warning' : 'fill-disabled')}"
                 ></svg>
             </button>
         </form>
@@ -31,7 +31,7 @@
                 class="star-button transition-colors duration-200"
             >
                 <svg
-                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 2} ? 'color-warning' : 'color-muted')}"
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 2} ? 'fill-warning' : 'fill-disabled')}"
                 ></svg>
             </button>
         </form>
@@ -47,7 +47,7 @@
                 class="star-button transition-colors duration-200"
             >
                 <svg
-                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 3} ? 'color-warning' : 'color-muted')}"
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 3} ? 'fill-warning' : 'fill-disabled')}"
                 ></svg>
             </button>
         </form>
@@ -63,7 +63,7 @@
                 class="star-button transition-colors duration-200"
             >
                 <svg
-                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 4} ? 'color-warning' : 'color-muted')}"
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 4} ? 'fill-warning' : 'fill-disabled')}"
                 ></svg>
             </button>
         </form>
@@ -79,7 +79,7 @@
                 class="star-button transition-colors duration-200"
             >
                 <svg
-                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 5} ? 'color-warning' : 'color-muted')}"
+                    th:replace="~{components/star :: star(48, 48, '#000', '1', ${currentRating >= 5} ? 'fill-warning' : 'fill-disabled')}"
                 ></svg>
             </button>
         </form>

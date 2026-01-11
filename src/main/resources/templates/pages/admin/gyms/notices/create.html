@@ -1,0 +1,41 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Admin Panel', url: '/admin/gyms'}, {label: 'Gyms', url: '/admin/gyms'}, {label: gym.name, url: '/admin/gyms/' + gym.id}, {label: 'Notices', url: '/admin/gyms/' + gym.id}, {label: 'Create', url: ''} } }"
+        >
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a
+                    th:href="@{/admin/gyms/{gymId}(gymId=${gym.id})}"
+                    class="button button-square"
+                >
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 p-4 flex items-center justify-between"
+                >
+                    <h1>Create Notice</h1>
+                </header>
+            </div>
+
+            <section class="card p-4 max-w-md mx-auto">
+                <th:block
+                    th:replace="~{components/cu-forms/notice :: notice(
+                    @{/admin/gyms/{gymId}/notices(gymId=${gym.id})},
+                    ${notice},
+                    ${gym}
+                )}"
+                ></th:block>
+            </section>
+        </main>
+    </th:block>
+</th:block>
