@@ -343,6 +343,36 @@
                     </div>
 
                     <div class="p-6 space-y-4">
+                        <h3>Events</h3>
+                        <div
+                            th:if="${lastGymEvents.isEmpty()}"
+                            class="text-foreground-muted"
+                        >
+                            No events yet
+                        </div>
+                        <ul
+                            th:if="${!lastGymEvents.isEmpty()}"
+                            class="space-y-4"
+                        >
+                            <li
+                                th:each="eventOccurrence : ${lastGymEvents}"
+                                class="border-2 p-4 rounded-base bg-background"
+                            >
+                                <strong
+                                    th:text="${eventOccurrence.event.title}"
+                                >
+                                    Event Title
+                                </strong>
+                                <p class="text-sm text-foreground-muted">
+                                    <time
+                                        th:datetime="${eventOccurrence.date}"
+                                        th:text="${#temporals.format(eventOccurrence.date, 'dd.MM.yy')}"
+                                    >
+                                        01.01.2024
+                                    </time>
+                                </p>
+                            </li>
+                        </ul>
                         <h3>Notices</h3>
                         <div
                             th:if="${lastGymNotices.isEmpty()}"

@@ -1,0 +1,131 @@
+<form
+    th:fragment="event(actionUrl, event, gym)"
+    th:action="${actionUrl}"
+    th:object="${event}"
+    method="post"
+    class="space-y-4"
+    xmlns:th="http://www.thymeleaf.org"
+    th:x-data="'{ periodic: ' + ${event.periodic} + ' }'"
+>
+    <input
+        type="hidden"
+        name="_method"
+        th:value="${event.id} != null ? 'put' : 'post'"
+    />
+
+    <div class="space-y-2">
+        <label class="block">Title</label>
+        <input th:field="*{title}" class="text-input w-full" />
+        <p
+            th:if="${#fields.hasErrors('title')}"
+            th:errors="*{title}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="space-y-2">
+        <label class="block">Description</label>
+        <textarea
+            th:field="*{description}"
+            class="text-input w-full"
+            rows="8"
+        ></textarea>
+        <p
+            th:if="${#fields.hasErrors('description')}"
+            th:errors="*{description}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="flex items-center gap-4">
+        <label class="switch">
+            <input
+                type="checkbox"
+                id="periodic-event"
+                th:field="*{periodic}"
+                x-model="periodic"
+            />
+            <span class="switch-thumb"></span>
+        </label>
+        <label for="periodic-event">Recurring event</label>
+    </div>
+
+    <div class="space-y-2" x-show="periodic" x-cloak>
+        <label class="block">Weekday</label>
+        <select
+            th:field="*{weekday}"
+            class="text-input w-full"
+            x-bind:required="periodic"
+        >
+            <option value="">Select weekday</option>
+            <option
+                th:each="day : ${T(java.time.DayOfWeek).values()}"
+                th:value="${day}"
+                th:text="${#strings.capitalize(day.toString().toLowerCase())}"
+            >
+                Monday
+            </option>
+        </select>
+        <p
+            th:if="${#fields.hasErrors('weekday')}"
+            th:errors="*{weekday}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="space-y-2" x-show="periodic" x-cloak>
+        <label class="block">Frequency</label>
+        <select
+            th:field="*{frequency}"
+            class="text-input w-full"
+            x-bind:required="periodic"
+        >
+            <option value="">Select frequency</option>
+            <option
+                th:each="frequency : ${T(de.othr.crusher.model.EventFrequency).values()}"
+                th:value="${frequency}"
+                th:text="${frequency.label}"
+            >
+                Weekly
+            </option>
+        </select>
+        <p
+            th:if="${#fields.hasErrors('frequency')}"
+            th:errors="*{frequency}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="space-y-2" x-show="!periodic" x-cloak>
+        <label class="block">Date</label>
+        <input
+            type="text"
+            th:field="*{date}"
+            class="text-input w-full"
+            placeholder="DD.MM.YY"
+            x-bind:required="!periodic"
+        />
+        <p class="text-sm text-foreground-muted">Format: DD.MM.YY</p>
+        <p
+            th:if="${#fields.hasErrors('date')}"
+            th:errors="*{date}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="space-y-2">
+        <label class="block">Time</label>
+        <input
+            th:field="*{time}"
+            class="text-input w-full"
+            placeholder="e.g. 18:00 or 18:00-20:00"
+        />
+        <p
+            th:if="${#fields.hasErrors('time')}"
+            th:errors="*{time}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <button type="submit" class="button primary mt-8 ml-auto">Save</button>
+</form>
