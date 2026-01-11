@@ -52,6 +52,40 @@
         ></p>
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+            <label class="block">Latitude (optional)</label>
+            <input
+                th:field="*{latitude}"
+                type="number"
+                step="any"
+                class="text-input w-full"
+                placeholder="49.032275"
+            />
+            <p
+                th:if="${#fields.hasErrors('latitude')}"
+                th:errors="*{latitude}"
+                class="text-error text-sm mt-1"
+            ></p>
+        </div>
+
+        <div class="space-y-2">
+            <label class="block">Longitude (optional)</label>
+            <input
+                th:field="*{longitude}"
+                type="number"
+                step="any"
+                class="text-input w-full"
+                placeholder="12.128859"
+            />
+            <p
+                th:if="${#fields.hasErrors('longitude')}"
+                th:errors="*{longitude}"
+                class="text-error text-sm mt-1"
+            ></p>
+        </div>
+    </div>
+
     <div class="space-y-2">
         <label class="block">Crowd Level URL (optional)</label>
         <input

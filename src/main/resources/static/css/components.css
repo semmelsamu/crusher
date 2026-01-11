@@ -12,6 +12,20 @@
     @apply border-2 rounded-base shadow-base bg-secondary-background;
 }
 
+.gym-map {
+    height: 220px;
+}
+
+@media (min-width: 768px) {
+    .gym-map {
+        height: 260px;
+    }
+}
+
+.gym-map.leaflet-container {
+    background-color: var(--color-background);
+}
+
 /*
 |-------------------------------------------------------------------------------
 | Buttons

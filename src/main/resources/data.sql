@@ -4,11 +4,11 @@ INSERT INTO users (name, role, password) VALUES
     ('klaus', 'OWNER', 'test'),
     ('crusher', 'ADMIN', 'test');
 
-INSERT INTO gyms (name, street, city, email, crowd_level_url, deleted) VALUES
-    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', 'https://www.boulderwelt-muenchen-ost.de/', FALSE),
-    ('Einstein Boulderhalle', 'Landsberger Straße 185', 'München', 'info@einstein-boulder.de', NULL, FALSE),
-    ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de', NULL, FALSE),
-    ('Boulderwelt Regensburg', 'Isarstraße 99', 'Regensburg', 'regensburg@boulderwelt.de', 'https://www.boulderwelt-regensburg.de/', FALSE);
+INSERT INTO gyms (name, street, city, email, latitude, longitude, crowd_level_url, deleted) VALUES
+    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', 48.12599371578731, 11.611093684742901, 'https://www.boulderwelt-muenchen-ost.de/', FALSE),
+    ('Einstein Boulderhalle', 'Landsberger Straße 185', 'München', 'info@einstein-boulder.de', 48.14053574359812, 11.522861113579506, NULL, FALSE),
+    ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de', 49.45265787314971, 11.051280015562101, NULL, FALSE),
+    ('Boulderwelt Regensburg', 'Isarstraße 99', 'Regensburg', 'regensburg@boulderwelt.de', 49.032275086772316, 12.128859684768997, 'https://www.boulderwelt-regensburg.de/', FALSE);
 
 INSERT INTO grades (name, v_scale, font_scale, description, gym_id, deleted) VALUES
     ('1', 'V0', '4', NULL, 1, FALSE),
