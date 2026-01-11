@@ -39,6 +39,9 @@
             th:href="@{/icons/apple-touch-icon.png}"
         />
         <script src="https://unpkg.com/ios-pwa-splash@1.0.0/cdn.min.js"></script>
+        <script>
+            iosPWASplash("@{/icons/apple-touch-icon.png}", "#38BDF8");
+        </script>
         <link rel="stylesheet" th:href="@{/css/_build.css}" />
         <script th:src="@{/js/app.js}" defer></script>
         <script

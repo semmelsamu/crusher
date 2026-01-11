@@ -407,20 +407,6 @@ function hashString(str) {
     return Math.abs(hash);
 }
 
-/**
- * Resolves a CSS custom property to its concrete value.
- */
-function resolveThemeValue(name, depth = 0) {
-    if (depth > 5) return "";
-    const value = getComputedStyle(document.documentElement)
-        .getPropertyValue(name)
-        .trim();
-    if (!value) return "";
-    const match = value.match(/^var\((--[^)]+)\)$/);
-    if (!match) return value;
-    return resolveThemeValue(match[1], depth + 1);
-}
-
 function getStoredTheme() {
     try {
         return localStorage.getItem("theme");
@@ -437,24 +423,6 @@ function setStoredTheme(theme) {
     }
 }
 
-function updateThemeMeta() {
-    const themeColor =
-        resolveThemeValue("--color-theme") || resolveThemeValue("--color-main");
-    if (!themeColor) return;
-
-    const metaTheme = document.querySelector('meta[name="theme-color"]');
-    if (metaTheme) {
-        metaTheme.setAttribute("content", themeColor);
-    }
-
-    const appleTouchIcon = document.querySelector(
-        'link[rel="apple-touch-icon"]',
-    );
-    if (window.iosPWASplash && appleTouchIcon) {
-        window.iosPWASplash(appleTouchIcon.href, themeColor);
-    }
-}
-
 function updateThemeToggle(theme) {
     const toggle = document.querySelector("[data-theme-toggle]");
     if (!toggle) return;
@@ -467,7 +435,6 @@ function updateThemeToggle(theme) {
 
 function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
-    updateThemeMeta();
     updateThemeToggle(theme);
 }
 
