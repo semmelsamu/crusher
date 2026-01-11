@@ -44,40 +44,40 @@ INSERT INTO sectors (name, description, image_path, gym_id) VALUES
     ('Tech-Deck', 'Schmale Leisten und Fußarbeitstraining.', '/uploads/sectors/5/c8f932c0-852a-4688-81f2-8b8e2671c2c4.png', 3),
     ('Höhle', 'Kompressionslastige Boulder in der Grotte.', '/uploads/sectors/6/5ae55a50-9088-4b06-841e-50bd76f2a027.png', 3);
 
-INSERT INTO boulders (description, color, grade_id, sector_id, holds_count) VALUES
+INSERT INTO boulders (description, color, grade_id, sector_id, holds_count, published) VALUES
     -- Boulders for sector 1 (30er, gym 1)
-    ('Links hinten', 'YELLOW', 1, 1, 18),
-    ('Rechts vorne, steil', 'BLUE', 3, 1, 22),
-    ('Mittig, dynamisch', 'RED', 4, 1, 20),
-    ('Kante rechts', 'PINK', 2, 1, 16),
-    
+    ('Links hinten', 'YELLOW', 1, 1, 18, true),
+    ('Rechts vorne, steil', 'BLUE', 3, 1, 22, true),
+    ('Mittig, dynamisch', 'RED', 4, 1, 20, true),
+    ('Kante rechts', 'PINK', 2, 1, 16, true),
+
     -- Boulders for sector 2 (Volldach, gym 1)
-    ('Dach links, Power', 'BLACK', 6, 2, 25),
-    ('Campus rechts', 'BLUE', 7, 2, 22),
-    ('Überhang mittig', 'DARK_GREEN', 5, 2, 21),
-    ('Traversierung komplett', 'WHITE', 4, 2, 30),
-    
+    ('Dach links, Power', 'BLACK', 6, 2, 25, true),
+    ('Campus rechts', 'BLUE', 7, 2, 22, true),
+    ('Überhang mittig', 'DARK_GREEN', 5, 2, 21, true),
+    ('Traversierung komplett', 'WHITE', 4, 2, 30, true),
+
     -- Boulders for sector 3 (Slab-City, gym 2)
-    ('Balance links', 'YELLOW', 9, 3, 14),
-    ('Platte rechts', 'WHITE', 10, 3, 12),
-    ('Technik pur', 'PINK', 11, 3, 18),
-    
+    ('Balance links', 'YELLOW', 9, 3, 14, true),
+    ('Platte rechts', 'WHITE', 10, 3, 12, true),
+    ('Technik pur', 'PINK', 11, 3, 18, true),
+
     -- Boulders for sector 4 (45er, gym 2)
-    ('Überhang extrem', 'BLACK', 14, 4, 26),
-    ('Power-Dynos', 'RED', 15, 4, 20),
-    ('Sloper Challenge', 'BLUE', 16, 4, 19),
-    ('Campus Board', 'DARK_GREEN', 13, 4, 24),
-    
+    ('Überhang extrem', 'BLACK', 14, 4, 26, true),
+    ('Power-Dynos', 'RED', 15, 4, 20, true),
+    ('Sloper Challenge', 'BLUE', 16, 4, 19, true),
+    ('Campus Board', 'DARK_GREEN', 13, 4, 24, true),
+
     -- Boulders for sector 5 (Tech-Deck, gym 3)
-    ('Crimp Heaven', 'YELLOW', 17, 5, 18),
-    ('Fußarbeit Spezial', 'PINK', 18, 5, 16),
-    ('Leisten links', 'WHITE', 19, 5, 17),
-    
+    ('Crimp Heaven', 'YELLOW', 17, 5, 18, true),
+    ('Fußarbeit Spezial', 'PINK', 18, 5, 16, true),
+    ('Leisten links', 'WHITE', 19, 5, 17, true),
+
     -- Boulders for sector 6 (Höhle, gym 3)
-    ('Compression Crack', 'BLACK', 22, 6, 23),
-    ('Grotten-Traverse', 'BLUE', 23, 6, 28),
-    ('Power-Kompression', 'RED', 24, 6, 24),
-    ('Höhlen-Arete', 'DARK_GREEN', 21, 6, 21);
+    ('Compression Crack', 'BLACK', 22, 6, 23, true),
+    ('Grotten-Traverse', 'BLUE', 23, 6, 28, true),
+    ('Power-Kompression', 'RED', 24, 6, 24, true),
+    ('Höhlen-Arete', 'DARK_GREEN', 21, 6, 21, true);
 
 INSERT INTO projects (user_id, boulder_id, created_at) VALUES
     -- Alice's projects (2 per gym)

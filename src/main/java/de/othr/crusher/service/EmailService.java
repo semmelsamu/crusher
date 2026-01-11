@@ -1,5 +1,7 @@
 package de.othr.crusher.service;
 
+import de.othr.crusher.model.BoulderEntity;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -56,5 +58,37 @@ public class EmailService {
         );
 
         sendEmail(to, subject, body);
+    }
+
+    /**
+     * Sends an email notification about new boulders added to a gym sector.
+     *
+     * @param to         recipient email address
+     * @param username   the user's name
+     * @param gymName    name of the gym
+     * @param sectorName name of the sector
+     * @param boulders   list of new boulders
+     */
+    public void sendNewBouldersEmail(String to, String username, String gymName, String sectorName, List<BoulderEntity> boulders) {
+        String subject = String.format("New Routes at %s!", gymName);
+
+        StringBuilder body = new StringBuilder();
+        body.append(String.format("Hi %s,\n\n", username));
+        body.append(String.format("Great news! %d new boulder(s) have been added to the %s sector at %s:\n\n",
+            boulders.size(), sectorName, gymName));
+
+        for (BoulderEntity boulder : boulders) {
+            body.append(String.format("• %s - Grade %s (%s)\n",
+                boulder.getColor().name().replace("_", " "),
+                boulder.getGrade().getName(),
+                boulder.getDescription() != null ? boulder.getDescription() : "No description"
+            ));
+        }
+
+        body.append("\nCome check them out and crush some new routes!\n\n");
+        body.append("Happy climbing!\n\n");
+        body.append("Your Crusher Team");
+
+        sendEmail(to, subject, body.toString());
     }
 }

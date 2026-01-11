@@ -3,9 +3,12 @@ package de.othr.crusher.controller;
 import de.othr.crusher.model.BoulderEntity;
 import de.othr.crusher.model.GymEntity;
 import de.othr.crusher.model.SectorEntity;
+import de.othr.crusher.model.UserEntity;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.SectorRepository;
+import de.othr.crusher.repository.SessionRepository;
+import de.othr.crusher.service.EmailService;
 import de.othr.crusher.service.SectorImageStorageService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -43,16 +46,22 @@ public class SectorController {
     private final SectorRepository sectorRepository;
     private final BoulderRepository boulderRepository;
     private final SectorImageStorageService sectorImageStorageService;
+    private final SessionRepository sessionRepository;
+    private final EmailService emailService;
 
     public SectorController(
             GymRepository gymRepository,
             SectorRepository sectorRepository,
             BoulderRepository boulderRepository,
-            SectorImageStorageService sectorImageStorageService) {
+            SectorImageStorageService sectorImageStorageService,
+            SessionRepository sessionRepository,
+            EmailService emailService) {
         this.gymRepository = gymRepository;
         this.sectorRepository = sectorRepository;
         this.boulderRepository = boulderRepository;
         this.sectorImageStorageService = sectorImageStorageService;
+        this.sessionRepository = sessionRepository;
+        this.emailService = emailService;
     }
 
     /**
@@ -268,11 +277,78 @@ public class SectorController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
+            "type", "success",
             "message", "Sector deleted successfully!"
         ));
 
         return "redirect:/admin/gyms/" + gymId;
+    }
+
+    /**
+     * Publishes unpublished boulders in this sector by sending email notifications
+     * to all users who have ever had a session at this gym, and marks them as published.
+     *
+     * @param gymId identifier of the parent gym
+     * @param sectorId identifier of the sector
+     * @param redirectAttributes attributes for flash messages on redirect
+     * @return redirect to the sector detail page
+     */
+    @PostMapping("/{sectorId}/publish-new-boulders")
+    public String publishNewBoulders(
+            @PathVariable("gymId") long gymId,
+            @PathVariable("sectorId") long sectorId,
+            RedirectAttributes redirectAttributes) {
+        GymEntity gym = findGymOrThrow(gymId);
+        SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
+
+        // Find all unpublished boulders in this sector
+        List<BoulderEntity> unpublishedBoulders = boulderRepository.findBySectorIdAndPublishedFalse(sectorId);
+
+        if (unpublishedBoulders.isEmpty()) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error",
+                "title", "No unpublished boulders",
+                "message", "All boulders in this sector have already been published."
+            ));
+            return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
+        }
+
+        // Find all users who have ever had a session at this gym
+        List<UserEntity> users = sessionRepository.findDistinctUsersByGymId(gymId);
+
+        if (users.isEmpty()) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error",
+                "title", "No users to notify",
+                "message", "No users have had sessions at this gym yet."
+            ));
+            return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
+        }
+
+        // Send email to each user
+        int emailsSent = 0;
+        for (UserEntity user : users) {
+            try {
+                emailService.sendNewBouldersEmail(user.getEmail(), user.getName(), gym.getName(), sector.getName(), unpublishedBoulders);
+                emailsSent++;
+            } catch (Exception e) {
+                System.err.println("Failed to send email to " + user.getEmail() + ": " + e.getMessage());
+            }
+        }
+
+        // Mark all boulders as published
+        for (BoulderEntity boulder : unpublishedBoulders) {
+            boulder.setPublished(true);
+        }
+        boulderRepository.saveAll(unpublishedBoulders);
+
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success",
+            "title", "Notifications sent",
+            "message", String.format("Sent %d email(s) about %d new boulder(s).", emailsSent, unpublishedBoulders.size())
+        ));
+
+        return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
     }
 
     private GymEntity findGymOrThrow(long gymId) {
