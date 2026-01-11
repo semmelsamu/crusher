@@ -225,7 +225,16 @@
 }
 
 .grade-badge {
-    @apply text-center inline-block w-fit px-1 min-w-7 bg-secondary-background border-2 font-medium;
+    @apply text-center inline-block w-fit px-1 min-w-7 border-2 font-medium;
+    background-color: white;
+    color: black;
+    border-color: black;
+}
+
+.grade-badge-admin {
+    background-color: var(--color-secondary-background);
+    color: var(--color-foreground);
+    border-color: var(--color-border);
 }
 
 [data-progress-container][data-disabled="true"] {

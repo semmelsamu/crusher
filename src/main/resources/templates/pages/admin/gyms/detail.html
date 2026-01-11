@@ -79,11 +79,16 @@
                 <h2>General Information</h2>
 
                 <div class="space-y-1">
-                    <p th:text="${gym.name}">Name</p>
-                    <p th:text="${gym.street}">Street</p>
-                    <p th:text="${gym.city}">City</p>
+                    <p class="text-foreground" th:text="${gym.name}">Name</p>
+                    <p class="text-foreground-muted" th:text="${gym.street}">
+                        Street
+                    </p>
+                    <p class="text-foreground-muted" th:text="${gym.city}">
+                        City
+                    </p>
                     <a
                         th:href="@{mailto:{email}(email=${gym.email})}"
+                        class="text-foreground-muted"
                         th:text="${gym.email}"
                     >
                         Email
@@ -175,7 +180,7 @@
                         <tr th:each="grade : ${grades}">
                             <td>
                                 <span
-                                    class="grade-badge"
+                                    class="grade-badge grade-badge-admin"
                                     th:text="${grade.name}"
                                 >
                                     1
@@ -212,7 +217,7 @@
                                             Are you sure you want to delete
                                             grade
                                             <span
-                                                class="grade-badge"
+                                                class="grade-badge grade-badge-admin"
                                                 th:text="${grade.name}"
                                             ></span>
                                             ?
