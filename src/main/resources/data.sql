@@ -252,7 +252,10 @@ INSERT INTO notices (title, message, creation_date, gym_id, deleted) VALUES
 INSERT INTO events (title, description, periodic, weekday, event_date, time, recurrence_frequency, created_at, gym_id, deleted) VALUES
     -- Events for Boulderwelt Muenchen Ost (gym 1)
     ('Community Climb Night', 'Join our monthly community climb night with a fun scramble format and prizes. All levels welcome.', TRUE, 'THURSDAY', NULL, '18:30-21:00', 'WEEKLY', '2024-11-28 12:00:00', 1, FALSE),
-    ('Technique Workshop', 'A two-hour workshop focused on footwork and balance. Limited to 16 participants. Register at the front desk.', FALSE, NULL, '2024-12-06', '17:00-19:00', NULL, '2024-11-20 09:00:00', 1, FALSE),
+    ('Technique Workshop', 'A two-hour workshop focused on footwork and balance. Limited to 16 participants. Register at the front desk.', FALSE, NULL, '2026-01-25', '17:00-19:00', NULL, '2024-11-20 09:00:00', 1, FALSE),
+    ('Friday Night Social', 'End your week with a relaxed climbing session and social gathering. Free snacks and drinks available. All members welcome!', TRUE, 'FRIDAY', NULL, '19:00-22:00', 'WEEKLY', '2026-01-24 14:00:00', 1, FALSE),
+    ('Advanced Training Camp', 'Intensive 3-day training camp for intermediate to advanced climbers. Focus on strength, technique, and mental preparation. Limited spots available.', FALSE, NULL, '2026-02-15', '10:00-16:00', NULL, '2024-11-22 10:30:00', 1, FALSE),
+    ('Beginner''s Morning Session', 'Perfect for newcomers! Learn the basics of bouldering in a supportive environment. Every other Saturday morning.', TRUE, 'SATURDAY', NULL, '10:00-12:00', 'BI_WEEKLY', '2026-11-15 08:00:00', 1, FALSE),
 
     -- Events for Einstein Boulderhalle (gym 2)
     ('Holiday Boulder Jam', 'Celebrate the season with music, mini games, and a team relay. Free for members; guests welcome with day pass.', FALSE, NULL, '2024-12-22', '18:00-22:00', NULL, '2024-11-25 10:00:00', 2, FALSE),
