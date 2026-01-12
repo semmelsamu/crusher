@@ -233,6 +233,11 @@ INSERT INTO notices (title, message, creation_date, gym_id, deleted) VALUES
     ('New Routes Set!', 'We''ve just finished setting 15 new routes in the Volldach sector. Come check out the fresh problems ranging from V2 to V8. The setters put extra focus on technical moves and balance.', '2024-12-15 10:00:00', 1, FALSE),
     ('Christmas Opening Hours', 'Please note that we will have special opening hours during the Christmas holidays. Dec 24-26: Closed. Dec 27-30: 10:00-20:00. Dec 31: 10:00-18:00. Jan 1: Closed. Regular hours resume Jan 2.', '2024-12-10 14:30:00', 1, FALSE),
     ('Youth Competition Registration', 'Registration is now open for our annual youth climbing competition on January 20th! Open to climbers aged 8-16. Sign up at the front desk or email us. Limited spots available.', '2024-12-08 09:15:00', 1, FALSE),
+    ('January Route Reset Complete', 'All sectors have been reset with fresh problems! Over 80 new boulders are ready to climb, with grades from V0 to V9. The setters focused on dynamic moves and technical sequences this round.', '2026-01-28 11:00:00', 1, FALSE),
+    ('Equipment Maintenance Day', 'On January 30th, we will be performing routine maintenance on our crash pads and holds. The gym will remain open, but some areas may be temporarily closed. We apologize for any inconvenience.', '2026-01-27 14:20:00', 1, FALSE),
+    ('New Member Special', 'Join us in January and get 20% off your first month membership! This offer is valid until January 31st. Perfect time to start your climbing journey or get back into the sport.', '2026-01-25 09:45:00', 1, FALSE),
+    ('Weekend Crowd Alert', 'Due to high demand, we expect busy periods on weekends throughout January. Consider visiting during weekday evenings (after 20:00) for a more relaxed climbing experience.', '2026-01-26 16:30:00', 1, FALSE),
+    ('Setter Workshop Feedback', 'Thank you to everyone who attended our route setter workshop! Based on your feedback, we''re planning more technical workshops in February. Stay tuned for announcements.', '2026-01-29 10:15:00', 1, FALSE),
     
     -- Notices for Einstein Boulderhalle (gym 2)
     ('Maintenance Notice', 'The Slab-City sector will be closed for maintenance and resetting from Dec 18-20. All other sectors remain open during regular hours. Sorry for any inconvenience!', '2024-12-12 16:45:00', 2, FALSE),
