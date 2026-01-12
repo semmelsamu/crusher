@@ -126,7 +126,8 @@
                 <h2>Events</h2>
                 <ul class="space-y-4">
                     <li
-                        th:each="eventOccurrence : ${events}"
+                        th:each="eventOccurrence, iterStat : ${events}"
+                        th:if="${iterStat.index < 3}"
                         class="border-2 p-4 rounded-base bg-background"
                     >
                         <a
@@ -162,6 +163,59 @@
                         </a>
                     </li>
                 </ul>
+                <details th:if="${#lists.size(events) > 3}" class="mt-4">
+                    <summary
+                        class="cursor-pointer text-foreground-muted hover:text-foreground p-2"
+                    >
+                        Show more events (<span
+                            th:text="${#lists.size(events) - 3}"
+                            >0</span
+                        >)
+                    </summary>
+                    <ul class="space-y-4 mt-4">
+                        <li
+                            th:each="eventOccurrence, iterStat : ${events}"
+                            th:if="${iterStat.index >= 3}"
+                            class="border-2 p-4 rounded-base bg-background"
+                        >
+                            <a
+                                th:href="@{/gyms/{gymId}/events/{eventId}(gymId=${gym.id}, eventId=${eventOccurrence.event.id})}"
+                                class="block space-y-1"
+                            >
+                                <strong
+                                    th:text="${eventOccurrence.event.title}"
+                                >
+                                    Event Title
+                                </strong>
+                                <p class="text-sm text-foreground-muted">
+                                    <time
+                                        th:datetime="${eventOccurrence.date}"
+                                        th:text="${#temporals.format(eventOccurrence.date, 'dd.MM.yy')}"
+                                    >
+                                        01.01.2024
+                                    </time>
+                                    <span aria-hidden="true">·</span>
+                                    <span
+                                        th:text="${eventOccurrence.event.time}"
+                                    >
+                                        18:00
+                                    </span>
+                                    <span
+                                        th:if="${eventOccurrence.event.periodic}"
+                                        aria-hidden="true"
+                                        >·</span
+                                    >
+                                    <span
+                                        th:if="${eventOccurrence.event.periodic}"
+                                        th:text="${eventOccurrence.event.frequency.label}"
+                                    >
+                                        Weekly
+                                    </span>
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </details>
             </section>
 
             <!-- Notices -->
