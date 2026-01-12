@@ -310,6 +310,18 @@
     @apply p-4 border-t-2;
 }
 
+.show-more {
+    @apply flex flex-col-reverse;
+}
+
+.show-more[open] > summary {
+    @apply mt-4;
+}
+
+.show-more summary {
+    @apply text-center block bg-background text-foreground p-4 border-t-2 -mx-4 -mb-4 cursor-pointer;
+}
+
 /*
 |-------------------------------------------------------------------------------
 | Column Charts

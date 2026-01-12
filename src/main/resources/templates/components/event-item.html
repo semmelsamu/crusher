@@ -1,0 +1,27 @@
+<a
+    th:fragment="event-item(gymId, eventOccurrence)"
+    xmlns:th="http://www.thymeleaf.org"
+    th:href="@{/gyms/{gymId}/events/{eventId}(gymId=${gymId}, eventId=${eventOccurrence.event.id})}"
+    class="block space-y-1 p-4 bg-background border-2 rounded-base"
+>
+    <strong th:text="${eventOccurrence.event.title}"> Event Title </strong>
+    <p class="text-sm text-foreground-muted">
+        <time
+            th:datetime="${eventOccurrence.date}"
+            th:text="${#temporals.format(eventOccurrence.date, 'dd.MM.yy')}"
+        >
+            01.01.2024
+        </time>
+        <span aria-hidden="true">·</span>
+        <span th:text="${eventOccurrence.event.time}"> 18:00 </span>
+        <span th:if="${eventOccurrence.event.periodic}" aria-hidden="true"
+            >·</span
+        >
+        <span
+            th:if="${eventOccurrence.event.periodic}"
+            th:text="${eventOccurrence.event.frequency.label}"
+        >
+            Weekly
+        </span>
+    </p>
+</a>
