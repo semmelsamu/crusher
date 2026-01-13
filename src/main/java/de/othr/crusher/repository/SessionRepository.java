@@ -1,11 +1,14 @@
 package de.othr.crusher.repository;
 
 import de.othr.crusher.model.SessionEntity;
+import de.othr.crusher.model.UserEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -39,5 +42,14 @@ public interface SessionRepository extends JpaRepository<SessionEntity, Long> {
      * @return optional containing the active session, or empty if no active session exists
      */
     Optional<SessionEntity> findFirstByUserIdAndEndedAtIsNullOrderByStartedAtDesc(Long userId);
+
+    /**
+     * Finds all distinct users who have ever had a session at the given gym.
+     *
+     * @param gymId identifier of the gym
+     * @return list of unique users who have had sessions at this gym
+     */
+    @Query("SELECT DISTINCT s.user FROM SessionEntity s WHERE s.gym.id = :gymId")
+    List<UserEntity> findDistinctUsersByGymId(@Param("gymId") Long gymId);
 }
 

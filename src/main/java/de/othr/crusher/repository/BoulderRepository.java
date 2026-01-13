@@ -77,6 +77,15 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
     List<BoulderEntity> findBySectorIdAndGradeIdIn(Long sectorId, List<Long> gradeIds);
 
     /**
+     * Finds all unpublished boulders for the given sector.
+     *
+     * @param sectorId identifier of the sector
+     * @return list of unpublished boulders belonging to the sector
+     */
+    List<BoulderEntity> findBySectorIdAndPublishedFalse(Long sectorId);
+}
+
+    /**
      * Finds all boulders for the given sector filtered by grade IDs with pagination.
      *
      * @param sectorId identifier of the sector

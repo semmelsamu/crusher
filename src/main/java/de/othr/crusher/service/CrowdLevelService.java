@@ -56,8 +56,17 @@ public class CrowdLevelService {
             webClient.getOptions().setTimeout(timeout);
             webClient.getOptions().setRedirectEnabled(true);
 
-            // Suppress HtmlUnit warnings
+            // Suppress all HtmlUnit warnings and errors
             java.util.logging.Logger.getLogger("org.htmlunit").setLevel(java.util.logging.Level.OFF);
+            java.util.logging.Logger.getLogger("org.htmlunit.javascript").setLevel(java.util.logging.Level.OFF);
+            java.util.logging.Logger.getLogger("org.htmlunit.IncorrectnessListenerImpl").setLevel(java.util.logging.Level.OFF);
+            java.util.logging.Logger.getLogger("org.htmlunit.WebConsole").setLevel(java.util.logging.Level.OFF);
+
+            // Suppress JavaScript console errors
+            webClient.setJavaScriptErrorListener(new org.htmlunit.javascript.SilentJavaScriptErrorListener());
+
+            // Suppress incorrectness warnings (like obsolete content types)
+            webClient.setIncorrectnessListener((message, origin) -> {});
 
             logger.info("Scraping crowd level from: {} (cache miss - will be cached for 5 minutes)", url);
             HtmlPage page = webClient.getPage(url);

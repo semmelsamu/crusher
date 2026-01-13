@@ -52,6 +52,8 @@ public class BoulderEntity {
     @Min(value = 1, message = "Boulder must have at least one hold")
     private Integer holdsCount;
 
+    @Column(name = "published", nullable = false)
+    private boolean published = false;
     @Column(nullable = false)
     private boolean deleted = false;
 
@@ -112,6 +114,12 @@ public class BoulderEntity {
         this.holdsCount = holdsCount;
     }
 
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
     public boolean isDeleted() {
         return deleted;
     }

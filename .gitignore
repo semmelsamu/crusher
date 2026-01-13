@@ -80,3 +80,7 @@ yarn-error.log*
 # uploads/
 
 .gradle-home/
+
+### Secrets and Local Configuration ###
+application-local.properties
+**/application-local.properties
