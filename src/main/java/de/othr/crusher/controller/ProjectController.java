@@ -60,7 +60,7 @@ public class ProjectController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
-        BoulderEntity boulder = boulderRepository.findById(boulderId)
+        BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         projectRepository.findByUserIdAndBoulderId(user.getId(), boulderId)
@@ -107,7 +107,7 @@ public class ProjectController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
-        BoulderEntity boulder = boulderRepository.findById(boulderId)
+        BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         projectRepository.findByUserIdAndBoulderId(user.getId(), boulderId).ifPresentOrElse(

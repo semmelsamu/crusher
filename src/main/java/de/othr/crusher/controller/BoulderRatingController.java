@@ -58,7 +58,7 @@ public class BoulderRatingController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
-        BoulderEntity boulder = boulderRepository.findById(boulderId)
+        BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         if (rating == null || rating < 1 || rating > 5) {

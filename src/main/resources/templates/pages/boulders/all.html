@@ -110,7 +110,7 @@
                                 <label
                                     th:for="'grade-' + ${grade.id}"
                                     th:text="${grade.name}"
-                                    class="grade-badge peer-checked:bg-main cursor-pointer"
+                                    class="grade-badge peer-checked:bg-main peer-checked:text-main-foreground cursor-pointer"
                                 >
                                     Grade
                                 </label>
@@ -263,6 +263,10 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <div
+                    th:replace="~{components/pagination :: pagination(${bouldersPage}, '/boulders')}"
+                ></div>
             </section>
         </main>
     </th:block>

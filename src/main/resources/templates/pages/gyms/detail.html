@@ -50,6 +50,20 @@
                             </span>
                         </div>
                     </div>
+
+                    <div
+                        class="w-full"
+                        th:if="${gym.latitude != null and gym.longitude != null}"
+                    >
+                        <div
+                            id="gym-map"
+                            class="gym-map border-2 rounded-base overflow-hidden"
+                            th:data-lat="${gym.latitude}"
+                            th:data-lng="${gym.longitude}"
+                            th:data-name="${gym.name}"
+                            th:data-address="${gym.city} + ', ' + ${gym.street}"
+                        ></div>
+                    </div>
                 </section>
 
                 <!-- Total Boulders / Crowd Level -->
@@ -142,6 +156,56 @@
                             Sunny
                         </p>
                     </div>
+                </section>
+
+                <!-- Events -->
+                <section
+                    class="card p-6 space-y-4 self-start"
+                    th:if="${!events.isEmpty()}"
+                >
+                    <h2>Events</h2>
+                    <ul class="space-y-4">
+                        <li
+                            th:each="eventOccurrence : ${events}"
+                            class="border-2 p-4 rounded-base bg-background"
+                        >
+                            <a
+                                th:href="@{/gyms/{gymId}/events/{eventId}(gymId=${gym.id}, eventId=${eventOccurrence.event.id})}"
+                                class="block space-y-1"
+                            >
+                                <strong
+                                    th:text="${eventOccurrence.event.title}"
+                                >
+                                    Event Title
+                                </strong>
+                                <p class="text-sm text-foreground-muted">
+                                    <time
+                                        th:datetime="${eventOccurrence.date}"
+                                        th:text="${#temporals.format(eventOccurrence.date, 'dd.MM.yy')}"
+                                    >
+                                        01.01.2024
+                                    </time>
+                                    <span aria-hidden="true">·</span>
+                                    <span
+                                        th:text="${eventOccurrence.event.time}"
+                                    >
+                                        18:00
+                                    </span>
+                                    <span
+                                        th:if="${eventOccurrence.event.periodic}"
+                                        aria-hidden="true"
+                                        >·</span
+                                    >
+                                    <span
+                                        th:if="${eventOccurrence.event.periodic}"
+                                        th:text="${eventOccurrence.event.frequency.label}"
+                                    >
+                                        Weekly
+                                    </span>
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
                 </section>
 
                 <!-- Notices -->

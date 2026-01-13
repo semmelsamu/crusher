@@ -39,7 +39,16 @@ public class GymEntity {
     private String email;
 
     @Column(nullable = true)
+    private Double latitude;
+
+    @Column(nullable = true)
+    private Double longitude;
+
+    @Column(nullable = true)
     private String crowdLevelUrl;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
 
     @OneToMany(
             mappedBy = "gym",
@@ -61,6 +70,13 @@ public class GymEntity {
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     private List<NoticeEntity> notices = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "gym",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<EventEntity> events = new ArrayList<>();
 
     public GymEntity() {}
 
@@ -112,6 +128,22 @@ public class GymEntity {
         this.email = email;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
     public String getCrowdLevelUrl() {
         return crowdLevelUrl;
     }
@@ -130,6 +162,10 @@ public class GymEntity {
 
     public List<NoticeEntity> getNotices() {
         return notices;
+    }
+
+    public List<EventEntity> getEvents() {
+        return events;
     }
 
     public void addSector(SectorEntity sector) {
@@ -160,5 +196,23 @@ public class GymEntity {
     public void removeNotice(NoticeEntity notice) {
         notices.remove(notice);
         notice.setGym(null);
+    }
+
+    public void addEvent(EventEntity event) {
+        events.add(event);
+        event.setGym(this);
+    }
+
+    public void removeEvent(EventEntity event) {
+        events.remove(event);
+        event.setGym(null);
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

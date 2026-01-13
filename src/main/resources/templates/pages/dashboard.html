@@ -10,7 +10,7 @@
                     <img
                         src="/images/wordmark.svg"
                         alt="crusher"
-                        class="h-10 -mb-1"
+                        class="h-10 -mb-1 nav-logo"
                     />
                     <div class="w-1 h-16 bg-foreground"></div>
                     <h1>Dashboard</h1>
@@ -328,7 +328,7 @@
                                 >
                                     0
                                 </span>
-                                <div class="*:fill-warning">
+                                <div class="*:fill-warning *:stroke-warning">
                                     <x
                                         th:replace="~{components/icons :: star}"
                                     ></x>
@@ -343,6 +343,36 @@
                     </div>
 
                     <div class="p-6 space-y-4">
+                        <h3>Events</h3>
+                        <div
+                            th:if="${lastGymEvents.isEmpty()}"
+                            class="text-foreground-muted"
+                        >
+                            No events yet
+                        </div>
+                        <ul
+                            th:if="${!lastGymEvents.isEmpty()}"
+                            class="space-y-4"
+                        >
+                            <li
+                                th:each="eventOccurrence : ${lastGymEvents}"
+                                class="border-2 p-4 rounded-base bg-background"
+                            >
+                                <strong
+                                    th:text="${eventOccurrence.event.title}"
+                                >
+                                    Event Title
+                                </strong>
+                                <p class="text-sm text-foreground-muted">
+                                    <time
+                                        th:datetime="${eventOccurrence.date}"
+                                        th:text="${#temporals.format(eventOccurrence.date, 'dd.MM.yy')}"
+                                    >
+                                        01.01.2024
+                                    </time>
+                                </p>
+                            </li>
+                        </ul>
                         <h3>Notices</h3>
                         <div
                             th:if="${lastGymNotices.isEmpty()}"
@@ -456,7 +486,7 @@
                         <!-- Finished -->
                         <div class="flex items-center gap-4">
                             <div
-                                class="flex items-center justify-center w-10 h-10 rounded-full bg-success"
+                                class="flex items-center justify-center w-10 h-10 rounded-full bg-success text-black"
                             >
                                 <x
                                     th:replace="~{components/icons :: check}"
@@ -480,7 +510,7 @@
                         <!-- Close Try -->
                         <div class="flex items-center gap-4">
                             <div
-                                class="flex items-center justify-center w-10 h-10 rounded-full bg-warning"
+                                class="flex items-center justify-center w-10 h-10 rounded-full bg-warning text-black"
                             >
                                 <x
                                     th:replace="~{components/icons :: flame}"
@@ -504,7 +534,7 @@
                         <!-- Did Not Finish -->
                         <div class="flex items-center gap-4">
                             <div
-                                class="flex items-center justify-center w-10 h-10 rounded-full bg-error"
+                                class="flex items-center justify-center w-10 h-10 rounded-full bg-error text-black"
                             >
                                 <x th:replace="~{components/icons :: x}"></x>
                             </div>

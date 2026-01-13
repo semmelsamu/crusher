@@ -58,7 +58,7 @@ public class GymRatingController {
             Principal principal,
             RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
-        GymEntity gym = gymRepository.findById(gymId)
+        GymEntity gym = gymRepository.findByIdAndDeletedFalse(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         if (rating == null || rating < 1 || rating > 5) {

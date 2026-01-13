@@ -1,6 +1,7 @@
 package de.othr.crusher.controller;
 
 import de.othr.crusher.model.GymEntity;
+import de.othr.crusher.repository.EventRepository;
 import de.othr.crusher.repository.GradeRepository;
 import de.othr.crusher.repository.GymRepository;
 import de.othr.crusher.repository.NoticeRepository;
@@ -26,6 +27,7 @@ public class GymController {
     private final GymRepository gymRepository;
     private final GradeRepository gradeRepository;
     private final NoticeRepository noticeRepository;
+    private final EventRepository eventRepository;
 
     /**
      * Creates a new GymController with the given repository.
@@ -33,11 +35,17 @@ public class GymController {
      * @param gymRepository repository for accessing gym data
      * @param gradeRepository repository for accessing grade data
      * @param noticeRepository repository for accessing notice data
+     * @param eventRepository repository for accessing event data
      */
-    public GymController(GymRepository gymRepository, GradeRepository gradeRepository, NoticeRepository noticeRepository) {
+    public GymController(
+            GymRepository gymRepository,
+            GradeRepository gradeRepository,
+            NoticeRepository noticeRepository,
+            EventRepository eventRepository) {
         this.gymRepository = gymRepository;
         this.gradeRepository = gradeRepository;
         this.noticeRepository = noticeRepository;
+        this.eventRepository = eventRepository;
     }
 
     /**
@@ -48,7 +56,7 @@ public class GymController {
      */
     @GetMapping
     public String showAllGyms(Model model) {
-        model.addAttribute("gyms", gymRepository.findAll());
+        model.addAttribute("gyms", gymRepository.findByDeletedFalse());
         return "pages/admin/gyms/all";
     }
 
@@ -61,12 +69,13 @@ public class GymController {
      */
     @GetMapping("/{id}")
     public String showGymForId(@PathVariable("id") long id, Model model) {
-        GymEntity gym = gymRepository.findById(id)
+        GymEntity gym = gymRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         model.addAttribute("gym", gym);
-        model.addAttribute("grades", gradeRepository.findByGymId(id));
-        model.addAttribute("notices", noticeRepository.findByGymIdOrderByCreationDateDesc(id));
+        model.addAttribute("grades", gradeRepository.findByGymIdAndDeletedFalse(id));
+        model.addAttribute("notices", noticeRepository.findByGymIdAndDeletedFalseOrderByCreationDateDesc(id));
+        model.addAttribute("events", eventRepository.findByGymIdAndDeletedFalse(id));
 
         return "pages/admin/gyms/detail";
     }
@@ -154,6 +163,9 @@ public class GymController {
         gym.setStreet(formGym.getStreet());
         gym.setCity(formGym.getCity());
         gym.setEmail(formGym.getEmail());
+        gym.setLatitude(formGym.getLatitude());
+        gym.setLongitude(formGym.getLongitude());
+        gym.setCrowdLevelUrl(formGym.getCrowdLevelUrl());
         gymRepository.save(gym);
 
         // Add success message for toast notification
@@ -166,7 +178,7 @@ public class GymController {
     }
 
     /**
-     * Deletes a gym by its ID.
+     * Soft-deletes a gym by setting its deleted flag.
      *
      * @param id gym ID
      * @param redirectAttributes attributes for flash messages on redirect
@@ -174,7 +186,9 @@ public class GymController {
      */
     @DeleteMapping("/{id}")
     public String deleteGym(@PathVariable("id") long id, RedirectAttributes redirectAttributes) {
-        gymRepository.deleteById(id);
+        GymEntity gym = findGymOrThrow(id);
+        gym.setDeleted(true);
+        gymRepository.save(gym);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
@@ -188,7 +202,7 @@ public class GymController {
 
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findById(gymId)
+                .findByIdAndDeletedFalse(gymId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }

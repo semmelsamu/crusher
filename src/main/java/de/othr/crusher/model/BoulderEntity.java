@@ -54,6 +54,8 @@ public class BoulderEntity {
 
     @Column(name = "published", nullable = false)
     private boolean published = false;
+    @Column(nullable = false)
+    private boolean deleted = false;
 
     public BoulderEntity() {}
 
@@ -118,5 +120,11 @@ public class BoulderEntity {
 
     public void setPublished(boolean published) {
         this.published = published;
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

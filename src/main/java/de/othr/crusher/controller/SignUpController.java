@@ -163,7 +163,7 @@ public class SignUpController {
         redirectAttributes.addFlashAttribute("toast", Map.of(
             "type", "success",
             "title", "Account created",
-            "message", "Welcome to Crusher! Your account has been created successfully"
+            "message", "Welcome to crusher! Your account has been created successfully"
         ));
         return "redirect:/dashboard";
     }

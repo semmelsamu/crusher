@@ -7,12 +7,50 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#38BDF8" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Crusher" />
+
+        <script>
+            (() => {
+                try {
+                    const storedTheme = localStorage.getItem("theme");
+                    const theme = storedTheme || "light";
+                    document.documentElement.setAttribute("data-theme", theme);
+                } catch (error) {
+                    document.documentElement.setAttribute(
+                        "data-theme",
+                        "light",
+                    );
+                }
+            })();
+        </script>
 
         <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">
             Crusher
         </title>
 
+        <link rel="manifest" th:href="@{/manifest.json}" />
+        <link rel="icon" th:href="@{/favicon.ico}" />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            th:href="@{/icons/apple-touch-icon.png}"
+        />
+        <script src="https://unpkg.com/ios-pwa-splash@1.0.0/cdn.min.js"></script>
+        <script>
+            iosPWASplash("@{/icons/apple-touch-icon.png}", "#38BDF8");
+        </script>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        />
         <link rel="stylesheet" th:href="@{/css/_build.css}" />
+        <script
+            src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            defer
+        ></script>
         <script th:src="@{/js/app.js}" defer></script>
         <script
             defer

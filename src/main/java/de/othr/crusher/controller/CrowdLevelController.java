@@ -36,7 +36,7 @@ public class CrowdLevelController {
      */
     @GetMapping("/{id}/crowd-level")
     public ResponseEntity<CrowdLevel> getCrowdLevel(@PathVariable("id") Long id) {
-        GymEntity gym = gymRepository.findById(id)
+        GymEntity gym = gymRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         // Check if gym has crowd level URL configured

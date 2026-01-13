@@ -1,5 +1,6 @@
 :root {
     --box-shadow-size: 0.25rem;
+    color-scheme: light;
 }
 
 @theme {
@@ -23,6 +24,8 @@
     --color-warning: var(--color-amber-300);
     --color-accent: var(--color-indigo-500);
     --color-disabled: var(--color-gray-300);
+    --color-switch-thumb: white;
+    --logo-filter: none;
 
     --radius-*: initial;
     --radius-base: 0.25rem;
@@ -30,4 +33,27 @@
     --shadow-*: initial;
     --shadow-base: var(--box-shadow-size) var(--box-shadow-size) 0
         var(--color-border);
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-foreground: var(--color-sky-50);
+    --color-foreground-muted: var(--color-sky-200);
+    --color-main-foreground: var(--color-sky-950);
+
+    --color-background: var(--color-sky-950);
+    --color-secondary-background: var(--color-zinc-800);
+
+    --color-border: black;
+    --color-overlay: rgba(2, 6, 23, 0.85);
+
+    --color-main: var(--color-sky-600);
+    --color-error: var(--color-rose-400);
+    --color-success: var(--color-emerald-500);
+    --color-warning: var(--color-amber-300);
+    --color-accent: var(--color-sky-300);
+    --color-disabled: var(--color-sky-800);
+    --color-theme: var(--color-background);
+    --color-switch-thumb: var(--color-sky-50);
+    --logo-filter: invert(1);
 }

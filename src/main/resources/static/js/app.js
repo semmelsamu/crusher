@@ -49,6 +49,14 @@ window.showToast = (message, type = "info") => {
     toast.addEventListener("click", dismissToast);
 };
 
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js").catch((error) => {
+            console.error("Service worker registration failed:", error);
+        });
+    });
+}
+
 // Auto-dismiss after 8 seconds and add click handler
 function setupImagePicker(picker) {
     const fileInput = picker.querySelector("[data-image-input]");
@@ -399,6 +407,56 @@ function hashString(str) {
     return Math.abs(hash);
 }
 
+function getStoredTheme() {
+    try {
+        return localStorage.getItem("theme");
+    } catch (error) {
+        return null;
+    }
+}
+
+function setStoredTheme(theme) {
+    try {
+        localStorage.setItem("theme", theme);
+    } catch (error) {
+        // Ignore storage errors for privacy-restricted environments.
+    }
+}
+
+function updateThemeToggle(theme) {
+    const toggle = document.querySelector("[data-theme-toggle]");
+    if (!toggle) return;
+    const isDark = theme === "dark";
+    const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+    toggle.setAttribute("aria-pressed", isDark ? "true" : "false");
+    toggle.setAttribute("aria-label", label);
+    toggle.setAttribute("title", label);
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    updateThemeToggle(theme);
+}
+
+function initThemeToggle() {
+    const storedTheme = getStoredTheme();
+    const initialTheme = storedTheme || "light";
+
+    applyTheme(initialTheme);
+
+    const toggle = document.querySelector("[data-theme-toggle]");
+    if (!toggle) return;
+    toggle.addEventListener("click", () => {
+        const currentTheme =
+            document.documentElement.getAttribute("data-theme") === "dark"
+                ? "dark"
+                : "light";
+        const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        setStoredTheme(nextTheme);
+        applyTheme(nextTheme);
+    });
+}
+
 /**
  * Initializes all avatars by applying colors based on username hash
  */
@@ -469,8 +527,50 @@ function loadCrowdLevel() {
         });
 }
 
+/**
+ * Initializes the gym map if coordinates are available.
+ */
+function initGymMap() {
+    const mapEl = document.getElementById("gym-map");
+    if (!mapEl) return;
+
+    if (typeof L === "undefined") {
+        console.warn("Leaflet is not loaded.");
+        return;
+    }
+
+    const lat = parseFloat(mapEl.getAttribute("data-lat"));
+    const lng = parseFloat(mapEl.getAttribute("data-lng"));
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+        return;
+    }
+
+    const name = mapEl.getAttribute("data-name") || "Gym";
+    const address = mapEl.getAttribute("data-address");
+    const popupText = address ? `${name}<br>${address}` : name;
+
+    const map = L.map(mapEl, {
+        zoomControl: true,
+        scrollWheelZoom: false,
+    }).setView([lat, lng], 15);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    L.marker([lat, lng]).addTo(map).bindPopup(popupText);
+
+    map.on("click", () => map.scrollWheelZoom.enable());
+    map.on("mouseout", () => map.scrollWheelZoom.disable());
+}
+
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
+    initThemeToggle();
     initAvatars();
     loadCrowdLevel();
+    initGymMap();
 });

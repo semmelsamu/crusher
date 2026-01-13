@@ -4,6 +4,7 @@ import de.othr.crusher.model.NoticeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
     /**
@@ -21,4 +22,28 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
      * @return list of notices for the gym, sorted by creation date descending
      */
     List<NoticeEntity> findByGymIdOrderByCreationDateDesc(Long gymId);
+
+    /**
+     * Finds all non-deleted notices for a specific gym.
+     *
+     * @param gymId the ID of the gym
+     * @return list of non-deleted notices for the gym
+     */
+    List<NoticeEntity> findByGymIdAndDeletedFalse(Long gymId);
+
+    /**
+     * Finds all non-deleted notices for a specific gym, ordered by creation date descending.
+     *
+     * @param gymId the ID of the gym
+     * @return list of non-deleted notices for the gym, sorted by creation date descending
+     */
+    List<NoticeEntity> findByGymIdAndDeletedFalseOrderByCreationDateDesc(Long gymId);
+
+    /**
+     * Finds a non-deleted notice by its ID.
+     *
+     * @param id the notice ID
+     * @return optional containing the notice if found and not deleted
+     */
+    Optional<NoticeEntity> findByIdAndDeletedFalse(Long id);
 }

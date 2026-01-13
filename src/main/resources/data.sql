@@ -228,23 +228,41 @@ INSERT INTO boulder_comments (user_id, boulder_id, comment, created_at) VALUES
     (1, 1, 'got it second try 🎉', '2024-12-03 20:00:00'),
     (2, 1, 'nice flow', '2024-12-04 18:45:00');
 
-INSERT INTO notices (title, message, creation_date, gym_id) VALUES
+INSERT INTO notices (title, message, creation_date, gym_id, deleted) VALUES
     -- Notices for Boulderwelt München Ost (gym 1)
-    ('New Routes Set!', 'We''ve just finished setting 15 new routes in the Volldach sector. Come check out the fresh problems ranging from V2 to V8. The setters put extra focus on technical moves and balance.', '2024-12-15 10:00:00', 1),
-    ('Christmas Opening Hours', 'Please note that we will have special opening hours during the Christmas holidays. Dec 24-26: Closed. Dec 27-30: 10:00-20:00. Dec 31: 10:00-18:00. Jan 1: Closed. Regular hours resume Jan 2.', '2024-12-10 14:30:00', 1),
-    ('Youth Competition Registration', 'Registration is now open for our annual youth climbing competition on January 20th! Open to climbers aged 8-16. Sign up at the front desk or email us. Limited spots available.', '2024-12-08 09:15:00', 1),
+    ('New Routes Set!', 'We''ve just finished setting 15 new routes in the Volldach sector. Come check out the fresh problems ranging from V2 to V8. The setters put extra focus on technical moves and balance.', '2024-12-15 10:00:00', 1, FALSE),
+    ('Christmas Opening Hours', 'Please note that we will have special opening hours during the Christmas holidays. Dec 24-26: Closed. Dec 27-30: 10:00-20:00. Dec 31: 10:00-18:00. Jan 1: Closed. Regular hours resume Jan 2.', '2024-12-10 14:30:00', 1, FALSE),
+    ('Youth Competition Registration', 'Registration is now open for our annual youth climbing competition on January 20th! Open to climbers aged 8-16. Sign up at the front desk or email us. Limited spots available.', '2024-12-08 09:15:00', 1, FALSE),
     
     -- Notices for Einstein Boulderhalle (gym 2)
-    ('Maintenance Notice', 'The Slab-City sector will be closed for maintenance and resetting from Dec 18-20. All other sectors remain open during regular hours. Sorry for any inconvenience!', '2024-12-12 16:45:00', 2),
-    ('Beginner Course Starting Soon', 'Our next beginner boulder course starts January 8th! Learn proper technique, safety, and fundamentals over 4 weeks. Perfect for those new to climbing. Register online or at reception.', '2024-12-11 11:20:00', 2),
-    ('Holiday Party December 22nd', 'Join us for our annual holiday party on December 22nd from 18:00-22:00! Free food, drinks, climbing games, and prizes. Everyone is welcome. Bring your friends and family!', '2024-12-05 15:00:00', 2),
+    ('Maintenance Notice', 'The Slab-City sector will be closed for maintenance and resetting from Dec 18-20. All other sectors remain open during regular hours. Sorry for any inconvenience!', '2024-12-12 16:45:00', 2, FALSE),
+    ('Beginner Course Starting Soon', 'Our next beginner boulder course starts January 8th! Learn proper technique, safety, and fundamentals over 4 weeks. Perfect for those new to climbing. Register online or at reception.', '2024-12-11 11:20:00', 2, FALSE),
+    ('Holiday Party December 22nd', 'Join us for our annual holiday party on December 22nd from 18:00-22:00! Free food, drinks, climbing games, and prizes. Everyone is welcome. Bring your friends and family!', '2024-12-05 15:00:00', 2, FALSE),
     
     -- Notices for BlocHütte Nürnberg (gym 3)
-    ('Winter Challenge Active', 'Our winter challenge is now live! Complete 50 routes of different grades before Feb 28th to win prizes. Track your progress on the board near the entrance. Good luck!', '2024-12-14 08:30:00', 3),
-    ('New Yoga Classes', 'We''re introducing climbing-specific yoga classes every Tuesday and Thursday at 19:00. Great for flexibility and injury prevention. First class is free! Sign up at the front desk.', '2024-12-09 13:00:00', 3),
-    ('Parking Reminder', 'Please remember to park in the designated gym parking area only. Cars parked in neighboring businesses'' lots may be towed. Thank you for your cooperation!', '2024-12-01 10:00:00', 3),
+    ('Winter Challenge Active', 'Our winter challenge is now live! Complete 50 routes of different grades before Feb 28th to win prizes. Track your progress on the board near the entrance. Good luck!', '2024-12-14 08:30:00', 3, FALSE),
+    ('New Yoga Classes', 'We''re introducing climbing-specific yoga classes every Tuesday and Thursday at 19:00. Great for flexibility and injury prevention. First class is free! Sign up at the front desk.', '2024-12-09 13:00:00', 3, FALSE),
+    ('Parking Reminder', 'Please remember to park in the designated gym parking area only. Cars parked in neighboring businesses'' lots may be towed. Thank you for your cooperation!', '2024-12-01 10:00:00', 3, FALSE),
 
     -- Notices for Boulderwelt Regensburg (gym 4)
-    ('Live Crowd Level Available!', 'You can now see our real-time gym capacity directly in the app! Check the crowd level indicator to find the best time to climb when it''s less busy.', '2024-12-16 12:00:00', 4),
-    ('Fresh Routes in Overhang Section', 'Our route setters just finished 20 new boulders in the overhang area. Featuring everything from V3 to V8 with creative movement patterns. Come try them out!', '2024-12-13 09:30:00', 4),
-    ('New Year''s Eve Hours', 'On December 31st we''re open from 10:00-16:00. Start the new year with some climbing! Closed on January 1st. Regular hours resume January 2nd.', '2024-12-10 15:00:00', 4);
+    ('Live Crowd Level Available!', 'You can now see our real-time gym capacity directly in the app! Check the crowd level indicator to find the best time to climb when it''s less busy.', '2024-12-16 12:00:00', 4, FALSE),
+    ('Fresh Routes in Overhang Section', 'Our route setters just finished 20 new boulders in the overhang area. Featuring everything from V3 to V8 with creative movement patterns. Come try them out!', '2024-12-13 09:30:00', 4, FALSE),
+    ('New Year''s Eve Hours', 'On December 31st we''re open from 10:00-16:00. Start the new year with some climbing! Closed on January 1st. Regular hours resume January 2nd.', '2024-12-10 15:00:00', 4, FALSE);
+
+INSERT INTO events (title, description, periodic, weekday, event_date, time, recurrence_frequency, created_at, gym_id, deleted) VALUES
+    -- Events for Boulderwelt Muenchen Ost (gym 1)
+    ('Community Climb Night', 'Join our monthly community climb night with a fun scramble format and prizes. All levels welcome.', TRUE, 'THURSDAY', NULL, '18:30-21:00', 'WEEKLY', '2024-11-28 12:00:00', 1, FALSE),
+    ('Technique Workshop', 'A two-hour workshop focused on footwork and balance. Limited to 16 participants. Register at the front desk.', FALSE, NULL, '2024-12-06', '17:00-19:00', NULL, '2024-11-20 09:00:00', 1, FALSE),
+
+    -- Events for Einstein Boulderhalle (gym 2)
+    ('Holiday Boulder Jam', 'Celebrate the season with music, mini games, and a team relay. Free for members; guests welcome with day pass.', FALSE, NULL, '2024-12-22', '18:00-22:00', NULL, '2024-11-25 10:00:00', 2, FALSE),
+    ('Intro to Bouldering', 'A beginner-friendly session covering safety, basics, and climbing etiquette. No prior experience required.', TRUE, 'MONDAY', NULL, '19:00-20:30', 'BI_WEEKLY', '2024-11-18 08:30:00', 2, FALSE),
+
+    -- Events for BlocHutte Nuernberg (gym 3)
+    ('Women''s Climbing Meet', 'An open meetup for women climbers to connect and climb together. Casual session with a coach on site.', TRUE, 'WEDNESDAY', NULL, '19:00-21:00', 'WEEKLY', '2024-11-13 15:00:00', 3, FALSE),
+    ('Youth Skills Day', 'A one-day clinic for ages 10-15 covering movement basics and warmup routines.', FALSE, NULL, '2024-12-07', '10:00-13:00', NULL, '2024-11-10 09:30:00', 3, FALSE),
+
+    -- Events for Boulderwelt Regensburg (gym 4)
+    ('Route Setter Q&A', 'Meet the setters, ask questions, and get insights on the new overhang set.', FALSE, NULL, '2024-12-14', '19:30-20:30', NULL, '2024-11-29 14:00:00', 4, FALSE),
+    ('New Year Warmup Session', 'Start the year with a guided warmup and easy problem circuit. Open to all members.', FALSE, NULL, '2024-12-29', '11:00-12:00', NULL, '2024-11-30 11:00:00', 4, FALSE),
+    ('Monthly Community Meetup', 'A casual monthly meetup to connect, climb, and share beta. Open to all levels.', TRUE, 'TUESDAY', NULL, '19:00-21:00', 'MONTHLY', '2024-11-05 18:00:00', 4, FALSE);
