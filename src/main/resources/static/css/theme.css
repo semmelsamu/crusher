@@ -33,6 +33,9 @@
     --shadow-*: initial;
     --shadow-base: var(--box-shadow-size) var(--box-shadow-size) 0
         var(--color-border);
+
+    --spacing-card-inner: 1rem;
+    --spacing-card-outer: 1.5rem;
 }
 
 :root[data-theme="dark"] {
@@ -56,4 +59,11 @@
     --color-theme: var(--color-background);
     --color-switch-thumb: var(--color-sky-50);
     --logo-filter: invert(1);
+}
+
+@media (min-width: 768px) {
+    :root {
+        --spacing-card-inner: 1.5rem;
+        --spacing-card-outer: 1.5rem;
+    }
 }

@@ -26,9 +26,9 @@
                     ></time>
                 </p>
             </header>
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 2xl:gap-8">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-card-outer">
                 <section class="card self-start divide-y-2">
-                    <div class="p-6 flex items-center justify-between">
+                    <div class="p-card-inner flex items-center justify-between">
                         <h2>Sessions</h2>
                         <a
                             href="/sessions"
@@ -39,7 +39,7 @@
                             ></x>
                         </a>
                     </div>
-                    <div class="p-6 space-y-4">
+                    <div class="p-card-inner space-y-4">
                         <!-- Session Stats -->
                         <div class="flex justify-evenly gap-8">
                             <div class="text-center">
@@ -74,7 +74,7 @@
                         </div>
                     </div>
 
-                    <div class="p-6 space-y-4">
+                    <div class="p-card-inner space-y-4">
                         <div th:if="${lastGym != null}" class="flex gap-2">
                             <x th:replace="~{components/icons :: play}"></x>
                             <div>
@@ -147,7 +147,7 @@
                 </section>
 
                 <section class="card self-start divide-y-2">
-                    <div class="p-6 flex items-center justify-between">
+                    <div class="p-card-inner flex items-center justify-between">
                         <h2>Projects</h2>
                         <a
                             th:href="@{/boulders(projectOnly=true)}"
@@ -160,7 +160,7 @@
                     </div>
 
                     <!-- Project Count Display -->
-                    <div class="p-6 flex justify-evenly gap-8">
+                    <div class="p-card-inner flex justify-evenly gap-8">
                         <div
                             th:if="${recentProjectAttempts > 0}"
                             class="text-center"
@@ -195,7 +195,7 @@
                         </div>
                     </div>
                     <!-- Recent Activity -->
-                    <div class="p-6 space-y-4">
+                    <div class="p-card-inner space-y-4">
                         <!-- Recent Projects List -->
                         <div th:if="${!projects.isEmpty()}" class="space-y-4">
                             <h3>Recent Projects</h3>
@@ -249,7 +249,7 @@
                             your progress!
                         </p>
                     </div>
-                    <div class="p-6 bg-background">
+                    <div class="p-card-inner bg-background">
                         <a href="/boulders" class="button"
                             >Browse All Boulders</a
                         >
@@ -257,7 +257,9 @@
                 </section>
 
                 <section class="card divide-y-2 self-start">
-                    <div class="flex items-center justify-between gap-4 p-6">
+                    <div
+                        class="flex items-center justify-between gap-4 p-card-inner"
+                    >
                         <h2
                             th:if="${lastGym != null}"
                             th:text="${lastGym.name}"
@@ -278,7 +280,7 @@
                     <!-- Weather Widget -->
                     <div
                         th:if="${lastGymWeather != null && lastGym != null}"
-                        class="p-6 flex items-center justify-center gap-4"
+                        class="p-card-inner flex items-center justify-center gap-4"
                     >
                         <div
                             th:replace="~{components/icons :: ${lastGymWeather.icon()}}"
@@ -300,7 +302,7 @@
                     </div>
 
                     <!-- Gym Metrics -->
-                    <div class="p-6 flex justify-evenly gap-8">
+                    <div class="p-card-inner flex justify-evenly gap-8">
                         <!-- Boulder Count -->
                         <div class="text-center">
                             <p
@@ -342,7 +344,7 @@
                         </div>
                     </div>
 
-                    <div class="p-6 space-y-4">
+                    <div class="p-card-inner space-y-4">
                         <h3>Events</h3>
                         <div
                             th:if="${lastGymEvents.isEmpty()}"
@@ -409,21 +411,21 @@
                             session!
                         </div>
                     </div>
-                    <div class="p-6 bg-background">
+                    <div class="p-card-inner bg-background">
                         <a href="/gyms" class="button">View All Gyms</a>
                     </div>
                 </section>
             </div>
 
             <section class="card divide-y-2 max-w-5xl mx-auto">
-                <div class="p-6 flex items-center justify-between">
+                <div class="p-card-inner flex items-center justify-between">
                     <h2>Your Statistics</h2>
                     <a href="/stats" class="button button-ghost button-square">
                         <x th:replace="~{components/icons :: arrow-right}"></x>
                     </a>
                 </div>
                 <div
-                    class="p-6 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 bg-background *:bg-secondary-background *:rounded-base *:border-2 *:text-center *:p-6"
+                    class="p-card-inner grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 bg-background *:bg-secondary-background *:rounded-base *:border-2 *:text-center *:p-6"
                 >
                     <!-- Total Boulders Finished -->
                     <div>
@@ -479,7 +481,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="p-6 space-y-4">
+                <div class="p-card-inner space-y-4">
                     <!-- Result Breakdown -->
                     <h3>Result Breakdown</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
