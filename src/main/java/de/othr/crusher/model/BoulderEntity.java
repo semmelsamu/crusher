@@ -120,6 +120,8 @@ public class BoulderEntity {
 
     public void setPublished(boolean published) {
         this.published = published;
+    }
+
     public boolean isDeleted() {
         return deleted;
     }
