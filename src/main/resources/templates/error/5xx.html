@@ -5,7 +5,9 @@
 >
     <th:block layout:fragment="content">
         <main class="wrapper">
-            <section class="card space-y-8 p-8 text-center max-w-md mx-auto">
+            <section
+                class="card space-y-8 p-card-inner text-center max-w-md mx-auto"
+            >
                 <h1>
                     Error <span th:text="${status}">Error 500</span> -
                     <span th:text="${error}">Internal Server Error</span>
@@ -21,9 +23,9 @@
             </section>
 
             <div
-                class="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8 w-full overflow-x-hidden"
+                class="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-card-outer w-full overflow-x-hidden"
             >
-                <section class="card space-y-8 p-8 pr-16">
+                <section class="card space-y-8 p-card-inner pr-16">
                     <h2>Details</h2>
                     <strong>Exception</strong>
                     <p th:text="${exception}">Internal Server Error</p>
@@ -38,7 +40,7 @@
                 </section>
 
                 <section
-                    class="card space-y-8 p-8 mx-auto max-w-full overflow-hidden"
+                    class="card space-y-8 p-card-inner mx-auto max-w-full overflow-hidden"
                 >
                     <div class="flex items-center justify-between">
                         <h2>Stack trace</h2>

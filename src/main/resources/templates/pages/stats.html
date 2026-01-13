@@ -18,7 +18,7 @@
                 </a>
 
                 <header
-                    class="card flex-1 p-4 flex items-center justify-between"
+                    class="card flex-1 p-card-inner flex items-center justify-between"
                 >
                     <h1>Your Statistics</h1>
                 </header>
@@ -27,10 +27,10 @@
             <!-- Statistics Section -->
             <section class="space-y-4">
                 <!-- Simple number stats - 2 columns -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-card-outer">
                     <!-- Total Boulders Finished -->
                     <div
-                        class="card p-6 flex flex-col items-center justify-center"
+                        class="card p-card-inner flex flex-col items-center justify-center"
                     >
                         <p
                             class="text-sm font-medium text-foreground-muted mb-2"
@@ -47,7 +47,7 @@
 
                     <!-- Total Attempts -->
                     <div
-                        class="card p-6 flex flex-col items-center justify-center"
+                        class="card p-card-inner flex flex-col items-center justify-center"
                     >
                         <p
                             class="text-sm font-medium text-foreground-muted mb-2"
@@ -63,7 +63,7 @@
                     </div>
 
                     <!-- Finished Boulders per Grade - Bar Chart -->
-                    <div class="card p-6">
+                    <div class="card p-card-inner">
                         <h3 class="text-lg font-semibold mb-4">
                             Finished Boulders per Grade
                         </h3>
@@ -107,7 +107,7 @@
                     </div>
 
                     <!-- Flashes per Grade - Bar Chart -->
-                    <div class="card p-6">
+                    <div class="card p-card-inner">
                         <h3 class="text-lg font-semibold mb-4">
                             Flashes per Grade
                         </h3>
@@ -152,7 +152,7 @@
 
                     <!-- Highest Grade -->
                     <div
-                        class="card p-6 flex flex-col items-center justify-center"
+                        class="card p-card-inner flex flex-col items-center justify-center"
                     >
                         <p
                             class="text-sm font-medium text-foreground-muted mb-2"
@@ -175,7 +175,7 @@
                     </div>
 
                     <!-- Go Results Pie Chart -->
-                    <div class="card p-6">
+                    <div class="card p-card-inner">
                         <h3 class="text-lg font-semibold mb-4">Go Results</h3>
                         <div
                             th:if="${statistics.totalAttempts == 0}"

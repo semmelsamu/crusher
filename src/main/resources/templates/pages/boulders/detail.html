@@ -17,7 +17,9 @@
                     <x th:replace="~{components/icons :: arrow-big-left}"></x>
                 </a>
 
-                <header class="card flex-1 p-4 flex items-center gap-4">
+                <header
+                    class="card flex-1 p-card-inner flex items-center gap-4"
+                >
                     <h1>Boulder Details</h1>
 
                     <span
@@ -30,10 +32,10 @@
                 </header>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-card-outer">
                 <!-- Card 1: Boulder Title with Color and Grade -->
                 <section
-                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                    class="card p-card-inner flex flex-col items-center justify-center space-y-4"
                 >
                     <p
                         class="text-6xl font-bold text-accent text-center"
@@ -70,7 +72,7 @@
                 </section>
 
                 <!-- Card 2: Location -->
-                <section class="card p-4 space-y-4">
+                <section class="card p-card-inner space-y-4">
                     <h2>Location</h2>
 
                     <div class="space-y-4">
@@ -108,7 +110,7 @@
 
                 <!-- Card 3: Your Rating -->
                 <section
-                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                    class="card p-card-inner flex flex-col items-center justify-center space-y-4"
                 >
                     <p class="text-sm font-medium text-foreground-muted">
                         Your Rating
@@ -119,7 +121,7 @@
                 </section>
 
                 <!-- Card 4: Stats -->
-                <section class="card p-6">
+                <section class="card p-card-inner">
                     <div class="grid grid-cols-2 gap-6 h-full">
                         <!-- Total Tries Column -->
                         <div class="flex flex-col items-center justify-center">
@@ -155,7 +157,7 @@
             </div>
 
             <!-- Comments Section (full width) -->
-            <section class="card p-6 max-w-xl mx-auto">
+            <section class="card p-card-inner max-w-xl mx-auto">
                 <div
                     th:replace="~{components/comments :: comments('/boulders/' + ${boulder.id} + '/comments', ${comments}, '/boulders/' + ${boulder.id} + '/comments')}"
                 ></div>
