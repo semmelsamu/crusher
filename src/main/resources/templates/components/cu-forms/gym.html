@@ -3,8 +3,9 @@
     th:action="${actionUrl}"
     th:object="${gym}"
     method="post"
-    class="space-y-4"
+    class="space-y-6"
     xmlns:th="http://www.thymeleaf.org"
+    th:x-data="'{ showMap: ' + ${gym.latitude != null && gym.longitude != null} + ' }'"
 >
     <input
         type="hidden"
@@ -57,34 +58,37 @@
         ></p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="space-y-2">
-            <label class="block">Latitude</label>
-            <input
-                th:field="*{latitude}"
-                type="number"
-                step="any"
-                class="text-input w-full"
-            />
+    <div class="space-y-4">
+        <div class="flex items-center gap-4">
+            <label class="switch">
+                <input type="checkbox" id="map-toggle" x-model="showMap" />
+                <span class="switch-thumb"></span>
+            </label>
+            <label for="map-toggle">Set location on map</label>
+        </div>
+
+        <input type="hidden" th:field="*{latitude}" data-lat-input />
+        <input type="hidden" th:field="*{longitude}" data-lng-input />
+
+        <div
+            id="gym-form-map"
+            x-show="showMap"
+            x-cloak
+            class="rounded-lg border border-border overflow-hidden"
+            style="height: 400px"
+            data-map-container
+        ></div>
+
+        <div class="space-y-1">
             <p
                 th:if="${#fields.hasErrors('latitude')}"
                 th:errors="*{latitude}"
-                class="text-error text-sm mt-1"
+                class="text-error text-sm"
             ></p>
-        </div>
-
-        <div class="space-y-2">
-            <label class="block">Longitude</label>
-            <input
-                th:field="*{longitude}"
-                type="number"
-                step="any"
-                class="text-input w-full"
-            />
             <p
                 th:if="${#fields.hasErrors('longitude')}"
                 th:errors="*{longitude}"
-                class="text-error text-sm mt-1"
+                class="text-error text-sm"
             ></p>
         </div>
     </div>

@@ -563,10 +563,153 @@ function initGymMap() {
     map.on("mouseout", () => map.scrollWheelZoom.disable());
 }
 
+/**
+ * Initializes the gym form map for selecting location with a draggable marker
+ * Uses MutationObserver to detect when Alpine.js shows/hides the map container
+ */
+function initGymFormMap() {
+    const mapContainer = document.querySelector("[data-map-container]");
+    const latInput = document.querySelector("[data-lat-input]");
+    const lngInput = document.querySelector("[data-lng-input]");
+
+    if (!mapContainer || !latInput || !lngInput) {
+        return;
+    }
+
+    if (typeof L === "undefined") {
+        console.warn("Leaflet is not loaded.");
+        return;
+    }
+
+    let map = null;
+    let marker = null;
+
+    // Default center: Germany
+    const DEFAULT_LAT = 51.1657;
+    const DEFAULT_LNG = 10.4515;
+    const DEFAULT_ZOOM = 6;
+
+    /**
+     * Creates and initializes the map
+     */
+    function createMap() {
+        if (map) return; // Already initialized
+
+        // Get existing coordinates or use defaults
+        const existingLat = parseFloat(latInput.value);
+        const existingLng = parseFloat(lngInput.value);
+
+        const hasValidCoords =
+            Number.isFinite(existingLat) && Number.isFinite(existingLng);
+        const initialLat = hasValidCoords ? existingLat : DEFAULT_LAT;
+        const initialLng = hasValidCoords ? existingLng : DEFAULT_LNG;
+        const initialZoom = hasValidCoords ? 15 : DEFAULT_ZOOM;
+
+        // Initialize map
+        map = L.map(mapContainer, {
+            zoomControl: true,
+            scrollWheelZoom: true,
+        }).setView([initialLat, initialLng], initialZoom);
+
+        // Add tile layer
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+
+        // Add draggable marker if coordinates exist
+        if (hasValidCoords) {
+            marker = L.marker([initialLat, initialLng], {
+                draggable: true,
+            }).addTo(map);
+
+            // Update inputs when marker is dragged
+            marker.on("dragend", function () {
+                const pos = marker.getLatLng();
+                latInput.value = pos.lat.toFixed(6);
+                lngInput.value = pos.lng.toFixed(6);
+            });
+        }
+
+        // Add marker on map click
+        map.on("click", function (e) {
+            const { lat, lng } = e.latlng;
+
+            if (marker) {
+                // Move existing marker
+                marker.setLatLng([lat, lng]);
+            } else {
+                // Create new marker
+                marker = L.marker([lat, lng], {
+                    draggable: true,
+                }).addTo(map);
+
+                // Update inputs when marker is dragged
+                marker.on("dragend", function () {
+                    const pos = marker.getLatLng();
+                    latInput.value = pos.lat.toFixed(6);
+                    lngInput.value = pos.lng.toFixed(6);
+                });
+            }
+
+            // Update hidden inputs
+            latInput.value = lat.toFixed(6);
+            lngInput.value = lng.toFixed(6);
+        });
+
+        // Fix display issues after container becomes visible
+        setTimeout(() => {
+            if (map) {
+                map.invalidateSize();
+            }
+        }, 100);
+    }
+
+    /**
+     * Destroys the map instance
+     */
+    function destroyMap() {
+        if (map) {
+            map.remove();
+            map = null;
+            marker = null;
+        }
+    }
+
+    /**
+     * Checks if element is visible
+     */
+    function isVisible(element) {
+        return element.offsetWidth > 0 && element.offsetHeight > 0;
+    }
+
+    // Use MutationObserver to watch for style changes from Alpine.js
+    const observer = new MutationObserver(() => {
+        if (isVisible(mapContainer)) {
+            createMap();
+        } else {
+            destroyMap();
+        }
+    });
+
+    // Observe style and display attribute changes
+    observer.observe(mapContainer, {
+        attributes: true,
+        attributeFilter: ["style", "class"],
+    });
+
+    // Initialize on load if already visible
+    if (isVisible(mapContainer)) {
+        createMap();
+    }
+}
+
 // Initialize on page load
 document.addEventListener("DOMContentLoaded", () => {
     initThemeToggle();
     initAvatars();
     loadCrowdLevel();
     initGymMap();
+    initGymFormMap();
 });
