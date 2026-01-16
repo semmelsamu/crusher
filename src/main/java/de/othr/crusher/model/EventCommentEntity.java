@@ -39,6 +39,9 @@ public class EventCommentEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column
+    private LocalDateTime updatedAt;
+
     public EventCommentEntity() {}
 
     public EventCommentEntity(UserEntity user, EventEntity event, String comment) {
@@ -85,5 +88,13 @@ public class EventCommentEntity {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

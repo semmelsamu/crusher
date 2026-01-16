@@ -39,6 +39,9 @@ public class BoulderCommentEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column
+    private LocalDateTime updatedAt;
+
     public BoulderCommentEntity() {}
 
     public BoulderCommentEntity(UserEntity user, BoulderEntity boulder, String comment) {
@@ -85,5 +88,13 @@ public class BoulderCommentEntity {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
