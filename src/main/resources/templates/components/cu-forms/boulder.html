@@ -18,6 +18,7 @@
             th:field="*{description}"
             class="text-input w-full"
             placeholder="e.g., Links hinten"
+            required
         />
         <p
             th:if="${#fields.hasErrors('description')}"
@@ -28,7 +29,7 @@
 
     <div class="space-y-2">
         <label class="block">Color</label>
-        <select th:field="*{color}" class="text-input w-full">
+        <select th:field="*{color}" class="text-input w-full" required>
             <option
                 th:each="colorOption : ${availableColors}"
                 th:value="${colorOption}"
@@ -46,7 +47,7 @@
 
     <div class="space-y-2">
         <label class="block">Grade</label>
-        <select th:field="*{grade.id}" class="text-input w-full">
+        <select th:field="*{grade.id}" class="text-input w-full" required>
             <option
                 th:each="gradeOption : ${availableGrades}"
                 th:value="${gradeOption.id}"
@@ -71,6 +72,7 @@
             th:field="*{holdsCount}"
             class="text-input w-full"
             placeholder="e.g., 20"
+            required
         />
         <p
             th:if="${#fields.hasErrors('holdsCount')}"

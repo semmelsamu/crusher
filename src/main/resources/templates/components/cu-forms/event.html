@@ -15,7 +15,7 @@
 
     <div class="space-y-2">
         <label class="block">Title</label>
-        <input th:field="*{title}" class="text-input w-full" />
+        <input th:field="*{title}" class="text-input w-full" required />
         <p
             th:if="${#fields.hasErrors('title')}"
             th:errors="*{title}"
@@ -29,6 +29,7 @@
             th:field="*{description}"
             class="text-input w-full"
             rows="8"
+            required
         ></textarea>
         <p
             th:if="${#fields.hasErrors('description')}"
@@ -118,6 +119,7 @@
             th:field="*{time}"
             class="text-input w-full"
             placeholder="e.g. 18:00 or 18:00-20:00"
+            required
         />
         <p
             th:if="${#fields.hasErrors('time')}"

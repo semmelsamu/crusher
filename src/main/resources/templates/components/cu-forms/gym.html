@@ -3,8 +3,9 @@
     th:action="${actionUrl}"
     th:object="${gym}"
     method="post"
-    class="space-y-4"
+    class="space-y-6"
     xmlns:th="http://www.thymeleaf.org"
+    th:x-data="'{ showMap: ' + ${gym.latitude != null && gym.longitude != null} + ' }'"
 >
     <input
         type="hidden"
@@ -14,7 +15,7 @@
 
     <div class="space-y-2">
         <label class="block">Name</label>
-        <input th:field="*{name}" class="text-input w-full" />
+        <input th:field="*{name}" class="text-input w-full" required />
         <p
             th:if="${#fields.hasErrors('name')}"
             th:errors="*{name}"
@@ -24,7 +25,7 @@
 
     <div class="space-y-2">
         <label class="block">Street</label>
-        <input th:field="*{street}" class="text-input w-full" />
+        <input th:field="*{street}" class="text-input w-full" required />
         <p
             th:if="${#fields.hasErrors('street')}"
             th:errors="*{street}"
@@ -34,7 +35,7 @@
 
     <div class="space-y-2">
         <label class="block">City</label>
-        <input th:field="*{city}" class="text-input w-full" />
+        <input th:field="*{city}" class="text-input w-full" required />
         <p
             th:if="${#fields.hasErrors('city')}"
             th:errors="*{city}"
@@ -44,7 +45,12 @@
 
     <div class="space-y-2">
         <label class="block">Email</label>
-        <input th:field="*{email}" type="email" class="text-input w-full" />
+        <input
+            th:field="*{email}"
+            type="email"
+            class="text-input w-full"
+            required
+        />
         <p
             th:if="${#fields.hasErrors('email')}"
             th:errors="*{email}"
@@ -52,50 +58,50 @@
         ></p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="space-y-2">
-            <label class="block">Latitude (optional)</label>
-            <input
-                th:field="*{latitude}"
-                type="number"
-                step="any"
-                class="text-input w-full"
-                placeholder="49.032275"
-            />
+    <div class="space-y-4">
+        <div class="flex items-center gap-4">
+            <label class="switch">
+                <input type="checkbox" id="map-toggle" x-model="showMap" />
+                <span class="switch-thumb"></span>
+            </label>
+            <label for="map-toggle">Set location on map</label>
+        </div>
+
+        <input type="hidden" th:field="*{latitude}" data-lat-input />
+        <input type="hidden" th:field="*{longitude}" data-lng-input />
+
+        <div
+            id="gym-form-map"
+            x-show="showMap"
+            x-cloak
+            class="rounded-lg border border-border overflow-hidden"
+            style="height: 400px"
+            data-map-container
+        ></div>
+
+        <div class="space-y-1">
             <p
                 th:if="${#fields.hasErrors('latitude')}"
                 th:errors="*{latitude}"
-                class="text-error text-sm mt-1"
+                class="text-error text-sm"
             ></p>
-        </div>
-
-        <div class="space-y-2">
-            <label class="block">Longitude (optional)</label>
-            <input
-                th:field="*{longitude}"
-                type="number"
-                step="any"
-                class="text-input w-full"
-                placeholder="12.128859"
-            />
             <p
                 th:if="${#fields.hasErrors('longitude')}"
                 th:errors="*{longitude}"
-                class="text-error text-sm mt-1"
+                class="text-error text-sm"
             ></p>
         </div>
     </div>
 
     <div class="space-y-2">
-        <label class="block">Crowd Level URL (optional)</label>
+        <label class="block">Crowd Level URL</label>
         <input
             th:field="*{crowdLevelUrl}"
             type="url"
             class="text-input w-full"
-            placeholder="https://www.boulderwelt-regensburg.de/"
         />
         <p class="text-foreground-muted text-sm">
-            URL zur Live-Auslastungsanzeige der Halle (falls verfügbar)
+            URL to the crowd level display of the hall (if available)
         </p>
         <p
             th:if="${#fields.hasErrors('crowdLevelUrl')}"

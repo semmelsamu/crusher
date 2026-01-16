@@ -49,3 +49,7 @@ label {
 :root:has(#main-nav[data-open="true"]) {
     @apply overflow-hidden;
 }
+
+label:has(~ input[required])::after {
+    @apply content-['*'] text-error ms-1;
+}

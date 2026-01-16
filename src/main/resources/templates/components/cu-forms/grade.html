@@ -14,7 +14,7 @@
 
     <div class="space-y-2">
         <label class="block">Name</label>
-        <input th:field="*{name}" class="text-input w-full" />
+        <input th:field="*{name}" class="text-input w-full" required />
         <p
             th:if="${#fields.hasErrors('name')}"
             th:errors="*{name}"
@@ -25,7 +25,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-2">
             <label class="block">V-Scale</label>
-            <input th:field="*{vScale}" class="text-input w-full" />
+            <input th:field="*{vScale}" class="text-input w-full" required />
             <p
                 th:if="${#fields.hasErrors('vScale')}"
                 th:errors="*{vScale}"
@@ -34,7 +34,7 @@
         </div>
         <div class="space-y-2">
             <label class="block">Font-Scale</label>
-            <input th:field="*{fontScale}" class="text-input w-full" />
+            <input th:field="*{fontScale}" class="text-input w-full" required />
             <p
                 th:if="${#fields.hasErrors('fontScale')}"
                 th:errors="*{fontScale}"
