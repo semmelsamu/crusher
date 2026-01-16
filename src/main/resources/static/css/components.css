@@ -184,8 +184,16 @@
 |-------------------------------------------------------------------------------
 */
 
+.table-wrapper {
+    @apply overflow-x-auto border-2 bg-background;
+}
+
 .table {
-    @apply w-max min-w-full overflow-x-auto table-fixed border-2 bg-background;
+    @apply w-max min-w-full overflow-x-auto table-fixed;
+}
+
+:not(.table-wrapper) > .table {
+    @apply border-2 bg-background;
 }
 
 .table th,
