@@ -53,7 +53,7 @@
     --color-main: var(--color-sky-700);
     --color-error: var(--color-rose-700);
     --color-success: var(--color-emerald-700);
-    --color-warning: var(--color-amber-500);
+    --color-warning: var(--color-amber-700);
     --color-accent: var(--color-sky-300);
     --color-disabled: var(--color-sky-800);
     --color-theme: var(--color-background);

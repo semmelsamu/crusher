@@ -14,7 +14,7 @@
 
     <div class="space-y-2">
         <label class="block">Name</label>
-        <input th:field="*{name}" class="text-input w-full" />
+        <input th:field="*{name}" class="text-input w-full" required />
         <p
             th:if="${#fields.hasErrors('name')}"
             th:errors="*{name}"
@@ -24,7 +24,7 @@
 
     <div class="space-y-2">
         <label class="block">Street</label>
-        <input th:field="*{street}" class="text-input w-full" />
+        <input th:field="*{street}" class="text-input w-full" required />
         <p
             th:if="${#fields.hasErrors('street')}"
             th:errors="*{street}"
@@ -34,7 +34,7 @@
 
     <div class="space-y-2">
         <label class="block">City</label>
-        <input th:field="*{city}" class="text-input w-full" />
+        <input th:field="*{city}" class="text-input w-full" required />
         <p
             th:if="${#fields.hasErrors('city')}"
             th:errors="*{city}"
@@ -44,7 +44,12 @@
 
     <div class="space-y-2">
         <label class="block">Email</label>
-        <input th:field="*{email}" type="email" class="text-input w-full" />
+        <input
+            th:field="*{email}"
+            type="email"
+            class="text-input w-full"
+            required
+        />
         <p
             th:if="${#fields.hasErrors('email')}"
             th:errors="*{email}"

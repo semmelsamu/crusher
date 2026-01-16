@@ -14,7 +14,7 @@
 
     <div class="space-y-2">
         <label class="block">Title</label>
-        <input th:field="*{title}" class="text-input w-full" />
+        <input th:field="*{title}" class="text-input w-full" required />
         <p
             th:if="${#fields.hasErrors('title')}"
             th:errors="*{title}"
@@ -28,6 +28,7 @@
             th:field="*{message}"
             class="text-input w-full"
             rows="8"
+            required
         ></textarea>
         <p
             th:if="${#fields.hasErrors('message')}"
