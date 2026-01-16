@@ -22,13 +22,27 @@
                 >
                     <h1>Boulder Details</h1>
 
-                    <span
-                        th:if="${isProject}"
-                        class="badge warning ml-auto flex items-center gap-3 text-lg px-4 py-5"
+                    <form
+                        th:action="@{/boulders/{boulderId}/project/toggle(boulderId=${boulder.id})}"
+                        method="post"
+                        class="ml-auto toggle-form"
                     >
-                        <x th:replace="~{components/icons :: star}"></x>
-                        Project
-                    </span>
+                        <button
+                            type="submit"
+                            class="button button-primary data-[active=true]:warning group toggle"
+                            th:attr="data-active=${isProject}"
+                        >
+                            <span class="active">
+                                <x th:replace="~{components/icons :: star}"></x>
+                            </span>
+                            <span class="deactivate">
+                                <x
+                                    th:replace="~{components/icons :: star-off}"
+                                ></x>
+                            </span>
+                            <span class="hidden sm:inline">Project</span>
+                        </button>
+                    </form>
                 </header>
             </div>
 
