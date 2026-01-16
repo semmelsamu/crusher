@@ -1,0 +1,58 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Admin Panel', url: '/admin/gyms'}, {label: 'Users', url: ''} } }"
+        >
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/admin/gyms}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 flex items-center justify-between p-card-inner"
+                >
+                    <h1>Users</h1>
+                </header>
+            </div>
+
+            <section class="card p-card-inner space-y-4">
+                <h2>All Users</h2>
+
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody th:if="${users.isEmpty()}">
+                            <tr>
+                                <td colspan="3" class="text-center">
+                                    No users found.
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody th:unless="${users.isEmpty()}">
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.name}">Name</td>
+                                <td th:text="${user.email}">Email</td>
+                                <td th:text="${user.role}">Role</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </th:block>
+</th:block>
