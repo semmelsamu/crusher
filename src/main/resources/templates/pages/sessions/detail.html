@@ -94,7 +94,25 @@
             </section>
 
             <section class="card p-card-inner space-y-4">
-                <h2>Goes</h2>
+                <div class="flex justify-between items-center gap-4">
+                    <h2>Goes</h2>
+
+                    <a
+                        th:if="${currentSession.isRunning()}"
+                        th:href="@{/sessions/{sessionId}/goes/create(sessionId=${currentSession.id})}"
+                        class="button button-square success"
+                    >
+                        <x th:replace="~{components/icons :: badge-plus}"></x>
+                    </a>
+
+                    <button
+                        th:unless="${currentSession.isRunning()}"
+                        onclick="openDialog('session-ended-dialog')"
+                        class="button button-square success"
+                    >
+                        <x th:replace="~{components/icons :: badge-plus}"></x>
+                    </button>
+                </div>
 
                 <div class="table-wrapper">
                     <table class="table">
@@ -212,24 +230,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <a
-                    th:if="${currentSession.isRunning()}"
-                    th:href="@{/sessions/{sessionId}/goes/create(sessionId=${currentSession.id})}"
-                    class="button success"
-                >
-                    <x th:replace="~{components/icons :: badge-plus}"></x>
-                    Record New Go
-                </a>
-
-                <button
-                    th:unless="${currentSession.isRunning()}"
-                    onclick="openDialog('session-ended-dialog')"
-                    class="button success w-full"
-                >
-                    <x th:replace="~{components/icons :: badge-plus}"></x>
-                    Record New Go
-                </button>
 
                 <dialog
                     id="session-ended-dialog"

@@ -157,7 +157,16 @@
             </section>
 
             <section class="card p-card-inner space-y-4">
-                <h2>Grades</h2>
+                <div class="flex justify-between items-center gap-4">
+                    <h2>Grades</h2>
+
+                    <a
+                        th:href="@{/admin/gyms/{gymId}/grades/create(gymId=${gym.id})}"
+                        class="button button-square success"
+                    >
+                        <x th:replace="~{components/icons :: badge-plus}"></x>
+                    </a>
+                </div>
 
                 <table class="table">
                     <thead>
@@ -254,18 +263,19 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <a
-                    th:href="@{/admin/gyms/{gymId}/grades/create(gymId=${gym.id})}"
-                    class="button success"
-                >
-                    <x th:replace="~{components/icons :: badge-plus}"></x>
-                    Create New Grade
-                </a>
             </section>
 
             <section class="card p-card-inner space-y-4">
-                <h2>Notices</h2>
+                <div class="flex justify-between items-center gap-4">
+                    <h2>Notices</h2>
+
+                    <a
+                        th:href="@{/admin/gyms/{gymId}/notices/create(gymId=${gym.id})}"
+                        class="button button-square success"
+                    >
+                        <x th:replace="~{components/icons :: badge-plus}"></x>
+                    </a>
+                </div>
 
                 <div class="table-wrapper">
                     <table class="table w-full min-w-3xl">
@@ -370,18 +380,19 @@
                         </tbody>
                     </table>
                 </div>
-
-                <a
-                    th:href="@{/admin/gyms/{gymId}/notices/create(gymId=${gym.id})}"
-                    class="button success"
-                >
-                    <x th:replace="~{components/icons :: badge-plus}"></x>
-                    Create New Notice
-                </a>
             </section>
 
             <section class="card p-card-inner space-y-4">
-                <h2>Events</h2>
+                <div class="flex justify-between items-center gap-4">
+                    <h2>Events</h2>
+
+                    <a
+                        th:href="@{/admin/gyms/{gymId}/events/create(gymId=${gym.id})}"
+                        class="button button-square success"
+                    >
+                        <x th:replace="~{components/icons :: badge-plus}"></x>
+                    </a>
+                </div>
 
                 <div class="table-wrapper">
                     <table class="table w-full min-w-3xl">
@@ -503,14 +514,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <a
-                    th:href="@{/admin/gyms/{gymId}/events/create(gymId=${gym.id})}"
-                    class="button success"
-                >
-                    <x th:replace="~{components/icons :: badge-plus}"></x>
-                    Create New Event
-                </a>
             </section>
         </main>
     </th:block>

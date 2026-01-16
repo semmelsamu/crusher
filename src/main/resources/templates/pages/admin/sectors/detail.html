@@ -120,22 +120,32 @@
             </section>
 
             <section class="card p-card-inner space-y-4">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between gap-4">
                     <h2>Boulders</h2>
-                    <form
-                        th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}/publish-new-boulders(gymId=${gym.id}, sectorId=${sector.id})}"
-                        method="post"
-                    >
-                        <button
-                            type="submit"
-                            th:disabled="${!hasUnpublishedBoulders}"
-                            class="button primary"
-                            th:title="${hasUnpublishedBoulders} ? 'Send email notification to users about unpublished boulders in this sector' : 'No unpublished boulders to publish'"
+                    <div class="flex gap-4">
+                        <form
+                            th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}/publish-new-boulders(gymId=${gym.id}, sectorId=${sector.id})}"
+                            method="post"
                         >
-                            <x th:replace="~{components/icons :: send}"></x>
-                            Publish New Boulders
-                        </button>
-                    </form>
+                            <button
+                                type="submit"
+                                th:disabled="${!hasUnpublishedBoulders}"
+                                class="button primary"
+                                th:title="${hasUnpublishedBoulders} ? 'Send email notification to users about unpublished boulders in this sector' : 'No unpublished boulders to publish'"
+                            >
+                                <x th:replace="~{components/icons :: send}"></x>
+                                Publish New Boulders
+                            </button>
+                        </form>
+                        <a
+                            th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/create(gymId=${gym.id}, sectorId=${sector.id})}"
+                            class="button button-square success"
+                        >
+                            <x
+                                th:replace="~{components/icons :: badge-plus}"
+                            ></x>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="table-wrapper">
@@ -245,14 +255,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <a
-                    th:href="@{/admin/gyms/{gymId}/sectors/{sectorId}/boulders/create(gymId=${gym.id}, sectorId=${sector.id})}"
-                    class="button success"
-                >
-                    <x th:replace="~{components/icons :: badge-plus}"></x>
-                    Create New Boulder
-                </a>
             </section>
         </main>
     </th:block>
