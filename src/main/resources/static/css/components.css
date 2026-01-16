@@ -323,11 +323,11 @@
 }
 
 .show-more[open] > summary {
-    @apply mt-4;
+    @apply mt-card-inner;
 }
 
 .show-more summary {
-    @apply text-center block bg-background text-foreground p-4 border-t-2 -mx-4 -mb-4 cursor-pointer;
+    @apply text-center block bg-background text-foreground p-4 border-t-2 -mx-card-inner -mb-card-inner cursor-pointer;
 }
 
 /*
