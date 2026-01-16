@@ -168,8 +168,19 @@
                                     Grade
                                 </span>
                             </td>
-                            <td th:text="${boulder.description}">
-                                Description
+                            <td>
+                                <div class="flex items-center gap-2">
+                                    <span th:text="${boulder.description}"
+                                        >Description</span
+                                    >
+                                    <span
+                                        th:if="${!boulder.published}"
+                                        class="badge success"
+                                        title="This boulder has not been published yet"
+                                    >
+                                        New
+                                    </span>
+                                </div>
                             </td>
                             <td>
                                 <div class="flex gap-2 justify-end">
