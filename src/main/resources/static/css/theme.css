@@ -50,7 +50,7 @@
     --color-border: black;
     --color-overlay: rgba(2, 6, 23, 0.85);
 
-    --color-main: var(--color-sky-600);
+    --color-main: var(--color-sky-700);
     --color-error: var(--color-rose-700);
     --color-success: var(--color-emerald-700);
     --color-warning: var(--color-amber-500);
