@@ -87,7 +87,11 @@
                             </tr>
                         </tbody>
                         <tbody th:unless="${sessions.isEmpty()}">
-                            <tr th:each="sess : ${sessions}">
+                            <tr
+                                th:each="sess : ${sessions}"
+                                class="cursor-pointer hover:bg-main"
+                                th:onclick="|window.location.href='@{/sessions/{id}(id=${sess.id})}';|"
+                            >
                                 <td>
                                     <span
                                         th:text="${#temporals.format(sess.startedAt, 'dd.MM.yyyy')}"
@@ -101,17 +105,12 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="flex gap-2 justify-end">
-                                        <a
-                                            th:href="@{/sessions/{id}(id=${sess.id})}"
-                                            class="button primary button-square"
-                                        >
-                                            <x
-                                                th:replace="~{components/icons :: pencil-ruler}"
-                                            ></x>
-                                        </a>
+                                    <div
+                                        class="flex gap-2 justify-end"
+                                        onclick="event.stopPropagation()"
+                                    >
                                         <button
-                                            th:onclick="|openDialog('delete-session-dialog-${sess.id}')|"
+                                            th:onclick="|event.stopPropagation(); openDialog('delete-session-dialog-${sess.id}')|"
                                             class="button danger button-square"
                                         >
                                             <x

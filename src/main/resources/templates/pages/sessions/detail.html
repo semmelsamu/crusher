@@ -127,13 +127,17 @@
                         </thead>
                         <tbody th:if="${goes.isEmpty()}">
                             <tr>
-                                <td colspan="7" class="text-center">
+                                <td colspan="5" class="text-center">
                                     No goes recorded yet.
                                 </td>
                             </tr>
                         </tbody>
                         <tbody th:unless="${goes.isEmpty()}">
-                            <tr th:each="go : ${goes}">
+                            <tr
+                                th:each="go : ${goes}"
+                                class="cursor-pointer hover:bg-main"
+                                th:onclick="|window.location.href='@{/sessions/{sessionId}/goes/{goId}/edit(sessionId=${currentSession.id}, goId=${go.id})}';|"
+                            >
                                 <td class="flex items-center gap-4">
                                     <div
                                         th:class="'color-badge ' + ${go.boulder.color.cssColorClass}"
@@ -178,17 +182,12 @@
                                     Time
                                 </td>
                                 <td>
-                                    <div class="flex gap-2 justify-end">
-                                        <a
-                                            th:href="@{/sessions/{sessionId}/goes/{goId}/edit(sessionId=${currentSession.id}, goId=${go.id})}"
-                                            class="button primary button-square"
-                                        >
-                                            <x
-                                                th:replace="~{components/icons :: pencil-ruler}"
-                                            ></x>
-                                        </a>
+                                    <div
+                                        class="flex gap-2 justify-end"
+                                        onclick="event.stopPropagation()"
+                                    >
                                         <button
-                                            th:onclick="|openDialog('delete-go-dialog-${go.id}')|"
+                                            th:onclick="|event.stopPropagation(); openDialog('delete-go-dialog-${go.id}')|"
                                             class="button danger button-square"
                                         >
                                             <x
