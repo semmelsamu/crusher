@@ -80,10 +80,12 @@ public class SectorController {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
         List<BoulderEntity> boulders = boulderRepository.findBySectorIdAndDeletedFalse(sectorId);
+        List<BoulderEntity> unpublishedBoulders = boulderRepository.findBySectorIdAndPublishedFalse(sectorId);
 
         model.addAttribute("gym", gym);
         model.addAttribute("sector", sector);
         model.addAttribute("boulders", boulders);
+        model.addAttribute("hasUnpublishedBoulders", !unpublishedBoulders.isEmpty());
         
         return "pages/admin/sectors/detail";
     }

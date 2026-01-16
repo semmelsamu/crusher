@@ -21,13 +21,13 @@
                 </a>
 
                 <header
-                    class="card flex-1 flex items-center justify-between p-4"
+                    class="card flex-1 flex items-center justify-between p-card-inner"
                 >
                     <h1>Result</h1>
                 </header>
             </div>
 
-            <section class="card p-4 max-w-md mx-auto space-y-6">
+            <section class="card p-card-inner max-w-md mx-auto space-y-6">
                 <th:block
                     th:replace="~{components/cu-forms/go :: go(
                     @{/sessions/{sessionId}/goes(sessionId=${currentSession.id})},

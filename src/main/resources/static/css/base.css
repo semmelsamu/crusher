@@ -45,3 +45,7 @@ label {
 .nav-logo {
     filter: var(--logo-filter);
 }
+
+:root:has(#main-nav[data-open="true"]) {
+    @apply overflow-hidden;
+}

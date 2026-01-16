@@ -41,18 +41,20 @@ public class ProjectController {
      * Adds the project when missing, removes it when present.
      *
      * @param boulderId identifier of the boulder
+     * @param returnUrl optional URL to redirect to after toggle
      * @param gymId optional gym filter to preserve on redirect
      * @param sectorId optional sector filter to preserve on redirect
      * @param gradeIds optional grade filters to preserve on redirect
      * @param projectOnly whether the projects-only filter was active
      * @param principal authenticated user
      * @param redirectAttributes attributes to preserve filters and toast
-     * @return redirect to the boulders overview
+     * @return redirect to the specified URL or boulders overview
      */
     @PostMapping("/boulders/{boulderId}/project/toggle")
     @Transactional
     public String toggleProject(
             @PathVariable("boulderId") Long boulderId,
+            @RequestParam(value = "returnUrl", required = false) String returnUrl,
             @RequestParam(value = "gymId", required = false) Long gymId,
             @RequestParam(value = "sectorId", required = false) Long sectorId,
             @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
@@ -79,6 +81,11 @@ public class ProjectController {
                 "type", "success",
                 "message", nowActive ? "Boulder added to your projects!" : "Boulder removed from your projects."
         ));
+        
+        if (returnUrl != null && !returnUrl.isEmpty()) {
+            return "redirect:" + returnUrl;
+        }
+        
         preserveFilters(redirectAttributes, gymId, sectorId, gradeIds, projectOnly);
         return "redirect:/boulders";
     }

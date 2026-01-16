@@ -8,244 +8,206 @@
             class="wrapper"
             th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Gyms', url: '/gyms'}, {label: gym.name, url: '/gyms/' + gym.id} } }"
         >
-            <div
+            <x
                 th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
-            ></div>
+            ></x>
 
             <div class="flex items-center gap-4">
                 <a th:href="@{/gyms}" class="button button-square">
                     <x th:replace="~{components/icons :: arrow-big-left}"></x>
                 </a>
 
-                <header class="card flex-1 p-4 flex items-center gap-4">
+                <header
+                    class="card flex-1 p-card-inner flex items-center gap-4"
+                >
                     <h1>Gym Details</h1>
                 </header>
             </div>
 
-            <main class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Gym Info -->
-                <section
-                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+            <div
+                class="space-y-2 xl:text-center xl:*:justify-center p-card-inner"
+            >
+                <h2
+                    class="text-6xl font-bold text-accent mb-4"
+                    th:text="${gym.name}"
                 >
-                    <p
-                        class="text-6xl font-bold text-accent text-center"
-                        th:text="${gym.name}"
-                    >
-                        Gym Name
+                    Gym Name
+                </h2>
+                <p class="flex items-center gap-2">
+                    <x th:replace="~{components/icons :: map-pin}"></x>
+                    <span th:text="${gym.city} + ', ' + ${gym.street}">
+                        City, Street
+                    </span>
+                </p>
+                <p class="flex items-center gap-2">
+                    <x th:replace="~{components/icons :: mail}"></x>
+                    <span th:text="${gym.email}">email@example.com</span>
+                </p>
+            </div>
+
+            <details class="card overflow-clip group mx-auto max-w-3xl">
+                <summary class="p-4 flex items-center gap-2 justify-center">
+                    <x th:replace="~{components/icons :: map}"></x>
+                    <p>
+                        <span class="group-open:hidden">Show map</span>
+                        <span class="group-open:block hidden">Hide map</span>
                     </p>
+                </summary>
 
-                    <div class="space-y-2 text-center">
-                        <div class="flex items-center gap-2 justify-center">
-                            <span
-                                class="text-lg"
-                                th:text="${gym.city} + ', ' + ${gym.street}"
-                            >
-                                City, Street
-                            </span>
-                        </div>
+                <div
+                    id="gym-map"
+                    class="w-full aspect-square overflow-hidden max-h-[80vh]"
+                    th:data-lat="${gym.latitude}"
+                    th:data-lng="${gym.longitude}"
+                    th:data-name="${gym.name}"
+                    th:data-address="${gym.city} + ', ' + ${gym.street}"
+                ></div>
+            </details>
 
-                        <div class="flex items-center gap-2 justify-center">
-                            <span class="text-lg" th:text="${gym.email}">
-                                email@example.com
-                            </span>
-                        </div>
-                    </div>
-
-                    <div
-                        class="w-full"
-                        th:if="${gym.latitude != null and gym.longitude != null}"
-                    >
-                        <div
-                            id="gym-map"
-                            class="gym-map border-2 rounded-base overflow-hidden"
-                            th:data-lat="${gym.latitude}"
-                            th:data-lng="${gym.longitude}"
-                            th:data-name="${gym.name}"
-                            th:data-address="${gym.city} + ', ' + ${gym.street}"
-                        ></div>
-                    </div>
-                </section>
-
-                <!-- Total Boulders / Crowd Level -->
+            <div class="w-full flex gap-card-outer *:flex-1">
                 <section
-                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                    class="card p-card-inner flex flex-col items-center justify-center text-center"
                 >
+                    <!-- Total Boulders -->
                     <p class="text-sm font-medium text-foreground-muted">
                         Total Boulders
                     </p>
                     <p
-                        class="text-9xl font-bold text-success"
+                        class="text-6xl font-bold text-success"
                         th:text="${boulderCount}"
                     >
                         0
                     </p>
+                </section>
 
-                    <!-- Crowd Level (lazy loaded) -->
-                    <div
-                        th:if="${gym.crowdLevelUrl != null and !#strings.isEmpty(gym.crowdLevelUrl)}"
-                        id="crowd-level-container"
-                        th:data-gym-id="${gym.id}"
-                        class="w-full border-t-2 pt-4 space-y-3"
-                    >
-                        <p
-                            class="text-sm font-medium text-foreground-muted text-center"
-                        >
+                <section
+                    class="card p-card-inner flex flex-col items-center justify-center text-center"
+                    th:if="${gym.crowdLevelUrl != null and !#strings.isEmpty(gym.crowdLevelUrl)}"
+                    id="crowd-level-container"
+                    th:data-gym-id="${gym.id}"
+                >
+                    <div>
+                        <p class="text-sm font-medium text-foreground-muted">
                             Crowd Level
                         </p>
-                        <!-- Loading State -->
-                        <div id="crowd-level-loading" class="text-center">
-                            <p class="text-sm text-foreground-muted">
-                                Loading...
-                            </p>
-                        </div>
-                        <!-- Crowd Level Data (hidden initially) -->
-                        <div id="crowd-level-data" class="hidden">
-                            <p
-                                id="crowd-level-percentage"
-                                class="text-2xl font-bold text-accent text-center"
-                            ></p>
-                            <div class="w-full max-w-xs mx-auto">
-                                <div
-                                    class="h-6 bg-background border-2 border-accent rounded-lg relative overflow-hidden"
-                                >
-                                    <div
-                                        id="crowd-level-bar"
-                                        class="h-full bg-gradient-to-r from-success via-warning to-danger transition-all duration-500"
-                                        style="width: 0%"
-                                    ></div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Error State (hidden initially) -->
-                        <div id="crowd-level-error" class="hidden text-center">
-                            <p class="text-sm text-foreground-muted">
-                                Not available
-                            </p>
-                        </div>
+                        <p
+                            id="crowd-level-percentage"
+                            class="text-6xl font-bold text-accent"
+                        ></p>
                     </div>
                 </section>
 
-                <!-- Your Rating -->
                 <section
-                    class="card p-6 flex flex-col items-center justify-center space-y-4"
-                >
-                    <p class="text-sm font-medium text-foreground-muted">
-                        Your Rating
-                    </p>
-                    <div
-                        th:replace="~{components/star-rating :: star-rating('/gyms/' + ${gym.id} + '/rating', ${currentRating}, ${averageRating})}"
-                    ></div>
-                </section>
-
-                <!-- Current Weather -->
-                <section
-                    class="card p-6 flex flex-col items-center justify-center space-y-4"
+                    class="card p-card-inner flex flex-col items-center justify-center text-center"
                     th:if="${weather != null}"
                 >
                     <p class="text-sm font-medium text-foreground-muted">
                         Current Weather
                     </p>
-                    <div class="flex items-center gap-4 text-accent">
+                    <div
+                        class="flex items-center justify-center gap-4 text-accent"
+                    >
                         <div
                             th:replace="~{components/icons :: ${weather.icon()}}"
                         ></div>
                         <p
-                            class="text-5xl font-bold"
+                            class="text-6xl font-bold"
                             th:text="${weather.text()}"
                         >
                             Sunny
                         </p>
                     </div>
                 </section>
+            </div>
 
+            <!-- Your Rating -->
+            <section
+                class="card p-card-inner flex flex-col items-center justify-center space-y-4"
+            >
+                <p class="text-sm font-medium text-foreground-muted">
+                    Your Rating
+                </p>
+                <div
+                    th:replace="~{components/star-rating :: star-rating('/gyms/' + ${gym.id} + '/rating', ${currentRating}, ${averageRating})}"
+                ></div>
+            </section>
+
+            <div class="lg:grid grid-cols-3 gap-card-outer *:self-start">
                 <!-- Events -->
                 <section
-                    class="card p-6 space-y-4 self-start"
+                    class="card p-card-inner space-y-4"
                     th:if="${!events.isEmpty()}"
                 >
                     <h2>Events</h2>
-                    <ul class="space-y-4">
-                        <li
-                            th:each="eventOccurrence : ${events}"
-                            class="border-2 p-4 rounded-base bg-background"
-                        >
-                            <a
-                                th:href="@{/gyms/{gymId}/events/{eventId}(gymId=${gym.id}, eventId=${eventOccurrence.event.id})}"
-                                class="block space-y-1"
+                    <th:block
+                        th:each="eventOccurrence, iterStat : ${events}"
+                        th:if="${iterStat.index < 3}"
+                        th:insert="~{components/event-item :: event-item(${gym.id}, ${eventOccurrence})}"
+                    ></th:block>
+                    <details
+                        th:if="${#lists.size(events) > 3}"
+                        class="show-more group"
+                    >
+                        <summary>
+                            <span class="group-open:hidden"
+                                >Show more events</span
                             >
-                                <strong
-                                    th:text="${eventOccurrence.event.title}"
-                                >
-                                    Event Title
-                                </strong>
-                                <p class="text-sm text-foreground-muted">
-                                    <time
-                                        th:datetime="${eventOccurrence.date}"
-                                        th:text="${#temporals.format(eventOccurrence.date, 'dd.MM.yy')}"
-                                    >
-                                        01.01.2024
-                                    </time>
-                                    <span aria-hidden="true">·</span>
-                                    <span
-                                        th:text="${eventOccurrence.event.time}"
-                                    >
-                                        18:00
-                                    </span>
-                                    <span
-                                        th:if="${eventOccurrence.event.periodic}"
-                                        aria-hidden="true"
-                                        >·</span
-                                    >
-                                    <span
-                                        th:if="${eventOccurrence.event.periodic}"
-                                        th:text="${eventOccurrence.event.frequency.label}"
-                                    >
-                                        Weekly
-                                    </span>
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
+                            <span class="group-open:block hidden"
+                                >Show less events</span
+                            >
+                        </summary>
+                        <div class="space-y-4">
+                            <th:block
+                                th:each="eventOccurrence, iterStat : ${events}"
+                                th:if="${iterStat.index >= 3}"
+                                th:insert="~{components/event-item :: event-item(${gym.id}, ${eventOccurrence})}"
+                            ></th:block>
+                        </div>
+                    </details>
                 </section>
 
                 <!-- Notices -->
                 <section
-                    class="card p-6 space-y-4 self-start"
+                    class="card p-card-inner space-y-4 self-start"
                     th:if="${!notices.isEmpty()}"
                 >
                     <h2>Notices</h2>
                     <div class="space-y-4">
-                        <div th:each="notice : ${notices}" class="card">
-                            <div
-                                class="flex items-center justify-between gap-4 bg-background border-b-2 p-4"
-                            >
-                                <h3
-                                    class="text-lg font-semibold"
-                                    th:text="${notice.title}"
-                                >
-                                    Notice Title
-                                </h3>
-                                <span
-                                    class="text-sm text-foreground-muted whitespace-nowrap"
-                                    th:text="${#temporals.format(notice.creationDate, 'dd.MM.yyyy')}"
-                                >
-                                    01.01.2024
-                                </span>
-                            </div>
-                            <p class="block p-4" th:text="${notice.message}">
-                                Notice message content goes here...
-                            </p>
-                        </div>
+                        <th:block
+                            th:each="notice, iterStat : ${notices}"
+                            th:if="${iterStat.index < 3}"
+                            th:insert="~{components/notice-item :: notice-item(${notice})}"
+                        ></th:block>
                     </div>
+                    <details
+                        th:if="${#lists.size(notices) > 3}"
+                        class="show-more group"
+                    >
+                        <summary>
+                            <span class="group-open:hidden"
+                                >Show more notices</span
+                            >
+                            <span class="group-open:block hidden"
+                                >Show less notices</span
+                            >
+                        </summary>
+                        <div class="space-y-4">
+                            <th:block
+                                th:each="notice, iterStat : ${notices}"
+                                th:if="${iterStat.index >= 3}"
+                                th:insert="~{components/notice-item :: notice-item(${notice})}"
+                            ></th:block>
+                        </div>
+                    </details>
                 </section>
 
                 <!-- Comments -->
-                <section class="card p-6 self-start">
+                <section class="card p-card-inner self-start">
                     <div
                         th:replace="~{components/comments :: comments('/gyms/' + ${gym.id} + '/comments', ${comments}, '/gyms/' + ${gym.id} + '/comments')}"
                     ></div>
                 </section>
-            </main>
+            </div>
         </div>
     </th:block>
 </th:block>

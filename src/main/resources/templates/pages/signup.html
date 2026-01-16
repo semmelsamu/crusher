@@ -5,84 +5,82 @@
 >
     <th:block layout:fragment="content">
         <main class="bg-main flex-1 space-y-16 py-16">
-            <section class="card space-y-4 p-6 max-w-lg mx-auto">
-                <p>
-                    <strong class="text-lg">Create an account</strong
-                    ><br />Enter your details to sign up
-                </p>
-                <form th:action="@{/signup}" method="post" class="space-y-4">
-                    <div class="space-y-2">
-                        <label for="username" class="form-label"
-                            >Username</label
-                        >
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            class="text-input block w-full"
-                            required
-                            autofocus
-                            minlength="4"
-                            placeholder="Choose a username"
-                            th:value="${username}"
-                        />
-                    </div>
-
-                    <div class="space-y-2">
-                        <label for="email" class="form-label">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            class="text-input block w-full"
-                            required
-                            placeholder="Your email address"
-                            th:value="${email}"
-                        />
-                    </div>
-
-                    <div class="space-y-2">
-                        <label for="password" class="form-label"
-                            >Password</label
-                        >
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="text-input block w-full"
-                            required
-                            minlength="4"
-                            placeholder="Choose a password"
-                        />
-                    </div>
-
-                    <div class="space-y-2">
-                        <label for="confirmPassword" class="form-label"
-                            >Confirm Password</label
-                        >
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            class="text-input block w-full"
-                            required
-                            minlength="4"
-                            placeholder="Confirm your password"
-                        />
-                    </div>
-
-                    <button type="submit" class="button primary w-full mt-8">
-                        Sign Up
-                    </button>
-                </form>
-
-                <div class="text-center text-sm mt-6">
-                    Already have an account?
-                    <a th:href="@{/login}" class="underline underline-offset-4"
-                        >Log in</a
+            <div class="wrapper">
+                <section class="card space-y-4 p-card-inner max-w-lg mx-auto">
+                    <p>
+                        <strong class="text-lg">Create an account</strong
+                        ><br />Enter your details to sign up
+                    </p>
+                    <form
+                        th:action="@{/signup}"
+                        method="post"
+                        class="space-y-4"
                     >
-                </div>
-            </section>
+                        <div class="space-y-2">
+                            <label for="username" class="form-label"
+                                >Username</label
+                            >
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="text-input block w-full"
+                                required
+                                autofocus
+                                minlength="4"
+                                placeholder="Choose a username"
+                                th:value="${username}"
+                            />
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="password" class="form-label"
+                                >Password</label
+                            >
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="text-input block w-full"
+                                required
+                                minlength="4"
+                                placeholder="Choose a password"
+                            />
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="confirmPassword" class="form-label"
+                                >Confirm Password</label
+                            >
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                class="text-input block w-full"
+                                required
+                                minlength="4"
+                                placeholder="Confirm your password"
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="button primary w-full mt-8"
+                        >
+                            Sign Up
+                        </button>
+                    </form>
+
+                    <div class="text-center text-sm mt-6">
+                        Already have an account?
+                        <a
+                            th:href="@{/login}"
+                            class="underline underline-offset-4"
+                            >Log in</a
+                        >
+                    </div>
+                </section>
+            </div>
         </main>
     </th:block>
 </th:block>

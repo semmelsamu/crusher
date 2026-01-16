@@ -5,71 +5,78 @@
 >
     <th:block layout:fragment="content">
         <main class="bg-main flex-1 space-y-16 py-16">
-            <section class="card space-y-4 p-6 max-w-lg mx-auto">
-                <p>
-                    <strong class="text-lg">Login to your account</strong
-                    ><br />Enter your credentials
-                </p>
-                <form th:action="@{/login}" method="post" class="space-y-4">
-                    <div class="space-y-2">
-                        <label for="username" class="form-label"
-                            >Username</label
+            <div class="wrapper">
+                <section class="card space-y-4 p-card-inner max-w-lg mx-auto">
+                    <p>
+                        <strong class="text-lg">Login to your account</strong
+                        ><br />Enter your credentials
+                    </p>
+                    <form th:action="@{/login}" method="post" class="space-y-4">
+                        <div class="space-y-2">
+                            <label for="username" class="form-label"
+                                >Username</label
+                            >
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="text-input block w-full"
+                                required
+                                autofocus
+                                placeholder="Enter your username"
+                            />
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="password" class="form-label"
+                                >Password</label
+                            >
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="text-input block w-full"
+                                required
+                                placeholder="Enter your password"
+                            />
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="button primary w-full mt-8"
                         >
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            class="text-input block w-full"
-                            required
-                            autofocus
-                            placeholder="Enter your username"
-                        />
-                    </div>
+                            Log In
+                            <x th:replace="~{components/icons :: log-in}"></x>
+                        </button>
+                    </form>
 
-                    <div class="space-y-2">
-                        <label for="password" class="form-label"
-                            >Password</label
+                    <div class="text-center text-sm mt-6">
+                        Don't have an account?
+                        <a
+                            th:href="@{/signup}"
+                            class="underline underline-offset-4"
+                            >Sign up</a
                         >
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="text-input block w-full"
-                            required
-                            placeholder="Enter your password"
-                        />
                     </div>
+                </section>
 
-                    <button type="submit" class="button primary w-full mt-8">
-                        Log In
-                        <x th:replace="~{components/icons :: log-in}"></x>
-                    </button>
-                </form>
-
-                <div class="text-center text-sm mt-6">
-                    Don't have an account?
-                    <a th:href="@{/signup}" class="underline underline-offset-4"
-                        >Sign up</a
-                    >
-                </div>
-            </section>
-
-            <details class="card max-w-lg mx-auto details">
-                <summary>Test Accounts</summary>
-                <div>
-                    <p>All accounts use password: <strong>test</strong></p>
-                    <dl>
-                        <dt>alice</dt>
-                        <dd>USER</dd>
-                        <dt>bob</dt>
-                        <dd>SETTER</dd>
-                        <dt>klaus</dt>
-                        <dd>OWNER</dd>
-                        <dt>crusher</dt>
-                        <dd>ADMIN</dd>
-                    </dl>
-                </div>
-            </details>
+                <details class="card max-w-lg mx-auto details">
+                    <summary>Test Accounts</summary>
+                    <div>
+                        <p>All accounts use password: <strong>test</strong></p>
+                        <dl>
+                            <dt>alice</dt>
+                            <dd>USER</dd>
+                            <dt>bob</dt>
+                            <dd>SETTER</dd>
+                            <dt>klaus</dt>
+                            <dd>OWNER</dd>
+                            <dt>crusher</dt>
+                            <dd>ADMIN</dd>
+                        </dl>
+                    </div>
+                </details>
+            </div>
         </main>
     </th:block>
 </th:block>

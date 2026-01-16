@@ -496,9 +496,11 @@ function loadCrowdLevel() {
     const gymId = container.getAttribute("data-gym-id");
     if (!gymId) return;
 
-    const loadingEl = document.getElementById("crowd-level-loading");
-    const dataEl = document.getElementById("crowd-level-data");
-    const errorEl = document.getElementById("crowd-level-error");
+    const percentageEl = document.getElementById("crowd-level-percentage");
+    if (!percentageEl) return;
+
+    // Show loading state
+    percentageEl.textContent = "Loading...";
 
     // Fetch crowd level from API
     fetch(`/api/gyms/${gymId}/crowd-level`)
@@ -509,20 +511,14 @@ function loadCrowdLevel() {
             return response.json();
         })
         .then((data) => {
-            // Hide loading, show data
-            loadingEl.classList.add("hidden");
-            dataEl.classList.remove("hidden");
-
+            // Round to nearest 10%
+            const rounded = Math.round(data.percentage / 10) * 10;
             // Update UI with data
-            document.getElementById("crowd-level-percentage").textContent =
-                data.percentage.toFixed(1) + "%";
-            document.getElementById("crowd-level-bar").style.width =
-                data.percentage + "%";
+            percentageEl.textContent = rounded + "%";
         })
         .catch((error) => {
-            // Hide loading, show error
-            loadingEl.classList.add("hidden");
-            errorEl.classList.remove("hidden");
+            // Show error state
+            percentageEl.textContent = "N/A";
             console.error("Error loading crowd level:", error);
         });
 }

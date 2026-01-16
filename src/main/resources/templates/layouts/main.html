@@ -67,6 +67,7 @@
     </head>
     <body class="min-h-screen flex flex-col">
         <x th:replace="~{components/nav :: nav}"></x>
+        <div id="nav-spacer" class="w-full h-20"></div>
         <x th:replace="~{components/toast :: toast}"></x>
         <x layout:fragment="content"></x>
         <x th:replace="~{components/footer :: footer}"></x>

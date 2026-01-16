@@ -12,20 +12,6 @@
     @apply border-2 rounded-base shadow-base bg-secondary-background;
 }
 
-.gym-map {
-    height: 220px;
-}
-
-@media (min-width: 768px) {
-    .gym-map {
-        height: 260px;
-    }
-}
-
-.gym-map.leaflet-container {
-    background-color: var(--color-background);
-}
-
 /*
 |-------------------------------------------------------------------------------
 | Buttons
@@ -46,7 +32,7 @@
 
 .button:disabled,
 .button[disabled] {
-    @apply shadow-none border-foreground-muted text-foreground-muted! hover:translate-none cursor-default;
+    @apply shadow-none border-border/80! text-foreground-muted! hover:translate-none cursor-default;
 }
 
 /*
@@ -198,8 +184,16 @@
 |-------------------------------------------------------------------------------
 */
 
+.table-wrapper {
+    @apply overflow-x-auto border-2 bg-background;
+}
+
 .table {
-    @apply w-full overflow-x-auto table-fixed border-2 bg-background;
+    @apply w-max min-w-full overflow-x-auto table-fixed;
+}
+
+:not(.table-wrapper) > .table {
+    @apply border-2 bg-background;
 }
 
 .table th,
@@ -210,6 +204,10 @@
 .table tr:not(:last-child),
 .table thead {
     @apply border-b-2;
+}
+
+:has(> .table) {
+    @apply overflow-x-auto;
 }
 
 /*
@@ -261,7 +259,7 @@
 */
 
 .notification {
-    @apply border-2 rounded-base shadow-base p-4 bg-background text-foreground w-full mx-4 sm:max-w-md sm:mx-auto;
+    @apply border-2 rounded-base shadow-base p-4 bg-background text-foreground w-full mx-4 max-w-[80vw] sm:max-w-md sm:mx-auto;
 }
 
 .notification:has(svg) {
@@ -318,6 +316,18 @@
 
 .details > :last-child {
     @apply p-4 border-t-2;
+}
+
+.show-more {
+    @apply flex flex-col-reverse;
+}
+
+.show-more[open] > summary {
+    @apply mt-card-inner;
+}
+
+.show-more summary {
+    @apply text-center block bg-background text-foreground p-4 border-t-2 -mx-card-inner -mb-card-inner cursor-pointer;
 }
 
 /*
