@@ -42,7 +42,7 @@
     color-scheme: dark;
     --color-foreground: var(--color-sky-50);
     --color-foreground-muted: var(--color-sky-200);
-    --color-main-foreground: var(--color-sky-950);
+    --color-main-foreground: var(--color-sky-50);
 
     --color-background: var(--color-sky-950);
     --color-secondary-background: var(--color-zinc-800);
@@ -51,9 +51,9 @@
     --color-overlay: rgba(2, 6, 23, 0.85);
 
     --color-main: var(--color-sky-600);
-    --color-error: var(--color-rose-400);
-    --color-success: var(--color-emerald-500);
-    --color-warning: var(--color-amber-300);
+    --color-error: var(--color-rose-700);
+    --color-success: var(--color-emerald-700);
+    --color-warning: var(--color-amber-500);
     --color-accent: var(--color-sky-300);
     --color-disabled: var(--color-sky-800);
     --color-theme: var(--color-background);
