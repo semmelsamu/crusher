@@ -26,53 +26,57 @@
 
             <section class="card p-card-inner space-y-4">
                 <h2>Gyms</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>City</th>
-                            <th>Street</th>
-                            <th>Email</th>
-                            <th class="w-20">Rating</th>
-                        </tr>
-                    </thead>
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>City</th>
+                                <th>Street</th>
+                                <th>Email</th>
+                                <th class="w-20">Rating</th>
+                            </tr>
+                        </thead>
 
-                    <tbody th:if="${gyms.isEmpty()}">
-                        <tr>
-                            <td
-                                colspan="6"
-                                class="text-center text-muted-foreground"
+                        <tbody th:if="${gyms.isEmpty()}">
+                            <tr>
+                                <td
+                                    colspan="6"
+                                    class="text-center text-muted-foreground"
+                                >
+                                    No gyms available yet.
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody th:unless="${gyms.isEmpty()}">
+                            <tr
+                                class="cursor-pointer hover:bg-main"
+                                th:each="gym : ${gyms}"
+                                th:onclick="|window.location.href='@{/gyms/{id}(id=${gym.id})}';|"
                             >
-                                No gyms available yet.
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody th:unless="${gyms.isEmpty()}">
-                        <tr
-                            class="cursor-pointer hover:bg-main"
-                            th:each="gym : ${gyms}"
-                            th:onclick="|window.location.href='@{/gyms/{id}(id=${gym.id})}';|"
-                        >
-                            <td th:text="${gym.name}">Gym Name</td>
-                            <td th:text="${gym.city}">City</td>
-                            <td th:text="${gym.street}">Street</td>
-                            <td th:text="${gym.email}">email@example.com</td>
-                            <td>
-                                <span
-                                    th:if="${gymRatings.containsKey(gym.id)}"
-                                    th:text="${gymRatings.get(gym.id)} + '/5'"
-                                >
-                                    3/5
-                                </span>
-                                <span
-                                    th:unless="${gymRatings.containsKey(gym.id)}"
-                                >
-                                    -
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                <td th:text="${gym.name}">Gym Name</td>
+                                <td th:text="${gym.city}">City</td>
+                                <td th:text="${gym.street}">Street</td>
+                                <td th:text="${gym.email}">
+                                    email@example.com
+                                </td>
+                                <td>
+                                    <span
+                                        th:if="${gymRatings.containsKey(gym.id)}"
+                                        th:text="${gymRatings.get(gym.id)} + '/5'"
+                                    >
+                                        3/5
+                                    </span>
+                                    <span
+                                        th:unless="${gymRatings.containsKey(gym.id)}"
+                                    >
+                                        -
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </main>
     </th:block>
