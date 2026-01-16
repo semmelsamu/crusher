@@ -119,7 +119,6 @@
                         <thead>
                             <tr>
                                 <th>Boulder</th>
-                                <th>Grade</th>
                                 <th>Progress</th>
                                 <th>Result</th>
                                 <th>Time</th>
@@ -128,23 +127,32 @@
                         </thead>
                         <tbody th:if="${goes.isEmpty()}">
                             <tr>
-                                <td colspan="6" class="text-center">
+                                <td colspan="7" class="text-center">
                                     No goes recorded yet.
                                 </td>
                             </tr>
                         </tbody>
                         <tbody th:unless="${goes.isEmpty()}">
                             <tr th:each="go : ${goes}">
-                                <td th:text="${go.boulder.description}">
-                                    Boulder Description
-                                </td>
-                                <td>
+                                <td class="flex items-center gap-4">
+                                    <div
+                                        th:class="'color-badge ' + ${go.boulder.color.cssColorClass}"
+                                    ></div>
                                     <span
                                         class="grade-badge"
                                         th:text="${go.boulder.grade.name}"
                                     >
                                         Grade
                                     </span>
+
+                                    <span th:text="${go.boulder.description}">
+                                        Boulder Description</span
+                                    >
+
+                                    <span
+                                        class="text-foreground-muted"
+                                        th:text="${go.boulder.sector.name}"
+                                    ></span>
                                 </td>
                                 <td>
                                     <span
