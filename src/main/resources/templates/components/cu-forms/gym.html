@@ -59,13 +59,12 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="space-y-2">
-            <label class="block">Latitude (optional)</label>
+            <label class="block">Latitude</label>
             <input
                 th:field="*{latitude}"
                 type="number"
                 step="any"
                 class="text-input w-full"
-                placeholder="49.032275"
             />
             <p
                 th:if="${#fields.hasErrors('latitude')}"
@@ -75,13 +74,12 @@
         </div>
 
         <div class="space-y-2">
-            <label class="block">Longitude (optional)</label>
+            <label class="block">Longitude</label>
             <input
                 th:field="*{longitude}"
                 type="number"
                 step="any"
                 class="text-input w-full"
-                placeholder="12.128859"
             />
             <p
                 th:if="${#fields.hasErrors('longitude')}"
@@ -92,15 +90,14 @@
     </div>
 
     <div class="space-y-2">
-        <label class="block">Crowd Level URL (optional)</label>
+        <label class="block">Crowd Level URL</label>
         <input
             th:field="*{crowdLevelUrl}"
             type="url"
             class="text-input w-full"
-            placeholder="https://www.boulderwelt-regensburg.de/"
         />
         <p class="text-foreground-muted text-sm">
-            URL zur Live-Auslastungsanzeige der Halle (falls verfügbar)
+            URL to the crowd level display of the hall (if available)
         </p>
         <p
             th:if="${#fields.hasErrors('crowdLevelUrl')}"
