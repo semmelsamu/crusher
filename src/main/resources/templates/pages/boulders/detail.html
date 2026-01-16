@@ -27,6 +27,11 @@
                         method="post"
                         class="ml-auto toggle-form"
                     >
+                        <input
+                            type="hidden"
+                            name="returnUrl"
+                            th:value="@{/boulders/{id}(id=${boulder.id})}"
+                        />
                         <button
                             type="submit"
                             class="button button-primary data-[active=true]:warning group toggle"
