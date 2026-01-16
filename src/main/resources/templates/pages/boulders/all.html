@@ -38,47 +38,49 @@
                     method="get"
                     class="flex gap-4 flex-wrap"
                 >
-                    <div class="space-y-2">
-                        <label for="gym-select">Gym</label>
-                        <select
-                            id="gym-select"
-                            name="gymId"
-                            class="text-input w-full"
-                        >
-                            <option
-                                value=""
-                                th:selected="${selectedGymId == null}"
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="space-y-2">
+                            <label for="gym-select">Gym</label>
+                            <select
+                                id="gym-select"
+                                name="gymId"
+                                class="text-input w-full"
                             >
-                                All Gyms
-                            </option>
-                            <option
-                                th:each="gym : ${gyms}"
-                                th:value="${gym.id}"
-                                th:text="${gym.name}"
-                                th:selected="${gym.id == selectedGymId}"
-                            >
-                                Gym
-                            </option>
-                        </select>
-                    </div>
+                                <option
+                                    value=""
+                                    th:selected="${selectedGymId == null}"
+                                >
+                                    All Gyms
+                                </option>
+                                <option
+                                    th:each="gym : ${gyms}"
+                                    th:value="${gym.id}"
+                                    th:text="${gym.name}"
+                                    th:selected="${gym.id == selectedGymId}"
+                                >
+                                    Gym
+                                </option>
+                            </select>
+                        </div>
 
-                    <div class="space-y-2">
-                        <label for="sector-select">Sector</label>
-                        <select
-                            id="sector-select"
-                            name="sectorId"
-                            class="text-input w-full"
-                        >
-                            <option value="">All Sectors</option>
-                            <option
-                                th:each="sector : ${sectors}"
-                                th:value="${sector.id}"
-                                th:text="${sector.name}"
-                                th:selected="${sector.id == selectedSectorId}"
+                        <div class="space-y-2">
+                            <label for="sector-select">Sector</label>
+                            <select
+                                id="sector-select"
+                                name="sectorId"
+                                class="text-input w-full"
                             >
-                                Sector
-                            </option>
-                        </select>
+                                <option value="">All Sectors</option>
+                                <option
+                                    th:each="sector : ${sectors}"
+                                    th:value="${sector.id}"
+                                    th:text="${sector.name}"
+                                    th:selected="${sector.id == selectedSectorId}"
+                                >
+                                    Sector
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
                     <div
@@ -118,25 +120,30 @@
                         </div>
                     </div>
 
-                    <div class="flex gap-2 flex-wrap">
-                        <div class="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                id="project-only"
-                                name="projectOnly"
-                                class="checkbox"
-                                th:checked="${projectOnly}"
-                            />
-                            <label for="project-only">
-                                Show projects only
-                            </label>
+                    <div class="flex flex-col sm:flex-row gap-4 w-full">
+                        <div class="flex gap-2 flex-wrap">
+                            <div class="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="project-only"
+                                    name="projectOnly"
+                                    class="checkbox"
+                                    th:checked="${projectOnly}"
+                                />
+                                <label for="project-only">
+                                    Show projects only
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    <button type="submit" class="button button-primary ml-auto">
-                        <x th:replace="~{components/icons :: funnel}"></x>
-                        Filter
-                    </button>
+                        <button
+                            type="submit"
+                            class="button button-primary ml-auto"
+                        >
+                            <x th:replace="~{components/icons :: funnel}"></x>
+                            Filter
+                        </button>
+                    </div>
                 </form>
             </section>
 
