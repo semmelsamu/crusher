@@ -132,76 +132,82 @@
                 ></div>
             </section>
 
-            <!-- Events -->
-            <section
-                class="card p-card-inner space-y-4"
-                th:if="${!events.isEmpty()}"
-            >
-                <h2>Events</h2>
-                <th:block
-                    th:each="eventOccurrence, iterStat : ${events}"
-                    th:if="${iterStat.index < 3}"
-                    th:insert="~{components/event-item :: event-item(${gym.id}, ${eventOccurrence})}"
-                ></th:block>
-                <details
-                    th:if="${#lists.size(events) > 3}"
-                    class="show-more group"
+            <div class="lg:grid grid-cols-3 gap-card-outer *:self-start">
+                <!-- Events -->
+                <section
+                    class="card p-card-inner space-y-4"
+                    th:if="${!events.isEmpty()}"
                 >
-                    <summary>
-                        <span class="group-open:hidden">Show more events</span>
-                        <span class="group-open:block hidden"
-                            >Show less events</span
-                        >
-                    </summary>
-                    <div class="space-y-4">
-                        <th:block
-                            th:each="eventOccurrence, iterStat : ${events}"
-                            th:if="${iterStat.index >= 3}"
-                            th:insert="~{components/event-item :: event-item(${gym.id}, ${eventOccurrence})}"
-                        ></th:block>
-                    </div>
-                </details>
-            </section>
-
-            <!-- Notices -->
-            <section
-                class="card p-card-inner space-y-4 self-start"
-                th:if="${!notices.isEmpty()}"
-            >
-                <h2>Notices</h2>
-                <div class="space-y-4">
+                    <h2>Events</h2>
                     <th:block
-                        th:each="notice, iterStat : ${notices}"
+                        th:each="eventOccurrence, iterStat : ${events}"
                         th:if="${iterStat.index < 3}"
-                        th:insert="~{components/notice-item :: notice-item(${notice})}"
+                        th:insert="~{components/event-item :: event-item(${gym.id}, ${eventOccurrence})}"
                     ></th:block>
-                </div>
-                <details
-                    th:if="${#lists.size(notices) > 3}"
-                    class="show-more group"
+                    <details
+                        th:if="${#lists.size(events) > 3}"
+                        class="show-more group"
+                    >
+                        <summary>
+                            <span class="group-open:hidden"
+                                >Show more events</span
+                            >
+                            <span class="group-open:block hidden"
+                                >Show less events</span
+                            >
+                        </summary>
+                        <div class="space-y-4">
+                            <th:block
+                                th:each="eventOccurrence, iterStat : ${events}"
+                                th:if="${iterStat.index >= 3}"
+                                th:insert="~{components/event-item :: event-item(${gym.id}, ${eventOccurrence})}"
+                            ></th:block>
+                        </div>
+                    </details>
+                </section>
+
+                <!-- Notices -->
+                <section
+                    class="card p-card-inner space-y-4 self-start"
+                    th:if="${!notices.isEmpty()}"
                 >
-                    <summary>
-                        <span class="group-open:hidden">Show more notices</span>
-                        <span class="group-open:block hidden"
-                            >Show less notices</span
-                        >
-                    </summary>
+                    <h2>Notices</h2>
                     <div class="space-y-4">
                         <th:block
                             th:each="notice, iterStat : ${notices}"
-                            th:if="${iterStat.index >= 3}"
+                            th:if="${iterStat.index < 3}"
                             th:insert="~{components/notice-item :: notice-item(${notice})}"
                         ></th:block>
                     </div>
-                </details>
-            </section>
+                    <details
+                        th:if="${#lists.size(notices) > 3}"
+                        class="show-more group"
+                    >
+                        <summary>
+                            <span class="group-open:hidden"
+                                >Show more notices</span
+                            >
+                            <span class="group-open:block hidden"
+                                >Show less notices</span
+                            >
+                        </summary>
+                        <div class="space-y-4">
+                            <th:block
+                                th:each="notice, iterStat : ${notices}"
+                                th:if="${iterStat.index >= 3}"
+                                th:insert="~{components/notice-item :: notice-item(${notice})}"
+                            ></th:block>
+                        </div>
+                    </details>
+                </section>
 
-            <!-- Comments -->
-            <section class="card p-card-inner self-start">
-                <div
-                    th:replace="~{components/comments :: comments('/gyms/' + ${gym.id} + '/comments', ${comments}, '/gyms/' + ${gym.id} + '/comments')}"
-                ></div>
-            </section>
+                <!-- Comments -->
+                <section class="card p-card-inner self-start">
+                    <div
+                        th:replace="~{components/comments :: comments('/gyms/' + ${gym.id} + '/comments', ${comments}, '/gyms/' + ${gym.id} + '/comments')}"
+                    ></div>
+                </section>
+            </div>
         </div>
     </th:block>
 </th:block>
