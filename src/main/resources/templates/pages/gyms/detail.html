@@ -24,7 +24,9 @@
                 </header>
             </div>
 
-            <div class="space-y-2">
+            <div
+                class="space-y-2 xl:text-center xl:*:justify-center p-card-inner"
+            >
                 <h2
                     class="text-6xl font-bold text-accent mb-4"
                     th:text="${gym.name}"
@@ -43,8 +45,7 @@
                 </p>
             </div>
 
-            <!-- Gym Info -->
-            <details class="card overflow-clip group">
+            <details class="card overflow-clip group mx-auto max-w-3xl">
                 <summary class="p-4 flex items-center gap-2 justify-center">
                     <x th:replace="~{components/icons :: map}"></x>
                     <p>
@@ -63,11 +64,11 @@
                 ></div>
             </details>
 
-            <section
-                class="card p-card-inner flex flex-wrap gap-8 justify-evenly"
-            >
-                <!-- Total Boulders -->
-                <div class="text-center">
+            <div class="w-full flex gap-card-outer *:flex-1">
+                <section
+                    class="card p-card-inner flex flex-col items-center justify-center text-center"
+                >
+                    <!-- Total Boulders -->
                     <p class="text-sm font-medium text-foreground-muted">
                         Total Boulders
                     </p>
@@ -77,29 +78,35 @@
                     >
                         0
                     </p>
-                </div>
+                </section>
 
-                <!-- Crowd Level (lazy loaded) -->
-                <div
+                <section
+                    class="card p-card-inner flex flex-col items-center justify-center text-center"
                     th:if="${gym.crowdLevelUrl != null and !#strings.isEmpty(gym.crowdLevelUrl)}"
                     id="crowd-level-container"
-                    class="text-center"
                     th:data-gym-id="${gym.id}"
                 >
-                    <p class="text-sm font-medium text-foreground-muted">
-                        Crowd Level
-                    </p>
-                    <p
-                        id="crowd-level-percentage"
-                        class="text-6xl font-bold text-accent"
-                    ></p>
-                </div>
+                    <div>
+                        <p class="text-sm font-medium text-foreground-muted">
+                            Crowd Level
+                        </p>
+                        <p
+                            id="crowd-level-percentage"
+                            class="text-6xl font-bold text-accent"
+                        ></p>
+                    </div>
+                </section>
 
-                <div th:if="${weather != null}" class="text-center">
+                <section
+                    class="card p-card-inner flex flex-col items-center justify-center text-center"
+                    th:if="${weather != null}"
+                >
                     <p class="text-sm font-medium text-foreground-muted">
                         Current Weather
                     </p>
-                    <div class="flex items-center gap-4 text-accent">
+                    <div
+                        class="flex items-center justify-center gap-4 text-accent"
+                    >
                         <div
                             th:replace="~{components/icons :: ${weather.icon()}}"
                         ></div>
@@ -110,8 +117,8 @@
                             Sunny
                         </p>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
 
             <!-- Your Rating -->
             <section
