@@ -120,7 +120,22 @@
             </section>
 
             <section class="card p-card-inner space-y-4">
-                <h2>Boulders</h2>
+                <div class="flex items-center justify-between">
+                    <h2>Boulders</h2>
+                    <form
+                        th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}/publish-new-boulders(gymId=${gym.id}, sectorId=${sector.id})}"
+                        method="post"
+                    >
+                        <button
+                            type="submit"
+                            class="button primary"
+                            title="Send email notification to users about unpublished boulders in this sector"
+                        >
+                            <x th:replace="~{components/icons :: send}"></x>
+                            Publish New Boulders
+                        </button>
+                    </form>
+                </div>
 
                 <table class="table">
                     <thead>

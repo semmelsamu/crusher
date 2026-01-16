@@ -1,83 +1,83 @@
-INSERT INTO users (name, role, password) VALUES
-    ('alice', 'USER', 'test'),
-    ('bob', 'SETTER', 'test'),
-    ('klaus', 'OWNER', 'test'),
-    ('crusher', 'ADMIN', 'test');
+INSERT INTO users (name, email, role, password) VALUES
+    ('alice', 'alice@crusher-test.de', 'USER', 'test'),
+    ('bob', 'bob@crusher-test.de', 'SETTER', 'test'),
+    ('klaus', 'klaus@crusher-test.de', 'OWNER', 'test'),
+    ('crusher', 'admin@crusher-test.de', 'ADMIN', 'test');
 
 INSERT INTO gyms (name, street, city, email, latitude, longitude, crowd_level_url, deleted) VALUES
-    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', 48.12599371578731, 11.611093684742901, 'https://www.boulderwelt-muenchen-ost.de/', FALSE),
-    ('Einstein Boulderhalle', 'Landsberger Straße 185', 'München', 'info@einstein-boulder.de', 48.14053574359812, 11.522861113579506, NULL, FALSE),
-    ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de', 49.45265787314971, 11.051280015562101, NULL, FALSE),
-    ('Boulderwelt Regensburg', 'Isarstraße 99', 'Regensburg', 'regensburg@boulderwelt.de', 49.032275086772316, 12.128859684768997, 'https://www.boulderwelt-regensburg.de/', FALSE);
+    ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', 48.12599371578731, 11.611093684742901, 'https://www.boulderwelt-muenchen-ost.de/', false),
+    ('Einstein Boulderhalle', 'Landsberger Straße 185', 'München', 'info@einstein-boulder.de', 48.14053574359812, 11.522861113579506, NULL, false),
+    ('BlocHütte Nürnberg', 'Fürther Straße 80', 'Nürnberg', 'nuernberg@blochuette.de', 49.45265787314971, 11.051280015562101, NULL, false),
+    ('Boulderwelt Regensburg', 'Isarstraße 99', 'Regensburg', 'regensburg@boulderwelt.de', 49.032275086772316, 12.128859684768997, 'https://www.boulderwelt-regensburg.de/', false);
 
 INSERT INTO grades (name, v_scale, font_scale, description, gym_id, deleted) VALUES
-    ('1', 'V0', '4', NULL, 1, FALSE),
-    ('2', 'V1', '5', NULL, 1, FALSE),
-    ('3', 'V2', '5+', NULL, 1, FALSE),
-    ('4', 'V3', '6a', 'Erste Hooks und Swing-Moves.', 1, FALSE),
-    ('5', 'V4', '6b', NULL, 1, FALSE),
-    ('6', 'V5', '6c', NULL, 1, FALSE),
-    ('7', 'V6', '7a', 'Crimp-Power über mehrere Moves.', 1, FALSE),
-    ('8', 'V7', '7b+', NULL, 1, FALSE),
-    ('1', 'V0', '4', NULL, 2, FALSE),
-    ('2', 'V1', '5', NULL, 2, FALSE),
-    ('3', 'V2', '5+', 'Erste weite Züge.', 2, FALSE),
-    ('4', 'V3', '6a', NULL, 2, FALSE),
-    ('5', 'V4', '6b', 'Crimps und kleinere Footholds.', 2, FALSE),
-    ('6', 'V5', '6c+', NULL, 2, FALSE),
-    ('7', 'V6', '7a+', NULL, 2, FALSE),
-    ('8', 'V7', '7b+', 'Power-Moves und Sloper mit viel Tention.', 2, FALSE),
-    ('1', 'V0', '4', 'Henkel-Moves zum Einsteigen.', 3, FALSE),
-    ('2', 'V1', '5', NULL, 3, FALSE),
-    ('3', 'V2', '5+', NULL, 3, FALSE),
-    ('4', 'V3', '6a+', 'Einführung in Toe- und Heelhooks.', 3, FALSE),
-    ('5', 'V4', '6b+', NULL, 3, FALSE),
-    ('6', 'V5', '6c+', 'Längere Boulder und schwierigere Dynos.', 3, FALSE),
-    ('7', 'V6', '7a+', NULL, 3, FALSE),
-    ('8', 'V7', '7b', 'Power-Moves mit maximaler Compression.', 3, FALSE);
+    ('1', 'V0', '4', NULL, 1, false),
+    ('2', 'V1', '5', NULL, 1, false),
+    ('3', 'V2', '5+', NULL, 1, false),
+    ('4', 'V3', '6a', 'Erste Hooks und Swing-Moves.', 1, false),
+    ('5', 'V4', '6b', NULL, 1, false),
+    ('6', 'V5', '6c', NULL, 1, false),
+    ('7', 'V6', '7a', 'Crimp-Power über mehrere Moves.', 1, false),
+    ('8', 'V7', '7b+', NULL, 1, false),
+    ('1', 'V0', '4', NULL, 2, false),
+    ('2', 'V1', '5', NULL, 2, false),
+    ('3', 'V2', '5+', 'Erste weite Züge.', 2, false),
+    ('4', 'V3', '6a', NULL, 2, false),
+    ('5', 'V4', '6b', 'Crimps und kleinere Footholds.', 2, false),
+    ('6', 'V5', '6c+', NULL, 2, false),
+    ('7', 'V6', '7a+', NULL, 2, false),
+    ('8', 'V7', '7b+', 'Power-Moves und Sloper mit viel Tention.', 2, false),
+    ('1', 'V0', '4', 'Henkel-Moves zum Einsteigen.', 3, false),
+    ('2', 'V1', '5', NULL, 3, false),
+    ('3', 'V2', '5+', NULL, 3, false),
+    ('4', 'V3', '6a+', 'Einführung in Toe- und Heelhooks.', 3, false),
+    ('5', 'V4', '6b+', NULL, 3, false),
+    ('6', 'V5', '6c+', 'Längere Boulder und schwierigere Dynos.', 3, false),
+    ('7', 'V6', '7a+', NULL, 3, false),
+    ('8', 'V7', '7b', 'Power-Moves mit maximaler Compression.', 3, false);
 
 INSERT INTO sectors (name, description, image_path, gym_id, deleted) VALUES
-    ('30er', 'Klassische Züge mit leichtem Überhang.', '/uploads/sectors/1/f9f1d556-c811-4352-b72e-4c67095d3351.png', 1, FALSE),
-    ('Volldach', 'Steile Wand mit großen Zügen.', '/uploads/sectors/2/a4e72d14-9cf0-421e-8f05-1975f3c724a9.png', 1, FALSE),
-    ('Slab-City', 'Technische Platten und Balance-Probleme.', '/uploads/sectors/3/3d0e1dc4-9d5b-4470-ae75-fb41a9456a2d.png', 2, FALSE),
-    ('45er', 'Starker Überhang und Campus-Style Moves.', '/uploads/sectors/4/0b9e6cfa-873e-46d6-b42f-a958602d9ff3.png', 2, FALSE),
-    ('Tech-Deck', 'Schmale Leisten und Fußarbeitstraining.', '/uploads/sectors/5/c8f932c0-852a-4688-81f2-8b8e2671c2c4.png', 3, FALSE),
-    ('Höhle', 'Kompressionslastige Boulder in der Grotte.', '/uploads/sectors/6/5ae55a50-9088-4b06-841e-50bd76f2a027.png', 3, FALSE);
+    ('30er', 'Klassische Züge mit leichtem Überhang.', '/uploads/sectors/1/f9f1d556-c811-4352-b72e-4c67095d3351.png', 1, false),
+    ('Volldach', 'Steile Wand mit großen Zügen.', '/uploads/sectors/2/a4e72d14-9cf0-421e-8f05-1975f3c724a9.png', 1, false),
+    ('Slab-City', 'Technische Platten und Balance-Probleme.', '/uploads/sectors/3/3d0e1dc4-9d5b-4470-ae75-fb41a9456a2d.png', 2, false),
+    ('45er', 'Starker Überhang und Campus-Style Moves.', '/uploads/sectors/4/0b9e6cfa-873e-46d6-b42f-a958602d9ff3.png', 2, false),
+    ('Tech-Deck', 'Schmale Leisten und Fußarbeitstraining.', '/uploads/sectors/5/c8f932c0-852a-4688-81f2-8b8e2671c2c4.png', 3, false),
+    ('Höhle', 'Kompressionslastige Boulder in der Grotte.', '/uploads/sectors/6/5ae55a50-9088-4b06-841e-50bd76f2a027.png', 3, false);
 
-INSERT INTO boulders (description, color, grade_id, sector_id, holds_count, deleted) VALUES
+INSERT INTO boulders (description, color, grade_id, sector_id, holds_count, published, deleted) VALUES
     -- Boulders for sector 1 (30er, gym 1)
-    ('Links hinten', 'YELLOW', 1, 1, 18, FALSE),
-    ('Rechts vorne, steil', 'BLUE', 3, 1, 22, FALSE),
-    ('Mittig, dynamisch', 'RED', 4, 1, 20, FALSE),
-    ('Kante rechts', 'PINK', 2, 1, 16, FALSE),
-    
+    ('Links hinten', 'YELLOW', 1, 1, 18, true, false),
+    ('Rechts vorne, steil', 'BLUE', 3, 1, 22, true, false),
+    ('Mittig, dynamisch', 'RED', 4, 1, 20, true, false),
+    ('Kante rechts', 'PINK', 2, 1, 16, true, false),
+
     -- Boulders for sector 2 (Volldach, gym 1)
-    ('Dach links, Power', 'BLACK', 6, 2, 25, FALSE),
-    ('Campus rechts', 'BLUE', 7, 2, 22, FALSE),
-    ('Überhang mittig', 'DARK_GREEN', 5, 2, 21, FALSE),
-    ('Traversierung komplett', 'WHITE', 4, 2, 30, FALSE),
-    
+    ('Dach links, Power', 'BLACK', 6, 2, 25, true, false),
+    ('Campus rechts', 'BLUE', 7, 2, 22, true, false),
+    ('Überhang mittig', 'DARK_GREEN', 5, 2, 21, true, false),
+    ('Traversierung komplett', 'WHITE', 4, 2, 30, true, false),
+
     -- Boulders for sector 3 (Slab-City, gym 2)
-    ('Balance links', 'YELLOW', 9, 3, 14, FALSE),
-    ('Platte rechts', 'WHITE', 10, 3, 12, FALSE),
-    ('Technik pur', 'PINK', 11, 3, 18, FALSE),
-    
+    ('Balance links', 'YELLOW', 9, 3, 14, true, false),
+    ('Platte rechts', 'WHITE', 10, 3, 12, true, false),
+    ('Technik pur', 'PINK', 11, 3, 18, true, false),
+
     -- Boulders for sector 4 (45er, gym 2)
-    ('Überhang extrem', 'BLACK', 14, 4, 26, FALSE),
-    ('Power-Dynos', 'RED', 15, 4, 20, FALSE),
-    ('Sloper Challenge', 'BLUE', 16, 4, 19, FALSE),
-    ('Campus Board', 'DARK_GREEN', 13, 4, 24, FALSE),
-    
+    ('Überhang extrem', 'BLACK', 14, 4, 26, true, false),
+    ('Power-Dynos', 'RED', 15, 4, 20, true, false),
+    ('Sloper Challenge', 'BLUE', 16, 4, 19, true, false),
+    ('Campus Board', 'DARK_GREEN', 13, 4, 24, true, false),
+
     -- Boulders for sector 5 (Tech-Deck, gym 3)
-    ('Crimp Heaven', 'YELLOW', 17, 5, 18, FALSE),
-    ('Fußarbeit Spezial', 'PINK', 18, 5, 16, FALSE),
-    ('Leisten links', 'WHITE', 19, 5, 17, FALSE),
-    
+    ('Crimp Heaven', 'YELLOW', 17, 5, 18, true, false),
+    ('Fußarbeit Spezial', 'PINK', 18, 5, 16, true, false),
+    ('Leisten links', 'WHITE', 19, 5, 17, true, false),
+
     -- Boulders for sector 6 (Höhle, gym 3)
-    ('Compression Crack', 'BLACK', 22, 6, 23, FALSE),
-    ('Grotten-Traverse', 'BLUE', 23, 6, 28, FALSE),
-    ('Power-Kompression', 'RED', 24, 6, 24, FALSE),
-    ('Höhlen-Arete', 'DARK_GREEN', 21, 6, 21, FALSE);
+    ('Compression Crack', 'BLACK', 22, 6, 23, true, false),
+    ('Grotten-Traverse', 'BLUE', 23, 6, 28, true, false),
+    ('Power-Kompression', 'RED', 24, 6, 24, true, false),
+    ('Höhlen-Arete', 'DARK_GREEN', 21, 6, 21, true, false);
 
 INSERT INTO projects (user_id, boulder_id, created_at) VALUES
     -- Alice's projects (2 per gym)
