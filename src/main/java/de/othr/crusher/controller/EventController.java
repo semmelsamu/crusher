@@ -2,9 +2,14 @@ package de.othr.crusher.controller;
 
 import de.othr.crusher.model.EventEntity;
 import de.othr.crusher.model.GymEntity;
+import de.othr.crusher.model.UserEntity;
 import de.othr.crusher.repository.EventRepository;
 import de.othr.crusher.repository.GymRepository;
+import de.othr.crusher.repository.SessionRepository;
+import de.othr.crusher.service.EmailService;
 import jakarta.validation.Valid;
+import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Map;
 
 /**
  * Controller for managing events within a gym in the admin area.
@@ -24,6 +27,8 @@ public class EventController {
 
     private final EventRepository eventRepository;
     private final GymRepository gymRepository;
+    private final SessionRepository sessionRepository;
+    private final EmailService emailService;
 
     /**
      * Creates a new EventController with the given repositories.
@@ -31,9 +36,12 @@ public class EventController {
      * @param eventRepository repository for accessing event data
      * @param gymRepository repository for accessing gym data
      */
-    public EventController(EventRepository eventRepository, GymRepository gymRepository) {
+    public EventController(EventRepository eventRepository, GymRepository gymRepository,
+            SessionRepository sessionRepository, EmailService emailService) {
         this.eventRepository = eventRepository;
         this.gymRepository = gymRepository;
+        this.sessionRepository = sessionRepository;
+        this.emailService = emailService;
     }
 
     /**
@@ -103,7 +111,18 @@ public class EventController {
 
         normalizeSchedule(formEvent);
         formEvent.setGym(gym);
-        eventRepository.save(formEvent);
+        EventEntity savedEvent = eventRepository.save(formEvent);
+
+        List<UserEntity> users = sessionRepository.findDistinctUsersByGymId(gymId);
+        if (!users.isEmpty()) {
+            for (UserEntity user : users) {
+                try {
+                    emailService.sendNewEventEmail(user.getEmail(), user.getName(), gym.getName(), savedEvent);
+                } catch (Exception e) {
+                    System.err.println("Failed to send event email to " + user.getEmail() + ": " + e.getMessage());
+                }
+            }
+        }
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
