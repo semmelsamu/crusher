@@ -1,0 +1,25 @@
+meta {
+  name: UpdateConfig
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:8080/api/statistics
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "goesPerGradeEnabled": true,
+    "finishedGoesPerGradeEnabled": false,
+    "resultDistributionEnabled": false,
+    "highestFinishedGradeEnabled": false
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
