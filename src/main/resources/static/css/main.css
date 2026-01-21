@@ -2,6 +2,8 @@
 
 @source "../../templates/**/*.html";
 
+@source inline("bg-yellow-400 bg-blue-500 bg-gray-900 bg-white bg-pink-400 bg-green-700 bg-red-500");
+
 @import "./theme.css";
 @import "./base.css" layer(base);
 @import "./components.css" layer(components);
