@@ -23,6 +23,15 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByName(String name);
 
     /**
+     * Finds a user by their username if they are not deleted.
+     *
+     * @param name the username to search for
+     * @return an {@link Optional} containing the matching {@link UserEntity},
+     *         or empty if no user was found
+     */
+    Optional<UserEntity> findByNameAndDeletedFalse(String name);
+
+    /**
      * Finds a user by their email address.
      *
      * @param email the email address to search for

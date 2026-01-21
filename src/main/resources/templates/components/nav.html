@@ -57,9 +57,15 @@
                     Dashboard
                 </a>
 
-                <div
-                    th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
-                ></div>
+                <a
+                    href="/account"
+                    aria-label="Account settings"
+                    title="Account settings"
+                >
+                    <div
+                        th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
+                    ></div>
+                </a>
 
                 <form
                     th:action="@{/logout}"

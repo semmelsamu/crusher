@@ -26,6 +26,8 @@ public class UserEntity {
 
     private String role;
 
+    private boolean deleted = false;
+
     public Long getId() {
         return id;
     }
@@ -65,5 +67,12 @@ public class UserEntity {
     public void setRole(String role) {
         this.role = role;
     }
-}
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+}
