@@ -8,9 +8,9 @@ The convention is inspired by [Conventional Branch](https://conventional-branch.
 
 There are 3 types of branches:
 
--   `feat/feature-name` for new features
--   `fix/fix-name` for bugfixes
--   `doc/doc-name` for documentation updates
+- `feat/feature-name` for new features
+- `fix/fix-name` for bugfixes
+- `doc/doc-name` for documentation updates
 
 ### Commit conventions
 
@@ -26,10 +26,11 @@ Commits should look like this:
 [optional footer(s)]
 ```
 
-The commit types should be the same as the branch types.
+The commit types should match the branch types.
 
 ## Coding conventions
 
-### Code Style
+### Code style
 
-We use the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html).
+- We use the Google Java Style Guide: https://google.github.io/styleguide/javaguide.html
+- We use prettier to format CSS, HTML and JavaScript

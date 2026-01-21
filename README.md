@@ -59,10 +59,10 @@ SPRING_PROFILES_ACTIVE=prod ./gradlew bootRun
 
 Seeded from `src/main/resources/data.sql`, password for all accounts is `test`.
 
-- alice / test (ROLE_USER)
-- bob / test (ROLE_SETTER)
-- klaus / test (ROLE_OWNER)
-- crusher / test (ROLE_ADMIN)
+- alice / test (USER, ROLE_USER)
+- bob / test (SETTER, ROLE_SETTER)
+- klaus / test (OWNER, ROLE_OWNER)
+- crusher / test (ADMIN, ROLE_ADMIN)
 
 ## H2 Console
 
@@ -72,7 +72,9 @@ http://localhost:8080/h2-console (restricted to ADMIN role). JDBC URL: `jdbc:h2:
 
 All detailed documentation can be found in `docs`:
 
+- Repository Structure
 - API documentation
 - Wireframes
 - Class Diagrams
 - Product backlog
+- Best Practices
