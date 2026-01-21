@@ -50,21 +50,75 @@
                                 <td th:text="${user.email}">Email</td>
                                 <td th:text="${user.role}">Role</td>
                                 <td>
-                                    <a
-                                        th:href="@{/users/{id}/edit(id=${user.id})}"
-                                        class="button primary"
-                                    >
-                                        <x
-                                            th:replace="~{components/icons :: pencil-small}"
-                                        ></x>
-                                        Edit
-                                    </a>
+                                    <div class="flex gap-2">
+                                        <a
+                                            th:href="@{/users/{id}/edit(id=${user.id})}"
+                                            class="button primary"
+                                        >
+                                            <x
+                                                th:replace="~{components/icons :: pencil-small}"
+                                            ></x>
+                                            Edit
+                                        </a>
+                                        <button
+                                            type="button"
+                                            class="button danger"
+                                            th:onclick="'openDialog(\'delete-user-dialog-' + ${user.id} + '\')'"
+                                        >
+                                            <x
+                                                th:replace="~{components/icons :: trash-2-small}"
+                                            ></x>
+                                            Delete
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </section>
+
+            <!-- Delete confirmation dialogs -->
+            <div th:each="user : ${users}">
+                <dialog
+                    th:id="'delete-user-dialog-' + ${user.id}"
+                    class="dialog space-y-4"
+                    closedby="any"
+                >
+                    <h3>Confirm deletion</h3>
+                    <p>
+                        Are you sure you want to delete user
+                        <strong th:text="${user.name}">user</strong>? This
+                        action cannot be undone. Their gym activity will remain.
+                    </p>
+                    <div class="flex justify-end gap-4">
+                        <button
+                            class="button"
+                            th:onclick="'closeDialog(\'delete-user-dialog-' + ${user.id} + '\')'"
+                        >
+                            Cancel
+                        </button>
+                        <form
+                            th:action="@{/users/{id}(id=${user.id})}"
+                            method="post"
+                            class="inline"
+                        >
+                            <input
+                                type="hidden"
+                                name="_method"
+                                value="delete"
+                            />
+                            <button
+                                autofocus
+                                type="submit"
+                                class="button danger"
+                            >
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </dialog>
+            </div>
         </main>
     </th:block>
 </th:block>

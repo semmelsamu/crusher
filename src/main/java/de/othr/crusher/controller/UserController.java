@@ -48,7 +48,7 @@ public class UserController {
     }
 
     /**
-     * Displays a list of all users with their roles (admin only).
+     * Displays a list of all active users with their roles (admin only).
      *
      * @param principal the authenticated user principal
      * @param model Spring model to pass data to the view
@@ -59,7 +59,7 @@ public class UserController {
         if (!isAdmin(principal)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userRepository.findByDeletedFalse());
         return "pages/admin/users/all";
     }
 
@@ -198,26 +198,30 @@ public class UserController {
 
     /**
      * Deletes a user account (soft delete).
-     * Users can only delete their own account.
+     * Users can delete their own account, admins can delete any user.
      *
      * @param userId identifier of the user to delete
      * @param principal the authenticated user principal
      * @param request HTTP request
      * @param response HTTP response
-     * @return redirect to login page
+     * @param redirectAttributes attributes for flash messages on redirect
+     * @return redirect to appropriate page
      */
     @DeleteMapping("/{userId}")
     public String deleteUser(
             @PathVariable("userId") Long userId,
             Principal principal,
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            RedirectAttributes redirectAttributes) {
         
         UserEntity currentUser = findUserByPrincipal(principal);
+        boolean admin = isAdmin(principal);
+        boolean isSelf = currentUser.getId().equals(userId);
         
-        // Only allow users to delete their own account
-        if (!currentUser.getId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own account");
+        // Check permissions: must be admin OR deleting own account
+        if (!admin && !isSelf) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
         UserEntity user = userRepository.findById(userId)
@@ -226,10 +230,19 @@ public class UserController {
         user.setDeleted(true);
         userRepository.save(user);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        new SecurityContextLogoutHandler().logout(request, response, authentication);
-
-        return "redirect:/login?deleted=1";
+        // If deleting own account, log out
+        if (isSelf) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+            return "redirect:/login?deleted=1";
+        }
+        
+        // Admin deleted another user - redirect to users list
+        redirectAttributes.addFlashAttribute("toast", Map.of(
+            "type", "success",
+            "message", "User deleted successfully!"
+        ));
+        return "redirect:/users";
     }
 
     /**

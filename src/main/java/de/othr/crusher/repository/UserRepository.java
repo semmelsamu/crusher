@@ -39,4 +39,11 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      *         or empty if no user was found
      */
     Optional<UserEntity> findByEmail(String email);
+
+    /**
+     * Finds all users that are not deleted.
+     *
+     * @return a list of all non-deleted users
+     */
+    java.util.List<UserEntity> findByDeletedFalse();
 }
