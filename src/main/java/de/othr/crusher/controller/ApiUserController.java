@@ -314,7 +314,8 @@ public class ApiUserController {
 
     private ResponseEntity<?> deleteUserInternal(UserEntity user) {
         try {
-            userRepository.deleteAndFlush(user);
+            userRepository.delete(user);
+            userRepository.flush();
         } catch (DataIntegrityViolationException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ApiErrorResponse("User has related data and cannot be deleted"));
