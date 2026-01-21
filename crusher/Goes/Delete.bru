@@ -1,0 +1,21 @@
+meta {
+  name: Delete
+  type: http
+  seq: 2
+}
+
+delete {
+  url: http://localhost:8080/api/sessions/:session_id/goes/:go_id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  go_id: 89
+  session_id: 25
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

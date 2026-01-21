@@ -1,17 +1,18 @@
 <nav
     th:fragment="pagination(page, baseUrl)"
     th:if="${page.totalPages > 1}"
-    class="flex justify-center items-center gap-4"
+    class="flex justify-center items-center gap-4 pagination-nav"
     role="navigation"
     aria-label="Pagination"
     xmlns:th="http://www.thymeleaf.org"
+    th:attr="data-base-url=${baseUrl}"
 >
     <!-- Previous Button -->
     <button
-        class="button button-square"
+        class="button button-square pagination-btn"
         th:disabled="${page.first}"
         aria-label="Previous page"
-        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number})}';|"
+        th:attr="data-page=${page.number}"
     >
         <x th:replace="~{components/icons :: chevron-left}"></x>
     </button>
@@ -28,9 +29,9 @@
         <th:block th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
             <button
                 th:text="${pageNum + 1}"
-                th:class="'button button-square' + (${pageNum == currentPage} ? ' primary' : '')"
+                th:class="'button button-square pagination-btn' + (${pageNum == currentPage} ? ' primary' : '')"
                 th:disabled="${pageNum == currentPage}"
-                th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${pageNum + 1})}';|"
+                th:attr="data-page=${pageNum + 1}"
             >
                 1
             </button>
@@ -39,10 +40,10 @@
 
     <!-- Next Button -->
     <button
-        class="button button-square"
+        class="button button-square pagination-btn"
         th:disabled="${page.last}"
         aria-label="Next page"
-        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number + 2})}';|"
+        th:attr="data-page=${page.number + 2}"
     >
         <x th:replace="~{components/icons :: chevron-right}"></x>
     </button>
