@@ -20,11 +20,17 @@
                 <header
                     class="card flex-1 flex items-center justify-between p-card-inner"
                 >
-                    <h1>Gyms</h1>
+                    <h1>Admin Panel</h1>
+
+                    <a th:href="@{/users}" class="button">
+                        <x th:replace="~{components/icons :: user}"></x>
+                        Users
+                    </a>
                 </header>
             </div>
 
             <section class="card p-card-inner space-y-4">
+                <h2>Gyms</h2>
                 <div class="grid lg:grid-cols-3 gap-card-outer">
                     <a
                         th:each="gym : ${gyms}"

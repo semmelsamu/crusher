@@ -58,7 +58,7 @@
                 </a>
 
                 <a
-                    href="/account"
+                    th:href="${currentUser != null ? '/users/' + currentUser.id + '/edit' : '/login'}"
                     aria-label="Account settings"
                     title="Account settings"
                 >

@@ -1,0 +1,122 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main
+            class="wrapper"
+            th:with="breadcrumb=${ { {label: 'Home', url: '/'}, {label: 'Admin Panel', url: '/admin/gyms'}, {label: 'Users', url: ''} } }"
+        >
+            <div
+                th:replace="~{components/breadcrumb :: breadcrumb(${breadcrumb})}"
+            ></div>
+
+            <div class="flex items-center gap-4">
+                <a th:href="@{/admin/gyms}" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+
+                <header
+                    class="card flex-1 flex items-center justify-between p-card-inner"
+                >
+                    <h1>Users</h1>
+                </header>
+            </div>
+
+            <section class="card p-card-inner space-y-4">
+                <h2>All Users</h2>
+
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody th:if="${users.isEmpty()}">
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    No users found.
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody th:unless="${users.isEmpty()}">
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.name}">Name</td>
+                                <td th:text="${user.email}">Email</td>
+                                <td th:text="${user.role}">Role</td>
+                                <td>
+                                    <div class="flex gap-2">
+                                        <a
+                                            th:href="@{/users/{id}/edit(id=${user.id})}"
+                                            class="button primary button-square"
+                                        >
+                                            <x
+                                                th:replace="~{components/icons :: pencil-ruler}"
+                                            ></x>
+                                        </a>
+                                        <button
+                                            type="button"
+                                            class="button danger button-square"
+                                            th:onclick="'openDialog(\'delete-user-dialog-' + ${user.id} + '\')'"
+                                        >
+                                            <x
+                                                th:replace="~{components/icons :: trash-2}"
+                                            ></x>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Delete confirmation dialogs -->
+            <div th:each="user : ${users}">
+                <dialog
+                    th:id="'delete-user-dialog-' + ${user.id}"
+                    class="dialog space-y-4"
+                    closedby="any"
+                >
+                    <h3>Confirm deletion</h3>
+                    <p>
+                        Are you sure you want to delete user
+                        <strong th:text="${user.name}">user</strong>? This
+                        action cannot be undone. Their gym activity will remain.
+                    </p>
+                    <div class="flex justify-end gap-4">
+                        <button
+                            class="button"
+                            th:onclick="'closeDialog(\'delete-user-dialog-' + ${user.id} + '\')'"
+                        >
+                            Cancel
+                        </button>
+                        <form
+                            th:action="@{/users/{id}(id=${user.id})}"
+                            method="post"
+                            class="inline"
+                        >
+                            <input
+                                type="hidden"
+                                name="_method"
+                                value="delete"
+                            />
+                            <button
+                                autofocus
+                                type="submit"
+                                class="button danger"
+                            >
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </dialog>
+            </div>
+        </main>
+    </th:block>
+</th:block>
