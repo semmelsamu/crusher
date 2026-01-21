@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
@@ -34,15 +33,12 @@ import jakarta.servlet.http.HttpSession;
 public class AccountController {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final CustomUserDetailsService userDetailsService;
 
     public AccountController(
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
             CustomUserDetailsService userDetailsService) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
     }
 
@@ -57,8 +53,6 @@ public class AccountController {
     public String updateAccount(
             @RequestParam String username,
             @RequestParam String email,
-            @RequestParam(required = false) String password,
-            @RequestParam(required = false) String confirmPassword,
             Principal principal,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
@@ -95,39 +89,6 @@ public class AccountController {
             return redirectBack(request);
         }
 
-        boolean hasPasswordInput =
-                StringUtils.hasText(password) || StringUtils.hasText(confirmPassword);
-        if (hasPasswordInput) {
-            if (!StringUtils.hasText(password) || !StringUtils.hasText(confirmPassword)) {
-                redirectAttributes.addFlashAttribute("toast", Map.of(
-                    "type", "error",
-                    "title", "Update failed",
-                    "message", "Please fill in both password fields"
-                ));
-                return redirectBack(request);
-            }
-
-            if (password.length() < 4) {
-                redirectAttributes.addFlashAttribute("toast", Map.of(
-                    "type", "error",
-                    "title", "Update failed",
-                    "message", "Password must be at least 4 characters long"
-                ));
-                return redirectBack(request);
-            }
-
-            if (!password.equals(confirmPassword)) {
-                redirectAttributes.addFlashAttribute("toast", Map.of(
-                    "type", "error",
-                    "title", "Update failed",
-                    "message", "Passwords do not match"
-                ));
-                return redirectBack(request);
-            }
-
-            user.setPassword(passwordEncoder.encode(password));
-        }
-
         user.setName(trimmedUsername);
         user.setEmail(trimmedEmail);
         userRepository.save(user);
@@ -144,20 +105,9 @@ public class AccountController {
 
     @DeleteMapping("/account")
     public String deleteAccount(
-            @RequestParam(name = "confirmDelete", required = false) String confirmDelete,
             Principal principal,
             HttpServletRequest request,
-            HttpServletResponse response,
-            RedirectAttributes redirectAttributes) {
-        if (!"on".equals(confirmDelete)) {
-            redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Delete failed",
-                "message", "Please confirm account deletion"
-            ));
-            return redirectBack(request);
-        }
-
+            HttpServletResponse response) {
         UserEntity user = findUserByPrincipal(principal);
         user.setDeleted(true);
         userRepository.save(user);
