@@ -53,22 +53,20 @@
                                     <div class="flex gap-2">
                                         <a
                                             th:href="@{/users/{id}/edit(id=${user.id})}"
-                                            class="button primary"
+                                            class="button primary button-square"
                                         >
                                             <x
-                                                th:replace="~{components/icons :: pencil-small}"
+                                                th:replace="~{components/icons :: pencil-ruler}"
                                             ></x>
-                                            Edit
                                         </a>
                                         <button
                                             type="button"
-                                            class="button danger"
+                                            class="button danger button-square"
                                             th:onclick="'openDialog(\'delete-user-dialog-' + ${user.id} + '\')'"
                                         >
                                             <x
-                                                th:replace="~{components/icons :: trash-2-small}"
+                                                th:replace="~{components/icons :: trash-2}"
                                             ></x>
-                                            Delete
                                         </button>
                                     </div>
                                 </td>
