@@ -220,10 +220,6 @@
     @apply w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold text-white bg-main shrink-0;
 }
 
-.avatar-button {
-    @apply inline-flex p-0 border-0 bg-transparent shadow-none cursor-pointer appearance-none;
-}
-
 .theme-toggle .theme-icon {
     @apply flex items-center justify-center;
 }
