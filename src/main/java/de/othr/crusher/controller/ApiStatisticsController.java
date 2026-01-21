@@ -145,12 +145,13 @@ public class ApiStatisticsController {
                     .body(new ApiErrorResponse("Configuration not found. Use POST to create one first."));
         }
 
-        // Get goes since last fetch (or since config creation if never fetched)
-        LocalDateTime since = config.getLastFetchedAt() != null
-                ? config.getLastFetchedAt()
-                : config.getCreatedAt();
-
-        List<GoEntity> goes = goRepository.findBySession_UserIdAndTimestampAfter(user.getId(), since);
+        // Get goes since last fetch (or all goes if never fetched)
+        List<GoEntity> goes;
+        if (config.getLastFetchedAt() != null) {
+            goes = goRepository.findBySession_UserIdAndTimestampAfter(user.getId(), config.getLastFetchedAt());
+        } else {
+            goes = goRepository.findBySession_UserId(user.getId());
+        }
 
         // Calculate statistics based on enabled options
         Map<String, Long> goesPerGrade = null;
