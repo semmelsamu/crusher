@@ -85,7 +85,7 @@
                         <x th:replace="~{components/icons :: pencil-small}"></x>
                     </span>
                     <span
-                        th:if="${comment.user.name == #authentication.principal.username}"
+                        th:if="${comment.user.name == #authentication.principal.username or #authorization.expression('hasRole(''ADMIN'')')}"
                         th:onclick="|openDialog('delete-comment-dialog-${comment.id}')|"
                         style="
                             cursor: pointer;
@@ -147,7 +147,7 @@
 
             <!-- Delete confirmation dialog -->
             <dialog
-                th:if="${comment.user.name == #authentication.principal.username}"
+                th:if="${comment.user.name == #authentication.principal.username or #authorization.expression('hasRole(''ADMIN'')')}"
                 th:id="|delete-comment-dialog-${comment.id}|"
                 class="dialog space-y-4"
                 closedby="any"
