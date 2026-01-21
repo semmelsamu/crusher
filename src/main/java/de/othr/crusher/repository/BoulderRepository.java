@@ -182,6 +182,14 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
     Page<BoulderEntity> findByDeletedFalse(Pageable pageable);
 
     /**
+     * Finds all non-deleted boulders by IDs.
+     *
+     * @param ids boulder identifiers
+     * @return list of non-deleted boulders matching IDs
+     */
+    List<BoulderEntity> findByIdInAndDeletedFalse(List<Long> ids);
+
+    /**
      * Finds all non-deleted boulders by IDs with pagination.
      *
      * @param ids boulder identifiers
@@ -189,6 +197,15 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return page of non-deleted boulders matching IDs
      */
     Page<BoulderEntity> findByIdInAndDeletedFalse(List<Long> ids, Pageable pageable);
+
+    /**
+     * Finds non-deleted boulders for a sector by IDs.
+     *
+     * @param sectorId identifier of the sector
+     * @param ids boulder identifiers
+     * @return list of non-deleted boulders for the sector matching IDs
+     */
+    List<BoulderEntity> findBySectorIdAndIdInAndDeletedFalse(Long sectorId, List<Long> ids);
 
     /**
      * Finds non-deleted boulders for a sector by IDs with pagination.
@@ -199,6 +216,19 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return page of non-deleted boulders for the sector matching IDs
      */
     Page<BoulderEntity> findBySectorIdAndIdInAndDeletedFalse(Long sectorId, List<Long> ids, Pageable pageable);
+
+    /**
+     * Finds non-deleted boulders for a sector by grade IDs and boulder IDs.
+     *
+     * @param sectorId identifier of the sector
+     * @param gradeIds list of grade identifiers
+     * @param ids boulder identifiers
+     * @return list of non-deleted boulders for the sector matching grades and IDs
+     */
+    List<BoulderEntity> findBySectorIdAndGradeIdInAndIdInAndDeletedFalse(
+            Long sectorId,
+            List<Long> gradeIds,
+            List<Long> ids);
 
     /**
      * Finds non-deleted boulders for a sector by grade IDs and boulder IDs with pagination.
@@ -216,6 +246,15 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
             Pageable pageable);
 
     /**
+     * Finds non-deleted boulders for a gym by IDs.
+     *
+     * @param gymId identifier of the gym
+     * @param ids boulder identifiers
+     * @return list of non-deleted boulders for the gym matching IDs
+     */
+    List<BoulderEntity> findBySectorGymIdAndIdInAndDeletedFalse(Long gymId, List<Long> ids);
+
+    /**
      * Finds non-deleted boulders for a gym by IDs with pagination.
      *
      * @param gymId identifier of the gym
@@ -224,6 +263,19 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return page of non-deleted boulders for the gym matching IDs
      */
     Page<BoulderEntity> findBySectorGymIdAndIdInAndDeletedFalse(Long gymId, List<Long> ids, Pageable pageable);
+
+    /**
+     * Finds non-deleted boulders for a gym by grade IDs and boulder IDs.
+     *
+     * @param gymId identifier of the gym
+     * @param gradeIds list of grade identifiers
+     * @param ids boulder identifiers
+     * @return list of non-deleted boulders for the gym matching grades and IDs
+     */
+    List<BoulderEntity> findBySectorGymIdAndGradeIdInAndIdInAndDeletedFalse(
+            Long gymId,
+            List<Long> gradeIds,
+            List<Long> ids);
 
     /**
      * Finds non-deleted boulders for a gym by grade IDs and boulder IDs with pagination.

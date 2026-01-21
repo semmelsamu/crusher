@@ -23,6 +23,7 @@ import de.othr.crusher.repository.SectorRepository;
 import de.othr.crusher.repository.SessionRepository;
 import de.othr.crusher.repository.UserRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -232,10 +233,13 @@ public class DashboardController {
     /**
      * Displays all boulders with optional filtering by gym, sector, and grades.
      *
+     * @param page current page number (1-indexed)
      * @param gymId optional gym ID to filter by
      * @param sectorId optional sector ID to filter by
      * @param gradeIds optional list of grade IDs to filter by
      * @param projectOnly whether to show only boulders marked as projects by the current user
+     * @param sortBy field to sort by (color, grade, rating, sector, gym)
+     * @param sortDir sort direction (asc or desc)
      * @param principal the authenticated user
      * @param model Spring model to pass data to the view
      * @return view name for the boulders page
@@ -248,12 +252,11 @@ public class DashboardController {
             @RequestParam(value = "sectorId", required = false) Long sectorId,
             @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
             @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir,
             Principal principal,
             Model model) {
         UserEntity user = findUserByPrincipal(principal);
-
-        // Convert 1-based page to 0-based for Spring's PageRequest
-        Pageable pageable = PageRequest.of(page - 1, 20);
 
         // Fetch all gyms for the dropdown
         List<GymEntity> gyms = gymRepository.findByDeletedFalse();
@@ -278,70 +281,60 @@ public class DashboardController {
         List<Long> projectBoulderIdList = projectBoulderIds.stream().toList();
         boolean hasGradeFilter = gradeIds != null && !gradeIds.isEmpty();
 
-        // Filter boulders based on selected criteria
-        Page<BoulderEntity> bouldersPage;
+        // Filter boulders based on selected criteria (fetch all matching boulders, no pagination yet)
+        List<BoulderEntity> allBoulders;
         if (projectOnly) {
             if (projectBoulderIdList.isEmpty()) {
-                bouldersPage = Page.empty(pageable);
+                allBoulders = List.of();
             } else if (sectorId != null) {
                 if (hasGradeFilter) {
-                    bouldersPage = boulderRepository
+                    allBoulders = boulderRepository
                             .findBySectorIdAndGradeIdInAndIdInAndDeletedFalse(
                                     sectorId,
                                     gradeIds,
-                                    projectBoulderIdList,
-                                    pageable);
+                                    projectBoulderIdList);
                 } else {
-                    bouldersPage = boulderRepository.findBySectorIdAndIdInAndDeletedFalse(
+                    allBoulders = boulderRepository.findBySectorIdAndIdInAndDeletedFalse(
                             sectorId,
-                            projectBoulderIdList,
-                            pageable);
+                            projectBoulderIdList);
                 }
             } else if (gymId != null) {
                 if (hasGradeFilter) {
-                    bouldersPage = boulderRepository
+                    allBoulders = boulderRepository
                             .findBySectorGymIdAndGradeIdInAndIdInAndDeletedFalse(
                                     gymId,
                                     gradeIds,
-                                    projectBoulderIdList,
-                                    pageable);
+                                    projectBoulderIdList);
                 } else {
-                    bouldersPage = boulderRepository.findBySectorGymIdAndIdInAndDeletedFalse(
+                    allBoulders = boulderRepository.findBySectorGymIdAndIdInAndDeletedFalse(
                             gymId,
-                            projectBoulderIdList,
-                            pageable);
+                            projectBoulderIdList);
                 }
             } else {
-                bouldersPage = boulderRepository.findByIdInAndDeletedFalse(
-                        projectBoulderIdList,
-                        pageable);
+                allBoulders = boulderRepository.findByIdInAndDeletedFalse(projectBoulderIdList);
             }
         } else if (sectorId != null) {
             // Filter by specific sector
             if (hasGradeFilter) {
-                bouldersPage = boulderRepository.findBySectorIdAndGradeIdInAndDeletedFalse(
+                allBoulders = boulderRepository.findBySectorIdAndGradeIdInAndDeletedFalse(
                         sectorId,
-                        gradeIds,
-                        pageable);
+                        gradeIds);
             } else {
-                bouldersPage = boulderRepository.findBySectorIdAndDeletedFalse(sectorId, pageable);
+                allBoulders = boulderRepository.findBySectorIdAndDeletedFalse(sectorId);
             }
         } else if (gymId != null) {
             // Filter by gym
             if (hasGradeFilter) {
-                bouldersPage = boulderRepository.findBySectorGymIdAndGradeIdInAndDeletedFalse(
+                allBoulders = boulderRepository.findBySectorGymIdAndGradeIdInAndDeletedFalse(
                         gymId,
-                        gradeIds,
-                        pageable);
+                        gradeIds);
             } else {
-                bouldersPage = boulderRepository.findBySectorGymIdAndDeletedFalse(gymId, pageable);
+                allBoulders = boulderRepository.findBySectorGymIdAndDeletedFalse(gymId);
             }
         } else {
             // No filters - show all boulders
-            bouldersPage = boulderRepository.findByDeletedFalse(pageable);
+            allBoulders = boulderRepository.findByDeletedFalse();
         }
-
-        List<BoulderEntity> boulders = bouldersPage.getContent();
 
         // Load ratings for current user
         Map<Long, Integer> boulderRatings = ratingRepository.findByUserId(user.getId()).stream()
@@ -349,6 +342,24 @@ public class DashboardController {
                         rating -> rating.getBoulder().getId(),
                         rating -> rating.getRating()
                 ));
+
+        // Sort boulders with custom comparator
+        Comparator<BoulderEntity> comparator = createBoulderComparator(sortBy, sortDir, boulderRatings);
+        allBoulders.sort(comparator);
+
+        // Manual pagination
+        int pageSize = 20;
+        int totalElements = allBoulders.size();
+        int startIndex = (page - 1) * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, totalElements);
+
+        List<BoulderEntity> boulders = (startIndex < totalElements) 
+                ? allBoulders.subList(startIndex, endIndex) 
+                : List.of();
+
+        // Create page object for pagination component
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<BoulderEntity> bouldersPage = new PageImpl<>(boulders, pageable, totalElements);
 
         // Add attributes to model
         model.addAttribute("boulders", boulders);
@@ -362,6 +373,8 @@ public class DashboardController {
         model.addAttribute("projectBoulderIds", projectBoulderIds);
         model.addAttribute("projectOnly", projectOnly);
         model.addAttribute("boulderRatings", boulderRatings);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
 
         return "pages/boulders/all";
     }
@@ -515,6 +528,95 @@ public class DashboardController {
      * @return the UserEntity for the current user
      * @throws ResponseStatusException if the user is not found
      */
+    /**
+     * Creates a comparator for sorting boulders.
+     * Applies primary sort based on sortBy parameter, then fallback chain:
+     * gym name -> sector name -> grade vScale -> description
+     *
+     * @param sortBy field to sort by (color, grade, rating, sector, gym)
+     * @param sortDir sort direction (asc or desc)
+     * @param boulderRatings map of boulder IDs to user ratings
+     * @return comparator for sorting boulders
+     */
+    private Comparator<BoulderEntity> createBoulderComparator(
+            String sortBy, String sortDir, Map<Long, Integer> boulderRatings) {
+        
+        // Create the fallback comparator chain: gym -> sector -> grade -> description
+        Comparator<BoulderEntity> fallbackComparator = Comparator
+                .comparing((BoulderEntity b) -> b.getSector().getGym().getName(), String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(b -> b.getSector().getName(), String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(b -> parseGradeValue(b.getGrade().getVScale()))
+                .thenComparing(b -> b.getDescription(), String.CASE_INSENSITIVE_ORDER);
+
+        // Create primary comparator based on sortBy
+        Comparator<BoulderEntity> primaryComparator;
+        
+        if (sortBy == null || sortBy.isEmpty()) {
+            // No specific sort - use fallback only
+            primaryComparator = fallbackComparator;
+        } else {
+            switch (sortBy.toLowerCase()) {
+                case "color":
+                    primaryComparator = Comparator
+                            .comparing((BoulderEntity b) -> b.getColor().ordinal())
+                            .thenComparing(fallbackComparator);
+                    break;
+                case "grade":
+                    primaryComparator = Comparator
+                            .comparing((BoulderEntity b) -> parseGradeValue(b.getGrade().getVScale()))
+                            .thenComparing(fallbackComparator);
+                    break;
+                case "rating":
+                    primaryComparator = Comparator
+                            .comparing(
+                                    (BoulderEntity b) -> boulderRatings.getOrDefault(b.getId(), -1),
+                                    Comparator.nullsLast(Comparator.naturalOrder()))
+                            .thenComparing(fallbackComparator);
+                    break;
+                case "sector":
+                    primaryComparator = Comparator
+                            .comparing((BoulderEntity b) -> b.getSector().getName(), String.CASE_INSENSITIVE_ORDER)
+                            .thenComparing(fallbackComparator);
+                    break;
+                case "gym":
+                    primaryComparator = Comparator
+                            .comparing((BoulderEntity b) -> b.getSector().getGym().getName(), String.CASE_INSENSITIVE_ORDER)
+                            .thenComparing(fallbackComparator);
+                    break;
+                default:
+                    primaryComparator = fallbackComparator;
+            }
+        }
+
+        // Apply sort direction
+        if ("desc".equalsIgnoreCase(sortDir)) {
+            primaryComparator = primaryComparator.reversed();
+        }
+
+        return primaryComparator;
+    }
+
+    /**
+     * Parses a V-scale grade string to an integer for comparison.
+     * Examples: "V3" -> 3, "V10" -> 10
+     * Returns 0 if parsing fails.
+     *
+     * @param vScale the V-scale string (e.g., "V3")
+     * @return integer value of the grade
+     */
+    private int parseGradeValue(String vScale) {
+        if (vScale == null || vScale.isEmpty()) {
+            return 0;
+        }
+        try {
+            // Remove 'V' prefix and parse the number
+            String numStr = vScale.trim().toUpperCase().replaceFirst("^V", "");
+            return Integer.parseInt(numStr);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));

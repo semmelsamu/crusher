@@ -5,13 +5,29 @@
     role="navigation"
     aria-label="Pagination"
     xmlns:th="http://www.thymeleaf.org"
+    th:with="
+        gymIdParam=${#request.getParameter('gymId')},
+        sectorIdParam=${#request.getParameter('sectorId')},
+        gradeIdsParam=${#request.getParameterValues('gradeIds')},
+        projectOnlyParam=${#request.getParameter('projectOnly')},
+        sortByParam=${#request.getParameter('sortBy')},
+        sortDirParam=${#request.getParameter('sortDir')}"
 >
     <!-- Previous Button -->
     <button
         class="button button-square"
         th:disabled="${page.first}"
         aria-label="Previous page"
-        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number})}';|"
+        th:onclick="|window.location.href='@{{baseUrl}(
+            baseUrl=${baseUrl},
+            page=${page.number},
+            gymId=${gymIdParam},
+            sectorId=${sectorIdParam},
+            gradeIds=${gradeIdsParam},
+            projectOnly=${projectOnlyParam},
+            sortBy=${sortByParam},
+            sortDir=${sortDirParam}
+        )}';|"
     >
         <x th:replace="~{components/icons :: chevron-left}"></x>
     </button>
@@ -30,7 +46,16 @@
                 th:text="${pageNum + 1}"
                 th:class="'button button-square' + (${pageNum == currentPage} ? ' primary' : '')"
                 th:disabled="${pageNum == currentPage}"
-                th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${pageNum + 1})}';|"
+                th:onclick="|window.location.href='@{{baseUrl}(
+                    baseUrl=${baseUrl},
+                    page=${pageNum + 1},
+                    gymId=${gymIdParam},
+                    sectorId=${sectorIdParam},
+                    gradeIds=${gradeIdsParam},
+                    projectOnly=${projectOnlyParam},
+                    sortBy=${sortByParam},
+                    sortDir=${sortDirParam}
+                )}';|"
             >
                 1
             </button>
@@ -42,7 +67,16 @@
         class="button button-square"
         th:disabled="${page.last}"
         aria-label="Next page"
-        th:onclick="|window.location.href='@{{baseUrl}?page={page}(baseUrl=${baseUrl},page=${page.number + 2})}';|"
+        th:onclick="|window.location.href='@{{baseUrl}(
+            baseUrl=${baseUrl},
+            page=${page.number + 2},
+            gymId=${gymIdParam},
+            sectorId=${sectorIdParam},
+            gradeIds=${gradeIdsParam},
+            projectOnly=${projectOnlyParam},
+            sortBy=${sortByParam},
+            sortDir=${sortDirParam}
+        )}';|"
     >
         <x th:replace="~{components/icons :: chevron-right}"></x>
     </button>

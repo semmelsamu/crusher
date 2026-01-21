@@ -144,6 +144,20 @@
                             Filter
                         </button>
                     </div>
+
+                    <!-- Hidden inputs to preserve sort state -->
+                    <input
+                        th:if="${sortBy != null}"
+                        type="hidden"
+                        name="sortBy"
+                        th:value="${sortBy}"
+                    />
+                    <input
+                        th:if="${sortDir != null}"
+                        type="hidden"
+                        name="sortDir"
+                        th:value="${sortDir}"
+                    />
                 </form>
             </section>
 
@@ -154,12 +168,127 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th class="w-20">Color</th>
-                                <th class="w-20">Grade</th>
+                                <th class="w-20">
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='color',
+                                            sortDir=${sortBy == 'color' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Color
+                                        <span
+                                            th:if="${sortBy == 'color' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'color' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
+                                <th class="w-20">
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='grade',
+                                            sortDir=${sortBy == 'grade' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Grade
+                                        <span
+                                            th:if="${sortBy == 'grade' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'grade' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
                                 <th>Description</th>
-                                <th class="w-20">Rating</th>
-                                <th>Sector</th>
-                                <th>Gym</th>
+                                <th class="w-20">
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='rating',
+                                            sortDir=${sortBy == 'rating' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Rating
+                                        <span
+                                            th:if="${sortBy == 'rating' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'rating' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
+                                <th>
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='sector',
+                                            sortDir=${sortBy == 'sector' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Sector
+                                        <span
+                                            th:if="${sortBy == 'sector' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'sector' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
+                                <th>
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='gym',
+                                            sortDir=${sortBy == 'gym' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Gym
+                                        <span
+                                            th:if="${sortBy == 'gym' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'gym' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
                                 <th class="w-16 text-right"></th>
                             </tr>
                         </thead>
@@ -249,6 +378,18 @@
                                             type="hidden"
                                             name="projectOnly"
                                             value="true"
+                                        />
+                                        <input
+                                            th:if="${sortBy != null}"
+                                            type="hidden"
+                                            name="sortBy"
+                                            th:value="${sortBy}"
+                                        />
+                                        <input
+                                            th:if="${sortDir != null}"
+                                            type="hidden"
+                                            name="sortDir"
+                                            th:value="${sortDir}"
                                         />
                                         <button
                                             type="submit"
