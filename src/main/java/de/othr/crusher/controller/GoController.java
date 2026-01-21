@@ -242,6 +242,12 @@ public class GoController {
         go.setTimestamp(LocalDateTime.now());
         goRepository.save(go);
 
+        // Auto-remove project when boulder is finished
+        if (go.getResult() == GoResult.FINISHED) {
+            projectRepository.findByUserIdAndBoulderId(user.getId(), boulder.getId())
+                .ifPresent(projectRepository::delete);
+        }
+
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
             "type", "success", 
@@ -313,9 +319,15 @@ public class GoController {
         // Timestamp is intentionally not updated - preserve original timestamp
         goRepository.save(go);
 
+        // Auto-remove project when go is updated to finished
+        if (go.getResult() == GoResult.FINISHED) {
+            projectRepository.findByUserIdAndBoulderId(user.getId(), boulder.getId())
+                .ifPresent(projectRepository::delete);
+        }
+
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
+            "type", "success",
             "message", "Go updated successfully!"
         ));
 
