@@ -1,0 +1,71 @@
+<form
+    th:fragment="user(actionUrl, user, isAdmin)"
+    th:action="${actionUrl}"
+    th:object="${user}"
+    method="post"
+    class="space-y-4"
+    xmlns:th="http://www.thymeleaf.org"
+>
+    <input
+        type="hidden"
+        name="_method"
+        th:value="${user.id} != null ? 'put' : 'post'"
+    />
+
+    <div class="space-y-2">
+        <label for="user-username" class="form-label">Username</label>
+        <input
+            type="text"
+            id="user-username"
+            th:field="*{name}"
+            class="text-input block w-full"
+            required
+        />
+        <p
+            th:if="${#fields.hasErrors('name')}"
+            th:errors="*{name}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="space-y-2">
+        <label for="user-email" class="form-label">Email</label>
+        <input
+            type="email"
+            id="user-email"
+            th:field="*{email}"
+            class="text-input block w-full"
+            required
+        />
+        <p
+            th:if="${#fields.hasErrors('email')}"
+            th:errors="*{email}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <div class="space-y-2" th:if="${isAdmin}">
+        <label for="user-role" class="form-label">Role</label>
+        <select
+            id="user-role"
+            th:field="*{role}"
+            class="text-input block w-full"
+            required
+        >
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+            <option value="OWNER">OWNER</option>
+            <option value="SETTER">SETTER</option>
+        </select>
+        <p
+            th:if="${#fields.hasErrors('role')}"
+            th:errors="*{role}"
+            class="text-error text-sm mt-1"
+        ></p>
+    </div>
+
+    <button type="submit" class="button primary">
+        <x th:replace="~{components/icons :: check}"></x>
+        Save changes
+    </button>
+</form>

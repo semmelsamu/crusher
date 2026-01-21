@@ -7,7 +7,7 @@
         <main class="wrapper">
             <div class="flex items-center gap-4">
                 <a
-                    th:href="${(isAdminEdit ?: false) ? '/admin/users' : '/dashboard'}"
+                    th:href="${(isAdmin ?: false) ? '/users' : '/dashboard'}"
                     class="button button-square"
                 >
                     <x th:replace="~{components/icons :: arrow-big-left}"></x>
@@ -17,13 +17,13 @@
                 >
                     <div>
                         <h1
-                            th:text="${(isAdminEdit ?: false) ? 'Edit User' : 'Account settings'}"
+                            th:text="${(isAdmin ?: false) && !(isSelf ?: true) ? 'Edit User' : 'Account settings'}"
                         >
                             Account settings
                         </h1>
                         <p
                             class="text-foreground-muted"
-                            th:text="${(isAdminEdit ?: false) ? 'Update user details and role.' : 'Update your profile details.'}"
+                            th:text="${(isAdmin ?: false) && !(isSelf ?: true) ? 'Update user details and role.' : 'Update your profile details.'}"
                         >
                             Update your profile details.
                         </p>
@@ -33,7 +33,7 @@
                         class="button danger button-square"
                         aria-label="Delete account"
                         onclick="openDialog('delete-account-dialog')"
-                        th:if="${!(isAdminEdit ?: false)}"
+                        th:if="${isSelf ?: true}"
                     >
                         <x th:replace="~{components/icons :: trash-2}"></x>
                     </button>
@@ -41,94 +41,20 @@
             </div>
 
             <section class="card p-card-inner max-w-md mx-auto">
-                <form
-                    th:action="${(isAdminEdit ?: false) ? '/admin/users/' + currentUser.id : '/account'}"
-                    method="post"
-                    class="space-y-4"
-                    th:if="${currentUser != null}"
-                >
-                    <input type="hidden" name="_method" value="put" />
-                    <input
-                        type="hidden"
-                        name="returnTo"
-                        th:value="${returnTo}"
-                        th:if="${!(isAdminEdit ?: false)}"
-                    />
-                    <div class="space-y-2">
-                        <label for="account-username" class="form-label"
-                            >Username</label
-                        >
-                        <input
-                            type="text"
-                            id="account-username"
-                            name="username"
-                            class="text-input block w-full"
-                            required
-                            th:value="${currentUser.name}"
-                        />
-                    </div>
-                    <div class="space-y-2">
-                        <label for="account-email" class="form-label"
-                            >Email</label
-                        >
-                        <input
-                            type="email"
-                            id="account-email"
-                            name="email"
-                            class="text-input block w-full"
-                            required
-                            th:value="${currentUser.email}"
-                        />
-                    </div>
-                    <div class="space-y-2" th:if="${isAdminEdit ?: false}">
-                        <label for="account-role" class="form-label"
-                            >Role</label
-                        >
-                        <select
-                            id="account-role"
-                            name="role"
-                            class="text-input block w-full"
-                            required
-                            th:value="${currentUser.role}"
-                        >
-                            <option
-                                value="USER"
-                                th:selected="${currentUser.role == 'USER'}"
-                            >
-                                USER
-                            </option>
-                            <option
-                                value="ADMIN"
-                                th:selected="${currentUser.role == 'ADMIN'}"
-                            >
-                                ADMIN
-                            </option>
-                            <option
-                                value="OWNER"
-                                th:selected="${currentUser.role == 'OWNER'}"
-                            >
-                                OWNER
-                            </option>
-                            <option
-                                value="SETTER"
-                                th:selected="${currentUser.role == 'SETTER'}"
-                            >
-                                SETTER
-                            </option>
-                        </select>
-                    </div>
-                    <button type="submit" class="button primary">
-                        <x th:replace="~{components/icons :: check}"></x>
-                        Save changes
-                    </button>
-                </form>
+                <th:block
+                    th:replace="~{components/cu-forms/user :: user(
+                        '/users/' + ${user.id},
+                        ${user},
+                        ${isAdmin ?: false}
+                    )}"
+                ></th:block>
             </section>
 
             <dialog
                 id="delete-account-dialog"
                 class="dialog space-y-4"
                 closedby="any"
-                th:if="${!(isAdminEdit ?: false)}"
+                th:if="${isSelf ?: true}"
             >
                 <h3>Confirm deletion</h3>
                 <p>
@@ -142,7 +68,11 @@
                     >
                         Cancel
                     </button>
-                    <form th:action="@{/account}" method="post" class="inline">
+                    <form
+                        th:action="@{/users/{id}(id=${user.id})}"
+                        method="post"
+                        class="inline"
+                    >
                         <input type="hidden" name="_method" value="delete" />
                         <button autofocus type="submit" class="button danger">
                             Delete
