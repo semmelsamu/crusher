@@ -34,6 +34,20 @@
                         </div>
 
                         <div class="space-y-2">
+                            <label for="email" class="form-label">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="text-input block w-full"
+                                required
+                                autocomplete="email"
+                                placeholder="Enter your email"
+                                th:value="${email}"
+                            />
+                        </div>
+
+                        <div class="space-y-2">
                             <label for="password" class="form-label"
                                 >Password</label
                             >
