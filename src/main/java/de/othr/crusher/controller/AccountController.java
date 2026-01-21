@@ -15,6 +15,8 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +44,13 @@ public class AccountController {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
+    }
+
+    @GetMapping("/account")
+    public String showAccount(Principal principal, Model model) {
+        UserEntity user = findUserByPrincipal(principal);
+        model.addAttribute("currentUser", user);
+        return "pages/account";
     }
 
     @PutMapping("/account")
@@ -135,9 +144,20 @@ public class AccountController {
 
     @DeleteMapping("/account")
     public String deleteAccount(
+            @RequestParam(name = "confirmDelete", required = false) String confirmDelete,
             Principal principal,
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            RedirectAttributes redirectAttributes) {
+        if (!"on".equals(confirmDelete)) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "error",
+                "title", "Delete failed",
+                "message", "Please confirm account deletion"
+            ));
+            return redirectBack(request);
+        }
+
         UserEntity user = findUserByPrincipal(principal);
         user.setDeleted(true);
         userRepository.save(user);

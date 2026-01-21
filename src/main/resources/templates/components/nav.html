@@ -57,164 +57,16 @@
                     Dashboard
                 </a>
 
-                <button
-                    type="button"
+                <a
+                    href="/account"
                     class="avatar-button"
-                    aria-haspopup="dialog"
-                    aria-controls="account-dialog"
+                    aria-label="Account settings"
                     title="Account settings"
-                    onclick="openDialog('account-dialog')"
                 >
                     <div
                         th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
                     ></div>
-                </button>
-
-                <dialog
-                    id="account-dialog"
-                    class="dialog space-y-4"
-                    closedby="any"
-                >
-                    <div class="flex items-start justify-between gap-4">
-                        <div>
-                            <h3>Account settings</h3>
-                            <p class="text-sm text-foreground-muted">
-                                Update your details or delete your account.
-                            </p>
-                        </div>
-                        <button
-                            type="button"
-                            class="button button-ghost button-square"
-                            aria-label="Close"
-                            onclick="closeDialog('account-dialog')"
-                        >
-                            <x th:replace="~{components/icons :: x}"></x>
-                        </button>
-                    </div>
-
-                    <form
-                        th:action="@{/account}"
-                        method="post"
-                        class="space-y-4"
-                        th:if="${currentUser != null}"
-                    >
-                        <input type="hidden" name="_method" value="put" />
-                        <div class="space-y-2">
-                            <label for="account-username" class="form-label"
-                                >Username</label
-                            >
-                            <input
-                                type="text"
-                                id="account-username"
-                                name="username"
-                                class="text-input block w-full"
-                                required
-                                th:value="${currentUser.name}"
-                            />
-                        </div>
-                        <div class="space-y-2">
-                            <label for="account-email" class="form-label"
-                                >Email</label
-                            >
-                            <input
-                                type="email"
-                                id="account-email"
-                                name="email"
-                                class="text-input block w-full"
-                                required
-                                th:value="${currentUser.email}"
-                            />
-                        </div>
-                        <div class="space-y-2">
-                            <label for="account-password" class="form-label"
-                                >New password</label
-                            >
-                            <input
-                                type="password"
-                                id="account-password"
-                                name="password"
-                                class="text-input block w-full"
-                                autocomplete="new-password"
-                                placeholder="Leave blank to keep current"
-                            />
-                        </div>
-                        <div class="space-y-2">
-                            <label
-                                for="account-confirm-password"
-                                class="form-label"
-                                >Confirm password</label
-                            >
-                            <input
-                                type="password"
-                                id="account-confirm-password"
-                                name="confirmPassword"
-                                class="text-input block w-full"
-                                autocomplete="new-password"
-                                placeholder="Re-enter new password"
-                            />
-                        </div>
-                        <button type="submit" class="button primary w-full">
-                            <x th:replace="~{components/icons :: check}"></x>
-                            Save changes
-                        </button>
-                    </form>
-
-                    <div class="border-t-2 pt-4 space-y-3">
-                        <p class="text-sm text-foreground-muted">
-                            Deleting your account removes access but keeps your
-                            activity for gym history.
-                        </p>
-                        <button
-                            type="button"
-                            class="button danger w-full"
-                            onclick="
-                                closeDialog('account-dialog');
-                                openDialog('delete-account-dialog');
-                            "
-                        >
-                            <x th:replace="~{components/icons :: trash-2}"></x>
-                            Delete account
-                        </button>
-                    </div>
-                </dialog>
-
-                <dialog
-                    id="delete-account-dialog"
-                    class="dialog space-y-4"
-                    closedby="any"
-                >
-                    <h3>Confirm deletion</h3>
-                    <p>
-                        Are you sure you want to delete your account? Your gym
-                        activity will remain.
-                    </p>
-                    <div class="flex justify-end gap-4">
-                        <button
-                            class="button"
-                            onclick="closeDialog('delete-account-dialog')"
-                        >
-                            Cancel
-                        </button>
-                        <form
-                            th:action="@{/account}"
-                            method="post"
-                            class="inline"
-                        >
-                            <input
-                                type="hidden"
-                                name="_method"
-                                value="delete"
-                            />
-                            <button
-                                autofocus
-                                type="submit"
-                                class="button danger"
-                            >
-                                Delete
-                            </button>
-                        </form>
-                    </div>
-                </dialog>
+                </a>
 
                 <form
                     th:action="@{/logout}"

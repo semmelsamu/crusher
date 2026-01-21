@@ -1,0 +1,124 @@
+<th:block
+    layout:decorate="~{layouts/main}"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+    <th:block layout:fragment="content">
+        <main class="wrapper">
+            <div class="flex items-center gap-4">
+                <a href="/dashboard" class="button button-square">
+                    <x th:replace="~{components/icons :: arrow-big-left}"></x>
+                </a>
+                <div>
+                    <h1>Account settings</h1>
+                    <p class="text-foreground-muted">
+                        Update your profile details or delete your account.
+                    </p>
+                </div>
+            </div>
+
+            <section class="card p-card-inner space-y-6 max-w-2xl">
+                <div class="space-y-2">
+                    <h2>Profile</h2>
+                    <p class="text-foreground-muted">
+                        Keep your username and email up to date.
+                    </p>
+                </div>
+
+                <form
+                    th:action="@{/account}"
+                    method="post"
+                    class="space-y-4"
+                    th:if="${currentUser != null}"
+                >
+                    <input type="hidden" name="_method" value="put" />
+                    <div class="space-y-2">
+                        <label for="account-username" class="form-label"
+                            >Username</label
+                        >
+                        <input
+                            type="text"
+                            id="account-username"
+                            name="username"
+                            class="text-input block w-full"
+                            required
+                            th:value="${currentUser.name}"
+                        />
+                    </div>
+                    <div class="space-y-2">
+                        <label for="account-email" class="form-label"
+                            >Email</label
+                        >
+                        <input
+                            type="email"
+                            id="account-email"
+                            name="email"
+                            class="text-input block w-full"
+                            required
+                            th:value="${currentUser.email}"
+                        />
+                    </div>
+                    <div class="space-y-2">
+                        <label for="account-password" class="form-label"
+                            >New password</label
+                        >
+                        <input
+                            type="password"
+                            id="account-password"
+                            name="password"
+                            class="text-input block w-full"
+                            autocomplete="new-password"
+                            placeholder="Leave blank to keep current"
+                        />
+                    </div>
+                    <div class="space-y-2">
+                        <label for="account-confirm-password" class="form-label"
+                            >Confirm password</label
+                        >
+                        <input
+                            type="password"
+                            id="account-confirm-password"
+                            name="confirmPassword"
+                            class="text-input block w-full"
+                            autocomplete="new-password"
+                            placeholder="Re-enter new password"
+                        />
+                    </div>
+                    <button type="submit" class="button primary">
+                        <x th:replace="~{components/icons :: check}"></x>
+                        Save changes
+                    </button>
+                </form>
+            </section>
+
+            <section class="card p-card-inner space-y-6 max-w-2xl">
+                <div class="space-y-2">
+                    <h2>Delete account</h2>
+                    <p class="text-foreground-muted">
+                        Deleting your account removes access but keeps your
+                        activity for gym history.
+                    </p>
+                </div>
+
+                <form th:action="@{/account}" method="post" class="space-y-4">
+                    <input type="hidden" name="_method" value="delete" />
+                    <label class="flex items-start gap-3">
+                        <input
+                            type="checkbox"
+                            name="confirmDelete"
+                            class="checkbox mt-1"
+                            required
+                        />
+                        <span>
+                            I understand that my account will be deleted.
+                        </span>
+                    </label>
+                    <button type="submit" class="button danger">
+                        <x th:replace="~{components/icons :: trash-2}"></x>
+                        Delete account
+                    </button>
+                </form>
+            </section>
+        </main>
+    </th:block>
+</th:block>
