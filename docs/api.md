@@ -1,0 +1,324 @@
+# API Documentation
+
+## Authentication
+
+Base path: `/api/auth`
+
+## POST /api/auth/login
+
+Request body:
+
+```json
+{
+    "username": "your-username",
+    "password": "your-password"
+}
+```
+
+Responses:
+
+- `200 OK`
+
+```json
+{
+    "id": 1,
+    "username": "your-username",
+    "role": "USER"
+}
+```
+
+- `400 Bad Request`
+
+```json
+{
+    "message": "Username and password are required"
+}
+```
+
+- `401 Unauthorized`
+
+```json
+{
+    "message": "Invalid username or password"
+}
+```
+
+Notes:
+
+- Creates an HTTP session and sets the `JSESSIONID` cookie.
+
+## GET /api/auth/session
+
+Requires the session cookie from login.
+
+Responses:
+
+- `200 OK`
+
+```json
+{
+    "id": 1,
+    "username": "your-username",
+    "role": "USER"
+}
+```
+
+- `401 Unauthorized`
+
+```json
+{
+    "message": "Not authenticated"
+}
+```
+
+## POST /api/auth/logout
+
+Requires the session cookie from login.
+
+Responses:
+
+- `204 No Content`
+
+## Error handling for /api/\*\*
+
+- Unauthenticated requests receive `401 Unauthorized`.
+- Authenticated but unauthorized requests receive `403 Forbidden`.
+
+---
+
+## Goes (Climbing Attempts)
+
+Base path: `/api/sessions/{sessionId}/goes`
+
+All endpoints require authentication via session cookie from login.
+
+### GET /api/sessions/{sessionId}/goes
+
+Lists all climbing attempts (goes) for a specific session.
+
+**Path Parameters:**
+
+- `sessionId` (Long) - The ID of the session
+
+**Responses:**
+
+- `200 OK`
+
+```json
+[
+    {
+        "id": 1,
+        "sessionId": 42,
+        "boulderId": 15,
+        "result": "FINISHED",
+        "timestamp": "2026-01-21T14:30:00",
+        "progressedHold": null
+    },
+    {
+        "id": 2,
+        "sessionId": 42,
+        "boulderId": 18,
+        "result": "CLOSE_TRY",
+        "timestamp": "2026-01-21T14:45:00",
+        "progressedHold": 8
+    }
+]
+```
+
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Session belongs to another user
+- `404 Not Found` - Session not found
+
+---
+
+### GET /api/sessions/{sessionId}/goes/{goId}
+
+Retrieves details of a specific climbing attempt.
+
+**Path Parameters:**
+
+- `sessionId` (Long) - The ID of the session
+- `goId` (Long) - The ID of the go
+
+**Responses:**
+
+- `200 OK`
+
+```json
+{
+    "id": 1,
+    "sessionId": 42,
+    "boulderId": 15,
+    "result": "FINISHED",
+    "timestamp": "2026-01-21T14:30:00",
+    "progressedHold": null
+}
+```
+
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Session belongs to another user
+- `404 Not Found` - Session or go not found, or go doesn't belong to session
+
+---
+
+### POST /api/sessions/{sessionId}/goes
+
+Creates a new climbing attempt for a session.
+
+**Path Parameters:**
+
+- `sessionId` (Long) - The ID of the session
+
+**Request Body:**
+
+```json
+{
+    "boulderId": 15,
+    "result": "FINISHED",
+    "timestamp": "2026-01-21T14:30:00",
+    "progressedHold": null
+}
+```
+
+**Fields:**
+
+- `boulderId` (Long, required) - The ID of the boulder being attempted
+- `result` (String, required) - Must be one of: `DID_NOT_FINISH`, `CLOSE_TRY`, `FINISHED`
+- `timestamp` (LocalDateTime, optional) - Defaults to current time if not provided
+- `progressedHold` (Integer, optional) - The last hold reached (must be >= 0 and <= boulder's total holds)
+
+**Responses:**
+
+- `201 Created`
+
+```json
+{
+    "id": 1,
+    "sessionId": 42,
+    "boulderId": 15,
+    "result": "FINISHED",
+    "timestamp": "2026-01-21T14:30:00",
+    "progressedHold": null
+}
+```
+
+- `400 Bad Request`
+
+```json
+{
+    "message": "Boulder is required"
+}
+```
+
+```json
+{
+    "message": "Invalid result value. Must be one of: DID_NOT_FINISH, CLOSE_TRY, FINISHED"
+}
+```
+
+```json
+{
+    "message": "Progressed hold cannot exceed the boulder's total holds (10)"
+}
+```
+
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Session belongs to another user
+- `404 Not Found` - Session not found
+
+**Notes:**
+
+- If `result` is `FINISHED`, any associated project for this boulder will be automatically removed
+- Timestamp defaults to the current time when the request is processed
+
+---
+
+### PUT /api/sessions/{sessionId}/goes/{goId}
+
+Updates an existing climbing attempt.
+
+**Path Parameters:**
+
+- `sessionId` (Long) - The ID of the session
+- `goId` (Long) - The ID of the go to update
+
+**Request Body:**
+
+```json
+{
+    "result": "CLOSE_TRY",
+    "progressedHold": 8
+}
+```
+
+**Fields:**
+
+- `result` (String, required) - Must be one of: `DID_NOT_FINISH`, `CLOSE_TRY`, `FINISHED`
+- `progressedHold` (Integer, optional) - The last hold reached (must be >= 0 and <= boulder's total holds)
+
+**Responses:**
+
+- `200 OK`
+
+```json
+{
+    "id": 1,
+    "sessionId": 42,
+    "boulderId": 15,
+    "result": "CLOSE_TRY",
+    "timestamp": "2026-01-21T14:30:00",
+    "progressedHold": 8
+}
+```
+
+- `400 Bad Request`
+
+```json
+{
+    "message": "Result is required"
+}
+```
+
+```json
+{
+    "message": "Progressed hold cannot be negative"
+}
+```
+
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Session belongs to another user
+- `404 Not Found` - Session or go not found, or go doesn't belong to session
+
+**Notes:**
+
+- The original `timestamp` is preserved and not updated
+- If `result` is updated to `FINISHED`, any associated project for this boulder will be automatically removed
+
+---
+
+### DELETE /api/sessions/{sessionId}/goes/{goId}
+
+Deletes a climbing attempt.
+
+**Path Parameters:**
+
+- `sessionId` (Long) - The ID of the session
+- `goId` (Long) - The ID of the go to delete
+
+**Responses:**
+
+- `204 No Content` - Successfully deleted
+
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Session belongs to another user
+- `404 Not Found` - Session or go not found, or go doesn't belong to session
+
+---
+
+### Go Result Values
+
+The `result` field accepts the following enum values:
+
+- `DID_NOT_FINISH` - The climber did not complete the boulder
+- `CLOSE_TRY` - The climber came close to finishing
+- `FINISHED` - The climber successfully completed the boulder
