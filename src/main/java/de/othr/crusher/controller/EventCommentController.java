@@ -103,8 +103,9 @@ public class EventCommentController {
         EventCommentEntity comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
-        // Ensure the comment belongs to the current user
-        if (!comment.getUser().getId().equals(user.getId())) {
+        // Ensure the comment belongs to the current user or user is admin
+        boolean isAdmin = "ADMIN".equals(user.getRole());
+        if (!comment.getUser().getId().equals(user.getId()) && !isAdmin) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own comments");
         }
 
