@@ -37,6 +37,11 @@
                     th:if="${currentUser != null}"
                 >
                     <input type="hidden" name="_method" value="put" />
+                    <input
+                        type="hidden"
+                        name="returnTo"
+                        th:value="${returnTo}"
+                    />
                     <div class="space-y-2">
                         <label for="account-username" class="form-label"
                             >Username</label

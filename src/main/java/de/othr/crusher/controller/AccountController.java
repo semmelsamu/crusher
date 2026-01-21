@@ -1,5 +1,7 @@
 package de.othr.crusher.controller;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Optional;
@@ -43,9 +45,10 @@ public class AccountController {
     }
 
     @GetMapping("/account")
-    public String showAccount(Principal principal, Model model) {
+    public String showAccount(Principal principal, Model model, HttpServletRequest request) {
         UserEntity user = findUserByPrincipal(principal);
         model.addAttribute("currentUser", user);
+        model.addAttribute("returnTo", resolveReturnTo(null, request));
         return "pages/account";
     }
 
@@ -53,6 +56,7 @@ public class AccountController {
     public String updateAccount(
             @RequestParam String username,
             @RequestParam String email,
+            @RequestParam(required = false) String returnTo,
             Principal principal,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
@@ -100,7 +104,7 @@ public class AccountController {
             "message", "Account updated successfully!"
         ));
 
-        return redirectBack(request);
+        return redirectToReturnTarget(request, returnTo);
     }
 
     @DeleteMapping("/account")
@@ -151,5 +155,49 @@ public class AccountController {
             return "redirect:" + referer;
         }
         return "redirect:/dashboard";
+    }
+
+    private String redirectToReturnTarget(HttpServletRequest request, String returnTo) {
+        String resolved = resolveReturnTo(returnTo, request);
+        return "redirect:" + resolved;
+    }
+
+    private String resolveReturnTo(String returnTo, HttpServletRequest request) {
+        String resolved = sanitizeReturnTo(returnTo);
+        if (!StringUtils.hasText(resolved)) {
+            resolved = sanitizeReturnTo(extractPathFromReferer(request.getHeader("Referer")));
+        }
+        if (!StringUtils.hasText(resolved) || "/account".equals(resolved)) {
+            return "/dashboard";
+        }
+        return resolved;
+    }
+
+    private String extractPathFromReferer(String referer) {
+        if (!StringUtils.hasText(referer)) {
+            return null;
+        }
+
+        try {
+            URI uri = new URI(referer);
+            String path = uri.getPath();
+            if (!StringUtils.hasText(path)) {
+                return null;
+            }
+            String query = uri.getQuery();
+            return StringUtils.hasText(query) ? path + "?" + query : path;
+        } catch (URISyntaxException ex) {
+            return null;
+        }
+    }
+
+    private String sanitizeReturnTo(String returnTo) {
+        if (!StringUtils.hasText(returnTo)) {
+            return null;
+        }
+        if (!returnTo.startsWith("/") || returnTo.startsWith("//") || returnTo.contains("://")) {
+            return null;
+        }
+        return returnTo;
     }
 }
