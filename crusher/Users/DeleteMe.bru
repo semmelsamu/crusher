@@ -1,0 +1,16 @@
+meta {
+  name: Delete Me
+  type: http
+  seq: 7
+}
+
+delete {
+  url: http://localhost:8080/api/users/me
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
