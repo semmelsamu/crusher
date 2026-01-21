@@ -40,7 +40,7 @@
                 <a
                     href="/admin/gyms"
                     class="button button-ghost"
-                    sec:authorize="hasAnyRole('ADMIN', 'OWNER')"
+                    sec:authorize="hasAnyRole('ADMIN', 'OWNER', 'SETTER')"
                 >
                     <x
                         th:replace="~{components/icons :: sliders-horizontal}"
