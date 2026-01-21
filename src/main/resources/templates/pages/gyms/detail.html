@@ -25,11 +25,12 @@
             </div>
 
             <div
-                class="space-y-2 xl:text-center xl:*:justify-center p-card-inner"
+                class="space-y-2 xl:text-center xl:*:justify-center sm:p-card-inner"
             >
                 <h2
-                    class="text-6xl font-bold text-accent mb-4"
+                    class="text-6xl font-bold text-accent mb-4 wrap-break-word hyphens-auto"
                     th:text="${gym.name}"
+                    lang="de"
                 >
                     Gym Name
                 </h2>
@@ -64,7 +65,7 @@
                 ></div>
             </details>
 
-            <div class="w-full flex gap-card-outer *:flex-1">
+            <div class="w-full flex gap-card-outer *:flex-1 flex-wrap">
                 <section
                     class="card p-card-inner flex flex-col items-center justify-center text-center"
                 >

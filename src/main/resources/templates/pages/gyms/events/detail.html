@@ -23,7 +23,13 @@
                 <header
                     class="card flex-1 p-card-inner flex items-center justify-between"
                 >
-                    <h1 th:text="${event.title}">Event Title</h1>
+                    <h1
+                        th:text="${event.title}"
+                        class="wrap-break-word hyphens-auto"
+                        lang="de"
+                    >
+                        Event Title
+                    </h1>
                 </header>
             </div>
 
