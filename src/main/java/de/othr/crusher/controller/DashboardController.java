@@ -253,7 +253,7 @@ public class DashboardController {
         UserEntity user = findUserByPrincipal(principal);
 
         // Convert 1-based page to 0-based for Spring's PageRequest
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, 20);
 
         // Fetch all gyms for the dropdown
         List<GymEntity> gyms = gymRepository.findByDeletedFalse();
