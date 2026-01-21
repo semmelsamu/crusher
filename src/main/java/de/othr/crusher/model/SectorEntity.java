@@ -14,90 +14,90 @@ import jakarta.validation.constraints.NotBlank;
 
 /**
  * Entity representing a climbing sector belonging to exactly one gym.
- * <p>
- * Maps to the {@code sectors} table and stores the sector name, optional description,
- * an image path (defaults to a placeholder), and a reference to its owning gym.
- * </p>
+ *
+ * <p>Maps to the {@code sectors} table and stores the sector name, optional description, an image
+ * path (defaults to a placeholder), and a reference to its owning gym.
  */
 @Entity
 @Table(name = "sectors")
 public class SectorEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Please enter a name")
-    private String name;
+  @Column(nullable = false)
+  @NotBlank(message = "Please enter a name")
+  private String name;
 
-    @Column
-    private String description;
+  @Column private String description;
 
-    @Column(name = "image_path")
-    private String imagePath = "/images/default-sector.svg";
+  @Column(name = "image_path")
+  private String imagePath = "/images/default-sector.svg";
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "gym_id", nullable = false)
-    private GymEntity gym;
+  @ManyToOne(
+      fetch = FetchType.LAZY,
+      cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+  @JoinColumn(name = "gym_id", nullable = false)
+  private GymEntity gym;
 
-    @Column(nullable = false)
-    private boolean deleted = false;
+  @Column(nullable = false)
+  private boolean deleted = false;
 
-    public SectorEntity() {}
+  public SectorEntity() {}
 
-    public SectorEntity(String name, String description, String imagePath, GymEntity gym) {
-        this.name = name;
-        this.description = description;
-        this.imagePath = imagePath;
-        this.gym = gym;
-    }
+  public SectorEntity(String name, String description, String imagePath, GymEntity gym) {
+    this.name = name;
+    this.description = description;
+    this.imagePath = imagePath;
+    this.gym = gym;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public String getImagePath() {
-        return imagePath;
-    }
+  public String getImagePath() {
+    return imagePath;
+  }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
+  public void setImagePath(String imagePath) {
+    this.imagePath = imagePath;
+  }
 
-    public GymEntity getGym() {
-        return gym;
-    }
+  public GymEntity getGym() {
+    return gym;
+  }
 
-    public void setGym(GymEntity gym) {
-        this.gym = gym;
-    }
+  public void setGym(GymEntity gym) {
+    this.gym = gym;
+  }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
+  public boolean isDeleted() {
+    return deleted;
+  }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
 }

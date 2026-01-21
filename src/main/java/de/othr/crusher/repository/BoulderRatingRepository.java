@@ -12,28 +12,28 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoulderRatingRepository extends JpaRepository<BoulderRatingEntity, Long> {
 
-    /**
-     * Finds a specific rating entry for a user and boulder.
-     *
-     * @param userId identifier of the user
-     * @param boulderId identifier of the boulder
-     * @return optional containing the rating if present
-     */
-    Optional<BoulderRatingEntity> findByUserIdAndBoulderId(Long userId, Long boulderId);
+  /**
+   * Finds a specific rating entry for a user and boulder.
+   *
+   * @param userId identifier of the user
+   * @param boulderId identifier of the boulder
+   * @return optional containing the rating if present
+   */
+  Optional<BoulderRatingEntity> findByUserIdAndBoulderId(Long userId, Long boulderId);
 
-    /**
-     * Finds all ratings for a given user.
-     *
-     * @param userId identifier of the user
-     * @return list of ratings for the user
-     */
-    List<BoulderRatingEntity> findByUserId(Long userId);
+  /**
+   * Finds all ratings for a given user.
+   *
+   * @param userId identifier of the user
+   * @return list of ratings for the user
+   */
+  List<BoulderRatingEntity> findByUserId(Long userId);
 
-    /**
-     * Finds all ratings for a given boulder.
-     *
-     * @param boulderId identifier of the boulder
-     * @return list of ratings for the boulder
-     */
-    List<BoulderRatingEntity> findByBoulderId(Long boulderId);
+  /**
+   * Finds all ratings for a given boulder.
+   *
+   * @param boulderId identifier of the boulder
+   * @return list of ratings for the boulder
+   */
+  List<BoulderRatingEntity> findByBoulderId(Long boulderId);
 }

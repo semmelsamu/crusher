@@ -1,7 +1,12 @@
 package de.othr.crusher.controller;
 
+import de.othr.crusher.model.UserEntity;
+import de.othr.crusher.repository.UserRepository;
+import de.othr.crusher.service.EmailService;
+import de.othr.crusher.utils.login.CustomUserDetailsService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.Map;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -16,155 +21,150 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import de.othr.crusher.model.UserEntity;
-import de.othr.crusher.repository.UserRepository;
-import de.othr.crusher.service.EmailService;
-import de.othr.crusher.utils.login.CustomUserDetailsService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-
-/**
- * Controller for handling user registration.
- */
+/** Controller for handling user registration. */
 @Controller
 public class SignUpController {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final CustomUserDetailsService userDetailsService;
-    private final EmailService emailService;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final CustomUserDetailsService userDetailsService;
+  private final EmailService emailService;
 
-    public SignUpController(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
-            CustomUserDetailsService userDetailsService,
-            EmailService emailService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userDetailsService = userDetailsService;
-        this.emailService = emailService;
+  public SignUpController(
+      UserRepository userRepository,
+      PasswordEncoder passwordEncoder,
+      CustomUserDetailsService userDetailsService,
+      EmailService emailService) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.userDetailsService = userDetailsService;
+    this.emailService = emailService;
+  }
+
+  /**
+   * Displays the sign-up page.
+   *
+   * @return the sign-up view template
+   */
+  @GetMapping("/signup")
+  public String signup() {
+    return "pages/signup";
+  }
+
+  /**
+   * Processes user registration. Validates input, creates new user, sends welcome email, and
+   * automatically logs them in.
+   *
+   * @param username the chosen username
+   * @param email the user's email address
+   * @param password the chosen password
+   * @param confirmPassword password confirmation
+   * @param request the HTTP request for session management
+   * @param model model for adding error messages
+   * @param redirectAttributes attributes for flash scope
+   * @return redirect to dashboard on success, or signup page on error
+   */
+  @PostMapping("/signup")
+  public String registerUser(
+      @RequestParam String username,
+      @RequestParam String email,
+      @RequestParam String password,
+      @RequestParam String confirmPassword,
+      HttpServletRequest request,
+      Model model,
+      RedirectAttributes redirectAttributes) {
+
+    // Validate password length (minimum 4 characters)
+    if (password.length() < 4) {
+      redirectAttributes.addFlashAttribute(
+          "toast",
+          Map.of(
+              "type", "error",
+              "title", "Registration failed",
+              "message", "Password must be at least 4 characters long"));
+      redirectAttributes.addFlashAttribute("username", username);
+      redirectAttributes.addFlashAttribute("email", email);
+      return "redirect:/signup";
     }
 
-    /**
-     * Displays the sign-up page.
-     *
-     * @return the sign-up view template
-     */
-    @GetMapping("/signup")
-    public String signup() {
-        return "pages/signup";
+    // Validate passwords match
+    if (!password.equals(confirmPassword)) {
+      redirectAttributes.addFlashAttribute(
+          "toast",
+          Map.of(
+              "type", "error",
+              "title", "Registration failed",
+              "message", "Passwords do not match"));
+      redirectAttributes.addFlashAttribute("username", username);
+      redirectAttributes.addFlashAttribute("email", email);
+      return "redirect:/signup";
     }
 
-    /**
-     * Processes user registration.
-     * Validates input, creates new user, sends welcome email, and automatically logs them in.
-     *
-     * @param username the chosen username
-     * @param email the user's email address
-     * @param password the chosen password
-     * @param confirmPassword password confirmation
-     * @param request the HTTP request for session management
-     * @param model model for adding error messages
-     * @param redirectAttributes attributes for flash scope
-     * @return redirect to dashboard on success, or signup page on error
-     */
-    @PostMapping("/signup")
-    public String registerUser(
-            @RequestParam String username,
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam String confirmPassword,
-            HttpServletRequest request,
-            Model model,
-            RedirectAttributes redirectAttributes) {
+    // Check if username already exists
+    if (userRepository.findByName(username).isPresent()) {
+      redirectAttributes.addFlashAttribute(
+          "toast",
+          Map.of(
+              "type", "error",
+              "title", "Registration failed",
+              "message", "Username already exists"));
+      redirectAttributes.addFlashAttribute("username", username);
+      redirectAttributes.addFlashAttribute("email", email);
+      return "redirect:/signup";
+    }
 
-        // Validate password length (minimum 4 characters)
-        if (password.length() < 4) {
-            redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Registration failed",
-                "message", "Password must be at least 4 characters long"
-            ));
-            redirectAttributes.addFlashAttribute("username", username);
-            redirectAttributes.addFlashAttribute("email", email);
-            return "redirect:/signup";
-        }
+    // Check if email already exists
+    if (userRepository.findByEmail(email).isPresent()) {
+      redirectAttributes.addFlashAttribute(
+          "toast",
+          Map.of(
+              "type", "error",
+              "title", "Registration failed",
+              "message", "Email address already registered"));
+      redirectAttributes.addFlashAttribute("username", username);
+      redirectAttributes.addFlashAttribute("email", email);
+      return "redirect:/signup";
+    }
 
-        // Validate passwords match
-        if (!password.equals(confirmPassword)) {
-            redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Registration failed",
-                "message", "Passwords do not match"
-            ));
-            redirectAttributes.addFlashAttribute("username", username);
-            redirectAttributes.addFlashAttribute("email", email);
-            return "redirect:/signup";
-        }
+    // Create new user with BCrypt encoded password
+    UserEntity newUser = new UserEntity();
+    newUser.setName(username);
+    newUser.setEmail(email);
+    newUser.setPassword(passwordEncoder.encode(password));
+    newUser.setRole("USER"); // Default role for new users
+    userRepository.save(newUser);
 
-        // Check if username already exists
-        if (userRepository.findByName(username).isPresent()) {
-            redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Registration failed",
-                "message", "Username already exists"
-            ));
-            redirectAttributes.addFlashAttribute("username", username);
-            redirectAttributes.addFlashAttribute("email", email);
-            return "redirect:/signup";
-        }
+    // Send welcome email
+    try {
+      emailService.sendWelcomeEmail(email, username);
+    } catch (Exception e) {
+      // Log the error but don't fail registration if email fails
+      System.err.println("Failed to send welcome email to " + email + ": " + e.getMessage());
+    }
 
-        // Check if email already exists
-        if (userRepository.findByEmail(email).isPresent()) {
-            redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Registration failed",
-                "message", "Email address already registered"
-            ));
-            redirectAttributes.addFlashAttribute("username", username);
-            redirectAttributes.addFlashAttribute("email", email);
-            return "redirect:/signup";
-        }
+    // Automatically log in the new user
+    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    Authentication authentication =
+        new UsernamePasswordAuthenticationToken(
+            userDetails, password, userDetails.getAuthorities());
 
-        // Create new user with BCrypt encoded password
-        UserEntity newUser = new UserEntity();
-        newUser.setName(username);
-        newUser.setEmail(email);
-        newUser.setPassword(passwordEncoder.encode(password));
-        newUser.setRole("USER"); // Default role for new users
-        userRepository.save(newUser);
+    // Create a new security context and set the authentication
+    SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+    securityContext.setAuthentication(authentication);
+    SecurityContextHolder.setContext(securityContext);
 
-        // Send welcome email
-        try {
-            emailService.sendWelcomeEmail(email, username);
-        } catch (Exception e) {
-            // Log the error but don't fail registration if email fails
-            System.err.println("Failed to send welcome email to " + email + ": " + e.getMessage());
-        }
+    // Manually save the security context in the session
+    HttpSession session = request.getSession(true);
+    session.setAttribute(
+        HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
 
-        // Automatically log in the new user
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-            userDetails,
-            password,
-            userDetails.getAuthorities()
-        );
-
-        // Create a new security context and set the authentication
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
-        // Manually save the security context in the session
-        HttpSession session = request.getSession(true);
-        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, securityContext);
-
-        // Redirect to dashboard with success message
-        redirectAttributes.addFlashAttribute("toast", Map.of(
+    // Redirect to dashboard with success message
+    redirectAttributes.addFlashAttribute(
+        "toast",
+        Map.of(
             "type", "success",
             "title", "Account created",
-            "message", "Welcome to crusher! Your account has been created successfully"
-        ));
-        return "redirect:/dashboard";
-    }
+            "message", "Welcome to crusher! Your account has been created successfully"));
+    return "redirect:/dashboard";
+  }
 }

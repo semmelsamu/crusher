@@ -6,6 +6,10 @@ import de.othr.crusher.model.UserEntity;
 import de.othr.crusher.repository.BoulderCommentRepository;
 import de.othr.crusher.repository.BoulderRepository;
 import de.othr.crusher.repository.UserRepository;
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,172 +21,179 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Controller for managing boulder comments.
- * Provides endpoints for creating user comments on boulders.
+ * Controller for managing boulder comments. Provides endpoints for creating user comments on
+ * boulders.
  */
 @Controller
 public class BoulderCommentController {
 
-    private final BoulderCommentRepository commentRepository;
-    private final BoulderRepository boulderRepository;
-    private final UserRepository userRepository;
+  private final BoulderCommentRepository commentRepository;
+  private final BoulderRepository boulderRepository;
+  private final UserRepository userRepository;
 
-    public BoulderCommentController(
-            BoulderCommentRepository commentRepository,
-            BoulderRepository boulderRepository,
-            UserRepository userRepository) {
-        this.commentRepository = commentRepository;
-        this.boulderRepository = boulderRepository;
-        this.userRepository = userRepository;
+  public BoulderCommentController(
+      BoulderCommentRepository commentRepository,
+      BoulderRepository boulderRepository,
+      UserRepository userRepository) {
+    this.commentRepository = commentRepository;
+    this.boulderRepository = boulderRepository;
+    this.userRepository = userRepository;
+  }
+
+  /**
+   * Creates a new comment for a boulder.
+   *
+   * @param boulderId the ID of the boulder to comment on
+   * @param comment the comment text
+   * @param principal the authenticated user
+   * @param redirectAttributes attributes for flash messages
+   * @return redirect back to the boulder detail page
+   */
+  @PostMapping("/boulders/{boulderId}/comments")
+  @Transactional
+  public String createComment(
+      @PathVariable("boulderId") Long boulderId,
+      @RequestParam("comment") String comment,
+      Principal principal,
+      RedirectAttributes redirectAttributes) {
+    UserEntity user = findUserByPrincipal(principal);
+    BoulderEntity boulder =
+        boulderRepository
+            .findByIdAndDeletedFalse(boulderId)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+
+    if (comment == null || comment.trim().isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment text cannot be empty");
     }
 
-    /**
-     * Creates a new comment for a boulder.
-     *
-     * @param boulderId the ID of the boulder to comment on
-     * @param comment the comment text
-     * @param principal the authenticated user
-     * @param redirectAttributes attributes for flash messages
-     * @return redirect back to the boulder detail page
-     */
-    @PostMapping("/boulders/{boulderId}/comments")
-    @Transactional
-    public String createComment(
-            @PathVariable("boulderId") Long boulderId,
-            @RequestParam("comment") String comment,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
-        UserEntity user = findUserByPrincipal(principal);
-        BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+    BoulderCommentEntity commentEntity = new BoulderCommentEntity(user, boulder, comment.trim());
+    commentRepository.save(commentEntity);
 
-        if (comment == null || comment.trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment text cannot be empty");
-        }
+    // Add success toast
+    Map<String, String> toast = new HashMap<>();
+    toast.put("type", "success");
+    toast.put("title", "Comment posted!");
+    toast.put("message", "Your comment has been successfully added.");
+    redirectAttributes.addFlashAttribute("toast", toast);
 
-        BoulderCommentEntity commentEntity = new BoulderCommentEntity(user, boulder, comment.trim());
-        commentRepository.save(commentEntity);
+    return "redirect:/boulders/" + boulderId;
+  }
 
-        // Add success toast
-        Map<String, String> toast = new HashMap<>();
-        toast.put("type", "success");
-        toast.put("title", "Comment posted!");
-        toast.put("message", "Your comment has been successfully added.");
-        redirectAttributes.addFlashAttribute("toast", toast);
+  /**
+   * Deletes a comment. Only the comment owner can delete their own comment.
+   *
+   * @param boulderId the ID of the boulder
+   * @param commentId the ID of the comment to delete
+   * @param principal the authenticated user
+   * @param redirectAttributes attributes for flash messages
+   * @return redirect back to the boulder detail page
+   */
+  @DeleteMapping("/boulders/{boulderId}/comments/{commentId}")
+  @Transactional
+  public String deleteComment(
+      @PathVariable("boulderId") Long boulderId,
+      @PathVariable("commentId") Long commentId,
+      Principal principal,
+      RedirectAttributes redirectAttributes) {
+    UserEntity user = findUserByPrincipal(principal);
+    BoulderCommentEntity comment =
+        commentRepository
+            .findById(commentId)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
-        return "redirect:/boulders/" + boulderId;
+    // Ensure the comment belongs to the current user or user is admin
+    boolean isAdmin = "ADMIN".equals(user.getRole());
+    if (!comment.getUser().getId().equals(user.getId()) && !isAdmin) {
+      throw new ResponseStatusException(
+          HttpStatus.FORBIDDEN, "You can only delete your own comments");
     }
 
-    /**
-     * Deletes a comment.
-     * Only the comment owner can delete their own comment.
-     *
-     * @param boulderId the ID of the boulder
-     * @param commentId the ID of the comment to delete
-     * @param principal the authenticated user
-     * @param redirectAttributes attributes for flash messages
-     * @return redirect back to the boulder detail page
-     */
-    @DeleteMapping("/boulders/{boulderId}/comments/{commentId}")
-    @Transactional
-    public String deleteComment(
-            @PathVariable("boulderId") Long boulderId,
-            @PathVariable("commentId") Long commentId,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
-        UserEntity user = findUserByPrincipal(principal);
-        BoulderCommentEntity comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
-
-        // Ensure the comment belongs to the current user or user is admin
-        boolean isAdmin = "ADMIN".equals(user.getRole());
-        if (!comment.getUser().getId().equals(user.getId()) && !isAdmin) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own comments");
-        }
-
-        // Ensure the comment belongs to the specified boulder
-        if (!comment.getBoulder().getId().equals(boulderId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment does not belong to this boulder");
-        }
-
-        commentRepository.delete(comment);
-
-        // Add success toast
-        Map<String, String> toast = new HashMap<>();
-        toast.put("type", "success");
-        toast.put("title", "Comment deleted!");
-        toast.put("message", "Your comment has been successfully deleted.");
-        redirectAttributes.addFlashAttribute("toast", toast);
-
-        return "redirect:/boulders/" + boulderId;
+    // Ensure the comment belongs to the specified boulder
+    if (!comment.getBoulder().getId().equals(boulderId)) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Comment does not belong to this boulder");
     }
 
-    /**
-     * Updates a comment.
-     * Only the comment owner can update their own comment.
-     *
-     * @param boulderId the ID of the boulder
-     * @param commentId the ID of the comment to update
-     * @param newComment the new comment text
-     * @param principal the authenticated user
-     * @param redirectAttributes attributes for flash messages
-     * @return redirect back to the boulder detail page
-     */
-    @PutMapping("/boulders/{boulderId}/comments/{commentId}")
-    @Transactional
-    public String updateComment(
-            @PathVariable("boulderId") Long boulderId,
-            @PathVariable("commentId") Long commentId,
-            @RequestParam("comment") String newComment,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
-        UserEntity user = findUserByPrincipal(principal);
-        BoulderCommentEntity comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+    commentRepository.delete(comment);
 
-        // Ensure the comment belongs to the current user
-        if (!comment.getUser().getId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only edit your own comments");
-        }
+    // Add success toast
+    Map<String, String> toast = new HashMap<>();
+    toast.put("type", "success");
+    toast.put("title", "Comment deleted!");
+    toast.put("message", "Your comment has been successfully deleted.");
+    redirectAttributes.addFlashAttribute("toast", toast);
 
-        // Ensure the comment belongs to the specified boulder
-        if (!comment.getBoulder().getId().equals(boulderId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment does not belong to this boulder");
-        }
+    return "redirect:/boulders/" + boulderId;
+  }
 
-        if (newComment == null || newComment.trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment text cannot be empty");
-        }
+  /**
+   * Updates a comment. Only the comment owner can update their own comment.
+   *
+   * @param boulderId the ID of the boulder
+   * @param commentId the ID of the comment to update
+   * @param newComment the new comment text
+   * @param principal the authenticated user
+   * @param redirectAttributes attributes for flash messages
+   * @return redirect back to the boulder detail page
+   */
+  @PutMapping("/boulders/{boulderId}/comments/{commentId}")
+  @Transactional
+  public String updateComment(
+      @PathVariable("boulderId") Long boulderId,
+      @PathVariable("commentId") Long commentId,
+      @RequestParam("comment") String newComment,
+      Principal principal,
+      RedirectAttributes redirectAttributes) {
+    UserEntity user = findUserByPrincipal(principal);
+    BoulderCommentEntity comment =
+        commentRepository
+            .findById(commentId)
+            .orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
-        comment.setComment(newComment.trim());
-        comment.setUpdatedAt(LocalDateTime.now());
-        commentRepository.save(comment);
-
-        // Add success toast
-        Map<String, String> toast = new HashMap<>();
-        toast.put("type", "success");
-        toast.put("title", "Comment updated!");
-        toast.put("message", "Your comment has been successfully updated.");
-        redirectAttributes.addFlashAttribute("toast", toast);
-
-        return "redirect:/boulders/" + boulderId;
+    // Ensure the comment belongs to the current user
+    if (!comment.getUser().getId().equals(user.getId())) {
+      throw new ResponseStatusException(
+          HttpStatus.FORBIDDEN, "You can only edit your own comments");
     }
 
-    /**
-     * Helper method to find the current user from the security principal.
-     *
-     * @param principal the authenticated user principal
-     * @return the UserEntity for the current user
-     * @throws ResponseStatusException if the user is not found
-     */
-    private UserEntity findUserByPrincipal(Principal principal) {
-        return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+    // Ensure the comment belongs to the specified boulder
+    if (!comment.getBoulder().getId().equals(boulderId)) {
+      throw new ResponseStatusException(
+          HttpStatus.BAD_REQUEST, "Comment does not belong to this boulder");
     }
+
+    if (newComment == null || newComment.trim().isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment text cannot be empty");
+    }
+
+    comment.setComment(newComment.trim());
+    comment.setUpdatedAt(LocalDateTime.now());
+    commentRepository.save(comment);
+
+    // Add success toast
+    Map<String, String> toast = new HashMap<>();
+    toast.put("type", "success");
+    toast.put("title", "Comment updated!");
+    toast.put("message", "Your comment has been successfully updated.");
+    redirectAttributes.addFlashAttribute("toast", toast);
+
+    return "redirect:/boulders/" + boulderId;
+  }
+
+  /**
+   * Helper method to find the current user from the security principal.
+   *
+   * @param principal the authenticated user principal
+   * @return the UserEntity for the current user
+   * @throws ResponseStatusException if the user is not found
+   */
+  private UserEntity findUserByPrincipal(Principal principal) {
+    return userRepository
+        .findByName(principal.getName())
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+  }
 }

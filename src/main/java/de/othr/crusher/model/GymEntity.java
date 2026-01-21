@@ -8,211 +8,210 @@ import java.util.List;
 
 /**
  * Entity representing a climbing gym.
- * <p>
- * Maps to the {@code gyms} table and stores the gym's contact details (name, street,
- * city, email) along with its associated sectors and grades.
- * </p>
+ *
+ * <p>Maps to the {@code gyms} table and stores the gym's contact details (name, street, city,
+ * email) along with its associated sectors and grades.
  */
 @Entity
 @Table(name = "gyms")
 public class GymEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Please enter a name")
-    private String name;
+  @Column(nullable = false)
+  @NotBlank(message = "Please enter a name")
+  private String name;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Please enter a street")
-    private String street;
+  @Column(nullable = false)
+  @NotBlank(message = "Please enter a street")
+  private String street;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Please enter a city")
-    private String city;
+  @Column(nullable = false)
+  @NotBlank(message = "Please enter a city")
+  private String city;
 
-    @Column(nullable = false)
-    @NotBlank(message = "Please enter a email")
-    @Email(message = "Please enter a correct email")
-    private String email;
+  @Column(nullable = false)
+  @NotBlank(message = "Please enter a email")
+  @Email(message = "Please enter a correct email")
+  private String email;
 
-    @Column(nullable = true)
-    private Double latitude;
+  @Column(nullable = true)
+  private Double latitude;
 
-    @Column(nullable = true)
-    private Double longitude;
+  @Column(nullable = true)
+  private Double longitude;
 
-    @Column(nullable = true)
-    private String crowdLevelUrl;
+  @Column(nullable = true)
+  private String crowdLevelUrl;
 
-    @Column(nullable = false)
-    private boolean deleted = false;
+  @Column(nullable = false)
+  private boolean deleted = false;
 
-    @OneToMany(
-            mappedBy = "gym",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<SectorEntity> sectors = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "gym",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  private List<SectorEntity> sectors = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "gym",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<GradeEntity> grades = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "gym",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  private List<GradeEntity> grades = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "gym",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<NoticeEntity> notices = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "gym",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  private List<NoticeEntity> notices = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "gym",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<EventEntity> events = new ArrayList<>();
+  @OneToMany(
+      mappedBy = "gym",
+      cascade = CascadeType.ALL,
+      orphanRemoval = true,
+      fetch = FetchType.LAZY)
+  private List<EventEntity> events = new ArrayList<>();
 
-    public GymEntity() {}
+  public GymEntity() {}
 
-    public GymEntity(String name, String street, String city, String email) {
-        this.name = name;
-        this.street = street;
-        this.city = city;
-        this.email = email;
-    }
+  public GymEntity(String name, String street, String city, String email) {
+    this.name = name;
+    this.street = street;
+    this.city = city;
+    this.email = email;
+  }
 
-    // ---- Getters / Setters ----
-    public Long getId() {
-        return id;
-    }
+  // ---- Getters / Setters ----
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getStreet() {
-        return street;
-    }
+  public String getStreet() {
+    return street;
+  }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
+  public void setStreet(String street) {
+    this.street = street;
+  }
 
-    public String getCity() {
-        return city;
-    }
+  public String getCity() {
+    return city;
+  }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+  public void setCity(String city) {
+    this.city = city;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public Double getLatitude() {
-        return latitude;
-    }
+  public Double getLatitude() {
+    return latitude;
+  }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
+  public void setLatitude(Double latitude) {
+    this.latitude = latitude;
+  }
 
-    public Double getLongitude() {
-        return longitude;
-    }
+  public Double getLongitude() {
+    return longitude;
+  }
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
+  public void setLongitude(Double longitude) {
+    this.longitude = longitude;
+  }
 
-    public String getCrowdLevelUrl() {
-        return crowdLevelUrl;
-    }
+  public String getCrowdLevelUrl() {
+    return crowdLevelUrl;
+  }
 
-    public void setCrowdLevelUrl(String crowdLevelUrl) {
-        this.crowdLevelUrl = crowdLevelUrl;
-    }
+  public void setCrowdLevelUrl(String crowdLevelUrl) {
+    this.crowdLevelUrl = crowdLevelUrl;
+  }
 
-    public List<SectorEntity> getSectors() {
-        return sectors;
-    }
+  public List<SectorEntity> getSectors() {
+    return sectors;
+  }
 
-    public List<GradeEntity> getGrades() {
-        return grades;
-    }
+  public List<GradeEntity> getGrades() {
+    return grades;
+  }
 
-    public List<NoticeEntity> getNotices() {
-        return notices;
-    }
+  public List<NoticeEntity> getNotices() {
+    return notices;
+  }
 
-    public List<EventEntity> getEvents() {
-        return events;
-    }
+  public List<EventEntity> getEvents() {
+    return events;
+  }
 
-    public void addSector(SectorEntity sector) {
-        sectors.add(sector);
-        sector.setGym(this);
-    }
+  public void addSector(SectorEntity sector) {
+    sectors.add(sector);
+    sector.setGym(this);
+  }
 
-    public void removeSector(SectorEntity sector) {
-        sectors.remove(sector);
-        sector.setGym(null);
-    }
+  public void removeSector(SectorEntity sector) {
+    sectors.remove(sector);
+    sector.setGym(null);
+  }
 
-    public void addGrade(GradeEntity grade) {
-        grades.add(grade);
-        grade.setGym(this);
-    }
+  public void addGrade(GradeEntity grade) {
+    grades.add(grade);
+    grade.setGym(this);
+  }
 
-    public void removeGrade(GradeEntity grade) {
-        grades.remove(grade);
-        grade.setGym(null);
-    }
+  public void removeGrade(GradeEntity grade) {
+    grades.remove(grade);
+    grade.setGym(null);
+  }
 
-    public void addNotice(NoticeEntity notice) {
-        notices.add(notice);
-        notice.setGym(this);
-    }
+  public void addNotice(NoticeEntity notice) {
+    notices.add(notice);
+    notice.setGym(this);
+  }
 
-    public void removeNotice(NoticeEntity notice) {
-        notices.remove(notice);
-        notice.setGym(null);
-    }
+  public void removeNotice(NoticeEntity notice) {
+    notices.remove(notice);
+    notice.setGym(null);
+  }
 
-    public void addEvent(EventEntity event) {
-        events.add(event);
-        event.setGym(this);
-    }
+  public void addEvent(EventEntity event) {
+    events.add(event);
+    event.setGym(this);
+  }
 
-    public void removeEvent(EventEntity event) {
-        events.remove(event);
-        event.setGym(null);
-    }
+  public void removeEvent(EventEntity event) {
+    events.remove(event);
+    event.setGym(null);
+  }
 
-    public boolean isDeleted() {
-        return deleted;
-    }
+  public boolean isDeleted() {
+    return deleted;
+  }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
 }

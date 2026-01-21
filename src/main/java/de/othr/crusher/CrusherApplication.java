@@ -8,8 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class CrusherApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CrusherApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(CrusherApplication.class, args);
+  }
 }
