@@ -12,11 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,8 +103,9 @@ public class EventCommentController {
         EventCommentEntity comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
-        // Ensure the comment belongs to the current user
-        if (!comment.getUser().getId().equals(user.getId())) {
+        // Ensure the comment belongs to the current user or user is admin
+        boolean isAdmin = "ADMIN".equals(user.getRole());
+        if (!comment.getUser().getId().equals(user.getId()) && !isAdmin) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only delete your own comments");
         }
 
@@ -119,6 +122,60 @@ public class EventCommentController {
         toast.put("type", "success");
         toast.put("title", "Comment deleted!");
         toast.put("message", "Your comment has been successfully deleted.");
+        redirectAttributes.addFlashAttribute("toast", toast);
+
+        return "redirect:/gyms/" + gymId + "/events/" + eventId;
+    }
+
+    /**
+     * Updates a comment.
+     * Only the comment owner can update their own comment.
+     *
+     * @param gymId the ID of the gym
+     * @param eventId the ID of the event
+     * @param commentId the ID of the comment to update
+     * @param newComment the new comment text
+     * @param principal the authenticated user
+     * @param redirectAttributes attributes for flash messages
+     * @return redirect back to the event detail page
+     */
+    @PutMapping("/gyms/{gymId}/events/{eventId}/comments/{commentId}")
+    @Transactional
+    public String updateComment(
+            @PathVariable("gymId") Long gymId,
+            @PathVariable("eventId") Long eventId,
+            @PathVariable("commentId") Long commentId,
+            @RequestParam("comment") String newComment,
+            Principal principal,
+            RedirectAttributes redirectAttributes) {
+        UserEntity user = findUserByPrincipal(principal);
+        EventCommentEntity comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+
+        // Ensure the comment belongs to the current user
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only edit your own comments");
+        }
+
+        // Ensure the comment belongs to the specified event and gym
+        if (!comment.getEvent().getId().equals(eventId)
+                || !comment.getEvent().getGym().getId().equals(gymId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment does not belong to this event");
+        }
+
+        if (newComment == null || newComment.trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment text cannot be empty");
+        }
+
+        comment.setComment(newComment.trim());
+        comment.setUpdatedAt(LocalDateTime.now());
+        commentRepository.save(comment);
+
+        // Add success toast
+        Map<String, String> toast = new HashMap<>();
+        toast.put("type", "success");
+        toast.put("title", "Comment updated!");
+        toast.put("message", "Your comment has been successfully updated.");
         redirectAttributes.addFlashAttribute("toast", toast);
 
         return "redirect:/gyms/" + gymId + "/events/" + eventId;

@@ -60,7 +60,32 @@
                         01.01.2024 12:00
                     </time>
                     <span
+                        th:if="${comment.updatedAt != null}"
+                        class="text-foreground-muted"
+                    >
+                        (edited)
+                    </span>
+                    <span
                         th:if="${comment.user.name == #authentication.principal.username}"
+                        th:onclick="|openDialog('edit-comment-dialog-${comment.id}')|"
+                        style="
+                            cursor: pointer;
+                            color: var(--color-foreground-muted);
+                            transition: color 0.2s;
+                            display: inline-flex;
+                            align-items: center;
+                            width: 12px;
+                            height: 12px;
+                        "
+                        onmouseover="this.style.color = 'var(--color-primary)'"
+                        onmouseout="
+                            this.style.color = 'var(--color-foreground-muted)'
+                        "
+                    >
+                        <x th:replace="~{components/icons :: pencil-small}"></x>
+                    </span>
+                    <span
+                        th:if="${comment.user.name == #authentication.principal.username or #authorization.expression('hasRole(''ADMIN'')')}"
                         th:onclick="|openDialog('delete-comment-dialog-${comment.id}')|"
                         style="
                             cursor: pointer;
@@ -84,9 +109,45 @@
                 <p th:text="${comment.comment}">Comment text goes here</p>
             </div>
 
-            <!-- Delete confirmation dialog -->
+            <!-- Edit comment dialog -->
             <dialog
                 th:if="${comment.user.name == #authentication.principal.username}"
+                th:id="|edit-comment-dialog-${comment.id}|"
+                class="dialog space-y-4"
+                closedby="any"
+            >
+                <h3>Edit Comment</h3>
+                <form
+                    th:action="${deleteUrlBase + '/' + comment.id}"
+                    method="post"
+                    class="space-y-4"
+                >
+                    <input type="hidden" name="_method" value="put" />
+                    <textarea
+                        name="comment"
+                        rows="4"
+                        class="text-input w-full"
+                        required
+                        th:text="${comment.comment}"
+                    ></textarea>
+                    <div class="flex justify-end gap-4">
+                        <button
+                            type="button"
+                            class="button"
+                            th:onclick="|closeDialog('edit-comment-dialog-${comment.id}')|"
+                        >
+                            Cancel
+                        </button>
+                        <button autofocus type="submit" class="button primary">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </dialog>
+
+            <!-- Delete confirmation dialog -->
+            <dialog
+                th:if="${comment.user.name == #authentication.principal.username or #authorization.expression('hasRole(''ADMIN'')')}"
                 th:id="|delete-comment-dialog-${comment.id}|"
                 class="dialog space-y-4"
                 closedby="any"

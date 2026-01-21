@@ -1,7 +1,10 @@
 package de.othr.crusher.service;
 
 import de.othr.crusher.model.BoulderEntity;
+import de.othr.crusher.model.EventEntity;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -90,5 +93,48 @@ public class EmailService {
         body.append("Your Crusher Team");
 
         sendEmail(to, subject, body.toString());
+    }
+
+    /**
+     * Sends an email notification about a new event created by a gym.
+     *
+     * @param to      recipient email address
+     * @param username the user's name
+     * @param gymName name of the gym
+     * @param event   event details
+     */
+    public void sendNewEventEmail(String to, String username, String gymName, EventEntity event) {
+        String subject = String.format("New Event at %s: %s", gymName, event.getTitle());
+
+        StringBuilder body = new StringBuilder();
+        body.append(String.format("Hi %s,\n\n", username));
+        body.append(String.format("%s just created a new event.\n\n", gymName));
+        body.append(String.format("Title: %s\n", event.getTitle()));
+        body.append(String.format("When: %s\n", formatEventSchedule(event)));
+        body.append(String.format("Details:\n%s\n\n", event.getDescription()));
+        body.append("See you on the wall!\n\n");
+        body.append("Your Crusher Team");
+
+        sendEmail(to, subject, body.toString());
+    }
+
+    private String formatEventSchedule(EventEntity event) {
+        if (event.isPeriodic()) {
+            String weekday = event.getWeekday() == null ? "Unknown day" : titleCase(event.getWeekday().name());
+            String frequency = event.getFrequency() == null ? "Recurring" : event.getFrequency().getLabel();
+            return String.format("Every %s (%s) at %s", weekday, frequency, event.getTime());
+        }
+
+        if (event.getDate() == null) {
+            return String.format("Date TBD at %s", event.getTime());
+        }
+
+        String date = event.getDate().format(DateTimeFormatter.ofPattern("dd.MM.yy"));
+        return String.format("%s at %s", date, event.getTime());
+    }
+
+    private String titleCase(String value) {
+        String lower = value.toLowerCase(Locale.ENGLISH);
+        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
     }
 }

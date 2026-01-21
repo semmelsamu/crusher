@@ -38,47 +38,49 @@
                     method="get"
                     class="flex gap-4 flex-wrap"
                 >
-                    <div class="space-y-2">
-                        <label for="gym-select">Gym</label>
-                        <select
-                            id="gym-select"
-                            name="gymId"
-                            class="text-input w-full"
-                        >
-                            <option
-                                value=""
-                                th:selected="${selectedGymId == null}"
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="space-y-2">
+                            <label for="gym-select">Gym</label>
+                            <select
+                                id="gym-select"
+                                name="gymId"
+                                class="text-input w-full"
                             >
-                                All Gyms
-                            </option>
-                            <option
-                                th:each="gym : ${gyms}"
-                                th:value="${gym.id}"
-                                th:text="${gym.name}"
-                                th:selected="${gym.id == selectedGymId}"
-                            >
-                                Gym
-                            </option>
-                        </select>
-                    </div>
+                                <option
+                                    value=""
+                                    th:selected="${selectedGymId == null}"
+                                >
+                                    All Gyms
+                                </option>
+                                <option
+                                    th:each="gym : ${gyms}"
+                                    th:value="${gym.id}"
+                                    th:text="${gym.name}"
+                                    th:selected="${gym.id == selectedGymId}"
+                                >
+                                    Gym
+                                </option>
+                            </select>
+                        </div>
 
-                    <div class="space-y-2">
-                        <label for="sector-select">Sector</label>
-                        <select
-                            id="sector-select"
-                            name="sectorId"
-                            class="text-input w-full"
-                        >
-                            <option value="">All Sectors</option>
-                            <option
-                                th:each="sector : ${sectors}"
-                                th:value="${sector.id}"
-                                th:text="${sector.name}"
-                                th:selected="${sector.id == selectedSectorId}"
+                        <div class="space-y-2">
+                            <label for="sector-select">Sector</label>
+                            <select
+                                id="sector-select"
+                                name="sectorId"
+                                class="text-input w-full"
                             >
-                                Sector
-                            </option>
-                        </select>
+                                <option value="">All Sectors</option>
+                                <option
+                                    th:each="sector : ${sectors}"
+                                    th:value="${sector.id}"
+                                    th:text="${sector.name}"
+                                    th:selected="${sector.id == selectedSectorId}"
+                                >
+                                    Sector
+                                </option>
+                            </select>
+                        </div>
                     </div>
 
                     <div
@@ -118,25 +120,44 @@
                         </div>
                     </div>
 
-                    <div class="flex gap-2 flex-wrap">
-                        <div class="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                id="project-only"
-                                name="projectOnly"
-                                class="checkbox"
-                                th:checked="${projectOnly}"
-                            />
-                            <label for="project-only">
-                                Show projects only
-                            </label>
+                    <div class="flex flex-col sm:flex-row gap-4 w-full">
+                        <div class="flex gap-2 flex-wrap">
+                            <div class="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="project-only"
+                                    name="projectOnly"
+                                    class="checkbox"
+                                    th:checked="${projectOnly}"
+                                />
+                                <label for="project-only">
+                                    Show projects only
+                                </label>
+                            </div>
                         </div>
+
+                        <button
+                            type="submit"
+                            class="button button-primary ml-auto"
+                        >
+                            <x th:replace="~{components/icons :: funnel}"></x>
+                            Filter
+                        </button>
                     </div>
 
-                    <button type="submit" class="button button-primary ml-auto">
-                        <x th:replace="~{components/icons :: funnel}"></x>
-                        Filter
-                    </button>
+                    <!-- Hidden inputs to preserve sort state -->
+                    <input
+                        th:if="${sortBy != null}"
+                        type="hidden"
+                        name="sortBy"
+                        th:value="${sortBy}"
+                    />
+                    <input
+                        th:if="${sortDir != null}"
+                        type="hidden"
+                        name="sortDir"
+                        th:value="${sortDir}"
+                    />
                 </form>
             </section>
 
@@ -147,12 +168,127 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th class="w-20">Color</th>
-                                <th class="w-20">Grade</th>
+                                <th class="w-20">
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='color',
+                                            sortDir=${sortBy == 'color' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Color
+                                        <span
+                                            th:if="${sortBy == 'color' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'color' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
+                                <th class="w-20">
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='grade',
+                                            sortDir=${sortBy == 'grade' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Grade
+                                        <span
+                                            th:if="${sortBy == 'grade' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'grade' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
                                 <th>Description</th>
-                                <th class="w-20">Rating</th>
-                                <th>Sector</th>
-                                <th>Gym</th>
+                                <th class="w-20">
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='rating',
+                                            sortDir=${sortBy == 'rating' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Rating
+                                        <span
+                                            th:if="${sortBy == 'rating' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'rating' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
+                                <th>
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='sector',
+                                            sortDir=${sortBy == 'sector' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Sector
+                                        <span
+                                            th:if="${sortBy == 'sector' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'sector' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
+                                <th>
+                                    <a
+                                        th:href="@{/boulders(
+                                            page=1,
+                                            gymId=${selectedGymId},
+                                            sectorId=${selectedSectorId},
+                                            gradeIds=${selectedGradeIds},
+                                            projectOnly=${projectOnly},
+                                            sortBy='gym',
+                                            sortDir=${sortBy == 'gym' && sortDir == 'asc' ? 'desc' : 'asc'}
+                                        )}"
+                                        class="flex items-center gap-1"
+                                    >
+                                        Gym
+                                        <span
+                                            th:if="${sortBy == 'gym' && sortDir == 'asc'}"
+                                            >▲</span
+                                        >
+                                        <span
+                                            th:if="${sortBy == 'gym' && sortDir == 'desc'}"
+                                            >▼</span
+                                        >
+                                    </a>
+                                </th>
                                 <th class="w-16 text-right"></th>
                             </tr>
                         </thead>
@@ -242,6 +378,18 @@
                                             type="hidden"
                                             name="projectOnly"
                                             value="true"
+                                        />
+                                        <input
+                                            th:if="${sortBy != null}"
+                                            type="hidden"
+                                            name="sortBy"
+                                            th:value="${sortBy}"
+                                        />
+                                        <input
+                                            th:if="${sortDir != null}"
+                                            type="hidden"
+                                            name="sortDir"
+                                            th:value="${sortDir}"
                                         />
                                         <button
                                             type="submit"

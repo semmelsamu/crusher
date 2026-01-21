@@ -26,6 +26,7 @@ public class LoginController {
     public String login(
             @RequestParam(required = false) String logout,
             @RequestParam(required = false) String error,
+            @RequestParam(required = false) String deleted,
             RedirectAttributes redirectAttributes) {
         
         if (logout != null) {
@@ -45,8 +46,16 @@ public class LoginController {
             ));
             return "redirect:/login";
         }
+
+        if (deleted != null) {
+            redirectAttributes.addFlashAttribute("toast", Map.of(
+                "type", "success",
+                "title", "Account deleted",
+                "message", "Your account has been deleted"
+            ));
+            return "redirect:/login";
+        }
         
         return "pages/login";
     }
 }
-

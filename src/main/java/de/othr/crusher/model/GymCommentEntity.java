@@ -39,6 +39,9 @@ public class GymCommentEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column
+    private LocalDateTime updatedAt;
+
     public GymCommentEntity() {}
 
     public GymCommentEntity(UserEntity user, GymEntity gym, String comment) {
@@ -85,5 +88,13 @@ public class GymCommentEntity {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

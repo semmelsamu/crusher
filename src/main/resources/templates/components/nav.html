@@ -40,7 +40,7 @@
                 <a
                     href="/admin/gyms"
                     class="button button-ghost"
-                    sec:authorize="hasAnyRole('ADMIN', 'OWNER')"
+                    sec:authorize="hasAnyRole('ADMIN', 'OWNER', 'SETTER')"
                 >
                     <x
                         th:replace="~{components/icons :: sliders-horizontal}"
@@ -57,9 +57,15 @@
                     Dashboard
                 </a>
 
-                <div
-                    th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
-                ></div>
+                <a
+                    href="/account"
+                    aria-label="Account settings"
+                    title="Account settings"
+                >
+                    <div
+                        th:replace="~{components/avatar :: avatar(${#authentication.principal.username})}"
+                    ></div>
+                </a>
 
                 <form
                     th:action="@{/logout}"
