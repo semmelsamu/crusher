@@ -203,7 +203,6 @@ public class ApiUserController {
     }
 
     @DeleteMapping("/me")
-    @Transactional
     public ResponseEntity<?> deleteCurrentUser(
             Authentication authentication,
             HttpServletRequest request,
@@ -222,7 +221,6 @@ public class ApiUserController {
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity<?> deleteUser(
             @PathVariable("id") Long id,
             Authentication authentication,
@@ -316,8 +314,7 @@ public class ApiUserController {
 
     private ResponseEntity<?> deleteUserInternal(UserEntity user) {
         try {
-            userRepository.delete(user);
-            userRepository.flush();
+            userRepository.deleteAndFlush(user);
         } catch (DataIntegrityViolationException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(new ApiErrorResponse("User has related data and cannot be deleted"));
