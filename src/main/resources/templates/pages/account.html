@@ -6,15 +6,25 @@
     <th:block layout:fragment="content">
         <main class="wrapper">
             <div class="flex items-center gap-4">
-                <a href="/dashboard" class="button button-square">
+                <a
+                    th:href="${isAdminEdit ? '/admin/users' : '/dashboard'}"
+                    class="button button-square"
+                >
                     <x th:replace="~{components/icons :: arrow-big-left}"></x>
                 </a>
                 <header
                     class="card flex-1 p-card-inner flex items-center justify-between"
                 >
                     <div>
-                        <h1>Account settings</h1>
-                        <p class="text-foreground-muted">
+                        <h1
+                            th:text="${isAdminEdit ? 'Edit User' : 'Account settings'}"
+                        >
+                            Account settings
+                        </h1>
+                        <p
+                            class="text-foreground-muted"
+                            th:text="${isAdminEdit ? 'Update user details and role.' : 'Update your profile details.'}"
+                        >
                             Update your profile details.
                         </p>
                     </div>
@@ -23,6 +33,7 @@
                         class="button danger button-square"
                         aria-label="Delete account"
                         onclick="openDialog('delete-account-dialog')"
+                        th:if="${!isAdminEdit}"
                     >
                         <x th:replace="~{components/icons :: trash-2}"></x>
                     </button>
@@ -31,7 +42,7 @@
 
             <section class="card p-card-inner max-w-md mx-auto">
                 <form
-                    th:action="@{/account}"
+                    th:action="${isAdminEdit ? '/admin/users/' + currentUser.id : '/account'}"
                     method="post"
                     class="space-y-4"
                     th:if="${currentUser != null}"
@@ -41,6 +52,7 @@
                         type="hidden"
                         name="returnTo"
                         th:value="${returnTo}"
+                        th:if="${!isAdminEdit}"
                     />
                     <div class="space-y-2">
                         <label for="account-username" class="form-label"
@@ -68,6 +80,43 @@
                             th:value="${currentUser.email}"
                         />
                     </div>
+                    <div class="space-y-2" th:if="${isAdminEdit}">
+                        <label for="account-role" class="form-label"
+                            >Role</label
+                        >
+                        <select
+                            id="account-role"
+                            name="role"
+                            class="text-input block w-full"
+                            required
+                            th:value="${currentUser.role}"
+                        >
+                            <option
+                                value="USER"
+                                th:selected="${currentUser.role == 'USER'}"
+                            >
+                                USER
+                            </option>
+                            <option
+                                value="ADMIN"
+                                th:selected="${currentUser.role == 'ADMIN'}"
+                            >
+                                ADMIN
+                            </option>
+                            <option
+                                value="OWNER"
+                                th:selected="${currentUser.role == 'OWNER'}"
+                            >
+                                OWNER
+                            </option>
+                            <option
+                                value="SETTER"
+                                th:selected="${currentUser.role == 'SETTER'}"
+                            >
+                                SETTER
+                            </option>
+                        </select>
+                    </div>
                     <button type="submit" class="button primary">
                         <x th:replace="~{components/icons :: check}"></x>
                         Save changes
@@ -79,6 +128,7 @@
                 id="delete-account-dialog"
                 class="dialog space-y-4"
                 closedby="any"
+                th:if="${!isAdminEdit}"
             >
                 <h3>Confirm deletion</h3>
                 <p>

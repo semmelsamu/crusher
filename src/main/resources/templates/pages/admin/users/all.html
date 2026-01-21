@@ -34,11 +34,12 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody th:if="${users.isEmpty()}">
                             <tr>
-                                <td colspan="3" class="text-center">
+                                <td colspan="4" class="text-center">
                                     No users found.
                                 </td>
                             </tr>
@@ -48,6 +49,17 @@
                                 <td th:text="${user.name}">Name</td>
                                 <td th:text="${user.email}">Email</td>
                                 <td th:text="${user.role}">Role</td>
+                                <td>
+                                    <a
+                                        th:href="@{/admin/users/{id}/edit(id=${user.id})}"
+                                        class="button primary"
+                                    >
+                                        <x
+                                            th:replace="~{components/icons :: pencil}"
+                                        ></x>
+                                        Edit
+                                    </a>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
