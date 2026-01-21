@@ -86,6 +86,193 @@ Responses:
 
 ---
 
+## Users
+
+Base path: `/api/users`
+
+All endpoints require authentication via session cookie from login.
+
+Notes:
+
+- `ADMIN`/`OWNER` can list, create, and manage any user.
+- Regular users can access/update/delete only themselves.
+- Role changes are only allowed for `ADMIN`/`OWNER`.
+
+### GET /api/users
+
+Lists all users (ADMIN/OWNER only).
+
+**Responses:**
+
+- `200 OK`
+
+```json
+[
+    {
+        "id": 1,
+        "username": "alice",
+        "email": "alice@crusher-test.de",
+        "role": "USER"
+    }
+]
+```
+
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Access denied
+
+---
+
+### GET /api/users/me
+
+Returns the current user.
+
+**Responses:**
+
+- `200 OK`
+
+```json
+{
+    "id": 1,
+    "username": "alice",
+    "email": "alice@crusher-test.de",
+    "role": "USER"
+}
+```
+
+- `401 Unauthorized` - Not authenticated
+
+---
+
+### GET /api/users/{id}
+
+Returns a user by ID (ADMIN/OWNER or self).
+
+**Path Parameters:**
+
+- `id` (Long) - The user ID
+
+**Responses:**
+
+- `200 OK` (same shape as `/me`)
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Access denied
+- `404 Not Found` - User not found
+
+---
+
+### POST /api/users
+
+Creates a new user (ADMIN/OWNER only).
+
+**Request Body:**
+
+```json
+{
+    "username": "new-user",
+    "email": "new-user@example.com",
+    "password": "strong-password",
+    "role": "USER"
+}
+```
+
+**Fields:**
+
+- `username` (String, required)
+- `email` (String, required)
+- `password` (String, required)
+- `role` (String, optional) - One of: `USER`, `SETTER`, `OWNER`, `ADMIN`
+
+**Responses:**
+
+- `201 Created` (same shape as `/me`)
+- `400 Bad Request` - Missing/invalid fields or duplicates
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Access denied
+
+---
+
+### PUT /api/users/me
+
+Updates the current user.
+
+**Request Body:**
+
+```json
+{
+    "username": "new-name",
+    "email": "new-email@example.com",
+    "password": "new-password"
+}
+```
+
+**Responses:**
+
+- `200 OK` (same shape as `/me`)
+- `400 Bad Request` - Invalid fields or duplicates
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Role change not allowed
+
+---
+
+### PUT /api/users/{id}
+
+Updates a user by ID (ADMIN/OWNER or self).
+
+**Path Parameters:**
+
+- `id` (Long) - The user ID
+
+**Request Body:**
+
+```json
+{
+    "username": "new-name",
+    "email": "new-email@example.com",
+    "password": "new-password",
+    "role": "SETTER"
+}
+```
+
+**Responses:**
+
+- `200 OK` (same shape as `/me`)
+- `400 Bad Request` - Invalid fields or duplicates
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Access denied or role change not allowed
+- `404 Not Found` - User not found
+
+---
+
+### DELETE /api/users/me
+
+Deletes the current user and logs them out.
+
+**Responses:**
+
+- `204 No Content`
+- `401 Unauthorized` - Not authenticated
+- `409 Conflict` - User has related data and cannot be deleted
+
+---
+
+### DELETE /api/users/{id}
+
+Deletes a user by ID (ADMIN/OWNER or self).
+
+**Path Parameters:**
+
+- `id` (Long) - The user ID
+
+**Responses:**
+
+- `204 No Content`
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Access denied
+- `404 Not Found` - User not found
+- `409 Conflict` - User has related data and cannot be deleted
+
+---
+
 ## Goes (Climbing Attempts)
 
 Base path: `/api/sessions/{sessionId}/goes`
