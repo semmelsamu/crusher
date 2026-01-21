@@ -8,7 +8,6 @@ import de.othr.crusher.model.UserEntity;
 import de.othr.crusher.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -313,14 +312,13 @@ public class ApiUserController {
     }
 
     private ResponseEntity<?> deleteUserInternal(UserEntity user) {
-        try {
-            userRepository.delete(user);
-            userRepository.flush();
-        } catch (DataIntegrityViolationException ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ApiErrorResponse("User has related data and cannot be deleted"));
-        }
-
+        String identifier = "deleted-user-" + user.getId();
+        user.setName(identifier);
+        user.setEmail(identifier + "@example.invalid");
+        user.setPassword(passwordEncoder.encode(java.util.UUID.randomUUID().toString()));
+        user.setRole("USER");
+        userRepository.save(user);
+        userRepository.flush();
         return ResponseEntity.noContent().build();
     }
 

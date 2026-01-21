@@ -97,6 +97,7 @@ Notes:
 - `ADMIN`/`OWNER` can list, create, and manage any user.
 - Regular users can access/update/delete only themselves.
 - Role changes are only allowed for `ADMIN`/`OWNER`.
+- Delete operations anonymize the user and keep related data.
 
 ### GET /api/users
 
