@@ -232,17 +232,26 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Persist scroll before clicking pagination buttons
-    document
-        .querySelectorAll("nav[aria-label='Pagination'] button")
-        .forEach((button) => {
-            button.addEventListener("click", () => {
-                sessionStorage.setItem(
-                    "paginationScroll",
-                    String(window.scrollY),
-                );
-            });
+    // Handle pagination button clicks
+    document.querySelectorAll(".pagination-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+            if (button.disabled) return;
+
+            const nav = button.closest(".pagination-nav");
+            const baseUrl = nav?.getAttribute("data-base-url");
+            const page = button.getAttribute("data-page");
+
+            if (!baseUrl || !page) return;
+
+            // Save scroll position
+            sessionStorage.setItem("paginationScroll", String(window.scrollY));
+
+            // Update URL parameters
+            const params = new URLSearchParams(window.location.search);
+            params.set("page", page);
+            window.location.href = baseUrl + "?" + params.toString();
         });
+    });
 
     // Initialize bar charts
     initializeBarCharts();
