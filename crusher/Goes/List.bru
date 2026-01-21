@@ -1,17 +1,16 @@
 meta {
-  name: Goes - Delete
+  name: List
   type: http
   seq: 2
 }
 
-delete {
-  url: http://localhost:8080/api/sessions/:session_id/goes/:go_id
+get {
+  url: http://localhost:8080/api/sessions/:session_id/goes
   body: none
   auth: inherit
 }
 
 params:path {
-  go_id: 89
   session_id: 25
 }
 

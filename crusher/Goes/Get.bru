@@ -1,25 +1,18 @@
 meta {
-  name: Goes - Update
+  name: Get
   type: http
   seq: 2
 }
 
-put {
+get {
   url: http://localhost:8080/api/sessions/:session_id/goes/:go_id
-  body: json
+  body: none
   auth: inherit
 }
 
 params:path {
-  session_id: 25
   go_id: 89
-}
-
-body:json {
-  {
-    "result": "CLOSE_TRY",
-    "progressedHold": 5
-  }
+  session_id: 25
 }
 
 settings {
