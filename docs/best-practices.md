@@ -32,5 +32,5 @@ The commit types should match the branch types.
 
 ### Code style
 
-- We use the Google Java Style Guide: https://google.github.io/styleguide/javaguide.html
+- We use the Astyle formatter for java files
 - We use prettier to format CSS, HTML and JavaScript
