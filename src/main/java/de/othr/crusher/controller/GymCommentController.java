@@ -34,9 +34,9 @@ public class GymCommentController {
     private final UserRepository userRepository;
 
     public GymCommentController(
-            GymCommentRepository commentRepository,
-            GymRepository gymRepository,
-            UserRepository userRepository) {
+        GymCommentRepository commentRepository,
+        GymRepository gymRepository,
+        UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.gymRepository = gymRepository;
         this.userRepository = userRepository;
@@ -54,13 +54,13 @@ public class GymCommentController {
     @PostMapping("/gyms/{gymId}/comments")
     @Transactional
     public String createComment(
-            @PathVariable("gymId") Long gymId,
-            @RequestParam("comment") String comment,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") Long gymId,
+        @RequestParam("comment") String comment,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         GymEntity gym = gymRepository.findByIdAndDeletedFalse(gymId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         if (comment == null || comment.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment text cannot be empty");
@@ -92,13 +92,13 @@ public class GymCommentController {
     @DeleteMapping("/gyms/{gymId}/comments/{commentId}")
     @Transactional
     public String deleteComment(
-            @PathVariable("gymId") Long gymId,
-            @PathVariable("commentId") Long commentId,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") Long gymId,
+        @PathVariable("commentId") Long commentId,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         GymCommentEntity comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+                                   .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         // Ensure the comment belongs to the current user or user is admin
         boolean isAdmin = "ADMIN".equals(user.getRole());
@@ -137,14 +137,14 @@ public class GymCommentController {
     @PutMapping("/gyms/{gymId}/comments/{commentId}")
     @Transactional
     public String updateComment(
-            @PathVariable("gymId") Long gymId,
-            @PathVariable("commentId") Long commentId,
-            @RequestParam("comment") String newComment,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") Long gymId,
+        @PathVariable("commentId") Long commentId,
+        @RequestParam("comment") String newComment,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         GymCommentEntity comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+                                   .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         // Ensure the comment belongs to the current user
         if (!comment.getUser().getId().equals(user.getId())) {
@@ -183,6 +183,6 @@ public class GymCommentController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }

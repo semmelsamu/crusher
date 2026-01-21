@@ -41,8 +41,8 @@ public class UserController {
     private final CustomUserDetailsService userDetailsService;
 
     public UserController(
-            UserRepository userRepository,
-            CustomUserDetailsService userDetailsService) {
+        UserRepository userRepository,
+        CustomUserDetailsService userDetailsService) {
         this.userRepository = userRepository;
         this.userDetailsService = userDetailsService;
     }
@@ -75,21 +75,21 @@ public class UserController {
      */
     @GetMapping("/{userId}/edit")
     public String showEditForm(
-            @PathVariable("userId") Long userId,
-            Principal principal,
-            Model model,
-            HttpServletRequest request) {
-        
+        @PathVariable("userId") Long userId,
+        Principal principal,
+        Model model,
+        HttpServletRequest request) {
+
         if (!canEditUser(principal, userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        
+                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
         UserEntity currentUser = findUserByPrincipal(principal);
         boolean admin = isAdmin(principal);
-        
+
         model.addAttribute("user", user);
         model.addAttribute("isAdmin", admin);
         model.addAttribute("isSelf", currentUser.getId().equals(userId));
@@ -112,33 +112,33 @@ public class UserController {
      */
     @PutMapping("/{userId}")
     public String updateUser(
-            @PathVariable("userId") Long userId,
-            @Valid @ModelAttribute("user") UserEntity formUser,
-            BindingResult result,
-            Principal principal,
-            HttpServletRequest request,
-            RedirectAttributes redirectAttributes) {
-        
+        @PathVariable("userId") Long userId,
+        @Valid @ModelAttribute("user") UserEntity formUser,
+        BindingResult result,
+        Principal principal,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes) {
+
         if (!canEditUser(principal, userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        
+                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
         UserEntity currentUser = findUserByPrincipal(principal);
         boolean admin = isAdmin(principal);
         boolean isSelf = currentUser.getId().equals(userId);
-        
+
         String trimmedUsername = formUser.getName() == null ? "" : formUser.getName().trim();
         String trimmedEmail = formUser.getEmail() == null ? "" : formUser.getEmail().trim();
 
         if (!StringUtils.hasText(trimmedUsername) || !StringUtils.hasText(trimmedEmail)) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Update failed",
-                "message", "Username and email are required"
-            ));
+                    "type", "error",
+                    "title", "Update failed",
+                    "message", "Username and email are required"
+                                                 ));
             return "redirect:/users/" + userId + "/edit";
         }
 
@@ -146,10 +146,10 @@ public class UserController {
         Optional<UserEntity> existingUser = userRepository.findByName(trimmedUsername);
         if (existingUser.isPresent() && !existingUser.get().getId().equals(user.getId())) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Update failed",
-                "message", "Username already exists"
-            ));
+                    "type", "error",
+                    "title", "Update failed",
+                    "message", "Username already exists"
+                                                 ));
             return "redirect:/users/" + userId + "/edit";
         }
 
@@ -157,17 +157,17 @@ public class UserController {
         Optional<UserEntity> existingEmail = userRepository.findByEmail(trimmedEmail);
         if (existingEmail.isPresent() && !existingEmail.get().getId().equals(user.getId())) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Update failed",
-                "message", "Email address already registered"
-            ));
+                    "type", "error",
+                    "title", "Update failed",
+                    "message", "Email address already registered"
+                                                 ));
             return "redirect:/users/" + userId + "/edit";
         }
 
         // Update user fields
         user.setName(trimmedUsername);
         user.setEmail(trimmedEmail);
-        
+
         // Only admins can change roles
         if (admin && formUser.getRole() != null) {
             String trimmedRole = formUser.getRole().trim();
@@ -175,7 +175,7 @@ public class UserController {
                 user.setRole(trimmedRole);
             }
         }
-        
+
         userRepository.save(user);
 
         // Refresh authentication if user edited their own account
@@ -184,9 +184,9 @@ public class UserController {
         }
 
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "message", "User updated successfully!"
-        ));
+                "type", "success",
+                "message", "User updated successfully!"
+                                             ));
 
         // Redirect based on who made the edit
         if (admin && !isSelf) {
@@ -209,24 +209,24 @@ public class UserController {
      */
     @DeleteMapping("/{userId}")
     public String deleteUser(
-            @PathVariable("userId") Long userId,
-            Principal principal,
-            HttpServletRequest request,
-            HttpServletResponse response,
-            RedirectAttributes redirectAttributes) {
-        
+        @PathVariable("userId") Long userId,
+        Principal principal,
+        HttpServletRequest request,
+        HttpServletResponse response,
+        RedirectAttributes redirectAttributes) {
+
         UserEntity currentUser = findUserByPrincipal(principal);
         boolean admin = isAdmin(principal);
         boolean isSelf = currentUser.getId().equals(userId);
-        
+
         // Check permissions: must be admin OR deleting own account
         if (!admin && !isSelf) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
         }
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        
+                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
         user.setDeleted(true);
         userRepository.save(user);
 
@@ -236,12 +236,12 @@ public class UserController {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
             return "redirect:/login?deleted=1";
         }
-        
+
         // Admin deleted another user - redirect to users list
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "message", "User deleted successfully!"
-        ));
+                "type", "success",
+                "message", "User deleted successfully!"
+                                             ));
         return "redirect:/users";
     }
 
@@ -255,14 +255,14 @@ public class UserController {
         if (principal == null) {
             return false;
         }
-        
+
         UserEntity user = userRepository.findByNameAndDeletedFalse(principal.getName())
-                .orElse(null);
-        
+                          .orElse(null);
+
         if (user == null) {
             return false;
         }
-        
+
         String role = user.getRole();
         return "ADMIN".equals(role) || "OWNER".equals(role) || "SETTER".equals(role);
     }
@@ -279,7 +279,7 @@ public class UserController {
         if (principal == null) {
             return false;
         }
-        
+
         UserEntity currentUser = findUserByPrincipal(principal);
         return isAdmin(principal) || currentUser.getId().equals(userId);
     }
@@ -297,7 +297,7 @@ public class UserController {
         }
 
         return userRepository.findByNameAndDeletedFalse(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 
     /**
@@ -309,9 +309,9 @@ public class UserController {
     private void refreshAuthentication(UserEntity user, HttpServletRequest request) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getName());
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                userDetails.getPassword(),
-                userDetails.getAuthorities());
+            userDetails,
+            userDetails.getPassword(),
+            userDetails.getAuthorities());
 
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
@@ -319,8 +319,8 @@ public class UserController {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.setAttribute(
-                    HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                    context);
+                HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                context);
         }
     }
 

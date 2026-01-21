@@ -66,12 +66,12 @@ public class HomeController {
             model.addAttribute("activeSession", activeSession.get());
         } else {
             Optional<SessionEntity> lastSession = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId())
-                    .stream()
-                    .findFirst();
+                                                  .stream()
+                                                  .findFirst();
 
             lastSession.ifPresent(session -> model.addAttribute("lastGym", session.getGym()));
         }
-        
+
 
         // Load user statistics
         UserStatistics statistics = statisticsService.getUserStatistics(user.getId());
@@ -99,6 +99,6 @@ public class HomeController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }

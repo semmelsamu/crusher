@@ -36,9 +36,9 @@ public class ApiStatisticsController {
     private final UserRepository userRepository;
 
     public ApiStatisticsController(
-            StatisticConfigRepository configRepository,
-            GoRepository goRepository,
-            UserRepository userRepository) {
+        StatisticConfigRepository configRepository,
+        GoRepository goRepository,
+        UserRepository userRepository) {
         this.configRepository = configRepository;
         this.goRepository = goRepository;
         this.userRepository = userRepository;
@@ -50,18 +50,18 @@ public class ApiStatisticsController {
     @PostMapping
     @Transactional
     public ResponseEntity<?> createConfig(
-            @RequestBody StatisticConfigRequest request,
-            Authentication authentication) {
+        @RequestBody StatisticConfigRequest request,
+        Authentication authentication) {
         UserEntity user = findUserByAuthentication(authentication);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Not authenticated"));
+                   .body(new ApiErrorResponse("Not authenticated"));
         }
 
         // Check if config already exists
         if (configRepository.findByUserId(user.getId()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ApiErrorResponse("Configuration already exists. Use PUT to update."));
+                   .body(new ApiErrorResponse("Configuration already exists. Use PUT to update."));
         }
 
         StatisticConfigEntity config = new StatisticConfigEntity();
@@ -74,14 +74,14 @@ public class ApiStatisticsController {
         configRepository.save(config);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                "message", "Configuration created successfully",
-                "config", Map.of(
+                    "message", "Configuration created successfully",
+                    "config", Map.of(
                         "goesPerGradeEnabled", config.isGoesPerGradeEnabled(),
                         "finishedGoesPerGradeEnabled", config.isFinishedGoesPerGradeEnabled(),
                         "resultDistributionEnabled", config.isResultDistributionEnabled(),
                         "highestFinishedGradeEnabled", config.isHighestFinishedGradeEnabled()
-                )
-        ));
+                    )
+                ));
     }
 
     /**
@@ -90,20 +90,20 @@ public class ApiStatisticsController {
     @PutMapping
     @Transactional
     public ResponseEntity<?> updateConfig(
-            @RequestBody StatisticConfigRequest request,
-            Authentication authentication) {
+        @RequestBody StatisticConfigRequest request,
+        Authentication authentication) {
         UserEntity user = findUserByAuthentication(authentication);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Not authenticated"));
+                   .body(new ApiErrorResponse("Not authenticated"));
         }
 
         StatisticConfigEntity config = configRepository.findByUserId(user.getId())
-                .orElse(null);
+                                       .orElse(null);
 
         if (config == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiErrorResponse("Configuration not found. Use POST to create."));
+                   .body(new ApiErrorResponse("Configuration not found. Use POST to create."));
         }
 
         config.setGoesPerGradeEnabled(request.goesPerGradeEnabled());
@@ -114,14 +114,14 @@ public class ApiStatisticsController {
         configRepository.save(config);
 
         return ResponseEntity.ok(Map.of(
-                "message", "Configuration updated successfully",
-                "config", Map.of(
-                        "goesPerGradeEnabled", config.isGoesPerGradeEnabled(),
-                        "finishedGoesPerGradeEnabled", config.isFinishedGoesPerGradeEnabled(),
-                        "resultDistributionEnabled", config.isResultDistributionEnabled(),
-                        "highestFinishedGradeEnabled", config.isHighestFinishedGradeEnabled()
-                )
-        ));
+                                     "message", "Configuration updated successfully",
+                                     "config", Map.of(
+                                         "goesPerGradeEnabled", config.isGoesPerGradeEnabled(),
+                                         "finishedGoesPerGradeEnabled", config.isFinishedGoesPerGradeEnabled(),
+                                         "resultDistributionEnabled", config.isResultDistributionEnabled(),
+                                         "highestFinishedGradeEnabled", config.isHighestFinishedGradeEnabled()
+                                     )
+                                 ));
     }
 
     /**
@@ -134,15 +134,15 @@ public class ApiStatisticsController {
         UserEntity user = findUserByAuthentication(authentication);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Not authenticated"));
+                   .body(new ApiErrorResponse("Not authenticated"));
         }
 
         StatisticConfigEntity config = configRepository.findByUserId(user.getId())
-                .orElse(null);
+                                       .orElse(null);
 
         if (config == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiErrorResponse("Configuration not found. Use POST to create one first."));
+                   .body(new ApiErrorResponse("Configuration not found. Use POST to create one first."));
         }
 
         // Get goes since last fetch (or all goes if never fetched)
@@ -180,11 +180,11 @@ public class ApiStatisticsController {
         configRepository.save(config);
 
         return ResponseEntity.ok(new StatisticResponse(
-                goesPerGrade,
-                finishedGoesPerGrade,
-                resultDistribution,
-                highestFinishedGrade
-        ));
+                                     goesPerGrade,
+                                     finishedGoesPerGrade,
+                                     resultDistribution,
+                                     highestFinishedGrade
+                                 ));
     }
 
     /**
@@ -192,10 +192,10 @@ public class ApiStatisticsController {
      */
     private Map<String, Long> calculateGoesPerGrade(List<GoEntity> goes) {
         Map<String, Long> raw = goes.stream()
-                .collect(Collectors.groupingBy(
-                        go -> go.getBoulder().getGrade().getVScale(),
-                        Collectors.counting()
-                ));
+                                .collect(Collectors.groupingBy(
+                                             go -> go.getBoulder().getGrade().getVScale(),
+                                             Collectors.counting()
+                                         ));
 
         return sortByGrade(raw);
     }
@@ -205,11 +205,11 @@ public class ApiStatisticsController {
      */
     private Map<String, Long> calculateFinishedGoesPerGrade(List<GoEntity> goes) {
         Map<String, Long> raw = goes.stream()
-                .filter(go -> go.getResult() == GoResult.FINISHED)
-                .collect(Collectors.groupingBy(
-                        go -> go.getBoulder().getGrade().getVScale(),
-                        Collectors.counting()
-                ));
+                                .filter(go -> go.getResult() == GoResult.FINISHED)
+                                .collect(Collectors.groupingBy(
+                                             go -> go.getBoulder().getGrade().getVScale(),
+                                             Collectors.counting()
+                                         ));
 
         return sortByGrade(raw);
     }
@@ -220,11 +220,11 @@ public class ApiStatisticsController {
     private Map<String, Long> calculateResultDistribution(List<GoEntity> goes) {
         Map<String, Long> distribution = new LinkedHashMap<>();
         distribution.put("FINISHED", goes.stream()
-                .filter(go -> go.getResult() == GoResult.FINISHED).count());
+                         .filter(go -> go.getResult() == GoResult.FINISHED).count());
         distribution.put("CLOSE_TRY", goes.stream()
-                .filter(go -> go.getResult() == GoResult.CLOSE_TRY).count());
+                         .filter(go -> go.getResult() == GoResult.CLOSE_TRY).count());
         distribution.put("DID_NOT_FINISH", goes.stream()
-                .filter(go -> go.getResult() == GoResult.DID_NOT_FINISH).count());
+                         .filter(go -> go.getResult() == GoResult.DID_NOT_FINISH).count());
         return distribution;
     }
 
@@ -233,10 +233,10 @@ public class ApiStatisticsController {
      */
     private String calculateHighestFinishedGrade(List<GoEntity> goes) {
         return goes.stream()
-                .filter(go -> go.getResult() == GoResult.FINISHED)
-                .map(go -> go.getBoulder().getGrade().getVScale())
-                .max(Comparator.comparingInt(this::extractVScaleValue))
-                .orElse(null);
+               .filter(go -> go.getResult() == GoResult.FINISHED)
+               .map(go -> go.getBoulder().getGrade().getVScale())
+               .max(Comparator.comparingInt(this::extractVScaleValue))
+               .orElse(null);
     }
 
     /**
@@ -244,13 +244,13 @@ public class ApiStatisticsController {
      */
     private Map<String, Long> sortByGrade(Map<String, Long> map) {
         return map.entrySet().stream()
-                .sorted(Comparator.comparingInt(e -> extractVScaleValue(e.getKey())))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new
-                ));
+               .sorted(Comparator.comparingInt(e -> extractVScaleValue(e.getKey())))
+               .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            Map.Entry::getValue,
+                            (e1, e2) -> e1,
+                            LinkedHashMap::new
+                            ));
     }
 
     /**

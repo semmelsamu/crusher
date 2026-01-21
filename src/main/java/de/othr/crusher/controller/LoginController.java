@@ -24,38 +24,38 @@ public class LoginController {
      */
     @GetMapping("/login")
     public String login(
-            @RequestParam(required = false) String logout,
-            @RequestParam(required = false) String error,
-            @RequestParam(required = false) String deleted,
-            RedirectAttributes redirectAttributes) {
-        
+        @RequestParam(required = false) String logout,
+        @RequestParam(required = false) String error,
+        @RequestParam(required = false) String deleted,
+        RedirectAttributes redirectAttributes) {
+
         if (logout != null) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "success",
-                "title", "Logged out",
-                "message", "You have been logged out successfully"
-            ));
+                    "type", "success",
+                    "title", "Logged out",
+                    "message", "You have been logged out successfully"
+                                                 ));
             return "redirect:/login";
         }
-        
+
         if (error != null) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Login failed",
-                "message", "Invalid username or password"
-            ));
+                    "type", "error",
+                    "title", "Login failed",
+                    "message", "Invalid username or password"
+                                                 ));
             return "redirect:/login";
         }
 
         if (deleted != null) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "success",
-                "title", "Account deleted",
-                "message", "Your account has been deleted"
-            ));
+                    "type", "success",
+                    "title", "Account deleted",
+                    "message", "Your account has been deleted"
+                                                 ));
             return "redirect:/login";
         }
-        
+
         return "pages/login";
     }
 }

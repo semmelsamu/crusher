@@ -31,9 +31,9 @@ public class GymRatingController {
     private final UserRepository userRepository;
 
     public GymRatingController(
-            GymRatingRepository ratingRepository,
-            GymRepository gymRepository,
-            UserRepository userRepository) {
+        GymRatingRepository ratingRepository,
+        GymRepository gymRepository,
+        UserRepository userRepository) {
         this.ratingRepository = ratingRepository;
         this.gymRepository = gymRepository;
         this.userRepository = userRepository;
@@ -53,13 +53,13 @@ public class GymRatingController {
     @PostMapping("/gyms/{gymId}/rating")
     @Transactional
     public String setRating(
-            @PathVariable("gymId") Long gymId,
-            @RequestParam("rating") Integer rating,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") Long gymId,
+        @RequestParam("rating") Integer rating,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         GymEntity gym = gymRepository.findByIdAndDeletedFalse(gymId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         if (rating == null || rating < 1 || rating > 5) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rating must be between 1 and 5");
@@ -67,7 +67,7 @@ public class GymRatingController {
 
         // Find existing rating or create new one
         GymRatingEntity ratingEntity = ratingRepository.findByUserIdAndGymId(user.getId(), gymId)
-                .orElse(new GymRatingEntity());
+                                       .orElse(new GymRatingEntity());
 
         boolean isNewRating = ratingEntity.getId() == null;
 
@@ -96,6 +96,6 @@ public class GymRatingController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }

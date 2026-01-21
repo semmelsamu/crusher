@@ -31,10 +31,10 @@ public class EventViewController {
     private final UserRepository userRepository;
 
     public EventViewController(
-            EventRepository eventRepository,
-            EventCommentRepository eventCommentRepository,
-            EventRatingRepository eventRatingRepository,
-            UserRepository userRepository) {
+        EventRepository eventRepository,
+        EventCommentRepository eventCommentRepository,
+        EventRatingRepository eventRatingRepository,
+        UserRepository userRepository) {
         this.eventRepository = eventRepository;
         this.eventCommentRepository = eventCommentRepository;
         this.eventRatingRepository = eventRatingRepository;
@@ -53,23 +53,23 @@ public class EventViewController {
     @GetMapping("/gyms/{gymId}/events/{eventId}")
     @Transactional(readOnly = true)
     public String showEvent(
-            @PathVariable("gymId") Long gymId,
-            @PathVariable("eventId") Long eventId,
-            Principal principal,
-            Model model) {
+        @PathVariable("gymId") Long gymId,
+        @PathVariable("eventId") Long eventId,
+        Principal principal,
+        Model model) {
         UserEntity user = findUserByPrincipal(principal);
         EventEntity event = findEventInGymOrThrow(gymId, eventId);
 
         Integer currentRating = eventRatingRepository.findByUserIdAndEventId(user.getId(), eventId)
-                .map(EventRatingEntity::getRating)
-                .orElse(0);
+                                .map(EventRatingEntity::getRating)
+                                .orElse(0);
 
         List<EventRatingEntity> allRatings = eventRatingRepository.findByEventId(eventId);
         Double averageRating = allRatings.isEmpty() ? null :
-                allRatings.stream()
-                        .mapToInt(EventRatingEntity::getRating)
-                        .average()
-                        .orElse(0.0);
+                               allRatings.stream()
+                               .mapToInt(EventRatingEntity::getRating)
+                               .average()
+                               .orElse(0.0);
 
         List<EventCommentEntity> comments = eventCommentRepository.findByEventIdOrderByCreatedAtDesc(eventId);
 
@@ -84,8 +84,8 @@ public class EventViewController {
 
     private EventEntity findEventInGymOrThrow(Long gymId, Long eventId) {
         EventEntity event = eventRepository
-                .findByIdAndDeletedFalse(eventId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
+                            .findByIdAndDeletedFalse(eventId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
 
         if (event.getGym() == null || event.getGym().getId() == null
                 || !event.getGym().getId().equals(gymId)) {
@@ -104,6 +104,6 @@ public class EventViewController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }

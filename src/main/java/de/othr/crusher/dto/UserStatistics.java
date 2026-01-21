@@ -20,14 +20,14 @@ public class UserStatistics {
     private final long finishedCount;
 
     public UserStatistics(
-            long totalBouldersFinished,
-            long totalAttempts,
-            Map<String, Long> finishedPerGrade,
-            Map<String, Long> flashesPerGrade,
-            String highestGrade,
-            long didNotFinishCount,
-            long closeTryCount,
-            long finishedCount) {
+        long totalBouldersFinished,
+        long totalAttempts,
+        Map<String, Long> finishedPerGrade,
+        Map<String, Long> flashesPerGrade,
+        String highestGrade,
+        long didNotFinishCount,
+        long closeTryCount,
+        long finishedCount) {
         this.totalBouldersFinished = totalBouldersFinished;
         this.totalAttempts = totalAttempts;
         this.finishedPerGrade = finishedPerGrade;

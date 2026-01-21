@@ -39,29 +39,29 @@ public class StatisticsService {
 
         // Group goes by boulder to find finished boulders and flashes
         Map<Long, List<GoEntity>> goesByBoulder = allGoes.stream()
-                .collect(Collectors.groupingBy(go -> go.getBoulder().getId()));
+            .collect(Collectors.groupingBy(go -> go.getBoulder().getId()));
 
         // Find unique boulders that were finished
         long totalBouldersFinished = goesByBoulder.entrySet().stream()
-                .filter(entry -> entry.getValue().stream()
-                        .anyMatch(go -> go.getResult() == GoResult.FINISHED))
-                .count();
+                                     .filter(entry -> entry.getValue().stream()
+                                             .anyMatch(go -> go.getResult() == GoResult.FINISHED))
+                                     .count();
 
         // Find the highest grade in all goes
         int maxGrade = allGoes.stream()
-                .map(go -> extractVScaleValue(go.getBoulder().getGrade().getVScale()))
-                .max(Integer::compare)
-                .orElse(0);
+                       .map(go -> extractVScaleValue(go.getBoulder().getGrade().getVScale()))
+                       .max(Integer::compare)
+                       .orElse(0);
 
         // Count finished boulders per grade
         Map<String, Long> finishedPerGradeRaw = goesByBoulder.entrySet().stream()
-                .filter(entry -> entry.getValue().stream()
-                        .anyMatch(go -> go.getResult() == GoResult.FINISHED))
-                .map(entry -> entry.getValue().get(0).getBoulder())
-                .collect(Collectors.groupingBy(
-                        boulder -> boulder.getGrade().getVScale(),
-                        Collectors.counting()
-                ));
+                                                .filter(entry -> entry.getValue().stream()
+                                                    .anyMatch(go -> go.getResult() == GoResult.FINISHED))
+                                                .map(entry -> entry.getValue().get(0).getBoulder())
+                                                .collect(Collectors.groupingBy(
+                                                        boulder -> boulder.getGrade().getVScale(),
+                                                        Collectors.counting()
+                                                    ));
 
         // Fill in missing grades from V0 to maxGrade
         Map<String, Long> finishedPerGrade = new LinkedHashMap<>();
@@ -72,18 +72,18 @@ public class StatisticsService {
 
         // Count flashes per grade (first attempt was FINISHED)
         Map<String, Long> flashesPerGradeRaw = goesByBoulder.entrySet().stream()
-                .filter(entry -> {
-                    List<GoEntity> goes = entry.getValue();
-                    GoEntity firstGo = goes.stream()
-                            .min(Comparator.comparing(GoEntity::getTimestamp))
-                            .orElse(null);
-                    return firstGo != null && firstGo.getResult() == GoResult.FINISHED;
-                })
-                .map(entry -> entry.getValue().get(0).getBoulder())
-                .collect(Collectors.groupingBy(
-                        boulder -> boulder.getGrade().getVScale(),
-                        Collectors.counting()
-                ));
+        .filter(entry -> {
+            List<GoEntity> goes = entry.getValue();
+            GoEntity firstGo = goes.stream()
+            .min(Comparator.comparing(GoEntity::getTimestamp))
+            .orElse(null);
+            return firstGo != null && firstGo.getResult() == GoResult.FINISHED;
+        })
+        .map(entry -> entry.getValue().get(0).getBoulder())
+        .collect(Collectors.groupingBy(
+                     boulder -> boulder.getGrade().getVScale(),
+                     Collectors.counting()
+                 ));
 
         // Fill in missing grades from V0 to maxGrade
         Map<String, Long> flashesPerGrade = new LinkedHashMap<>();
@@ -94,32 +94,32 @@ public class StatisticsService {
 
         // Find highest grade from finished boulders
         String highestGrade = allGoes.stream()
-                .filter(go -> go.getResult() == GoResult.FINISHED)
-                .map(go -> go.getBoulder().getGrade().getVScale())
-                .max(Comparator.comparingInt(this::extractVScaleValue))
-                .orElse(null);
+                              .filter(go -> go.getResult() == GoResult.FINISHED)
+                              .map(go -> go.getBoulder().getGrade().getVScale())
+                              .max(Comparator.comparingInt(this::extractVScaleValue))
+                              .orElse(null);
 
         // Count goes by result type
         long didNotFinishCount = allGoes.stream()
-                .filter(go -> go.getResult() == GoResult.DID_NOT_FINISH)
-                .count();
+                                 .filter(go -> go.getResult() == GoResult.DID_NOT_FINISH)
+                                 .count();
         long closeTryCount = allGoes.stream()
-                .filter(go -> go.getResult() == GoResult.CLOSE_TRY)
-                .count();
+                             .filter(go -> go.getResult() == GoResult.CLOSE_TRY)
+                             .count();
         long finishedCount = allGoes.stream()
-                .filter(go -> go.getResult() == GoResult.FINISHED)
-                .count();
+                             .filter(go -> go.getResult() == GoResult.FINISHED)
+                             .count();
 
         return new UserStatistics(
-                totalBouldersFinished,
-                totalAttempts,
-                finishedPerGrade,
-                flashesPerGrade,
-                highestGrade,
-                didNotFinishCount,
-                closeTryCount,
-                finishedCount
-        );
+                   totalBouldersFinished,
+                   totalAttempts,
+                   finishedPerGrade,
+                   flashesPerGrade,
+                   highestGrade,
+                   didNotFinishCount,
+                   closeTryCount,
+                   finishedCount
+               );
     }
 
     /**

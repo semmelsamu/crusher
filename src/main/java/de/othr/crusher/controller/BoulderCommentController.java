@@ -34,9 +34,9 @@ public class BoulderCommentController {
     private final UserRepository userRepository;
 
     public BoulderCommentController(
-            BoulderCommentRepository commentRepository,
-            BoulderRepository boulderRepository,
-            UserRepository userRepository) {
+        BoulderCommentRepository commentRepository,
+        BoulderRepository boulderRepository,
+        UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.boulderRepository = boulderRepository;
         this.userRepository = userRepository;
@@ -54,13 +54,13 @@ public class BoulderCommentController {
     @PostMapping("/boulders/{boulderId}/comments")
     @Transactional
     public String createComment(
-            @PathVariable("boulderId") Long boulderId,
-            @RequestParam("comment") String comment,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("boulderId") Long boulderId,
+        @RequestParam("comment") String comment,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         if (comment == null || comment.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Comment text cannot be empty");
@@ -92,13 +92,13 @@ public class BoulderCommentController {
     @DeleteMapping("/boulders/{boulderId}/comments/{commentId}")
     @Transactional
     public String deleteComment(
-            @PathVariable("boulderId") Long boulderId,
-            @PathVariable("commentId") Long commentId,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("boulderId") Long boulderId,
+        @PathVariable("commentId") Long commentId,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         BoulderCommentEntity comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+                                       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         // Ensure the comment belongs to the current user or user is admin
         boolean isAdmin = "ADMIN".equals(user.getRole());
@@ -137,14 +137,14 @@ public class BoulderCommentController {
     @PutMapping("/boulders/{boulderId}/comments/{commentId}")
     @Transactional
     public String updateComment(
-            @PathVariable("boulderId") Long boulderId,
-            @PathVariable("commentId") Long commentId,
-            @RequestParam("comment") String newComment,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("boulderId") Long boulderId,
+        @PathVariable("commentId") Long commentId,
+        @RequestParam("comment") String newComment,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         BoulderCommentEntity comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+                                       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         // Ensure the comment belongs to the current user
         if (!comment.getUser().getId().equals(user.getId())) {
@@ -183,6 +183,6 @@ public class BoulderCommentController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }

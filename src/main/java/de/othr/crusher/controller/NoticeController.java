@@ -45,9 +45,9 @@ public class NoticeController {
      */
     @GetMapping("/{noticeId}/update")
     public String showEditForm(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("noticeId") long noticeId,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("noticeId") long noticeId,
+        Model model) {
         NoticeEntity notice = findNoticeInGymOrThrow(gymId, noticeId);
         model.addAttribute("gym", notice.getGym());
         model.addAttribute("notice", notice);
@@ -85,11 +85,11 @@ public class NoticeController {
      */
     @PostMapping
     public String createNotice(
-            @PathVariable("gymId") long gymId,
-            @Valid @ModelAttribute("notice") NoticeEntity formNotice,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @Valid @ModelAttribute("notice") NoticeEntity formNotice,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
 
         if (result.hasErrors()) {
@@ -103,9 +103,9 @@ public class NoticeController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Notice created successfully!"
-        ));
+                "type", "success",
+                "message", "Notice created successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
@@ -124,12 +124,12 @@ public class NoticeController {
      */
     @PutMapping("/{noticeId}")
     public String updateNotice(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("noticeId") long noticeId,
-            @Valid @ModelAttribute("notice") NoticeEntity formNotice,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("noticeId") long noticeId,
+        @Valid @ModelAttribute("notice") NoticeEntity formNotice,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         NoticeEntity notice = findNoticeInGymOrThrow(gymId, noticeId);
 
         if (result.hasErrors()) {
@@ -146,9 +146,9 @@ public class NoticeController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Notice updated successfully!"
-        ));
+                "type", "success",
+                "message", "Notice updated successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
@@ -163,18 +163,18 @@ public class NoticeController {
      */
     @DeleteMapping("/{noticeId}")
     public String deleteNotice(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("noticeId") long noticeId,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("noticeId") long noticeId,
+        RedirectAttributes redirectAttributes) {
         NoticeEntity notice = findNoticeInGymOrThrow(gymId, noticeId);
         notice.setDeleted(true);
         noticeRepository.save(notice);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Notice deleted successfully!"
-        ));
+                "type", "success",
+                "message", "Notice deleted successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
@@ -189,8 +189,8 @@ public class NoticeController {
      */
     private NoticeEntity findNoticeInGymOrThrow(long gymId, long noticeId) {
         NoticeEntity notice = noticeRepository
-                .findByIdAndDeletedFalse(noticeId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notice not found"));
+                              .findByIdAndDeletedFalse(noticeId)
+                              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notice not found"));
 
         if (notice.getGym() == null || notice.getGym().getId() == null
                 || !notice.getGym().getId().equals(gymId)) {
@@ -208,7 +208,7 @@ public class NoticeController {
      */
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findByIdAndDeletedFalse(gymId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+               .findByIdAndDeletedFalse(gymId)
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }

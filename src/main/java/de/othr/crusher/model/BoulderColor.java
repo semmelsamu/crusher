@@ -37,13 +37,13 @@ public enum BoulderColor {
      */
     public String getCssColorClass() {
         return switch (this) {
-            case YELLOW -> "bg-yellow-400";
-            case BLUE -> "bg-blue-500";
-            case BLACK -> "bg-gray-900";
-            case WHITE -> "bg-white";
-            case PINK -> "bg-pink-400";
-            case DARK_GREEN -> "bg-green-700";
-            case RED -> "bg-red-500";
+        case YELLOW -> "bg-yellow-400";
+        case BLUE -> "bg-blue-500";
+        case BLACK -> "bg-gray-900";
+        case WHITE -> "bg-white";
+        case PINK -> "bg-pink-400";
+        case DARK_GREEN -> "bg-green-700";
+        case RED -> "bg-red-500";
         };
     }
 }

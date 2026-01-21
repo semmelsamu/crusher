@@ -50,12 +50,12 @@ public class SectorController {
     private final EmailService emailService;
 
     public SectorController(
-            GymRepository gymRepository,
-            SectorRepository sectorRepository,
-            BoulderRepository boulderRepository,
-            SectorImageStorageService sectorImageStorageService,
-            SessionRepository sessionRepository,
-            EmailService emailService) {
+        GymRepository gymRepository,
+        SectorRepository sectorRepository,
+        BoulderRepository boulderRepository,
+        SectorImageStorageService sectorImageStorageService,
+        SessionRepository sessionRepository,
+        EmailService emailService) {
         this.gymRepository = gymRepository;
         this.sectorRepository = sectorRepository;
         this.boulderRepository = boulderRepository;
@@ -74,9 +74,9 @@ public class SectorController {
      */
     @GetMapping("/{sectorId}")
     public String showSector(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("sectorId") long sectorId,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("sectorId") long sectorId,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
         List<BoulderEntity> boulders = boulderRepository.findBySectorIdAndDeletedFalse(sectorId);
@@ -86,7 +86,7 @@ public class SectorController {
         model.addAttribute("sector", sector);
         model.addAttribute("boulders", boulders);
         model.addAttribute("hasUnpublishedBoulders", !unpublishedBoulders.isEmpty());
-        
+
         return "pages/admin/sectors/detail";
     }
 
@@ -119,9 +119,9 @@ public class SectorController {
      */
     @GetMapping("/{sectorId}/update")
     public String showEditForm(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("sectorId") long sectorId,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("sectorId") long sectorId,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
@@ -144,12 +144,12 @@ public class SectorController {
      */
     @PostMapping
     public String createSector(
-            @PathVariable("gymId") long gymId,
-            @Valid @ModelAttribute("sector") SectorEntity sector,
-            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @Valid @ModelAttribute("sector") SectorEntity sector,
+        @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
 
         if (result.hasErrors()) {
@@ -183,9 +183,9 @@ public class SectorController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", toastType,
-            "message", toastMessage
-        ));
+                "type", toastType,
+                "message", toastMessage
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + saved.getId();
     }
@@ -205,14 +205,14 @@ public class SectorController {
      */
     @PutMapping("/{sectorId}")
     public String updateSector(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("sectorId") long sectorId,
-            @Valid @ModelAttribute("sector") SectorEntity formSector,
-            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
-            @RequestParam(value = "removeImage", defaultValue = "false") boolean removeImage,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("sectorId") long sectorId,
+        @Valid @ModelAttribute("sector") SectorEntity formSector,
+        @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+        @RequestParam(value = "removeImage", defaultValue = "false") boolean removeImage,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
@@ -221,7 +221,7 @@ public class SectorController {
             formSector.setGym(gym);
             if (formSector.getImagePath() == null || formSector.getImagePath().isBlank()) {
                 formSector.setImagePath(
-                        sector.getImagePath() != null ? sector.getImagePath() : DEFAULT_IMAGE_PATH);
+                    sector.getImagePath() != null ? sector.getImagePath() : DEFAULT_IMAGE_PATH);
             }
             model.addAttribute("gym", gym);
             model.addAttribute("sector", formSector);
@@ -254,9 +254,9 @@ public class SectorController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", toastType,
-            "message", toastMessage
-        ));
+                "type", toastType,
+                "message", toastMessage
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sector.getId();
     }
@@ -271,7 +271,7 @@ public class SectorController {
      */
     @DeleteMapping("/{sectorId}")
     public String deleteSector(
-            @PathVariable("gymId") long gymId, @PathVariable("sectorId") long sectorId, RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") long gymId, @PathVariable("sectorId") long sectorId, RedirectAttributes redirectAttributes) {
         findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
         sector.setDeleted(true);
@@ -279,9 +279,9 @@ public class SectorController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "message", "Sector deleted successfully!"
-        ));
+                "type", "success",
+                "message", "Sector deleted successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
@@ -297,9 +297,9 @@ public class SectorController {
      */
     @PostMapping("/{sectorId}/publish-new-boulders")
     public String publishNewBoulders(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("sectorId") long sectorId,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("sectorId") long sectorId,
+        RedirectAttributes redirectAttributes) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
@@ -308,10 +308,10 @@ public class SectorController {
 
         if (unpublishedBoulders.isEmpty()) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "No unpublished boulders",
-                "message", "All boulders in this sector have already been published."
-            ));
+                    "type", "error",
+                    "title", "No unpublished boulders",
+                    "message", "All boulders in this sector have already been published."
+                                                 ));
             return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
         }
 
@@ -320,10 +320,10 @@ public class SectorController {
 
         if (users.isEmpty()) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "No users to notify",
-                "message", "No users have had sessions at this gym yet."
-            ));
+                    "type", "error",
+                    "title", "No users to notify",
+                    "message", "No users have had sessions at this gym yet."
+                                                 ));
             return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
         }
 
@@ -345,25 +345,25 @@ public class SectorController {
         boulderRepository.saveAll(unpublishedBoulders);
 
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "title", "Notifications sent",
-            "message", String.format("Sent %d email(s) about %d new boulder(s).", emailsSent, unpublishedBoulders.size())
-        ));
+                "type", "success",
+                "title", "Notifications sent",
+                "message", String.format("Sent %d email(s) about %d new boulder(s).", emailsSent, unpublishedBoulders.size())
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
     }
 
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findByIdAndDeletedFalse(gymId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+               .findByIdAndDeletedFalse(gymId)
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 
     private SectorEntity findSectorInGymOrThrow(long gymId, long sectorId) {
         SectorEntity sector = sectorRepository
-                .findByIdAndDeletedFalse(sectorId)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sector not found"));
+                              .findByIdAndDeletedFalse(sectorId)
+                              .orElseThrow(
+                                  () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sector not found"));
 
         if (sector.getGym() == null || sector.getGym().getId() == null
                 || !sector.getGym().getId().equals(gymId)) {

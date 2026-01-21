@@ -26,8 +26,8 @@ import org.hibernate.annotations.OnDeleteAction;
  */
 @Entity
 @Table(
-        name = "projects",
-        uniqueConstraints = @UniqueConstraint(name = "uk_user_boulder_project", columnNames = {"user_id", "boulder_id"})
+    name = "projects",
+    uniqueConstraints = @UniqueConstraint(name = "uk_user_boulder_project", columnNames = {"user_id", "boulder_id"})
 )
 public class ProjectEntity {
 

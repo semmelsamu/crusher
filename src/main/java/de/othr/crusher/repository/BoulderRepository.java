@@ -226,9 +226,9 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return list of non-deleted boulders for the sector matching grades and IDs
      */
     List<BoulderEntity> findBySectorIdAndGradeIdInAndIdInAndDeletedFalse(
-            Long sectorId,
-            List<Long> gradeIds,
-            List<Long> ids);
+        Long sectorId,
+        List<Long> gradeIds,
+        List<Long> ids);
 
     /**
      * Finds non-deleted boulders for a sector by grade IDs and boulder IDs with pagination.
@@ -240,10 +240,10 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return page of non-deleted boulders for the sector matching grades and IDs
      */
     Page<BoulderEntity> findBySectorIdAndGradeIdInAndIdInAndDeletedFalse(
-            Long sectorId,
-            List<Long> gradeIds,
-            List<Long> ids,
-            Pageable pageable);
+        Long sectorId,
+        List<Long> gradeIds,
+        List<Long> ids,
+        Pageable pageable);
 
     /**
      * Finds non-deleted boulders for a gym by IDs.
@@ -273,9 +273,9 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return list of non-deleted boulders for the gym matching grades and IDs
      */
     List<BoulderEntity> findBySectorGymIdAndGradeIdInAndIdInAndDeletedFalse(
-            Long gymId,
-            List<Long> gradeIds,
-            List<Long> ids);
+        Long gymId,
+        List<Long> gradeIds,
+        List<Long> ids);
 
     /**
      * Finds non-deleted boulders for a gym by grade IDs and boulder IDs with pagination.
@@ -287,10 +287,10 @@ public interface BoulderRepository extends JpaRepository<BoulderEntity, Long> {
      * @return page of non-deleted boulders for the gym matching grades and IDs
      */
     Page<BoulderEntity> findBySectorGymIdAndGradeIdInAndIdInAndDeletedFalse(
-            Long gymId,
-            List<Long> gradeIds,
-            List<Long> ids,
-            Pageable pageable);
+        Long gymId,
+        List<Long> gradeIds,
+        List<Long> ids,
+        Pageable pageable);
     /**
      * Finds a non-deleted boulder by its ID.
      *

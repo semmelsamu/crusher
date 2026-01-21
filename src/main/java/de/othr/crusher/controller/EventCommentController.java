@@ -34,9 +34,9 @@ public class EventCommentController {
     private final UserRepository userRepository;
 
     public EventCommentController(
-            EventCommentRepository commentRepository,
-            EventRepository eventRepository,
-            UserRepository userRepository) {
+        EventCommentRepository commentRepository,
+        EventRepository eventRepository,
+        UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
@@ -55,11 +55,11 @@ public class EventCommentController {
     @PostMapping("/gyms/{gymId}/events/{eventId}/comments")
     @Transactional
     public String createComment(
-            @PathVariable("gymId") Long gymId,
-            @PathVariable("eventId") Long eventId,
-            @RequestParam("comment") String comment,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") Long gymId,
+        @PathVariable("eventId") Long eventId,
+        @RequestParam("comment") String comment,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         EventEntity event = findEventInGymOrThrow(gymId, eventId);
 
@@ -94,14 +94,14 @@ public class EventCommentController {
     @DeleteMapping("/gyms/{gymId}/events/{eventId}/comments/{commentId}")
     @Transactional
     public String deleteComment(
-            @PathVariable("gymId") Long gymId,
-            @PathVariable("eventId") Long eventId,
-            @PathVariable("commentId") Long commentId,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") Long gymId,
+        @PathVariable("eventId") Long eventId,
+        @PathVariable("commentId") Long commentId,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         EventCommentEntity comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         // Ensure the comment belongs to the current user or user is admin
         boolean isAdmin = "ADMIN".equals(user.getRole());
@@ -142,15 +142,15 @@ public class EventCommentController {
     @PutMapping("/gyms/{gymId}/events/{eventId}/comments/{commentId}")
     @Transactional
     public String updateComment(
-            @PathVariable("gymId") Long gymId,
-            @PathVariable("eventId") Long eventId,
-            @PathVariable("commentId") Long commentId,
-            @RequestParam("comment") String newComment,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") Long gymId,
+        @PathVariable("eventId") Long eventId,
+        @PathVariable("commentId") Long commentId,
+        @RequestParam("comment") String newComment,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         EventCommentEntity comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
+                                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found"));
 
         // Ensure the comment belongs to the current user
         if (!comment.getUser().getId().equals(user.getId())) {
@@ -183,8 +183,8 @@ public class EventCommentController {
 
     private EventEntity findEventInGymOrThrow(Long gymId, Long eventId) {
         EventEntity event = eventRepository
-                .findByIdAndDeletedFalse(eventId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
+                            .findByIdAndDeletedFalse(eventId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
 
         if (event.getGym() == null || event.getGym().getId() == null
                 || !event.getGym().getId().equals(gymId)) {
@@ -203,6 +203,6 @@ public class EventCommentController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }

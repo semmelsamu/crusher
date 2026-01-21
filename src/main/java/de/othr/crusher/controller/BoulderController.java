@@ -43,10 +43,10 @@ public class BoulderController {
     private final GradeRepository gradeRepository;
 
     public BoulderController(
-            GymRepository gymRepository,
-            SectorRepository sectorRepository,
-            BoulderRepository boulderRepository,
-            GradeRepository gradeRepository) {
+        GymRepository gymRepository,
+        SectorRepository sectorRepository,
+        BoulderRepository boulderRepository,
+        GradeRepository gradeRepository) {
         this.gymRepository = gymRepository;
         this.sectorRepository = sectorRepository;
         this.boulderRepository = boulderRepository;
@@ -63,12 +63,12 @@ public class BoulderController {
      */
     @GetMapping("/create")
     public String showCreateForm(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("sectorId") long sectorId,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("sectorId") long sectorId,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
-        
+
         BoulderEntity boulder = new BoulderEntity();
         boulder.setSector(sector);
 
@@ -93,10 +93,10 @@ public class BoulderController {
      */
     @GetMapping("/{boulderId}/update")
     public String showEditForm(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("sectorId") long sectorId,
-            @PathVariable("boulderId") long boulderId,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("sectorId") long sectorId,
+        @PathVariable("boulderId") long boulderId,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
         BoulderEntity boulder = findBoulderInSectorOrThrow(sectorId, boulderId);
@@ -125,12 +125,12 @@ public class BoulderController {
      */
     @PostMapping
     public String createBoulder(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("sectorId") long sectorId,
-            @Valid @ModelAttribute("boulder") BoulderEntity boulder,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("sectorId") long sectorId,
+        @Valid @ModelAttribute("boulder") BoulderEntity boulder,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
 
@@ -147,7 +147,7 @@ public class BoulderController {
         // Validate that the grade belongs to the same gym
         if (boulder.getGrade() != null) {
             GradeEntity grade = gradeRepository.findById(boulder.getGrade().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid grade"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid grade"));
             if (!grade.getGym().getId().equals(gymId)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grade does not belong to this gym");
             }
@@ -159,9 +159,9 @@ public class BoulderController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Boulder created successfully!"
-        ));
+                "type", "success",
+                "message", "Boulder created successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
     }
@@ -180,13 +180,13 @@ public class BoulderController {
      */
     @PutMapping("/{boulderId}")
     public String updateBoulder(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("sectorId") long sectorId,
-            @PathVariable("boulderId") long boulderId,
-            @Valid @ModelAttribute("boulder") BoulderEntity formBoulder,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("sectorId") long sectorId,
+        @PathVariable("boulderId") long boulderId,
+        @Valid @ModelAttribute("boulder") BoulderEntity formBoulder,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
         SectorEntity sector = findSectorInGymOrThrow(gymId, sectorId);
         BoulderEntity boulder = findBoulderInSectorOrThrow(sectorId, boulderId);
@@ -206,7 +206,7 @@ public class BoulderController {
         // Validate that the grade belongs to the same gym
         if (formBoulder.getGrade() != null) {
             GradeEntity grade = gradeRepository.findById(formBoulder.getGrade().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid grade"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid grade"));
             if (!grade.getGym().getId().equals(gymId)) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Grade does not belong to this gym");
             }
@@ -220,9 +220,9 @@ public class BoulderController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Boulder updated successfully!"
-        ));
+                "type", "success",
+                "message", "Boulder updated successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
     }
@@ -238,10 +238,10 @@ public class BoulderController {
      */
     @DeleteMapping("/{boulderId}")
     public String deleteBoulder(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("sectorId") long sectorId,
-            @PathVariable("boulderId") long boulderId,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("sectorId") long sectorId,
+        @PathVariable("boulderId") long boulderId,
+        RedirectAttributes redirectAttributes) {
         findGymOrThrow(gymId);
         findSectorInGymOrThrow(gymId, sectorId);
         BoulderEntity boulder = findBoulderInSectorOrThrow(sectorId, boulderId);
@@ -250,24 +250,24 @@ public class BoulderController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Boulder deleted successfully!"
-        ));
+                "type", "success",
+                "message", "Boulder deleted successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId + "/sectors/" + sectorId;
     }
 
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findByIdAndDeletedFalse(gymId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+               .findByIdAndDeletedFalse(gymId)
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 
     private SectorEntity findSectorInGymOrThrow(long gymId, long sectorId) {
         SectorEntity sector = sectorRepository
-                .findByIdAndDeletedFalse(sectorId)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sector not found"));
+                              .findByIdAndDeletedFalse(sectorId)
+                              .orElseThrow(
+                                  () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sector not found"));
 
         if (sector.getGym() == null || sector.getGym().getId() == null
                 || !sector.getGym().getId().equals(gymId)) {
@@ -278,9 +278,9 @@ public class BoulderController {
 
     private BoulderEntity findBoulderInSectorOrThrow(long sectorId, long boulderId) {
         BoulderEntity boulder = boulderRepository
-                .findByIdAndDeletedFalse(boulderId)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+                                .findByIdAndDeletedFalse(boulderId)
+                                .orElseThrow(
+                                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         if (boulder.getSector() == null || boulder.getSector().getId() == null
                 || !boulder.getSector().getId().equals(sectorId)) {

@@ -74,23 +74,23 @@ public class DashboardController {
     private final StatisticsService statisticsService;
 
     public DashboardController(
-            SessionRepository sessionRepository,
-            UserRepository userRepository,
-            BoulderRepository boulderRepository,
-            GymRepository gymRepository,
-            SectorRepository sectorRepository,
-            GradeRepository gradeRepository,
-            ProjectRepository projectRepository,
-            GoRepository goRepository,
-            BoulderRatingRepository ratingRepository,
-            BoulderCommentRepository commentRepository,
-            GymRatingRepository gymRatingRepository,
-            GymCommentRepository gymCommentRepository,
-            NoticeRepository noticeRepository,
-            EventRepository eventRepository,
-            WeatherService weatherService,
-            CrowdLevelService crowdLevelService,
-            StatisticsService statisticsService) {
+        SessionRepository sessionRepository,
+        UserRepository userRepository,
+        BoulderRepository boulderRepository,
+        GymRepository gymRepository,
+        SectorRepository sectorRepository,
+        GradeRepository gradeRepository,
+        ProjectRepository projectRepository,
+        GoRepository goRepository,
+        BoulderRatingRepository ratingRepository,
+        BoulderCommentRepository commentRepository,
+        GymRatingRepository gymRatingRepository,
+        GymCommentRepository gymCommentRepository,
+        NoticeRepository noticeRepository,
+        EventRepository eventRepository,
+        WeatherService weatherService,
+        CrowdLevelService crowdLevelService,
+        StatisticsService statisticsService) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.boulderRepository = boulderRepository;
@@ -127,26 +127,26 @@ public class DashboardController {
 
         // Find the last session (most recent)
         SessionEntity lastSession = sessions.stream()
-                .filter(session -> session.getGym() != null)
-                .findFirst()
-                .orElse(null);
+                                    .filter(session -> session.getGym() != null)
+                                    .findFirst()
+                                    .orElse(null);
 
         // Find the most recently used gym
         GymEntity lastGym = lastSession != null ? lastSession.getGym() : null;
 
         // Find active session (if any)
         SessionEntity activeSession = sessions.stream()
-                .filter(session -> session.getEndedAt() == null)
-                .findFirst()
-                .orElse(null);
+                                      .filter(session -> session.getEndedAt() == null)
+                                      .findFirst()
+                                      .orElse(null);
 
         // Get last 3 notices from the last gym
         List<NoticeEntity> lastGymNotices = List.of();
         if (lastGym != null && !lastGym.isDeleted()) {
             List<NoticeEntity> allNotices = noticeRepository.findByGymIdAndDeletedFalseOrderByCreationDateDesc(lastGym.getId());
             lastGymNotices = allNotices.stream()
-                    .limit(3)
-                    .toList();
+                             .limit(3)
+                             .toList();
         }
 
         // Get next 3 events from the last gym
@@ -154,31 +154,31 @@ public class DashboardController {
         if (lastGym != null && !lastGym.isDeleted()) {
             List<EventEntity> allEvents = eventRepository.findByGymIdAndDeletedFalse(lastGym.getId());
             lastGymEvents = buildUpcomingEvents(allEvents).stream()
-                    .limit(3)
-                    .toList();
+                            .limit(3)
+                            .toList();
         }
 
         // Fetch project data
         List<ProjectEntity> projects = projectRepository.findByUserId(user.getId());
         List<ProjectEntity> recentProjects = projects.stream()
-                .limit(5)
-                .toList();
+                                             .limit(5)
+                                             .toList();
         long projectCount = projects.size();
 
         // Fetch recent project activity (last 7 days)
         LocalDateTime weekAgo = LocalDateTime.now().minusDays(7);
         long recentProjectAttempts = projects.stream()
-                .flatMap(p -> goRepository.findByBoulderIdOrderByTimestampDesc(p.getBoulder().getId()).stream())
-                .filter(go -> go.getTimestamp().isAfter(weekAgo))
-                .count();
+                                     .flatMap(p -> goRepository.findByBoulderIdOrderByTimestampDesc(p.getBoulder().getId()).stream())
+                                     .filter(go -> go.getTimestamp().isAfter(weekAgo))
+                                     .count();
 
         // Fetch user statistics
         UserStatistics stats = statisticsService.getUserStatistics(user.getId());
 
         // Calculate success rate
-        double successRate = stats.getTotalAttempts() > 0 
-                ? (stats.getFinishedCount() * 100.0 / stats.getTotalAttempts()) 
-                : 0.0;
+        double successRate = stats.getTotalAttempts() > 0
+                             ? (stats.getFinishedCount() * 100.0 / stats.getTotalAttempts())
+                             : 0.0;
 
         // Fetch session stats
         long sessionCount = sessions.size();
@@ -187,17 +187,17 @@ public class DashboardController {
         // Fetch gym-related data
         WeatherInfo lastGymWeather = lastGym != null && !lastGym.isDeleted() ? weatherService.getWeatherForCity(lastGym.getCity()) : null;
         long lastGymBoulderCount = lastGym != null && !lastGym.isDeleted() ? boulderRepository.findBySectorGymIdAndDeletedFalse(lastGym.getId()).size() : 0;
-        Integer lastGymUserRating = lastGym != null 
-                ? gymRatingRepository.findByUserIdAndGymId(user.getId(), lastGym.getId())
-                    .map(r -> r.getRating())
-                    .orElse(null) 
-                : null;
+        Integer lastGymUserRating = lastGym != null
+                                    ? gymRatingRepository.findByUserIdAndGymId(user.getId(), lastGym.getId())
+                                    .map(r -> r.getRating())
+                                    .orElse(null)
+                                    : null;
         Double lastGymAverageRating = lastGym != null
-                ? gymRatingRepository.findByGymId(lastGym.getId()).stream()
-                    .mapToInt(GymRatingEntity::getRating)
-                    .average()
-                    .orElse(0.0)
-                : null;
+                                      ? gymRatingRepository.findByGymId(lastGym.getId()).stream()
+                                      .mapToInt(GymRatingEntity::getRating)
+                                      .average()
+                                      .orElse(0.0)
+                                      : null;
 
         // Add all attributes to model
         model.addAttribute("user", user);
@@ -207,20 +207,20 @@ public class DashboardController {
         model.addAttribute("activeSession", activeSession);
         model.addAttribute("lastGymNotices", lastGymNotices);
         model.addAttribute("lastGymEvents", lastGymEvents);
-        
+
         // Project data
         model.addAttribute("projects", recentProjects);
         model.addAttribute("projectCount", projectCount);
         model.addAttribute("recentProjectAttempts", recentProjectAttempts);
-        
+
         // Statistics data
         model.addAttribute("stats", stats);
         model.addAttribute("successRate", successRate);
-        
+
         // Session data
         model.addAttribute("sessionCount", sessionCount);
         model.addAttribute("lastSessionGoCount", lastSessionGoCount);
-        
+
         // Gym data
         model.addAttribute("lastGymWeather", lastGymWeather);
         model.addAttribute("lastGymBoulderCount", lastGymBoulderCount);
@@ -247,15 +247,15 @@ public class DashboardController {
     @GetMapping("/boulders")
     @Transactional(readOnly = true)
     public String showAllBoulders(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "gymId", required = false) Long gymId,
-            @RequestParam(value = "sectorId", required = false) Long sectorId,
-            @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
-            @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
-            @RequestParam(value = "sortBy", required = false) String sortBy,
-            @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir,
-            Principal principal,
-            Model model) {
+        @RequestParam(value = "page", defaultValue = "1") int page,
+        @RequestParam(value = "gymId", required = false) Long gymId,
+        @RequestParam(value = "sectorId", required = false) Long sectorId,
+        @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
+        @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
+        @RequestParam(value = "sortBy", required = false) String sortBy,
+        @RequestParam(value = "sortDir", required = false, defaultValue = "asc") String sortDir,
+        Principal principal,
+        Model model) {
         UserEntity user = findUserByPrincipal(principal);
 
         // Fetch all gyms for the dropdown
@@ -274,9 +274,9 @@ public class DashboardController {
 
         // Load project marks for current user (once) to drive UI and optional filtering
         Set<Long> projectBoulderIds = projectRepository.findByUserId(user.getId()).stream()
-                .map(project -> project.getBoulder() != null ? project.getBoulder().getId() : null)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+                                      .map(project -> project.getBoulder() != null ? project.getBoulder().getId() : null)
+                                      .filter(Objects::nonNull)
+                                      .collect(Collectors.toSet());
 
         List<Long> projectBoulderIdList = projectBoulderIds.stream().toList();
         boolean hasGradeFilter = gradeIds != null && !gradeIds.isEmpty();
@@ -289,26 +289,26 @@ public class DashboardController {
             } else if (sectorId != null) {
                 if (hasGradeFilter) {
                     allBoulders = boulderRepository
-                            .findBySectorIdAndGradeIdInAndIdInAndDeletedFalse(
-                                    sectorId,
-                                    gradeIds,
-                                    projectBoulderIdList);
+                                  .findBySectorIdAndGradeIdInAndIdInAndDeletedFalse(
+                                      sectorId,
+                                      gradeIds,
+                                      projectBoulderIdList);
                 } else {
                     allBoulders = boulderRepository.findBySectorIdAndIdInAndDeletedFalse(
-                            sectorId,
-                            projectBoulderIdList);
+                                      sectorId,
+                                      projectBoulderIdList);
                 }
             } else if (gymId != null) {
                 if (hasGradeFilter) {
                     allBoulders = boulderRepository
-                            .findBySectorGymIdAndGradeIdInAndIdInAndDeletedFalse(
-                                    gymId,
-                                    gradeIds,
-                                    projectBoulderIdList);
+                                  .findBySectorGymIdAndGradeIdInAndIdInAndDeletedFalse(
+                                      gymId,
+                                      gradeIds,
+                                      projectBoulderIdList);
                 } else {
                     allBoulders = boulderRepository.findBySectorGymIdAndIdInAndDeletedFalse(
-                            gymId,
-                            projectBoulderIdList);
+                                      gymId,
+                                      projectBoulderIdList);
                 }
             } else {
                 allBoulders = boulderRepository.findByIdInAndDeletedFalse(projectBoulderIdList);
@@ -317,8 +317,8 @@ public class DashboardController {
             // Filter by specific sector
             if (hasGradeFilter) {
                 allBoulders = boulderRepository.findBySectorIdAndGradeIdInAndDeletedFalse(
-                        sectorId,
-                        gradeIds);
+                                  sectorId,
+                                  gradeIds);
             } else {
                 allBoulders = boulderRepository.findBySectorIdAndDeletedFalse(sectorId);
             }
@@ -326,8 +326,8 @@ public class DashboardController {
             // Filter by gym
             if (hasGradeFilter) {
                 allBoulders = boulderRepository.findBySectorGymIdAndGradeIdInAndDeletedFalse(
-                        gymId,
-                        gradeIds);
+                                  gymId,
+                                  gradeIds);
             } else {
                 allBoulders = boulderRepository.findBySectorGymIdAndDeletedFalse(gymId);
             }
@@ -338,10 +338,10 @@ public class DashboardController {
 
         // Load ratings for current user
         Map<Long, Integer> boulderRatings = ratingRepository.findByUserId(user.getId()).stream()
-                .collect(Collectors.toMap(
-                        rating -> rating.getBoulder().getId(),
-                        rating -> rating.getRating()
-                ));
+                                            .collect(Collectors.toMap(
+                                                    rating -> rating.getBoulder().getId(),
+                                                    rating -> rating.getRating()
+                                                ));
 
         // Sort boulders with custom comparator
         Comparator<BoulderEntity> comparator = createBoulderComparator(sortBy, sortDir, boulderRatings);
@@ -353,9 +353,9 @@ public class DashboardController {
         int startIndex = (page - 1) * pageSize;
         int endIndex = Math.min(startIndex + pageSize, totalElements);
 
-        List<BoulderEntity> boulders = (startIndex < totalElements) 
-                ? allBoulders.subList(startIndex, endIndex) 
-                : List.of();
+        List<BoulderEntity> boulders = (startIndex < totalElements)
+                                       ? allBoulders.subList(startIndex, endIndex)
+                                       : List.of();
 
         // Create page object for pagination component
         Pageable pageable = PageRequest.of(page - 1, pageSize);
@@ -392,13 +392,13 @@ public class DashboardController {
     public String showBoulder(@PathVariable("id") Long id, Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
         BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         // Load project status for the current user
         Set<Long> projectBoulderIds = projectRepository.findByUserId(user.getId()).stream()
-                .map(project -> project.getBoulder() != null ? project.getBoulder().getId() : null)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+                                      .map(project -> project.getBoulder() != null ? project.getBoulder().getId() : null)
+                                      .filter(Objects::nonNull)
+                                      .collect(Collectors.toSet());
 
         // Get all goes for this boulder
         var allGoes = goRepository.findByBoulderIdOrderByTimestampDesc(boulder.getId());
@@ -408,21 +408,21 @@ public class DashboardController {
 
         // Count total ascents (finished goes) for this boulder
         long ascentsCount = allGoes.stream()
-                .filter(go -> go.getResult() != null && go.getResult() == GoResult.FINISHED)
-                .count();
+                            .filter(go -> go.getResult() != null && go.getResult() == GoResult.FINISHED)
+                            .count();
 
         // Get current user's rating for this boulder
         Integer currentRating = ratingRepository.findByUserIdAndBoulderId(user.getId(), boulder.getId())
-                .map(rating -> rating.getRating())
-                .orElse(0);
+                                .map(rating -> rating.getRating())
+                                .orElse(0);
 
         // Calculate average rating for this boulder
         List<BoulderRatingEntity> allRatings = ratingRepository.findByBoulderId(boulder.getId());
         Double averageRating = allRatings.isEmpty() ? null :
-                allRatings.stream()
-                        .mapToInt(BoulderRatingEntity::getRating)
-                        .average()
-                        .orElse(0.0);
+                               allRatings.stream()
+                               .mapToInt(BoulderRatingEntity::getRating)
+                               .average()
+                               .orElse(0.0);
 
         // Get all comments for this boulder
         List<BoulderCommentEntity> comments = commentRepository.findByBoulderIdOrderByCreatedAtDesc(boulder.getId());
@@ -455,10 +455,10 @@ public class DashboardController {
 
         // Load ratings for current user
         Map<Long, Integer> gymRatings = gymRatingRepository.findByUserId(user.getId()).stream()
-                .collect(Collectors.toMap(
-                        rating -> rating.getGym().getId(),
-                        rating -> rating.getRating()
-                ));
+                                        .collect(Collectors.toMap(
+                                                rating -> rating.getGym().getId(),
+                                                rating -> rating.getRating()
+                                            ));
 
         model.addAttribute("gyms", gyms);
         model.addAttribute("gymRatings", gymRatings);
@@ -479,20 +479,20 @@ public class DashboardController {
     public String showGym(@PathVariable("id") Long id, Principal principal, Model model) {
         UserEntity user = findUserByPrincipal(principal);
         GymEntity gym = gymRepository.findByIdAndDeletedFalse(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         // Get current user's rating for this gym
         Integer currentRating = gymRatingRepository.findByUserIdAndGymId(user.getId(), gym.getId())
-                .map(rating -> rating.getRating())
-                .orElse(0);
+                                .map(rating -> rating.getRating())
+                                .orElse(0);
 
         // Calculate average rating for this gym
         List<GymRatingEntity> allRatings = gymRatingRepository.findByGymId(gym.getId());
         Double averageRating = allRatings.isEmpty() ? null :
-                allRatings.stream()
-                        .mapToInt(GymRatingEntity::getRating)
-                        .average()
-                        .orElse(0.0);
+                               allRatings.stream()
+                               .mapToInt(GymRatingEntity::getRating)
+                               .average()
+                               .orElse(0.0);
 
         // Get all comments for this gym
         List<GymCommentEntity> comments = gymCommentRepository.findByGymIdOrderByCreatedAtDesc(gym.getId());
@@ -539,52 +539,52 @@ public class DashboardController {
      * @return comparator for sorting boulders
      */
     private Comparator<BoulderEntity> createBoulderComparator(
-            String sortBy, String sortDir, Map<Long, Integer> boulderRatings) {
-        
+        String sortBy, String sortDir, Map<Long, Integer> boulderRatings) {
+
         // Create the fallback comparator chain: gym -> sector -> grade -> description
         Comparator<BoulderEntity> fallbackComparator = Comparator
-                .comparing((BoulderEntity b) -> b.getSector().getGym().getName(), String.CASE_INSENSITIVE_ORDER)
-                .thenComparing(b -> b.getSector().getName(), String.CASE_INSENSITIVE_ORDER)
-                .thenComparing(b -> parseGradeValue(b.getGrade().getVScale()))
-                .thenComparing(b -> b.getDescription(), String.CASE_INSENSITIVE_ORDER);
+            .comparing((BoulderEntity b) -> b.getSector().getGym().getName(), String.CASE_INSENSITIVE_ORDER)
+            .thenComparing(b -> b.getSector().getName(), String.CASE_INSENSITIVE_ORDER)
+            .thenComparing(b -> parseGradeValue(b.getGrade().getVScale()))
+            .thenComparing(b -> b.getDescription(), String.CASE_INSENSITIVE_ORDER);
 
         // Create primary comparator based on sortBy
         Comparator<BoulderEntity> primaryComparator;
-        
+
         if (sortBy == null || sortBy.isEmpty()) {
             // No specific sort - use fallback only
             primaryComparator = fallbackComparator;
         } else {
             switch (sortBy.toLowerCase()) {
-                case "color":
-                    primaryComparator = Comparator
-                            .comparing((BoulderEntity b) -> b.getColor().ordinal())
-                            .thenComparing(fallbackComparator);
-                    break;
-                case "grade":
-                    primaryComparator = Comparator
-                            .comparing((BoulderEntity b) -> parseGradeValue(b.getGrade().getVScale()))
-                            .thenComparing(fallbackComparator);
-                    break;
-                case "rating":
-                    primaryComparator = Comparator
-                            .comparing(
-                                    (BoulderEntity b) -> boulderRatings.getOrDefault(b.getId(), -1),
-                                    Comparator.nullsLast(Comparator.naturalOrder()))
-                            .thenComparing(fallbackComparator);
-                    break;
-                case "sector":
-                    primaryComparator = Comparator
-                            .comparing((BoulderEntity b) -> b.getSector().getName(), String.CASE_INSENSITIVE_ORDER)
-                            .thenComparing(fallbackComparator);
-                    break;
-                case "gym":
-                    primaryComparator = Comparator
-                            .comparing((BoulderEntity b) -> b.getSector().getGym().getName(), String.CASE_INSENSITIVE_ORDER)
-                            .thenComparing(fallbackComparator);
-                    break;
-                default:
-                    primaryComparator = fallbackComparator;
+            case "color":
+                primaryComparator = Comparator
+                                    .comparing((BoulderEntity b) -> b.getColor().ordinal())
+                                    .thenComparing(fallbackComparator);
+                break;
+            case "grade":
+                primaryComparator = Comparator
+                                    .comparing((BoulderEntity b) -> parseGradeValue(b.getGrade().getVScale()))
+                                    .thenComparing(fallbackComparator);
+                break;
+            case "rating":
+                primaryComparator = Comparator
+                                    .comparing(
+                                        (BoulderEntity b) -> boulderRatings.getOrDefault(b.getId(), -1),
+                                        Comparator.nullsLast(Comparator.naturalOrder()))
+                                    .thenComparing(fallbackComparator);
+                break;
+            case "sector":
+                primaryComparator = Comparator
+                                    .comparing((BoulderEntity b) -> b.getSector().getName(), String.CASE_INSENSITIVE_ORDER)
+                                    .thenComparing(fallbackComparator);
+                break;
+            case "gym":
+                primaryComparator = Comparator
+                                    .comparing((BoulderEntity b) -> b.getSector().getGym().getName(), String.CASE_INSENSITIVE_ORDER)
+                                    .thenComparing(fallbackComparator);
+                break;
+            default:
+                primaryComparator = fallbackComparator;
             }
         }
 
@@ -619,17 +619,17 @@ public class DashboardController {
 
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 
     private List<EventOccurrence> buildUpcomingEvents(List<EventEntity> events) {
         LocalDate today = LocalDate.now();
         return events.stream()
-                .map(event -> toOccurrence(event, today))
-                .flatMap(Optional::stream)
-                .filter(occurrence -> !occurrence.date().isBefore(today))
-                .sorted(Comparator.comparing(EventOccurrence::date))
-                .toList();
+               .map(event -> toOccurrence(event, today))
+               .flatMap(Optional::stream)
+               .filter(occurrence -> !occurrence.date().isBefore(today))
+               .sorted(Comparator.comparing(EventOccurrence::date))
+               .toList();
     }
 
     private Optional<EventOccurrence> toOccurrence(EventEntity event, LocalDate today) {
@@ -670,9 +670,9 @@ public class DashboardController {
         }
 
         return switch (frequency) {
-            case WEEKLY -> advanceByWeeks(startDate, today, 1);
-            case BI_WEEKLY -> advanceByWeeks(startDate, today, 2);
-            case MONTHLY -> advanceByMonths(startDate, today, 1);
+        case WEEKLY -> advanceByWeeks(startDate, today, 1);
+        case BI_WEEKLY -> advanceByWeeks(startDate, today, 2);
+        case MONTHLY -> advanceByMonths(startDate, today, 1);
         };
     }
 

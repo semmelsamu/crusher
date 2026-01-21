@@ -39,7 +39,7 @@ public class ApiAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody(required = false) LoginRequest request,
-            HttpServletRequest httpRequest) {
+                                   HttpServletRequest httpRequest) {
         if (request == null || request.username() == null || request.username().isBlank()
                 || request.password() == null || request.password().isBlank()) {
             return ResponseEntity.badRequest().body(new ApiErrorResponse("Username and password are required"));
@@ -47,22 +47,22 @@ public class ApiAuthController {
 
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+                                                new UsernamePasswordAuthenticationToken(request.username(), request.password()));
 
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             context.setAuthentication(authentication);
             SecurityContextHolder.setContext(context);
             httpRequest.getSession(true)
-                    .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+            .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 
             UserEntity user = userRepository.findByName(authentication.getName())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+                              .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
 
             return ResponseEntity.ok(new AuthSessionResponse(user.getId(), user.getName(), user.getRole()));
         } catch (AuthenticationException ex) {
             SecurityContextHolder.clearContext();
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Invalid username or password"));
+                   .body(new ApiErrorResponse("Invalid username or password"));
         }
     }
 
@@ -71,18 +71,18 @@ public class ApiAuthController {
         if (authentication == null || !authentication.isAuthenticated()
                 || authentication instanceof AnonymousAuthenticationToken) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Not authenticated"));
+                   .body(new ApiErrorResponse("Not authenticated"));
         }
 
         UserEntity user = userRepository.findByName(authentication.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
 
         return ResponseEntity.ok(new AuthSessionResponse(user.getId(), user.getName(), user.getRole()));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) {
+                                       Authentication authentication) {
         new SecurityContextLogoutHandler().logout(request, response, authentication);
         return ResponseEntity.noContent().build();
     }
