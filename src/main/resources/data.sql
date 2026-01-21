@@ -1,8 +1,8 @@
-INSERT INTO users (name, email, role, password) VALUES
-    ('alice', 'alice@crusher-test.de', 'USER', 'test'),
-    ('bob', 'bob@crusher-test.de', 'SETTER', 'test'),
-    ('klaus', 'klaus@crusher-test.de', 'OWNER', 'test'),
-    ('crusher', 'admin@crusher-test.de', 'ADMIN', 'test');
+INSERT INTO users (name, email, role, password, deleted) VALUES
+    ('alice', 'alice@crusher-test.de', 'USER', 'test', false),
+    ('bob', 'bob@crusher-test.de', 'SETTER', 'test', false),
+    ('klaus', 'klaus@crusher-test.de', 'OWNER', 'test', false),
+    ('crusher', 'admin@crusher-test.de', 'ADMIN', 'test', false);
 
 INSERT INTO gyms (name, street, city, email, latitude, longitude, crowd_level_url, deleted) VALUES
     ('Boulderwelt München Ost', 'Friedenstraße 22', 'München', 'muc-ost@boulderwelt.de', 48.12599371578731, 11.611093684742901, 'https://www.boulderwelt-muenchen-ost.de/', false),
