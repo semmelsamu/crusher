@@ -7,7 +7,7 @@
         <main class="wrapper">
             <div class="flex items-center gap-4">
                 <a
-                    th:href="${isAdminEdit ? '/admin/users' : '/dashboard'}"
+                    th:href="${(isAdminEdit ?: false) ? '/admin/users' : '/dashboard'}"
                     class="button button-square"
                 >
                     <x th:replace="~{components/icons :: arrow-big-left}"></x>
@@ -17,13 +17,13 @@
                 >
                     <div>
                         <h1
-                            th:text="${isAdminEdit ? 'Edit User' : 'Account settings'}"
+                            th:text="${(isAdminEdit ?: false) ? 'Edit User' : 'Account settings'}"
                         >
                             Account settings
                         </h1>
                         <p
                             class="text-foreground-muted"
-                            th:text="${isAdminEdit ? 'Update user details and role.' : 'Update your profile details.'}"
+                            th:text="${(isAdminEdit ?: false) ? 'Update user details and role.' : 'Update your profile details.'}"
                         >
                             Update your profile details.
                         </p>
@@ -33,7 +33,7 @@
                         class="button danger button-square"
                         aria-label="Delete account"
                         onclick="openDialog('delete-account-dialog')"
-                        th:if="${!isAdminEdit}"
+                        th:if="${!(isAdminEdit ?: false)}"
                     >
                         <x th:replace="~{components/icons :: trash-2}"></x>
                     </button>
@@ -42,7 +42,7 @@
 
             <section class="card p-card-inner max-w-md mx-auto">
                 <form
-                    th:action="${isAdminEdit ? '/admin/users/' + currentUser.id : '/account'}"
+                    th:action="${(isAdminEdit ?: false) ? '/admin/users/' + currentUser.id : '/account'}"
                     method="post"
                     class="space-y-4"
                     th:if="${currentUser != null}"
@@ -52,7 +52,7 @@
                         type="hidden"
                         name="returnTo"
                         th:value="${returnTo}"
-                        th:if="${!isAdminEdit}"
+                        th:if="${!(isAdminEdit ?: false)}"
                     />
                     <div class="space-y-2">
                         <label for="account-username" class="form-label"
@@ -80,7 +80,7 @@
                             th:value="${currentUser.email}"
                         />
                     </div>
-                    <div class="space-y-2" th:if="${isAdminEdit}">
+                    <div class="space-y-2" th:if="${isAdminEdit ?: false}">
                         <label for="account-role" class="form-label"
                             >Role</label
                         >
@@ -128,7 +128,7 @@
                 id="delete-account-dialog"
                 class="dialog space-y-4"
                 closedby="any"
-                th:if="${!isAdminEdit}"
+                th:if="${!(isAdminEdit ?: false)}"
             >
                 <h3>Confirm deletion</h3>
                 <p>
