@@ -17,117 +17,116 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Entity representing a boulder problem within a sector.
- *
- * <p>Each boulder has a description, a color tag, and belongs to a specific grade and sector.
+ * <p>
+ * Each boulder has a description, a color tag, and belongs to a specific grade and sector.
+ * </p>
  */
 @Entity
 @Table(name = "boulders")
 public class BoulderEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @Column(nullable = false)
-  @NotBlank(message = "Please enter a description")
-  private String description;
+    @Column(nullable = false)
+    @NotBlank(message = "Please enter a description")
+    private String description;
 
-  @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
-  @NotNull(message = "Please select a color")
-  private BoulderColor color;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Please select a color")
+    private BoulderColor color;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "grade_id", nullable = false)
-  @NotNull(message = "Please select a grade")
-  private GradeEntity grade;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "grade_id", nullable = false)
+    @NotNull(message = "Please select a grade")
+    private GradeEntity grade;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "sector_id", nullable = false)
-  private SectorEntity sector;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sector_id", nullable = false)
+    private SectorEntity sector;
 
-  @Column(name = "holds_count", nullable = false)
-  @NotNull(message = "Please enter the number of holds")
-  @Min(value = 1, message = "Boulder must have at least one hold")
-  private Integer holdsCount;
+    @Column(name = "holds_count", nullable = false)
+    @NotNull(message = "Please enter the number of holds")
+    @Min(value = 1, message = "Boulder must have at least one hold")
+    private Integer holdsCount;
 
-  @Column(name = "published", nullable = false)
-  private boolean published = false;
+    @Column(name = "published", nullable = false)
+    private boolean published = false;
+    @Column(nullable = false)
+    private boolean deleted = false;
 
-  @Column(nullable = false)
-  private boolean deleted = false;
+    public BoulderEntity() {}
 
-  public BoulderEntity() {}
+    public BoulderEntity(String description, BoulderColor color, GradeEntity grade, SectorEntity sector) {
+        this.description = description;
+        this.color = color;
+        this.grade = grade;
+        this.sector = sector;
+    }
 
-  public BoulderEntity(
-      String description, BoulderColor color, GradeEntity grade, SectorEntity sector) {
-    this.description = description;
-    this.color = color;
-    this.grade = grade;
-    this.sector = sector;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public BoulderColor getColor() {
+        return color;
+    }
 
-  public BoulderColor getColor() {
-    return color;
-  }
+    public void setColor(BoulderColor color) {
+        this.color = color;
+    }
 
-  public void setColor(BoulderColor color) {
-    this.color = color;
-  }
+    public GradeEntity getGrade() {
+        return grade;
+    }
 
-  public GradeEntity getGrade() {
-    return grade;
-  }
+    public void setGrade(GradeEntity grade) {
+        this.grade = grade;
+    }
 
-  public void setGrade(GradeEntity grade) {
-    this.grade = grade;
-  }
+    public SectorEntity getSector() {
+        return sector;
+    }
 
-  public SectorEntity getSector() {
-    return sector;
-  }
+    public void setSector(SectorEntity sector) {
+        this.sector = sector;
+    }
 
-  public void setSector(SectorEntity sector) {
-    this.sector = sector;
-  }
+    public Integer getHoldsCount() {
+        return holdsCount;
+    }
 
-  public Integer getHoldsCount() {
-    return holdsCount;
-  }
+    public void setHoldsCount(Integer holdsCount) {
+        this.holdsCount = holdsCount;
+    }
 
-  public void setHoldsCount(Integer holdsCount) {
-    this.holdsCount = holdsCount;
-  }
+    public boolean isPublished() {
+        return published;
+    }
 
-  public boolean isPublished() {
-    return published;
-  }
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
 
-  public void setPublished(boolean published) {
-    this.published = published;
-  }
+    public boolean isDeleted() {
+        return deleted;
+    }
 
-  public boolean isDeleted() {
-    return deleted;
-  }
-
-  public void setDeleted(boolean deleted) {
-    this.deleted = deleted;
-  }
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 }

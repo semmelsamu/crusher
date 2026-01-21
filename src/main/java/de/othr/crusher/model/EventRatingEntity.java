@@ -15,70 +15,71 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Entity representing a user's rating for an event.
- *
- * <p>Each rating has a user, event, and a rating value from 1 to 5 stars.
+ * <p>
+ * Each rating has a user, event, and a rating value from 1 to 5 stars.
+ * </p>
  */
 @Entity
 @Table(name = "event_ratings")
 public class EventRatingEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  @NotNull(message = "User is required")
-  private UserEntity user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull(message = "User is required")
+    private UserEntity user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "event_id", nullable = false)
-  @NotNull(message = "Event is required")
-  private EventEntity event;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    @NotNull(message = "Event is required")
+    private EventEntity event;
 
-  @Column(nullable = false)
-  @NotNull(message = "Rating is required")
-  @Min(value = 1, message = "Rating must be at least 1")
-  @Max(value = 5, message = "Rating must be at most 5")
-  private Integer rating;
+    @Column(nullable = false)
+    @NotNull(message = "Rating is required")
+    @Min(value = 1, message = "Rating must be at least 1")
+    @Max(value = 5, message = "Rating must be at most 5")
+    private Integer rating;
 
-  public EventRatingEntity() {}
+    public EventRatingEntity() {}
 
-  public EventRatingEntity(UserEntity user, EventEntity event, Integer rating) {
-    this.user = user;
-    this.event = event;
-    this.rating = rating;
-  }
+    public EventRatingEntity(UserEntity user, EventEntity event, Integer rating) {
+        this.user = user;
+        this.event = event;
+        this.rating = rating;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public UserEntity getUser() {
-    return user;
-  }
+    public UserEntity getUser() {
+        return user;
+    }
 
-  public void setUser(UserEntity user) {
-    this.user = user;
-  }
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
 
-  public EventEntity getEvent() {
-    return event;
-  }
+    public EventEntity getEvent() {
+        return event;
+    }
 
-  public void setEvent(EventEntity event) {
-    this.event = event;
-  }
+    public void setEvent(EventEntity event) {
+        this.event = event;
+    }
 
-  public Integer getRating() {
-    return rating;
-  }
+    public Integer getRating() {
+        return rating;
+    }
 
-  public void setRating(Integer rating) {
-    this.rating = rating;
-  }
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
 }

@@ -1,7 +1,5 @@
 package de.othr.crusher.service;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.htmlunit.BrowserVersion;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.HtmlImage;
@@ -12,119 +10,122 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- * Service for scraping crowd level information from gym websites. Uses HtmlUnit to execute
- * JavaScript and parse dynamic HTML.
+ * Service for scraping crowd level information from gym websites.
+ * Uses HtmlUnit to execute JavaScript and parse dynamic HTML.
  */
 @Service
 public class CrowdLevelService {
 
-  private static final Logger logger = LoggerFactory.getLogger(CrowdLevelService.class);
-  private static final Pattern MARGIN_PATTERN =
-      Pattern.compile("margin-left\\s*:\\s*(\\d+(?:\\.\\d+)?)%");
+    private static final Logger logger = LoggerFactory.getLogger(CrowdLevelService.class);
+    private static final Pattern MARGIN_PATTERN = Pattern.compile("margin-left\\s*:\\s*(\\d+(?:\\.\\d+)?)%");
 
-  @Value("${crowdlevel.timeout:5000}")
-  private int timeout;
+    @Value("${crowdlevel.timeout:5000}")
+    private int timeout;
 
-  @Value("${crowdlevel.js-wait:2000}")
-  private int jsWaitTime;
+    @Value("${crowdlevel.js-wait:2000}")
+    private int jsWaitTime;
 
-  /**
-   * Fetches crowd level from a gym's website. Uses HtmlUnit with JavaScript execution to handle
-   * dynamically loaded content. Results are cached for 5 minutes to avoid excessive scraping.
-   *
-   * @param url the URL of the gym's website
-   * @return CrowdLevel with percentage and status, or null if unavailable
-   */
-  @Cacheable(value = "crowdLevels", key = "#url", unless = "#result == null")
-  public CrowdLevel getCrowdLevel(String url) {
-    if (url == null || url.isBlank()) {
-      logger.debug("Crowd level URL is null or empty");
-      return null;
+    /**
+     * Fetches crowd level from a gym's website.
+     * Uses HtmlUnit with JavaScript execution to handle dynamically loaded content.
+     * Results are cached for 5 minutes to avoid excessive scraping.
+     *
+     * @param url the URL of the gym's website
+     * @return CrowdLevel with percentage and status, or null if unavailable
+     */
+    @Cacheable(value = "crowdLevels", key = "#url", unless = "#result == null")
+    public CrowdLevel getCrowdLevel(String url) {
+        if (url == null || url.isBlank()) {
+            logger.debug("Crowd level URL is null or empty");
+            return null;
+        }
+
+        WebClient webClient = null;
+        try {
+            // Configure HtmlUnit WebClient
+            webClient = new WebClient(BrowserVersion.CHROME);
+            webClient.getOptions().setJavaScriptEnabled(true);
+            webClient.getOptions().setCssEnabled(false);
+            webClient.getOptions().setDownloadImages(false);
+            webClient.getOptions().setThrowExceptionOnScriptError(false);
+            webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
+            webClient.getOptions().setTimeout(timeout);
+            webClient.getOptions().setRedirectEnabled(true);
+
+            // Suppress all HtmlUnit warnings and errors
+            java.util.logging.Logger.getLogger("org.htmlunit").setLevel(java.util.logging.Level.OFF);
+            java.util.logging.Logger.getLogger("org.htmlunit.javascript").setLevel(java.util.logging.Level.OFF);
+            java.util.logging.Logger.getLogger("org.htmlunit.IncorrectnessListenerImpl").setLevel(java.util.logging.Level.OFF);
+            java.util.logging.Logger.getLogger("org.htmlunit.WebConsole").setLevel(java.util.logging.Level.OFF);
+
+            // Suppress JavaScript console errors
+            webClient.setJavaScriptErrorListener(new org.htmlunit.javascript.SilentJavaScriptErrorListener());
+
+            // Suppress incorrectness warnings (like obsolete content types)
+            webClient.setIncorrectnessListener((message, origin) -> {});
+
+            logger.info("Scraping crowd level from: {} (cache miss - will be cached for 5 minutes)", url);
+            HtmlPage page = webClient.getPage(url);
+
+            // Wait for JavaScript to execute
+            webClient.waitForBackgroundJavaScript(jsWaitTime);
+
+            // Find the crowd level pointer image
+            HtmlImage img = page.querySelector(".crowd-level-pointer img");
+            if (img == null) {
+                logger.warn("Crowd level indicator image not found for URL: {}", url);
+                return null;
+            }
+
+            // Extract margin-left percentage from style attribute
+            String style = img.getAttribute("style");
+            Matcher matcher = MARGIN_PATTERN.matcher(style);
+
+            if (!matcher.find()) {
+                logger.warn("Could not parse margin-left from style: {}", style);
+                logger.debug("Available style attribute: {}", style);
+                return null;
+            }
+
+            double percentage = Double.parseDouble(matcher.group(1));
+            CrowdLevel crowdLevel = new CrowdLevel(percentage, getCrowdStatus(percentage));
+
+            logger.info("Crowd level for {}: {}% ({})", url, percentage, crowdLevel.status());
+            return crowdLevel;
+
+        } catch (Exception e) {
+            logger.error("Error fetching crowd level from {}: {}", url, e.getMessage());
+            return null;
+        } finally {
+            if (webClient != null) {
+                webClient.close();
+            }
+        }
     }
 
-    WebClient webClient = null;
-    try {
-      // Configure HtmlUnit WebClient
-      webClient = new WebClient(BrowserVersion.CHROME);
-      webClient.getOptions().setJavaScriptEnabled(true);
-      webClient.getOptions().setCssEnabled(false);
-      webClient.getOptions().setDownloadImages(false);
-      webClient.getOptions().setThrowExceptionOnScriptError(false);
-      webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-      webClient.getOptions().setTimeout(timeout);
-      webClient.getOptions().setRedirectEnabled(true);
-
-      // Suppress all HtmlUnit warnings and errors
-      java.util.logging.Logger.getLogger("org.htmlunit").setLevel(java.util.logging.Level.OFF);
-      java.util.logging.Logger.getLogger("org.htmlunit.javascript")
-          .setLevel(java.util.logging.Level.OFF);
-      java.util.logging.Logger.getLogger("org.htmlunit.IncorrectnessListenerImpl")
-          .setLevel(java.util.logging.Level.OFF);
-      java.util.logging.Logger.getLogger("org.htmlunit.WebConsole")
-          .setLevel(java.util.logging.Level.OFF);
-
-      // Suppress JavaScript console errors
-      webClient.setJavaScriptErrorListener(
-          new org.htmlunit.javascript.SilentJavaScriptErrorListener());
-
-      // Suppress incorrectness warnings (like obsolete content types)
-      webClient.setIncorrectnessListener((message, origin) -> {});
-
-      logger.info("Scraping crowd level from: {} (cache miss - will be cached for 5 minutes)", url);
-      HtmlPage page = webClient.getPage(url);
-
-      // Wait for JavaScript to execute
-      webClient.waitForBackgroundJavaScript(jsWaitTime);
-
-      // Find the crowd level pointer image
-      HtmlImage img = page.querySelector(".crowd-level-pointer img");
-      if (img == null) {
-        logger.warn("Crowd level indicator image not found for URL: {}", url);
-        return null;
-      }
-
-      // Extract margin-left percentage from style attribute
-      String style = img.getAttribute("style");
-      Matcher matcher = MARGIN_PATTERN.matcher(style);
-
-      if (!matcher.find()) {
-        logger.warn("Could not parse margin-left from style: {}", style);
-        logger.debug("Available style attribute: {}", style);
-        return null;
-      }
-
-      double percentage = Double.parseDouble(matcher.group(1));
-      CrowdLevel crowdLevel = new CrowdLevel(percentage, getCrowdStatus(percentage));
-
-      logger.info("Crowd level for {}: {}% ({})", url, percentage, crowdLevel.status());
-      return crowdLevel;
-
-    } catch (Exception e) {
-      logger.error("Error fetching crowd level from {}: {}", url, e.getMessage());
-      return null;
-    } finally {
-      if (webClient != null) {
-        webClient.close();
-      }
+    /**
+     * Maps crowd percentage to a human-readable status.
+     */
+    private String getCrowdStatus(double percentage) {
+        if (percentage < 25) {
+            return "Empty";
+        } else if (percentage < 50) {
+            return "Chill crowd";
+        } else if (percentage < 75) {
+            return "Busy";
+        } else if (percentage < 90) {
+            return "Lot going on";
+        } else {
+            return "Completely full";
+        }
     }
-  }
 
-  /** Maps crowd percentage to a human-readable status. */
-  private String getCrowdStatus(double percentage) {
-    if (percentage < 25) {
-      return "Empty";
-    } else if (percentage < 50) {
-      return "Chill crowd";
-    } else if (percentage < 75) {
-      return "Busy";
-    } else if (percentage < 90) {
-      return "Lot going on";
-    } else {
-      return "Completely full";
-    }
-  }
-
-  /** Crowd level information containing percentage and status text. */
-  public record CrowdLevel(double percentage, String status) {}
+    /**
+     * Crowd level information containing percentage and status text.
+     */
+    public record CrowdLevel(double percentage, String status) {}
 }

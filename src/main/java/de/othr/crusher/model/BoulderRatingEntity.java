@@ -15,70 +15,71 @@ import jakarta.validation.constraints.NotNull;
 
 /**
  * Entity representing a user's rating for a boulder.
- *
- * <p>Each rating has a user, boulder, and a rating value from 1 to 5 stars.
+ * <p>
+ * Each rating has a user, boulder, and a rating value from 1 to 5 stars.
+ * </p>
  */
 @Entity
 @Table(name = "boulder_ratings")
 public class BoulderRatingEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  @NotNull(message = "User is required")
-  private UserEntity user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull(message = "User is required")
+    private UserEntity user;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "boulder_id", nullable = false)
-  @NotNull(message = "Boulder is required")
-  private BoulderEntity boulder;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boulder_id", nullable = false)
+    @NotNull(message = "Boulder is required")
+    private BoulderEntity boulder;
 
-  @Column(nullable = false)
-  @NotNull(message = "Rating is required")
-  @Min(value = 1, message = "Rating must be at least 1")
-  @Max(value = 5, message = "Rating must be at most 5")
-  private Integer rating;
+    @Column(nullable = false)
+    @NotNull(message = "Rating is required")
+    @Min(value = 1, message = "Rating must be at least 1")
+    @Max(value = 5, message = "Rating must be at most 5")
+    private Integer rating;
 
-  public BoulderRatingEntity() {}
+    public BoulderRatingEntity() {}
 
-  public BoulderRatingEntity(UserEntity user, BoulderEntity boulder, Integer rating) {
-    this.user = user;
-    this.boulder = boulder;
-    this.rating = rating;
-  }
+    public BoulderRatingEntity(UserEntity user, BoulderEntity boulder, Integer rating) {
+        this.user = user;
+        this.boulder = boulder;
+        this.rating = rating;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public UserEntity getUser() {
-    return user;
-  }
+    public UserEntity getUser() {
+        return user;
+    }
 
-  public void setUser(UserEntity user) {
-    this.user = user;
-  }
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
 
-  public BoulderEntity getBoulder() {
-    return boulder;
-  }
+    public BoulderEntity getBoulder() {
+        return boulder;
+    }
 
-  public void setBoulder(BoulderEntity boulder) {
-    this.boulder = boulder;
-  }
+    public void setBoulder(BoulderEntity boulder) {
+        this.boulder = boulder;
+    }
 
-  public Integer getRating() {
-    return rating;
-  }
+    public Integer getRating() {
+        return rating;
+    }
 
-  public void setRating(Integer rating) {
-    this.rating = rating;
-  }
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
 }

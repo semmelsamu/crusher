@@ -17,97 +17,97 @@ import java.time.LocalDateTime;
 
 /**
  * Entity representing a climbing attempt (go) on a boulder during a session.
- *
- * <p>Maps to the {@code goes} table and stores the attempt result and timestamp along with
- * references to the session and boulder.
+ * <p>
+ * Maps to the {@code goes} table and stores the attempt result and timestamp
+ * along with references to the session and boulder.
+ * </p>
  */
 @Entity
 @Table(name = "goes")
 public class GoEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "session_id", nullable = false)
-  @NotNull(message = "Go must belong to a session")
-  private SessionEntity session;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "session_id", nullable = false)
+    @NotNull(message = "Go must belong to a session")
+    private SessionEntity session;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "boulder_id", nullable = false)
-  @NotNull(message = "Go must belong to a boulder")
-  private BoulderEntity boulder;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boulder_id", nullable = false)
+    @NotNull(message = "Go must belong to a boulder")
+    private BoulderEntity boulder;
 
-  @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
-  @NotNull(message = "Please select a result")
-  private GoResult result;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Please select a result")
+    private GoResult result;
 
-  @Column(nullable = false)
-  @NotNull(message = "Go must have a timestamp")
-  private LocalDateTime timestamp;
+    @Column(nullable = false)
+    @NotNull(message = "Go must have a timestamp")
+    private LocalDateTime timestamp;
 
-  @Column(name = "progressed_hold")
-  @Min(value = 0, message = "Progressed hold cannot be negative")
-  private Integer progressedHold;
+    @Column(name = "progressed_hold")
+    @Min(value = 0, message = "Progressed hold cannot be negative")
+    private Integer progressedHold;
 
-  public GoEntity() {}
+    public GoEntity() {}
 
-  public GoEntity(
-      SessionEntity session, BoulderEntity boulder, GoResult result, LocalDateTime timestamp) {
-    this.session = session;
-    this.boulder = boulder;
-    this.result = result;
-    this.timestamp = timestamp;
-  }
+    public GoEntity(SessionEntity session, BoulderEntity boulder, GoResult result, LocalDateTime timestamp) {
+        this.session = session;
+        this.boulder = boulder;
+        this.result = result;
+        this.timestamp = timestamp;
+    }
 
-  // ---- Getters / Setters ----
-  public Long getId() {
-    return id;
-  }
+    // ---- Getters / Setters ----
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public SessionEntity getSession() {
-    return session;
-  }
+    public SessionEntity getSession() {
+        return session;
+    }
 
-  public void setSession(SessionEntity session) {
-    this.session = session;
-  }
+    public void setSession(SessionEntity session) {
+        this.session = session;
+    }
 
-  public BoulderEntity getBoulder() {
-    return boulder;
-  }
+    public BoulderEntity getBoulder() {
+        return boulder;
+    }
 
-  public void setBoulder(BoulderEntity boulder) {
-    this.boulder = boulder;
-  }
+    public void setBoulder(BoulderEntity boulder) {
+        this.boulder = boulder;
+    }
 
-  public GoResult getResult() {
-    return result;
-  }
+    public GoResult getResult() {
+        return result;
+    }
 
-  public void setResult(GoResult result) {
-    this.result = result;
-  }
+    public void setResult(GoResult result) {
+        this.result = result;
+    }
 
-  public LocalDateTime getTimestamp() {
-    return timestamp;
-  }
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
 
-  public void setTimestamp(LocalDateTime timestamp) {
-    this.timestamp = timestamp;
-  }
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
 
-  public Integer getProgressedHold() {
-    return progressedHold;
-  }
+    public Integer getProgressedHold() {
+        return progressedHold;
+    }
 
-  public void setProgressedHold(Integer progressedHold) {
-    this.progressedHold = progressedHold;
-  }
+    public void setProgressedHold(Integer progressedHold) {
+        this.progressedHold = progressedHold;
+    }
 }

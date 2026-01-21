@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class CrusherApplicationTests {
 
-  @Test
-  void contextLoads() {}
+	@Test
+	void contextLoads() {
+	}
+
 }
