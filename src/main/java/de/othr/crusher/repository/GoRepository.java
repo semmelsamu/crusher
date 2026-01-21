@@ -1,6 +1,7 @@
 package de.othr.crusher.repository;
 
 import de.othr.crusher.model.GoEntity;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,4 +46,13 @@ public interface GoRepository extends JpaRepository<GoEntity, Long> {
      * @return list of all goes belonging to the user
      */
     List<GoEntity> findBySession_UserId(Long userId);
+
+    /**
+     * Finds all goes for a given user since a specific timestamp.
+     *
+     * @param userId identifier of the user
+     * @param since timestamp to filter from (exclusive)
+     * @return list of goes belonging to the user after the given timestamp
+     */
+    List<GoEntity> findBySession_UserIdAndTimestampAfter(Long userId, LocalDateTime since);
 }
