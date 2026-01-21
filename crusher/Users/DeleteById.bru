@@ -1,0 +1,20 @@
+meta {
+  name: Delete By Id
+  type: http
+  seq: 8
+}
+
+delete {
+  url: http://localhost:8080/api/users/:id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  id: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

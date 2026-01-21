@@ -1,0 +1,28 @@
+meta {
+  name: Update By Id
+  type: http
+  seq: 6
+}
+
+put {
+  url: http://localhost:8080/api/users/:id
+  body: json
+  auth: inherit
+}
+
+params:path {
+  id: 1
+}
+
+body:json {
+  {
+    "username": "new-name",
+    "email": "new-email@example.com",
+    "password": "new-password"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
