@@ -1,4 +1,4 @@
-<p align="center"><a href="https://webflow-pwa.com/" target="_blank"><img src="src/main/resources/static/images/wordmark.svg" width="300" alt="Webflow PWA Logo" style="filter: invert(1); margin: 4rem;"></a></p>
+<p align="center"><a href="https://webflow-pwa.com/" target="_blank"><img src="src/main/resources/static/images/logo.png" alt="Webflow PWA Logo" /></a></p>
 
 # Boulder / rock climbing tracking and management tool
 
