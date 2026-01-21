@@ -105,16 +105,13 @@ public class ApiUserController {
     public ResponseEntity<?> createUser(
             @RequestBody(required = false) CreateUserRequest request,
             Authentication authentication) {
-        if (!isAuthenticated(authentication)) {
-            return notAuthenticated();
-        }
-
-        if (!isPrivileged(authentication)) {
-            return accessDenied();
-        }
-
         if (request == null) {
             return ResponseEntity.badRequest().body(new ApiErrorResponse("Request body is required"));
+        }
+
+        boolean authenticated = isAuthenticated(authentication);
+        if (authenticated && !isPrivileged(authentication)) {
+            return accessDenied();
         }
 
         String username = normalize(request.username());
@@ -139,9 +136,12 @@ public class ApiUserController {
             return ResponseEntity.badRequest().body(new ApiErrorResponse("Email already exists"));
         }
 
-        String role = normalizeRole(request.role());
-        if (role == null) {
-            role = "USER";
+        String role = "USER";
+        if (authenticated) {
+            String requestedRole = normalizeRole(request.role());
+            if (requestedRole != null) {
+                role = requestedRole;
+            }
         }
 
         UserEntity user = new UserEntity();

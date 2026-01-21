@@ -163,7 +163,7 @@ Returns a user by ID (ADMIN/OWNER or self).
 
 ### POST /api/users
 
-Creates a new user (ADMIN/OWNER only).
+Creates a new user. This endpoint is public for sign-up; authenticated `ADMIN`/`OWNER` can also create users with roles.
 
 **Request Body:**
 
@@ -181,7 +181,7 @@ Creates a new user (ADMIN/OWNER only).
 - `username` (String, required)
 - `email` (String, required)
 - `password` (String, required)
-- `role` (String, optional) - One of: `USER`, `SETTER`, `OWNER`, `ADMIN`
+- `role` (String, optional) - One of: `USER`, `SETTER`, `OWNER`, `ADMIN` (only for `ADMIN`/`OWNER`)
 
 **Responses:**
 
