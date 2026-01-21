@@ -1,0 +1,29 @@
+meta {
+  name: Goes - Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/sessions/:session_id/goes
+  body: json
+  auth: inherit
+}
+
+params:path {
+  session_id: 25
+}
+
+body:json {
+  {
+    "boulderId": 1,
+    "result": "FINISHED",
+    "timestamp": "2026-01-21T14:30:00",
+    "progressedHold": null
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Goes - List
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/api/sessions/:session_id/goes
+  body: none
+  auth: inherit
+}
+
+params:path {
+  session_id: 25
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
