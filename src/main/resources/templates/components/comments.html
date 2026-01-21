@@ -51,7 +51,7 @@
                 th:replace="~{components/avatar :: avatar(${comment.user.name})}"
             ></div>
             <div class="flex-1">
-                <p class="text-sm flex items-center gap-2">
+                <p class="text-sm flex items-center gap-2 flex-wrap">
                     <strong th:text="${comment.user.name}"> Username </strong>
                     <time
                         class="text-foreground-muted"

@@ -198,7 +198,7 @@
 
 .table th,
 .table td {
-    @apply align-top text-left p-2;
+    @apply align-top text-left p-2 wrap-break-word;
 }
 
 .table tr:not(:last-child),

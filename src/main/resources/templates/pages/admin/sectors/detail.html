@@ -21,7 +21,7 @@
                 </a>
 
                 <header
-                    class="card flex-1 p-card-inner flex items-center justify-between"
+                    class="card flex-1 p-card-inner flex items-center justify-between flex-wrap gap-4"
                 >
                     <h1>Sector Details</h1>
                     <div class="flex gap-4">
@@ -83,7 +83,7 @@
             <section class="card p-card-inner space-y-4">
                 <h2>General Information</h2>
 
-                <div class="grid gap-4 grid-cols-2">
+                <div class="grid gap-4 md:grid-cols-2">
                     <div>
                         <strong th:text="${sector.name}">Sector Name</strong>
 
@@ -120,9 +120,9 @@
             </section>
 
             <section class="card p-card-inner space-y-4">
-                <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center justify-between gap-4 flex-wrap">
                     <h2>Boulders</h2>
-                    <div class="flex gap-4">
+                    <div class="flex gap-4 flex-wrap">
                         <form
                             th:action="@{/admin/gyms/{gymId}/sectors/{sectorId}/publish-new-boulders(gymId=${gym.id}, sectorId=${sector.id})}"
                             method="post"
