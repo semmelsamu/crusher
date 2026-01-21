@@ -53,39 +53,39 @@ public class ProjectController {
     @PostMapping("/boulders/{boulderId}/project/toggle")
     @Transactional
     public String toggleProject(
-            @PathVariable("boulderId") Long boulderId,
-            @RequestParam(value = "returnUrl", required = false) String returnUrl,
-            @RequestParam(value = "gymId", required = false) Long gymId,
-            @RequestParam(value = "sectorId", required = false) Long sectorId,
-            @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
-            @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("boulderId") Long boulderId,
+        @RequestParam(value = "returnUrl", required = false) String returnUrl,
+        @RequestParam(value = "gymId", required = false) Long gymId,
+        @RequestParam(value = "sectorId", required = false) Long sectorId,
+        @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
+        @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         projectRepository.findByUserIdAndBoulderId(user.getId(), boulderId)
-                .ifPresentOrElse(
-                        projectRepository::delete,
-                        () -> {
-                            ProjectEntity project = new ProjectEntity();
-                            project.setUser(user);
-                            project.setBoulder(boulder);
-                            projectRepository.save(project);
-                        }
-                );
+        .ifPresentOrElse(
+            projectRepository::delete,
+        () -> {
+            ProjectEntity project = new ProjectEntity();
+            project.setUser(user);
+            project.setBoulder(boulder);
+            projectRepository.save(project);
+        }
+        );
 
         boolean nowActive = projectRepository.findByUserIdAndBoulderId(user.getId(), boulderId).isPresent();
         redirectAttributes.addFlashAttribute("toast", Map.of(
                 "type", "success",
                 "message", nowActive ? "Boulder added to your projects!" : "Boulder removed from your projects."
-        ));
-        
+                                             ));
+
         if (returnUrl != null && !returnUrl.isEmpty()) {
             return "redirect:" + returnUrl;
         }
-        
+
         preserveFilters(redirectAttributes, gymId, sectorId, gradeIds, projectOnly);
         return "redirect:/boulders";
     }
@@ -106,31 +106,31 @@ public class ProjectController {
     @PostMapping("/boulders/{boulderId}/project")
     @Transactional
     public String addProject(
-            @PathVariable("boulderId") Long boulderId,
-            @RequestParam(value = "gymId", required = false) Long gymId,
-            @RequestParam(value = "sectorId", required = false) Long sectorId,
-            @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
-            @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("boulderId") Long boulderId,
+        @RequestParam(value = "gymId", required = false) Long gymId,
+        @RequestParam(value = "sectorId", required = false) Long sectorId,
+        @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
+        @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         projectRepository.findByUserIdAndBoulderId(user.getId(), boulderId).ifPresentOrElse(
-                existing -> { /* Already added, nothing to do */ },
-                () -> {
-                    ProjectEntity project = new ProjectEntity();
-                    project.setUser(user);
-                    project.setBoulder(boulder);
-                    projectRepository.save(project);
-                }
+            existing -> { /* Already added, nothing to do */ },
+        () -> {
+            ProjectEntity project = new ProjectEntity();
+            project.setUser(user);
+            project.setBoulder(boulder);
+            projectRepository.save(project);
+        }
         );
 
         redirectAttributes.addFlashAttribute("toast", Map.of(
                 "type", "success",
                 "message", "Boulder added to your projects!"
-        ));
+                                             ));
         preserveFilters(redirectAttributes, gymId, sectorId, gradeIds, projectOnly);
         return "redirect:/boulders";
     }
@@ -151,28 +151,28 @@ public class ProjectController {
     @DeleteMapping("/boulders/{boulderId}/project")
     @Transactional
     public String removeProject(
-            @PathVariable("boulderId") Long boulderId,
-            @RequestParam(value = "gymId", required = false) Long gymId,
-            @RequestParam(value = "sectorId", required = false) Long sectorId,
-            @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
-            @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("boulderId") Long boulderId,
+        @RequestParam(value = "gymId", required = false) Long gymId,
+        @RequestParam(value = "sectorId", required = false) Long sectorId,
+        @RequestParam(value = "gradeIds", required = false) List<Long> gradeIds,
+        @RequestParam(value = "projectOnly", required = false, defaultValue = "false") boolean projectOnly,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         projectRepository.findByUserIdAndBoulderId(user.getId(), boulderId)
-                .ifPresent(projectRepository::delete);
+        .ifPresent(projectRepository::delete);
 
         redirectAttributes.addFlashAttribute("toast", Map.of(
                 "type", "success",
                 "message", "Boulder removed from your projects."
-        ));
+                                             ));
         preserveFilters(redirectAttributes, gymId, sectorId, gradeIds, projectOnly);
         return "redirect:/boulders";
     }
 
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 
     private void preserveFilters(RedirectAttributes redirectAttributes, Long gymId, Long sectorId, List<Long> gradeIds, boolean projectOnly) {

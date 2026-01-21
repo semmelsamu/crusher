@@ -35,10 +35,10 @@ public class SignUpController {
     private final EmailService emailService;
 
     public SignUpController(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
-            CustomUserDetailsService userDetailsService,
-            EmailService emailService) {
+        UserRepository userRepository,
+        PasswordEncoder passwordEncoder,
+        CustomUserDetailsService userDetailsService,
+        EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
@@ -70,21 +70,21 @@ public class SignUpController {
      */
     @PostMapping("/signup")
     public String registerUser(
-            @RequestParam String username,
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam String confirmPassword,
-            HttpServletRequest request,
-            Model model,
-            RedirectAttributes redirectAttributes) {
+        @RequestParam String username,
+        @RequestParam String email,
+        @RequestParam String password,
+        @RequestParam String confirmPassword,
+        HttpServletRequest request,
+        Model model,
+        RedirectAttributes redirectAttributes) {
 
         // Validate password length (minimum 4 characters)
         if (password.length() < 4) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Registration failed",
-                "message", "Password must be at least 4 characters long"
-            ));
+                    "type", "error",
+                    "title", "Registration failed",
+                    "message", "Password must be at least 4 characters long"
+                                                 ));
             redirectAttributes.addFlashAttribute("username", username);
             redirectAttributes.addFlashAttribute("email", email);
             return "redirect:/signup";
@@ -93,10 +93,10 @@ public class SignUpController {
         // Validate passwords match
         if (!password.equals(confirmPassword)) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Registration failed",
-                "message", "Passwords do not match"
-            ));
+                    "type", "error",
+                    "title", "Registration failed",
+                    "message", "Passwords do not match"
+                                                 ));
             redirectAttributes.addFlashAttribute("username", username);
             redirectAttributes.addFlashAttribute("email", email);
             return "redirect:/signup";
@@ -105,10 +105,10 @@ public class SignUpController {
         // Check if username already exists
         if (userRepository.findByName(username).isPresent()) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Registration failed",
-                "message", "Username already exists"
-            ));
+                    "type", "error",
+                    "title", "Registration failed",
+                    "message", "Username already exists"
+                                                 ));
             redirectAttributes.addFlashAttribute("username", username);
             redirectAttributes.addFlashAttribute("email", email);
             return "redirect:/signup";
@@ -117,10 +117,10 @@ public class SignUpController {
         // Check if email already exists
         if (userRepository.findByEmail(email).isPresent()) {
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "title", "Registration failed",
-                "message", "Email address already registered"
-            ));
+                    "type", "error",
+                    "title", "Registration failed",
+                    "message", "Email address already registered"
+                                                 ));
             redirectAttributes.addFlashAttribute("username", username);
             redirectAttributes.addFlashAttribute("email", email);
             return "redirect:/signup";
@@ -161,10 +161,10 @@ public class SignUpController {
 
         // Redirect to dashboard with success message
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "title", "Account created",
-            "message", "Welcome to crusher! Your account has been created successfully"
-        ));
+                "type", "success",
+                "title", "Account created",
+                "message", "Welcome to crusher! Your account has been created successfully"
+                                             ));
         return "redirect:/dashboard";
     }
 }

@@ -47,7 +47,7 @@ public class PasswordEncoderRunner implements CommandLineRunner {
     @Override
     public void run(String... args) {
         var users = jdbc.query("SELECT id, password FROM users",
-                (rs, n) -> Map.of("id", rs.getLong("id"), "pw", rs.getString("password")));
+                               (rs, n) -> Map.of("id", rs.getLong("id"), "pw", rs.getString("password")));
 
         for (var u : users) {
             String pw = (String) u.get("pw");

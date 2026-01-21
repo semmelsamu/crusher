@@ -22,19 +22,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws IOException, ServletException {
-        
+                                        Authentication authentication) throws IOException, ServletException {
+
         // Add toast notification to flash scope
         FlashMap flashMap = new FlashMap();
         flashMap.put("toast", Map.of(
-            "type", "success",
-            "title", "Welcome back!",
-            "message", "You have been logged in successfully"
-        ));
-        
+                         "type", "success",
+                         "title", "Welcome back!",
+                         "message", "You have been logged in successfully"
+                     ));
+
         SessionFlashMapManager flashMapManager = new SessionFlashMapManager();
         flashMapManager.saveOutputFlashMap(flashMap, request, response);
-        
+
         // Redirect to dashboard page
         response.sendRedirect("/dashboard");
     }

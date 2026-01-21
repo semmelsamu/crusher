@@ -53,12 +53,12 @@ public class GoController {
     private final ProjectRepository projectRepository;
 
     public GoController(
-            GoRepository goRepository,
-            SessionRepository sessionRepository,
-            BoulderRepository boulderRepository,
-            SectorRepository sectorRepository,
-            UserRepository userRepository,
-            ProjectRepository projectRepository) {
+        GoRepository goRepository,
+        SessionRepository sessionRepository,
+        BoulderRepository boulderRepository,
+        SectorRepository sectorRepository,
+        UserRepository userRepository,
+        ProjectRepository projectRepository) {
         this.goRepository = goRepository;
         this.sessionRepository = sessionRepository;
         this.boulderRepository = boulderRepository;
@@ -78,9 +78,9 @@ public class GoController {
     @GetMapping("/create")
     @Transactional(readOnly = true)
     public String showBoulderSelection(
-            @PathVariable("sessionId") Long sessionId,
-            Principal principal,
-            Model model) {
+        @PathVariable("sessionId") Long sessionId,
+        Principal principal,
+        Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
 
@@ -137,16 +137,16 @@ public class GoController {
     @GetMapping("/create/{boulderId}")
     @Transactional(readOnly = true)
     public String showCreateForm(
-            @PathVariable("sessionId") Long sessionId,
-            @PathVariable("boulderId") Long boulderId,
-            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
-            @RequestParam(required = false, defaultValue = "false") boolean trackProgress,
-            Principal principal,
-            Model model) {
+        @PathVariable("sessionId") Long sessionId,
+        @PathVariable("boulderId") Long boulderId,
+        @RequestParam(required = false, defaultValue = "false") boolean createAnother,
+        @RequestParam(required = false, defaultValue = "false") boolean trackProgress,
+        Principal principal,
+        Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
         BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         GoEntity go = new GoEntity();
         go.setSession(session);
@@ -174,10 +174,10 @@ public class GoController {
     @GetMapping("/{goId}/edit")
     @Transactional(readOnly = true)
     public String showEditForm(
-            @PathVariable("sessionId") Long sessionId,
-            @PathVariable("goId") Long goId,
-            Principal principal,
-            Model model) {
+        @PathVariable("sessionId") Long sessionId,
+        @PathVariable("goId") Long goId,
+        Principal principal,
+        Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
         GoEntity go = findGoInSessionOrThrow(sessionId, goId);
@@ -205,21 +205,21 @@ public class GoController {
     @PostMapping
     @Transactional
     public String createGo(
-            @PathVariable("sessionId") Long sessionId,
-            @ModelAttribute("go") GoEntity go,
-            BindingResult result,
-            @RequestParam(required = false, defaultValue = "false") boolean createAnother,
-            @RequestParam(value = "trackProgress", required = false, defaultValue = "false") boolean trackProgress,
-            Principal principal,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("sessionId") Long sessionId,
+        @ModelAttribute("go") GoEntity go,
+        BindingResult result,
+        @RequestParam(required = false, defaultValue = "false") boolean createAnother,
+        @RequestParam(value = "trackProgress", required = false, defaultValue = "false") boolean trackProgress,
+        Principal principal,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
 
         BoulderEntity boulder = null;
         if (go.getBoulder() != null && go.getBoulder().getId() != null) {
             boulder = boulderRepository.findByIdAndDeletedFalse(go.getBoulder().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
+                      .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
             go.setBoulder(boulder);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Boulder is required");
@@ -245,14 +245,14 @@ public class GoController {
         // Auto-remove project when boulder is finished
         if (go.getResult() == GoResult.FINISHED) {
             projectRepository.findByUserIdAndBoulderId(user.getId(), boulder.getId())
-                .ifPresent(projectRepository::delete);
+            .ifPresent(projectRepository::delete);
         }
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Go created successfully!"
-        ));
+                "type", "success",
+                "message", "Go created successfully!"
+                                             ));
 
         // If "create another" is checked, redirect back to create form with same boulder
         if (createAnother && go.getBoulder() != null) {
@@ -277,14 +277,14 @@ public class GoController {
     @PutMapping("/{goId}")
     @Transactional
     public String updateGo(
-            @PathVariable("sessionId") Long sessionId,
-            @PathVariable("goId") Long goId,
-            @ModelAttribute("go") GoEntity formGo,
-            BindingResult result,
-            @RequestParam(value = "trackProgress", required = false, defaultValue = "false") boolean trackProgress,
-            Principal principal,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("sessionId") Long sessionId,
+        @PathVariable("goId") Long goId,
+        @ModelAttribute("go") GoEntity formGo,
+        BindingResult result,
+        @RequestParam(value = "trackProgress", required = false, defaultValue = "false") boolean trackProgress,
+        Principal principal,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = findSessionAndVerifyOwnership(sessionId, user);
         GoEntity go = findGoInSessionOrThrow(sessionId, goId);
@@ -292,7 +292,7 @@ public class GoController {
         BoulderEntity boulder = null;
         if (formGo.getBoulder() != null && formGo.getBoulder().getId() != null) {
             boulder = boulderRepository.findByIdAndDeletedFalse(formGo.getBoulder().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
+                      .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
         } else if (go.getBoulder() != null) {
             boulder = go.getBoulder();
         } else {
@@ -322,14 +322,14 @@ public class GoController {
         // Auto-remove project when go is updated to finished
         if (go.getResult() == GoResult.FINISHED) {
             projectRepository.findByUserIdAndBoulderId(user.getId(), boulder.getId())
-                .ifPresent(projectRepository::delete);
+            .ifPresent(projectRepository::delete);
         }
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "message", "Go updated successfully!"
-        ));
+                "type", "success",
+                "message", "Go updated successfully!"
+                                             ));
 
         return "redirect:/sessions/" + sessionId;
     }
@@ -346,10 +346,10 @@ public class GoController {
     @DeleteMapping("/{goId}")
     @Transactional
     public String deleteGo(
-            @PathVariable("sessionId") Long sessionId,
-            @PathVariable("goId") Long goId,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("sessionId") Long sessionId,
+        @PathVariable("goId") Long goId,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         findSessionAndVerifyOwnership(sessionId, user);
         GoEntity go = findGoInSessionOrThrow(sessionId, goId);
@@ -358,15 +358,15 @@ public class GoController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Go deleted successfully!"
-        ));
+                "type", "success",
+                "message", "Go deleted successfully!"
+                                             ));
 
         return "redirect:/sessions/" + sessionId;
     }
 
     private void validateProgressedHold(
-            GoEntity go, BoulderEntity boulder, boolean trackProgress, BindingResult result) {
+        GoEntity go, BoulderEntity boulder, boolean trackProgress, BindingResult result) {
         if (!trackProgress) {
             go.setProgressedHold(null);
             return;
@@ -385,9 +385,9 @@ public class GoController {
         Integer holdsCount = boulder.getHoldsCount();
         if (holdsCount != null && progressedHold > holdsCount) {
             result.rejectValue(
-                    "progressedHold",
-                    "progress.tooHigh",
-                    "Progressed hold cannot exceed the boulder's total holds");
+                "progressedHold",
+                "progress.tooHigh",
+                "Progressed hold cannot exceed the boulder's total holds");
         }
     }
 
@@ -400,7 +400,7 @@ public class GoController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 
     /**
@@ -413,7 +413,7 @@ public class GoController {
      */
     private SessionEntity findSessionAndVerifyOwnership(Long sessionId, UserEntity user) {
         SessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
 
         if (!session.getUser().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
@@ -432,7 +432,7 @@ public class GoController {
      */
     private GoEntity findGoInSessionOrThrow(Long sessionId, Long goId) {
         GoEntity go = goRepository.findById(goId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Go not found"));
+                      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Go not found"));
 
         if (go.getSession() == null || !go.getSession().getId().equals(sessionId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Go does not belong to session");

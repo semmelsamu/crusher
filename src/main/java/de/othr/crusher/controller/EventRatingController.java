@@ -31,9 +31,9 @@ public class EventRatingController {
     private final UserRepository userRepository;
 
     public EventRatingController(
-            EventRatingRepository ratingRepository,
-            EventRepository eventRepository,
-            UserRepository userRepository) {
+        EventRatingRepository ratingRepository,
+        EventRepository eventRepository,
+        UserRepository userRepository) {
         this.ratingRepository = ratingRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
@@ -54,11 +54,11 @@ public class EventRatingController {
     @PostMapping("/gyms/{gymId}/events/{eventId}/rating")
     @Transactional
     public String setRating(
-            @PathVariable("gymId") Long gymId,
-            @PathVariable("eventId") Long eventId,
-            @RequestParam("rating") Integer rating,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") Long gymId,
+        @PathVariable("eventId") Long eventId,
+        @RequestParam("rating") Integer rating,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         EventEntity event = findEventInGymOrThrow(gymId, eventId);
 
@@ -68,7 +68,7 @@ public class EventRatingController {
 
         // Find existing rating or create new one
         EventRatingEntity ratingEntity = ratingRepository.findByUserIdAndEventId(user.getId(), eventId)
-                .orElse(new EventRatingEntity());
+                                         .orElse(new EventRatingEntity());
 
         boolean isNewRating = ratingEntity.getId() == null;
 
@@ -90,8 +90,8 @@ public class EventRatingController {
 
     private EventEntity findEventInGymOrThrow(Long gymId, Long eventId) {
         EventEntity event = eventRepository
-                .findByIdAndDeletedFalse(eventId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
+                            .findByIdAndDeletedFalse(eventId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
 
         if (event.getGym() == null || event.getGym().getId() == null
                 || !event.getGym().getId().equals(gymId)) {
@@ -110,6 +110,6 @@ public class EventRatingController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }

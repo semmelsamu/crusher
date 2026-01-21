@@ -45,9 +45,9 @@ public class GradeController {
      */
     @GetMapping("/{gradeId}")
     public String showGrade(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("gradeId") long gradeId,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("gradeId") long gradeId,
+        Model model) {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
@@ -64,9 +64,9 @@ public class GradeController {
      */
     @GetMapping("/{gradeId}/update")
     public String showEditForm(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("gradeId") long gradeId,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("gradeId") long gradeId,
+        Model model) {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
         model.addAttribute("gym", grade.getGym());
         model.addAttribute("grade", grade);
@@ -104,12 +104,12 @@ public class GradeController {
      */
     @PutMapping("/{gradeId}")
     public String updateGrade(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("gradeId") long gradeId,
-            @Valid @ModelAttribute("grade") GradeEntity formGrade,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("gradeId") long gradeId,
+        @Valid @ModelAttribute("grade") GradeEntity formGrade,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         GradeEntity grade = findGradeInGymOrThrow(gymId, gradeId);
 
         if (result.hasErrors()) {
@@ -128,9 +128,9 @@ public class GradeController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Grade updated successfully!"
-        ));
+                "type", "success",
+                "message", "Grade updated successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
@@ -147,11 +147,11 @@ public class GradeController {
      */
     @PostMapping
     public String createGrade(
-            @PathVariable("gymId") long gymId,
-            @Valid @ModelAttribute("grade") GradeEntity formGrade,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @Valid @ModelAttribute("grade") GradeEntity formGrade,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
 
         if (result.hasErrors()) {
@@ -165,9 +165,9 @@ public class GradeController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Grade created successfully!"
-        ));
+                "type", "success",
+                "message", "Grade created successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
@@ -188,17 +188,17 @@ public class GradeController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Grade deleted successfully!"
-        ));
+                "type", "success",
+                "message", "Grade deleted successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
 
     private GradeEntity findGradeInGymOrThrow(long gymId, long gradeId) {
         GradeEntity grade = gradeRepository
-                .findByIdAndDeletedFalse(gradeId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Grade not found"));
+                            .findByIdAndDeletedFalse(gradeId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Grade not found"));
 
         if (grade.getGym() == null || grade.getGym().getId() == null
                 || !grade.getGym().getId().equals(gymId)) {
@@ -209,7 +209,7 @@ public class GradeController {
 
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findByIdAndDeletedFalse(gymId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+               .findByIdAndDeletedFalse(gymId)
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }

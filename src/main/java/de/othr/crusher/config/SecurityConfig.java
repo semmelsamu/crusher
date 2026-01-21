@@ -72,40 +72,40 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // only for dev with /h2-console, delete in prod
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/api/**"))
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+        // only for dev with /h2-console, delete in prod
+        .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/api/**"))
+        .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 
-                // authorization
-                .authorizeHttpRequests(a -> a
-                        .requestMatchers("/h2-console/**").hasRole("ADMIN")
-                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "OWNER", "SETTER")
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/signup").permitAll()
-                        .requestMatchers("/api/auth/login", "/api/auth/logout").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/manifest.json", "/favicon.ico", "/sw.js").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .successHandler(authenticationSuccessHandler)
-                        .failureUrl("/login?error")
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll())
-                .exceptionHandling(exception -> exception
-                        .defaultAuthenticationEntryPointFor(
-                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                                new AntPathRequestMatcher("/api/**"))
-                        .defaultAccessDeniedHandlerFor(
-                                (request, response, accessDeniedException) -> response
-                                        .sendError(HttpStatus.FORBIDDEN.value()),
-                                new AntPathRequestMatcher("/api/**"))
-                        .accessDeniedPage("/error"));
+        // authorization
+        .authorizeHttpRequests(a -> a
+                               .requestMatchers("/h2-console/**").hasRole("ADMIN")
+                               .requestMatchers("/admin/**").hasAnyRole("ADMIN", "OWNER", "SETTER")
+                               .requestMatchers("/error").permitAll()
+                               .requestMatchers("/").permitAll()
+                               .requestMatchers("/login").permitAll()
+                               .requestMatchers("/signup").permitAll()
+                               .requestMatchers("/api/auth/login", "/api/auth/logout").permitAll()
+                               .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                               .requestMatchers("/uploads/**").permitAll()
+                               .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/manifest.json", "/favicon.ico", "/sw.js").permitAll()
+                               .anyRequest().authenticated())
+        .formLogin(form -> form
+                   .loginPage("/login")
+                   .successHandler(authenticationSuccessHandler)
+                   .failureUrl("/login?error")
+                   .permitAll())
+        .logout(logout -> logout
+                .logoutSuccessUrl("/login?logout")
+                .permitAll())
+        .exceptionHandling(exception -> exception
+                           .defaultAuthenticationEntryPointFor(
+                               new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
+                               new AntPathRequestMatcher("/api/**"))
+                           .defaultAccessDeniedHandlerFor(
+                               (request, response, accessDeniedException) -> response
+                               .sendError(HttpStatus.FORBIDDEN.value()),
+                               new AntPathRequestMatcher("/api/**"))
+                           .accessDeniedPage("/error"));
         return http.build();
     }
 }

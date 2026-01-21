@@ -37,7 +37,7 @@ public class EventController {
      * @param gymRepository repository for accessing gym data
      */
     public EventController(EventRepository eventRepository, GymRepository gymRepository,
-            SessionRepository sessionRepository, EmailService emailService) {
+                           SessionRepository sessionRepository, EmailService emailService) {
         this.eventRepository = eventRepository;
         this.gymRepository = gymRepository;
         this.sessionRepository = sessionRepository;
@@ -54,9 +54,9 @@ public class EventController {
      */
     @GetMapping("/{eventId}/update")
     public String showEditForm(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("eventId") long eventId,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("eventId") long eventId,
+        Model model) {
         EventEntity event = findEventInGymOrThrow(gymId, eventId);
         model.addAttribute("gym", event.getGym());
         model.addAttribute("event", event);
@@ -94,11 +94,11 @@ public class EventController {
      */
     @PostMapping
     public String createEvent(
-            @PathVariable("gymId") long gymId,
-            @Valid @ModelAttribute("event") EventEntity formEvent,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @Valid @ModelAttribute("event") EventEntity formEvent,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         GymEntity gym = findGymOrThrow(gymId);
 
         validateSchedule(formEvent, result);
@@ -126,9 +126,9 @@ public class EventController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "message", "Event created successfully!"
-        ));
+                "type", "success",
+                "message", "Event created successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
@@ -147,12 +147,12 @@ public class EventController {
      */
     @PutMapping("/{eventId}")
     public String updateEvent(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("eventId") long eventId,
-            @Valid @ModelAttribute("event") EventEntity formEvent,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("eventId") long eventId,
+        @Valid @ModelAttribute("event") EventEntity formEvent,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         EventEntity event = findEventInGymOrThrow(gymId, eventId);
 
         validateSchedule(formEvent, result);
@@ -177,9 +177,9 @@ public class EventController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "message", "Event updated successfully!"
-        ));
+                "type", "success",
+                "message", "Event updated successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
@@ -194,18 +194,18 @@ public class EventController {
      */
     @DeleteMapping("/{eventId}")
     public String deleteEvent(
-            @PathVariable("gymId") long gymId,
-            @PathVariable("eventId") long eventId,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("gymId") long gymId,
+        @PathVariable("eventId") long eventId,
+        RedirectAttributes redirectAttributes) {
         EventEntity event = findEventInGymOrThrow(gymId, eventId);
         event.setDeleted(true);
         eventRepository.save(event);
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "message", "Event deleted successfully!"
-        ));
+                "type", "success",
+                "message", "Event deleted successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + gymId;
     }
@@ -220,8 +220,8 @@ public class EventController {
      */
     private EventEntity findEventInGymOrThrow(long gymId, long eventId) {
         EventEntity event = eventRepository
-                .findByIdAndDeletedFalse(eventId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
+                            .findByIdAndDeletedFalse(eventId)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
 
         if (event.getGym() == null || event.getGym().getId() == null
                 || !event.getGym().getId().equals(gymId)) {
@@ -239,8 +239,8 @@ public class EventController {
      */
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findByIdAndDeletedFalse(gymId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+               .findByIdAndDeletedFalse(gymId)
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 
     private void validateSchedule(EventEntity event, BindingResult result) {

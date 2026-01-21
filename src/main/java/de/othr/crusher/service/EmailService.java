@@ -49,16 +49,16 @@ public class EmailService {
     public void sendWelcomeEmail(String to, String username) {
         String subject = "Welcome to Crusher!";
         String body = String.format(
-            "Hi %s,\n\n" +
-            "Welcome to Crusher - your boulder tracking app!\n\n" +
-            "We're excited to have you on board. You can now:\n" +
-            "- Track your boulder sessions\n" +
-            "- Monitor your progress\n" +
-            "- Discover new routes\n\n" +
-            "Happy climbing!\n\n" +
-            "Your Crusher Team",
-            username
-        );
+                          "Hi %s,\n\n" +
+                          "Welcome to Crusher - your boulder tracking app!\n\n" +
+                          "We're excited to have you on board. You can now:\n" +
+                          "- Track your boulder sessions\n" +
+                          "- Monitor your progress\n" +
+                          "- Discover new routes\n\n" +
+                          "Happy climbing!\n\n" +
+                          "Your Crusher Team",
+                          username
+                      );
 
         sendEmail(to, subject, body);
     }
@@ -78,14 +78,14 @@ public class EmailService {
         StringBuilder body = new StringBuilder();
         body.append(String.format("Hi %s,\n\n", username));
         body.append(String.format("Great news! %d new boulder(s) have been added to the %s sector at %s:\n\n",
-            boulders.size(), sectorName, gymName));
+                                  boulders.size(), sectorName, gymName));
 
         for (BoulderEntity boulder : boulders) {
             body.append(String.format("• %s - Grade %s (%s)\n",
-                boulder.getColor().name().replace("_", " "),
-                boulder.getGrade().getName(),
-                boulder.getDescription() != null ? boulder.getDescription() : "No description"
-            ));
+                                      boulder.getColor().name().replace("_", " "),
+                                      boulder.getGrade().getName(),
+                                      boulder.getDescription() != null ? boulder.getDescription() : "No description"
+                                     ));
         }
 
         body.append("\nCome check them out and crush some new routes!\n\n");

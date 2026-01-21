@@ -38,10 +38,10 @@ public class GymController {
      * @param eventRepository repository for accessing event data
      */
     public GymController(
-            GymRepository gymRepository,
-            GradeRepository gradeRepository,
-            NoticeRepository noticeRepository,
-            EventRepository eventRepository) {
+        GymRepository gymRepository,
+        GradeRepository gradeRepository,
+        NoticeRepository noticeRepository,
+        EventRepository eventRepository) {
         this.gymRepository = gymRepository;
         this.gradeRepository = gradeRepository;
         this.noticeRepository = noticeRepository;
@@ -70,7 +70,7 @@ public class GymController {
     @GetMapping("/{id}")
     public String showGymForId(@PathVariable("id") long id, Model model) {
         GymEntity gym = gymRepository.findByIdAndDeletedFalse(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         model.addAttribute("gym", gym);
         model.addAttribute("grades", gradeRepository.findByGymIdAndDeletedFalse(id));
@@ -126,9 +126,9 @@ public class GymController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Gym created successfully!"
-        ));
+                "type", "success",
+                "message", "Gym created successfully!"
+                                             ));
 
         return "redirect:/admin/gyms";
     }
@@ -146,11 +146,11 @@ public class GymController {
      */
     @PutMapping("/{id}")
     public String updateGym(
-            @PathVariable("id") long id,
-            @Valid @ModelAttribute("gym") GymEntity formGym,
-            BindingResult result,
-            RedirectAttributes redirectAttributes,
-            Model model) {
+        @PathVariable("id") long id,
+        @Valid @ModelAttribute("gym") GymEntity formGym,
+        BindingResult result,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         GymEntity gym = findGymOrThrow(id);
 
         if (result.hasErrors()) {
@@ -170,9 +170,9 @@ public class GymController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Gym updated successfully!"
-        ));
+                "type", "success",
+                "message", "Gym updated successfully!"
+                                             ));
 
         return "redirect:/admin/gyms/" + id;
     }
@@ -192,9 +192,9 @@ public class GymController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Gym deleted successfully!"
-        ));
+                "type", "success",
+                "message", "Gym deleted successfully!"
+                                             ));
 
         return "redirect:/admin/gyms";
     }
@@ -202,7 +202,7 @@ public class GymController {
 
     private GymEntity findGymOrThrow(long gymId) {
         return gymRepository
-                .findByIdAndDeletedFalse(gymId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+               .findByIdAndDeletedFalse(gymId)
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
     }
 }

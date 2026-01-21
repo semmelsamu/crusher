@@ -24,6 +24,6 @@ public class CurrentUserAdvice {
         }
 
         userRepository.findByNameAndDeletedFalse(principal.getName())
-                .ifPresent(user -> model.addAttribute("currentUser", user));
+        .ifPresent(user -> model.addAttribute("currentUser", user));
     }
 }

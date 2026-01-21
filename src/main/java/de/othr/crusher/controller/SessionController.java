@@ -55,14 +55,14 @@ public class SessionController {
     private final ProjectRepository projectRepository;
 
     public SessionController(
-            SessionRepository sessionRepository,
-            UserRepository userRepository,
-            GymRepository gymRepository,
-            GoRepository goRepository,
-            BoulderRepository boulderRepository,
-            SectorRepository sectorRepository,
-            GradeRepository gradeRepository,
-            ProjectRepository projectRepository) {
+        SessionRepository sessionRepository,
+        UserRepository userRepository,
+        GymRepository gymRepository,
+        GoRepository goRepository,
+        BoulderRepository boulderRepository,
+        SectorRepository sectorRepository,
+        GradeRepository gradeRepository,
+        ProjectRepository projectRepository) {
         this.sessionRepository = sessionRepository;
         this.userRepository = userRepository;
         this.gymRepository = gymRepository;
@@ -84,11 +84,11 @@ public class SessionController {
     @GetMapping("/sessions")
     @Transactional(readOnly = true)
     public String showAllSessions(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            Principal principal,
-            Model model) {
+        @RequestParam(value = "page", defaultValue = "1") int page,
+        Principal principal,
+        Model model) {
         UserEntity user = findUserByPrincipal(principal);
-        
+
         // Convert 1-based page to 0-based for Spring's PageRequest
         Pageable pageable = PageRequest.of(page - 1, 10);
         Page<SessionEntity> sessionsPage = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId(), pageable);
@@ -96,16 +96,16 @@ public class SessionController {
 
         // Find the most recently used gym
         GymEntity lastGym = sessions.stream()
-                .filter(session -> session.getGym() != null)
-                .findFirst()
-                .map(SessionEntity::getGym)
-                .orElse(null);
+                            .filter(session -> session.getGym() != null)
+                            .findFirst()
+                            .map(SessionEntity::getGym)
+                            .orElse(null);
 
         // Find active session (if any)
         SessionEntity activeSession = sessions.stream()
-                .filter(session -> session.getEndedAt() == null)
-                .findFirst()
-                .orElse(null);
+                                      .filter(session -> session.getEndedAt() == null)
+                                      .findFirst()
+                                      .orElse(null);
 
         model.addAttribute("sessions", sessions);
         model.addAttribute("sessionsPage", sessionsPage);
@@ -140,27 +140,27 @@ public class SessionController {
      */
     @PostMapping("/sessions")
     public String createSession(
-            @RequestParam("gymId") Long gymId,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @RequestParam("gymId") Long gymId,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         GymEntity gym = gymRepository.findByIdAndDeletedFalse(gymId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Gym not found"));
 
         // Check for active sessions
         List<SessionEntity> activeSessions = sessionRepository.findByUserIdOrderByStartedAtDesc(user.getId())
-                .stream()
-                .filter(session -> session.getEndedAt() == null)
-                .toList();
+                                             .stream()
+                                             .filter(session -> session.getEndedAt() == null)
+                                             .toList();
 
         // If active session exists, show error message and redirect to active session
         if (!activeSessions.isEmpty()) {
             SessionEntity activeSession = activeSessions.get(0);
             redirectAttributes.addFlashAttribute("toast", Map.of(
-                "type", "error",
-                "message", "You already have an active session at " + activeSession.getGym().getName() +
-                          ". Please end it before starting a new one."
-            ));
+                    "type", "error",
+                    "message", "You already have an active session at " + activeSession.getGym().getName() +
+                    ". Please end it before starting a new one."
+                                                 ));
             return "redirect:/sessions/" + activeSession.getId();
         }
 
@@ -174,9 +174,9 @@ public class SessionController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success",
-            "message", "Session created successfully!"
-        ));
+                "type", "success",
+                "message", "Session created successfully!"
+                                             ));
 
         return "redirect:/sessions/" + savedSession.getId();
     }
@@ -193,13 +193,13 @@ public class SessionController {
     @GetMapping("/sessions/{id}")
     @Transactional(readOnly = true)
     public String showSession(
-            @PathVariable("id") Long id,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            Principal principal,
-            Model model) {
+        @PathVariable("id") Long id,
+        @RequestParam(value = "page", defaultValue = "1") int page,
+        Principal principal,
+        Model model) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
 
         // Ensure the session belongs to the current user
         if (!session.getUser().getId().equals(user.getId())) {
@@ -230,7 +230,7 @@ public class SessionController {
     public String endSession(@PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
 
         // Ensure the session belongs to the current user
         if (!session.getUser().getId().equals(user.getId())) {
@@ -247,9 +247,9 @@ public class SessionController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Session ended successfully!"
-        ));
+                "type", "success",
+                "message", "Session ended successfully!"
+                                             ));
 
         return "redirect:/sessions";
     }
@@ -267,7 +267,7 @@ public class SessionController {
     public String deleteSession(@PathVariable("id") Long id, Principal principal, RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         SessionEntity session = sessionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
 
         // Ensure the session belongs to the current user
         if (!session.getUser().getId().equals(user.getId())) {
@@ -278,9 +278,9 @@ public class SessionController {
 
         // Add success message for toast notification
         redirectAttributes.addFlashAttribute("toast", Map.of(
-            "type", "success", 
-            "message", "Session deleted successfully!"
-        ));
+                "type", "success",
+                "message", "Session deleted successfully!"
+                                             ));
 
         return "redirect:/sessions";
     }
@@ -294,6 +294,6 @@ public class SessionController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }

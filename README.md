@@ -1,11 +1,33 @@
-# Crusher — Quickstart
+<p align="center"><a href="https://webflow-pwa.com/" target="_blank"><img src="src/main/resources/static/images/logo.png" alt="Webflow PWA Logo" /></a></p>
 
-## Prerequisites
+# Boulder / rock climbing tracking and management tool
+
+## Running
+
+We recommend running the application using Docker.
+
+Build the image:
+
+```zsh
+docker build -t crusher .
+```
+
+Run the container (persists uploads on the host):
+
+```zsh
+docker run --rm -p 8080:8080 -v "$(pwd)/uploads:/app/uploads" crusher
+```
+
+Once started, the application will run under http://localhost:8080.
+
+## Development
+
+Prerequisites:
 
 - Java 21 (project toolchain requires Java 21).
-- The Gradle wrapper is included (`./gradlew`) — you don't need a global Gradle installation.
+- The Gradle wrapper is included (`./gradlew`) - you don't need a global Gradle installation.
 
-## Quickstart (terminal)
+Setup:
 
 1. Verify your Java version (should be Java 21):
 
@@ -25,16 +47,7 @@ java -version
 ./gradlew dev
 ```
 
-4. Access & test data
-
-- Open the app at: http://localhost:8080 — you will be redirected to the login page if not authenticated.
-- Test accounts (seeded from `src/main/resources/data.sql`, password for all accounts is `test` before encoding by the startup runner):
-    - alice / test (ROLE_USER)
-    - bob / test (ROLE_SETTER)
-    - klaus / test (ROLE_OWNER)
-    - crusher / test (ROLE_ADMIN)
-
-- H2 Console: http://localhost:8080/h2-console (restricted to ADMIN role). JDBC URL: `jdbc:h2:mem:app`, user `sa`, password `password`.
+Once started, the application will run under http://localhost:8080.
 
 ### Optional: run with production profile
 
@@ -42,16 +55,26 @@ java -version
 SPRING_PROFILES_ACTIVE=prod ./gradlew bootRun
 ```
 
-## Docker
+## Test accounts
 
-Build the image:
+Seeded from `src/main/resources/data.sql`, password for all accounts is `test`.
 
-```zsh
-docker build -t crusher .
-```
+- alice / test (USER, ROLE_USER)
+- bob / test (SETTER, ROLE_SETTER)
+- klaus / test (OWNER, ROLE_OWNER)
+- crusher / test (ADMIN, ROLE_ADMIN)
 
-Run the container (persists uploads on the host):
+## H2 Console
 
-```zsh
-docker run --rm -p 8080:8080 -v "$(pwd)/uploads:/app/uploads" crusher
-```
+http://localhost:8080/h2-console (restricted to ADMIN role). JDBC URL: `jdbc:h2:mem:app`, user `sa`, password `password`.
+
+## Further documentation
+
+All detailed documentation can be found in `docs`:
+
+- Repository Structure
+- API documentation
+- Wireframes
+- Class Diagrams
+- Product backlog
+- Best Practices

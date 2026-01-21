@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class SectorImageStorageService {
 
     private static final Set<String> ALLOWED_CONTENT_TYPES =
-            Set.of("image/jpeg", "image/png", "image/webp", "image/gif");
+        Set.of("image/jpeg", "image/png", "image/webp", "image/gif");
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg", "jpeg", "png", "webp", "gif");
 
     private final Path sectorUploadRoot;
@@ -37,8 +37,8 @@ public class SectorImageStorageService {
      * @param maxFileSize maximum allowed file size (Spring DataSize format, e.g. "5MB")
      */
     public SectorImageStorageService(
-            @Value("${app.uploads.sectors-dir:uploads/sectors}") String sectorUploadDir,
-            @Value("${app.uploads.max-size:5MB}") String maxFileSize) {
+        @Value("${app.uploads.sectors-dir:uploads/sectors}") String sectorUploadDir,
+        @Value("${app.uploads.max-size:5MB}") String maxFileSize) {
         this.sectorUploadRoot = Paths.get(sectorUploadDir).toAbsolutePath().normalize();
         this.maxFileSize = DataSize.parse(maxFileSize);
 
@@ -93,14 +93,14 @@ public class SectorImageStorageService {
      */
     public void deleteIfStored(String imagePath) {
         resolveStoredPath(imagePath)
-                .ifPresent(
-                        path -> {
-                            try {
-                                Files.deleteIfExists(path);
-                            } catch (IOException e) {
-                                throw new IllegalStateException("Failed to delete sector image", e);
-                            }
-                        });
+        .ifPresent(
+        path -> {
+            try {
+                Files.deleteIfExists(path);
+            } catch (IOException e) {
+                throw new IllegalStateException("Failed to delete sector image", e);
+            }
+        });
     }
 
     /**
@@ -119,7 +119,7 @@ public class SectorImageStorageService {
 
         String contentType = file.getContentType();
         boolean allowedContentType = contentType != null
-                && ALLOWED_CONTENT_TYPES.stream().anyMatch(ct -> ct.equalsIgnoreCase(contentType));
+                                     && ALLOWED_CONTENT_TYPES.stream().anyMatch(ct -> ct.equalsIgnoreCase(contentType));
         boolean allowedExtension = !resolveExtension(file).isBlank();
 
         if (!allowedContentType && !allowedExtension) {
@@ -140,16 +140,16 @@ public class SectorImageStorageService {
         String contentType = file.getContentType();
         if (contentType != null) {
             switch (contentType) {
-                case "image/jpeg":
-                    return "jpg";
-                case "image/png":
-                    return "png";
-                case "image/webp":
-                    return "webp";
-                case "image/gif":
-                    return "gif";
-                default:
-                    break;
+            case "image/jpeg":
+                return "jpg";
+            case "image/png":
+                return "png";
+            case "image/webp":
+                return "webp";
+            case "image/gif":
+                return "gif";
+            default:
+                break;
             }
         }
 

@@ -50,11 +50,11 @@ public class ApiGoController {
     private final ProjectRepository projectRepository;
 
     public ApiGoController(
-            GoRepository goRepository,
-            SessionRepository sessionRepository,
-            BoulderRepository boulderRepository,
-            UserRepository userRepository,
-            ProjectRepository projectRepository) {
+        GoRepository goRepository,
+        SessionRepository sessionRepository,
+        BoulderRepository boulderRepository,
+        UserRepository userRepository,
+        ProjectRepository projectRepository) {
         this.goRepository = goRepository;
         this.sessionRepository = sessionRepository;
         this.boulderRepository = boulderRepository;
@@ -72,11 +72,11 @@ public class ApiGoController {
     @GetMapping
     @Transactional(readOnly = true)
     public ResponseEntity<?> listGoes(
-            @PathVariable("sessionId") Long sessionId,
-            Authentication authentication) {
+        @PathVariable("sessionId") Long sessionId,
+        Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Not authenticated"));
+                   .body(new ApiErrorResponse("Not authenticated"));
         }
 
         UserEntity user = findUserByAuthentication(authentication);
@@ -84,8 +84,8 @@ public class ApiGoController {
 
         List<GoEntity> goes = goRepository.findBySessionIdOrderByTimestampDesc(sessionId);
         List<GoResponse> response = goes.stream()
-                .map(this::toGoResponse)
-                .collect(Collectors.toList());
+                                    .map(this::toGoResponse)
+                                    .collect(Collectors.toList());
 
         return ResponseEntity.ok(response);
     }
@@ -101,12 +101,12 @@ public class ApiGoController {
     @GetMapping("/{goId}")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getGo(
-            @PathVariable("sessionId") Long sessionId,
-            @PathVariable("goId") Long goId,
-            Authentication authentication) {
+        @PathVariable("sessionId") Long sessionId,
+        @PathVariable("goId") Long goId,
+        Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Not authenticated"));
+                   .body(new ApiErrorResponse("Not authenticated"));
         }
 
         UserEntity user = findUserByAuthentication(authentication);
@@ -127,28 +127,28 @@ public class ApiGoController {
     @PostMapping
     @Transactional
     public ResponseEntity<?> createGo(
-            @PathVariable("sessionId") Long sessionId,
-            @RequestBody(required = false) CreateGoRequest request,
-            Authentication authentication) {
+        @PathVariable("sessionId") Long sessionId,
+        @RequestBody(required = false) CreateGoRequest request,
+        Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Not authenticated"));
+                   .body(new ApiErrorResponse("Not authenticated"));
         }
 
         if (request == null) {
             return ResponseEntity.badRequest()
-                    .body(new ApiErrorResponse("Request body is required"));
+                   .body(new ApiErrorResponse("Request body is required"));
         }
 
         // Validate required fields
         if (request.boulderId() == null) {
             return ResponseEntity.badRequest()
-                    .body(new ApiErrorResponse("Boulder is required"));
+                   .body(new ApiErrorResponse("Boulder is required"));
         }
 
         if (request.result() == null || request.result().isBlank()) {
             return ResponseEntity.badRequest()
-                    .body(new ApiErrorResponse("Result is required"));
+                   .body(new ApiErrorResponse("Result is required"));
         }
 
         // Validate result enum
@@ -157,7 +157,7 @@ public class ApiGoController {
             result = GoResult.valueOf(request.result());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                    .body(new ApiErrorResponse("Invalid result value. Must be one of: DID_NOT_FINISH, CLOSE_TRY, FINISHED"));
+                   .body(new ApiErrorResponse("Invalid result value. Must be one of: DID_NOT_FINISH, CLOSE_TRY, FINISHED"));
         }
 
         UserEntity user = findUserByAuthentication(authentication);
@@ -165,7 +165,7 @@ public class ApiGoController {
 
         // Validate boulder exists and is not deleted
         BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(request.boulderId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid boulder"));
 
         // Create go entity
         GoEntity go = new GoEntity();
@@ -179,7 +179,7 @@ public class ApiGoController {
         String validationError = validateProgressedHold(go, boulder);
         if (validationError != null) {
             return ResponseEntity.badRequest()
-                    .body(new ApiErrorResponse(validationError));
+                   .body(new ApiErrorResponse(validationError));
         }
 
         goRepository.save(go);
@@ -187,7 +187,7 @@ public class ApiGoController {
         // Auto-remove project when boulder is finished
         if (go.getResult() == GoResult.FINISHED) {
             projectRepository.findByUserIdAndBoulderId(user.getId(), boulder.getId())
-                    .ifPresent(projectRepository::delete);
+            .ifPresent(projectRepository::delete);
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(toGoResponse(go));
@@ -205,23 +205,23 @@ public class ApiGoController {
     @PutMapping("/{goId}")
     @Transactional
     public ResponseEntity<?> updateGo(
-            @PathVariable("sessionId") Long sessionId,
-            @PathVariable("goId") Long goId,
-            @RequestBody(required = false) UpdateGoRequest request,
-            Authentication authentication) {
+        @PathVariable("sessionId") Long sessionId,
+        @PathVariable("goId") Long goId,
+        @RequestBody(required = false) UpdateGoRequest request,
+        Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Not authenticated"));
+                   .body(new ApiErrorResponse("Not authenticated"));
         }
 
         if (request == null) {
             return ResponseEntity.badRequest()
-                    .body(new ApiErrorResponse("Request body is required"));
+                   .body(new ApiErrorResponse("Request body is required"));
         }
 
         if (request.result() == null || request.result().isBlank()) {
             return ResponseEntity.badRequest()
-                    .body(new ApiErrorResponse("Result is required"));
+                   .body(new ApiErrorResponse("Result is required"));
         }
 
         // Validate result enum
@@ -230,7 +230,7 @@ public class ApiGoController {
             result = GoResult.valueOf(request.result());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest()
-                    .body(new ApiErrorResponse("Invalid result value. Must be one of: DID_NOT_FINISH, CLOSE_TRY, FINISHED"));
+                   .body(new ApiErrorResponse("Invalid result value. Must be one of: DID_NOT_FINISH, CLOSE_TRY, FINISHED"));
         }
 
         UserEntity user = findUserByAuthentication(authentication);
@@ -245,7 +245,7 @@ public class ApiGoController {
         String validationError = validateProgressedHold(go, go.getBoulder());
         if (validationError != null) {
             return ResponseEntity.badRequest()
-                    .body(new ApiErrorResponse(validationError));
+                   .body(new ApiErrorResponse(validationError));
         }
 
         goRepository.save(go);
@@ -253,7 +253,7 @@ public class ApiGoController {
         // Auto-remove project when go is updated to finished
         if (go.getResult() == GoResult.FINISHED) {
             projectRepository.findByUserIdAndBoulderId(user.getId(), go.getBoulder().getId())
-                    .ifPresent(projectRepository::delete);
+            .ifPresent(projectRepository::delete);
         }
 
         return ResponseEntity.ok(toGoResponse(go));
@@ -270,12 +270,12 @@ public class ApiGoController {
     @DeleteMapping("/{goId}")
     @Transactional
     public ResponseEntity<?> deleteGo(
-            @PathVariable("sessionId") Long sessionId,
-            @PathVariable("goId") Long goId,
-            Authentication authentication) {
+        @PathVariable("sessionId") Long sessionId,
+        @PathVariable("goId") Long goId,
+        Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiErrorResponse("Not authenticated"));
+                   .body(new ApiErrorResponse("Not authenticated"));
         }
 
         UserEntity user = findUserByAuthentication(authentication);
@@ -295,12 +295,12 @@ public class ApiGoController {
      */
     private GoResponse toGoResponse(GoEntity go) {
         return new GoResponse(
-                go.getId(),
-                go.getSession().getId(),
-                go.getBoulder().getId(),
-                go.getResult().name(),
-                go.getTimestamp(),
-                go.getProgressedHold());
+                   go.getId(),
+                   go.getSession().getId(),
+                   go.getBoulder().getId(),
+                   go.getResult().name(),
+                   go.getTimestamp(),
+                   go.getProgressedHold());
     }
 
     /**
@@ -312,7 +312,7 @@ public class ApiGoController {
      */
     private UserEntity findUserByAuthentication(Authentication authentication) {
         return userRepository.findByName(authentication.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 
     /**
@@ -325,7 +325,7 @@ public class ApiGoController {
      */
     private SessionEntity validateAndGetSession(Long sessionId, UserEntity user) {
         SessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
 
         if (!session.getUser().getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied");
@@ -344,7 +344,7 @@ public class ApiGoController {
      */
     private GoEntity findGoInSessionOrThrow(Long sessionId, Long goId) {
         GoEntity go = goRepository.findById(goId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Go not found"));
+                      .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Go not found"));
 
         if (go.getSession() == null || !go.getSession().getId().equals(sessionId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Go does not belong to session");

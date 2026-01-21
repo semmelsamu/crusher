@@ -68,12 +68,12 @@ public class WeatherService {
             int weatherCode = weather.current.weatherCode;
             WeatherInfo weatherInfo = mapWeatherCodeToWeatherInfo(weatherCode);
             logger.info("Weather for {} (lat={}, lon={}): code={} -> {} ({})",
-                       city, latitude, longitude, weatherCode, weatherInfo.text(), weatherInfo.icon());
+                        city, latitude, longitude, weatherCode, weatherInfo.text(), weatherInfo.icon());
             return weatherInfo;
 
         } catch (WebClientResponseException e) {
             logger.error("HTTP error fetching weather for city {}: {} {}",
-                        city, e.getStatusCode(), e.getMessage());
+                         city, e.getStatusCode(), e.getMessage());
             return null;
         } catch (Exception e) {
             logger.error("Error fetching weather for city {}: {}", city, e.getMessage());
@@ -86,11 +86,11 @@ public class WeatherService {
      */
     private GeocodingResponse geocodeCity(String city) {
         return webClient.get()
-                .uri(geocodingUrl + "?name={city}&count=1&language=de&format=json", city)
-                .retrieve()
-                .bodyToMono(GeocodingResponse.class)
-                .timeout(Duration.ofMillis(timeout))
-                .block();
+               .uri(geocodingUrl + "?name={city}&count=1&language=de&format=json", city)
+               .retrieve()
+               .bodyToMono(GeocodingResponse.class)
+               .timeout(Duration.ofMillis(timeout))
+               .block();
     }
 
     /**
@@ -98,12 +98,12 @@ public class WeatherService {
      */
     private WeatherResponse getWeather(double latitude, double longitude) {
         return webClient.get()
-                .uri(forecastUrl + "?latitude={lat}&longitude={lon}&current=weather_code&timezone=auto",
-                     latitude, longitude)
-                .retrieve()
-                .bodyToMono(WeatherResponse.class)
-                .timeout(Duration.ofMillis(timeout))
-                .block();
+               .uri(forecastUrl + "?latitude={lat}&longitude={lon}&current=weather_code&timezone=auto",
+                    latitude, longitude)
+               .retrieve()
+               .bodyToMono(WeatherResponse.class)
+               .timeout(Duration.ofMillis(timeout))
+               .block();
     }
 
     /**
@@ -112,20 +112,20 @@ public class WeatherService {
      */
     private WeatherInfo mapWeatherCodeToWeatherInfo(int weatherCode) {
         return switch (weatherCode) {
-            case 0, 1 -> new WeatherInfo("Sunny", "sun");               // Clear sky, mainly clear
-            case 2 -> new WeatherInfo("Cloudy", "cloudy");              // Partly cloudy
-            case 3 -> new WeatherInfo("Cloudy", "cloudy");              // Overcast
-            case 45, 48 -> new WeatherInfo("Foggy", "cloud-fog");       // Fog and depositing rime fog
-            case 51, 53, 55 -> new WeatherInfo("Rainy", "cloud-rain");  // Drizzle: Light, moderate, and dense
-            case 56, 57 -> new WeatherInfo("Rainy", "cloud-rain");      // Freezing Drizzle: Light and dense
-            case 61, 63, 65 -> new WeatherInfo("Rainy", "cloud-rain");  // Rain: Slight, moderate and heavy
-            case 66, 67 -> new WeatherInfo("Rainy", "cloud-rain");      // Freezing Rain: Light and heavy
-            case 71, 73, 75 -> new WeatherInfo("Snowy", "cloud-snow");  // Snow fall: Slight, moderate, and heavy
-            case 77 -> new WeatherInfo("Snowy", "cloud-snow");          // Snow grains
-            case 80, 81, 82 -> new WeatherInfo("Rainy", "cloud-rain");  // Rain showers: Slight, moderate, and violent
-            case 85, 86 -> new WeatherInfo("Snowy", "cloud-snow");      // Snow showers slight and heavy
-            case 95 -> new WeatherInfo("Rainy", "cloud-rain");          // Thunderstorm: Slight or moderate
-            case 96, 99 -> new WeatherInfo("Rainy", "cloud-rain");      // Thunderstorm with slight and heavy hail
+        case 0, 1 -> new WeatherInfo("Sunny", "sun");               // Clear sky, mainly clear
+        case 2 -> new WeatherInfo("Cloudy", "cloudy");              // Partly cloudy
+        case 3 -> new WeatherInfo("Cloudy", "cloudy");              // Overcast
+        case 45, 48 -> new WeatherInfo("Foggy", "cloud-fog");       // Fog and depositing rime fog
+        case 51, 53, 55 -> new WeatherInfo("Rainy", "cloud-rain");  // Drizzle: Light, moderate, and dense
+        case 56, 57 -> new WeatherInfo("Rainy", "cloud-rain");      // Freezing Drizzle: Light and dense
+        case 61, 63, 65 -> new WeatherInfo("Rainy", "cloud-rain");  // Rain: Slight, moderate and heavy
+        case 66, 67 -> new WeatherInfo("Rainy", "cloud-rain");      // Freezing Rain: Light and heavy
+        case 71, 73, 75 -> new WeatherInfo("Snowy", "cloud-snow");  // Snow fall: Slight, moderate, and heavy
+        case 77 -> new WeatherInfo("Snowy", "cloud-snow");          // Snow grains
+        case 80, 81, 82 -> new WeatherInfo("Rainy", "cloud-rain");  // Rain showers: Slight, moderate, and violent
+        case 85, 86 -> new WeatherInfo("Snowy", "cloud-snow");      // Snow showers slight and heavy
+        case 95 -> new WeatherInfo("Rainy", "cloud-rain");          // Thunderstorm: Slight or moderate
+        case 96, 99 -> new WeatherInfo("Rainy", "cloud-rain");      // Thunderstorm with slight and heavy hail
             default -> new WeatherInfo("Cloudy", "cloudy");             // Unknown/default to cloudy
         };
     }

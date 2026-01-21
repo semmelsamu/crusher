@@ -31,9 +31,9 @@ public class BoulderRatingController {
     private final UserRepository userRepository;
 
     public BoulderRatingController(
-            BoulderRatingRepository ratingRepository,
-            BoulderRepository boulderRepository,
-            UserRepository userRepository) {
+        BoulderRatingRepository ratingRepository,
+        BoulderRepository boulderRepository,
+        UserRepository userRepository) {
         this.ratingRepository = ratingRepository;
         this.boulderRepository = boulderRepository;
         this.userRepository = userRepository;
@@ -53,13 +53,13 @@ public class BoulderRatingController {
     @PostMapping("/boulders/{boulderId}/rating")
     @Transactional
     public String setRating(
-            @PathVariable("boulderId") Long boulderId,
-            @RequestParam("rating") Integer rating,
-            Principal principal,
-            RedirectAttributes redirectAttributes) {
+        @PathVariable("boulderId") Long boulderId,
+        @RequestParam("rating") Integer rating,
+        Principal principal,
+        RedirectAttributes redirectAttributes) {
         UserEntity user = findUserByPrincipal(principal);
         BoulderEntity boulder = boulderRepository.findByIdAndDeletedFalse(boulderId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
+                                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Boulder not found"));
 
         if (rating == null || rating < 1 || rating > 5) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Rating must be between 1 and 5");
@@ -67,7 +67,7 @@ public class BoulderRatingController {
 
         // Find existing rating or create new one
         BoulderRatingEntity ratingEntity = ratingRepository.findByUserIdAndBoulderId(user.getId(), boulderId)
-                .orElse(new BoulderRatingEntity());
+                                           .orElse(new BoulderRatingEntity());
 
         boolean isNewRating = ratingEntity.getId() == null;
 
@@ -96,6 +96,6 @@ public class BoulderRatingController {
      */
     private UserEntity findUserByPrincipal(Principal principal) {
         return userRepository.findByName(principal.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 }

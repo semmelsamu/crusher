@@ -61,8 +61,8 @@ public class ApiUserController {
         }
 
         List<UserResponse> users = userRepository.findAll().stream()
-                .map(this::toUserResponse)
-                .toList();
+                                   .map(this::toUserResponse)
+                                   .toList();
 
         return ResponseEntity.ok(users);
     }
@@ -81,8 +81,8 @@ public class ApiUserController {
     @GetMapping("/{id}")
     @Transactional(readOnly = true)
     public ResponseEntity<?> getUser(
-            @PathVariable("id") Long id,
-            Authentication authentication) {
+        @PathVariable("id") Long id,
+        Authentication authentication) {
         if (!isAuthenticated(authentication)) {
             return notAuthenticated();
         }
@@ -93,9 +93,9 @@ public class ApiUserController {
         }
 
         UserEntity user = currentUser.getId().equals(id)
-                ? currentUser
-                : userRepository.findById(id)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                          ? currentUser
+                          : userRepository.findById(id)
+                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         return ResponseEntity.ok(toUserResponse(user));
     }
@@ -103,8 +103,8 @@ public class ApiUserController {
     @PostMapping
     @Transactional
     public ResponseEntity<?> createUser(
-            @RequestBody(required = false) CreateUserRequest request,
-            Authentication authentication) {
+        @RequestBody(required = false) CreateUserRequest request,
+        Authentication authentication) {
         if (request == null) {
             return ResponseEntity.badRequest().body(new ApiErrorResponse("Request body is required"));
         }
@@ -157,9 +157,9 @@ public class ApiUserController {
     @PutMapping("/me")
     @Transactional
     public ResponseEntity<?> updateCurrentUser(
-            @RequestBody(required = false) UpdateUserRequest request,
-            Authentication authentication,
-            HttpServletRequest httpRequest) {
+        @RequestBody(required = false) UpdateUserRequest request,
+        Authentication authentication,
+        HttpServletRequest httpRequest) {
         if (!isAuthenticated(authentication)) {
             return notAuthenticated();
         }
@@ -175,10 +175,10 @@ public class ApiUserController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity<?> updateUser(
-            @PathVariable("id") Long id,
-            @RequestBody(required = false) UpdateUserRequest request,
-            Authentication authentication,
-            HttpServletRequest httpRequest) {
+        @PathVariable("id") Long id,
+        @RequestBody(required = false) UpdateUserRequest request,
+        Authentication authentication,
+        HttpServletRequest httpRequest) {
         if (!isAuthenticated(authentication)) {
             return notAuthenticated();
         }
@@ -194,18 +194,18 @@ public class ApiUserController {
         }
 
         UserEntity user = currentUser.getId().equals(id)
-                ? currentUser
-                : userRepository.findById(id)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                          ? currentUser
+                          : userRepository.findById(id)
+                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         return updateUser(user, request, privileged, currentUser.getId().equals(id) ? httpRequest : null);
     }
 
     @DeleteMapping("/me")
     public ResponseEntity<?> deleteCurrentUser(
-            Authentication authentication,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+        Authentication authentication,
+        HttpServletRequest request,
+        HttpServletResponse response) {
         if (!isAuthenticated(authentication)) {
             return notAuthenticated();
         }
@@ -221,10 +221,10 @@ public class ApiUserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(
-            @PathVariable("id") Long id,
-            Authentication authentication,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+        @PathVariable("id") Long id,
+        Authentication authentication,
+        HttpServletRequest request,
+        HttpServletResponse response) {
         if (!isAuthenticated(authentication)) {
             return notAuthenticated();
         }
@@ -236,9 +236,9 @@ public class ApiUserController {
         }
 
         UserEntity user = currentUser.getId().equals(id)
-                ? currentUser
-                : userRepository.findById(id)
-                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                          ? currentUser
+                          : userRepository.findById(id)
+                          .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         ResponseEntity<?> result = deleteUserInternal(user);
         if (result.getStatusCode().is2xxSuccessful() && currentUser.getId().equals(id)) {
@@ -249,10 +249,10 @@ public class ApiUserController {
     }
 
     private ResponseEntity<?> updateUser(
-            UserEntity user,
-            UpdateUserRequest request,
-            boolean allowRoleChange,
-            HttpServletRequest httpRequest) {
+        UserEntity user,
+        UpdateUserRequest request,
+        boolean allowRoleChange,
+        HttpServletRequest httpRequest) {
         if (request.username() != null) {
             String username = normalize(request.username());
             if (username == null) {
@@ -260,10 +260,10 @@ public class ApiUserController {
             }
 
             userRepository.findByName(username)
-                    .filter(existing -> !existing.getId().equals(user.getId()))
-                    .ifPresent(existing -> {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists");
-                    });
+            .filter(existing -> !existing.getId().equals(user.getId()))
+            .ifPresent(existing -> {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists");
+            });
 
             user.setName(username);
         }
@@ -275,10 +275,10 @@ public class ApiUserController {
             }
 
             userRepository.findByEmail(email)
-                    .filter(existing -> !existing.getId().equals(user.getId()))
-                    .ifPresent(existing -> {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
-                    });
+            .filter(existing -> !existing.getId().equals(user.getId()))
+            .ifPresent(existing -> {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exists");
+            });
 
             user.setEmail(email);
         }
@@ -324,35 +324,35 @@ public class ApiUserController {
 
     private void refreshSession(UserEntity user, HttpServletRequest request) {
         UserDetails userDetails = User.withUsername(user.getName())
-                .password(user.getPassword())
-                .roles(user.getRole())
-                .build();
+                                  .password(user.getPassword())
+                                  .roles(user.getRole())
+                                  .build();
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(
-                new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()));
+            new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities()));
         SecurityContextHolder.setContext(context);
         request.getSession(true)
-                .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+        .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
     }
 
     private boolean isAuthenticated(Authentication authentication) {
         return authentication != null
-                && authentication.isAuthenticated()
-                && !(authentication instanceof AnonymousAuthenticationToken);
+               && authentication.isAuthenticated()
+               && !(authentication instanceof AnonymousAuthenticationToken);
     }
 
     private boolean isPrivileged(Authentication authentication) {
         return authentication.getAuthorities().stream()
-                .anyMatch(authority -> PRIVILEGED_ROLES.contains(authority.getAuthority()));
+               .anyMatch(authority -> PRIVILEGED_ROLES.contains(authority.getAuthority()));
     }
 
     private UserEntity findUserByAuthentication(Authentication authentication) {
         return userRepository.findByName(authentication.getName())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"));
     }
 
     private UserResponse toUserResponse(UserEntity user) {
@@ -388,11 +388,11 @@ public class ApiUserController {
 
     private ResponseEntity<ApiErrorResponse> notAuthenticated() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ApiErrorResponse("Not authenticated"));
+               .body(new ApiErrorResponse("Not authenticated"));
     }
 
     private ResponseEntity<ApiErrorResponse> accessDenied() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new ApiErrorResponse("Access denied"));
+               .body(new ApiErrorResponse("Access denied"));
     }
 }

@@ -51,31 +51,31 @@ public class GymEntity {
     private boolean deleted = false;
 
     @OneToMany(
-            mappedBy = "gym",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
+        mappedBy = "gym",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY)
     private List<SectorEntity> sectors = new ArrayList<>();
 
     @OneToMany(
-            mappedBy = "gym",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
+        mappedBy = "gym",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY)
     private List<GradeEntity> grades = new ArrayList<>();
 
     @OneToMany(
-            mappedBy = "gym",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
+        mappedBy = "gym",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY)
     private List<NoticeEntity> notices = new ArrayList<>();
 
     @OneToMany(
-            mappedBy = "gym",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
+        mappedBy = "gym",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY)
     private List<EventEntity> events = new ArrayList<>();
 
     public GymEntity() {}
