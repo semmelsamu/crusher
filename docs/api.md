@@ -510,3 +510,233 @@ The `result` field accepts the following enum values:
 - `DID_NOT_FINISH` - The climber did not complete the boulder
 - `CLOSE_TRY` - The climber came close to finishing
 - `FINISHED` - The climber successfully completed the boulder
+
+---
+
+## Statistics
+
+Base path: `/api/statistics`
+
+All endpoints require authentication via session cookie from login.
+
+The statistics API allows users to configure which statistics they want to track and retrieve statistics data since their last fetch. Statistics are calculated based on the user's climbing attempts (goes).
+
+### POST /api/statistics
+
+Creates a new statistics configuration for the authenticated user.
+
+**Request Body:**
+
+```json
+{
+    "goesPerGradeEnabled": true,
+    "finishedGoesPerGradeEnabled": true,
+    "resultDistributionEnabled": true,
+    "highestFinishedGradeEnabled": true
+}
+```
+
+**Fields:**
+
+- `goesPerGradeEnabled` (boolean, required) - Track total attempts per grade
+- `finishedGoesPerGradeEnabled` (boolean, required) - Track finished attempts per grade
+- `resultDistributionEnabled` (boolean, required) - Track distribution of results (FINISHED, CLOSE_TRY, DID_NOT_FINISH)
+- `highestFinishedGradeEnabled` (boolean, required) - Track the highest grade completed
+
+**Responses:**
+
+- `201 Created`
+
+```json
+{
+    "message": "Configuration created successfully",
+    "config": {
+        "goesPerGradeEnabled": true,
+        "finishedGoesPerGradeEnabled": true,
+        "resultDistributionEnabled": true,
+        "highestFinishedGradeEnabled": true
+    }
+}
+```
+
+- `401 Unauthorized` - Not authenticated
+
+```json
+{
+    "message": "Not authenticated"
+}
+```
+
+- `409 Conflict` - Configuration already exists
+
+```json
+{
+    "message": "Configuration already exists. Use PUT to update."
+}
+```
+
+**Notes:**
+
+- Each user can only have one statistics configuration
+- Use PUT endpoint to update an existing configuration
+
+---
+
+### PUT /api/statistics
+
+Updates the statistics configuration for the authenticated user.
+
+**Request Body:**
+
+```json
+{
+    "goesPerGradeEnabled": true,
+    "finishedGoesPerGradeEnabled": false,
+    "resultDistributionEnabled": false,
+    "highestFinishedGradeEnabled": true
+}
+```
+
+**Fields:**
+
+- `goesPerGradeEnabled` (boolean, required) - Track total attempts per grade
+- `finishedGoesPerGradeEnabled` (boolean, required) - Track finished attempts per grade
+- `resultDistributionEnabled` (boolean, required) - Track distribution of results
+- `highestFinishedGradeEnabled` (boolean, required) - Track the highest grade completed
+
+**Responses:**
+
+- `200 OK`
+
+```json
+{
+    "message": "Configuration updated successfully",
+    "config": {
+        "goesPerGradeEnabled": true,
+        "finishedGoesPerGradeEnabled": false,
+        "resultDistributionEnabled": false,
+        "highestFinishedGradeEnabled": true
+    }
+}
+```
+
+- `401 Unauthorized` - Not authenticated
+
+```json
+{
+    "message": "Not authenticated"
+}
+```
+
+- `404 Not Found` - Configuration doesn't exist
+
+```json
+{
+    "message": "Configuration not found. Use POST to create."
+}
+```
+
+**Notes:**
+
+- Updates all configuration fields
+- Configuration must already exist (use POST to create first)
+
+---
+
+### GET /api/statistics
+
+Retrieves statistics based on the user's configuration. Returns statistics calculated from goes since the last GET request (or all goes if this is the first request after configuration creation).
+
+**Responses:**
+
+- `200 OK`
+
+```json
+{
+    "goesPerGrade": {
+        "V3": 5,
+        "V4": 8,
+        "V5": 3
+    },
+    "finishedGoesPerGrade": {
+        "V3": 4,
+        "V4": 5,
+        "V5": 1
+    },
+    "resultDistribution": {
+        "FINISHED": 10,
+        "CLOSE_TRY": 4,
+        "DID_NOT_FINISH": 2
+    },
+    "highestFinishedGrade": "V5"
+}
+```
+
+**Response Fields:**
+
+- `goesPerGrade` (object, nullable) - Count of all attempts per grade (V-scale). Grades are sorted in ascending order. Only present if `goesPerGradeEnabled` is true.
+- `finishedGoesPerGrade` (object, nullable) - Count of finished attempts per grade (V-scale). Grades are sorted in ascending order. Only present if `finishedGoesPerGradeEnabled` is true.
+- `resultDistribution` (object, nullable) - Count of attempts by result type. Only present if `resultDistributionEnabled` is true.
+- `highestFinishedGrade` (string, nullable) - The highest grade (V-scale) successfully finished. Returns `null` if no grades have been finished. Only present if `highestFinishedGradeEnabled` is true.
+
+- `401 Unauthorized` - Not authenticated
+
+```json
+{
+    "message": "Not authenticated"
+}
+```
+
+- `404 Not Found` - Configuration doesn't exist
+
+```json
+{
+    "message": "Configuration not found. Use POST to create one first."
+}
+```
+
+**Notes:**
+
+- Statistics are calculated only from goes that occurred after the previous GET request
+- On the first GET request after configuration creation, all historical goes are included
+- The `lastFetchedAt` timestamp is automatically updated after each successful GET request
+- Fields in the response are `null` if their corresponding configuration flag is disabled
+- Grades in `goesPerGrade` and `finishedGoesPerGrade` are sorted by V-scale value (V0, V1, V2, etc.)
+- The `resultDistribution` object always contains all three result types: `FINISHED`, `CLOSE_TRY`, `DID_NOT_FINISH`
+
+---
+
+### Example Workflow
+
+1. **Login** (see Authentication section)
+
+```bash
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"alice","password":"password"}' \
+  -c cookies.txt
+```
+
+2. **Create statistics configuration**
+
+```bash
+curl -X POST http://localhost:8080/api/statistics \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{"goesPerGradeEnabled":true,"finishedGoesPerGradeEnabled":true,"resultDistributionEnabled":true,"highestFinishedGradeEnabled":true}'
+```
+
+3. **Retrieve statistics**
+
+```bash
+curl http://localhost:8080/api/statistics -b cookies.txt
+```
+
+4. **Update configuration** (e.g., disable some statistics)
+
+```bash
+curl -X PUT http://localhost:8080/api/statistics \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{"goesPerGradeEnabled":true,"finishedGoesPerGradeEnabled":false,"resultDistributionEnabled":false,"highestFinishedGradeEnabled":true}'
+```
